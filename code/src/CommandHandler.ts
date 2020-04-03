@@ -354,10 +354,6 @@ export default class CommandHandler {
         Embedder.SendCard(command, card);
     }
 
-    private SendCardList(command:IMessageInfo, player:Player, animalName:string) {
-        player.SendCardList(command, animalName);
-    }
-
     private async SendCardStats(command:IMessageInfo) {
         const cards:any = await Card.GET_ALL();
         const stats:any = {}
