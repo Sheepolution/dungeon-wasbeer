@@ -38,7 +38,7 @@ export default class Constants {
     public static readonly Settings = {
         MessagePointTimeoutMinutes: 15,
         MessagePointAmountRewards: {
-            Card: 8
+            Card: 4
         },
         CardRankRollValue: [
             55,
