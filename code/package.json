@@ -4,7 +4,7 @@
   "description": "A Discord bot for a Discord farm game.",
   "main": "lib/index.js",
   "scripts": {
-    "start": "ts-node-dev --respawn src/index.ts",
+    "start": "ts-node-dev --respawn src/Index.ts",
     "build": "tsc"
   },
   "repository": {
