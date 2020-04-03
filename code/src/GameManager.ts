@@ -85,17 +85,15 @@ export default class GameManager {
 
         var player = await this.GetPlayer(message.member.id, message_info);
 
-        var new_player = false;
-
         if (player == null) {
             player = await this.CreateNewPlayer(message_info);
-            new_player = true;
+            await CardHandler.GiveMemberCard(message_info, player);
         }
 
         var content = message.content.trim();
 
         var prefix = Constants.Defaults.Guild.Prefix;
-
+        
         if (content.startsWith(prefix)) {
             if (message.channel.id != process.env.MAIN_CHANNEL_ID) {
                 return;
@@ -109,9 +107,6 @@ export default class GameManager {
             this.commandHandler.OnCommand(message_info, player, content, command, args);
         }
         else {
-            if (new_player) {
-                CardHandler.GiveMemberCard(message_info, player);
-            }
             this.commandHandler.HandleNormalMessage(message_info, player)
         }
     }
