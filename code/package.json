@@ -1,7 +1,7 @@
 {
-  "name": "farmcord",
+  "name": "dungeon-wasbeer",
   "version": "1.0.0",
-  "description": "A Discord bot for a Discord farm game.",
+  "description": "A Discord bot for the Moederwasbeer server.",
   "main": "lib/index.js",
   "scripts": {
     "start": "ts-node-dev --respawn src/Index.ts",
@@ -9,14 +9,14 @@
   },
   "repository": {
     "type": "git",
-    "url": "git+https://github.com/Sheepolution/prog.git"
+    "url": "git+https://github.com/Sheepolution/dungeon-wasbeer.git"
   },
   "author": "Sheepolution",
   "license": "ISC",
   "bugs": {
-    "url": "https://github.com/Sheepolution/prog/issues"
+    "url": "https://github.com/Sheepolution/dungeon-wasbeer/issues"
   },
-  "homepage": "https://github.com/Sheepolution/prog#readme",
+  "homepage": "https://github.com/Sheepolution/dungeon-wasbeer#readme",
   "dependencies": {
     "@types/pg": "^7.14.3",
     "@types/ws": "^7.2.3",
