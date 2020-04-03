@@ -97,6 +97,10 @@ export default class GameManager {
         var prefix = Constants.Defaults.Guild.Prefix;
 
         if (content.startsWith(prefix)) {
+            if (message.channel.id != process.env.MAIN_CHANNEL_ID) {
+                return;
+            }
+
             const words = content.split(" ");
             const command = words[0].substr(prefix.length);
             words.shift();

@@ -11,6 +11,8 @@ interface Regexes {
 
 export default class DungeonWasbeer {
 
+    public static mainChannel:Discord.TextChannel;
+
     public static client:Discord.Client;
     private static readonly regexes:Regexes = {
         mention: /<@!?([0-9]*)>/,
@@ -28,6 +30,7 @@ export default class DungeonWasbeer {
         DungeonWasbeer.game = new GameManager();
         const client = DungeonWasbeer.client;
 
+
         client.on('ready', async function () { await DungeonWasbeer.EventReady() });
 
         client.on("message", async function (message) { await DungeonWasbeer.EventMessage(message) });
@@ -42,6 +45,7 @@ export default class DungeonWasbeer {
 
     static async EventReady () {
         console.log("Dungeon Wasbeer: Connected");
+        DungeonWasbeer.mainChannel = <Discord.TextChannel> await DungeonWasbeer.client.channels.fetch(process.env.MAIN_CHANNEL_ID || "");
         DungeonWasbeer.OnReady();
     }
 
@@ -149,28 +153,28 @@ export default class DungeonWasbeer {
     // SEND ////////////////////////
 
     public static SendEmbed(embed:Discord.MessageEmbed, channel:Discord.Channel, content?:string) {
-        const textChannel:Discord.TextChannel = (<Discord.TextChannel>channel);
-        return content ? textChannel.send(content, embed) : textChannel.send(embed)
+        // const textChannel:Discord.TextChannel = (<Discord.TextChannel>channel);
+        return content ? DungeonWasbeer.mainChannel.send(content, embed) : DungeonWasbeer.mainChannel.send(embed)
     }
 
     public static SendMessage(channel:Discord.TextChannel, message:string, embed?:Discord.MessageEmbed) {
         if (embed) {
-            this.SendEmbed(embed, channel, message)
+            this.SendEmbed(embed, DungeonWasbeer.mainChannel, message)
             return;
         }
 
-        channel.send(message);
+        DungeonWasbeer.mainChannel.send(message);
     }
 
     public static ReplyMessage(channel:Discord.TextChannel, member:Discord.GuildMember, message:string, embed?:Discord.MessageEmbed) {
         const reply = `<@${member.user}> ${message}`;
 
         if (embed) {
-            this.SendEmbed(embed, channel, reply)
+            this.SendEmbed(embed, DungeonWasbeer.mainChannel, reply)
             return;
         }
 
-        channel.send(reply);
+        DungeonWasbeer.mainChannel.send(reply);
     }
 
 
