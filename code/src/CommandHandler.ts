@@ -226,7 +226,7 @@ export default class CommandHandler {
 
         switch(command) {
             case "kaart":
-                this.SendPlayerCard(commandMessage, player, args[0]);
+                this.SendPlayerCard(commandMessage, player, args.join(" "));
                 break;
             case "lijst":
                 this.SendPlayerCardList(commandMessage, player);
