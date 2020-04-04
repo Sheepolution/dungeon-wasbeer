@@ -6,7 +6,7 @@ export default class Constants {
         red:"#ff0000",
         blue:"#0000ff",
         green:"#00ff00",
-        default:"#0AD1CF"
+        default:"#f0529a"
     }
 
     // Gameplay
