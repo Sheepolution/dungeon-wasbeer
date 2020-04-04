@@ -22,7 +22,7 @@ export default class GameManager {
         this.cacheRefreshInterval = setInterval(() => { that.RefreshCache() }, 1000 * 60 * 5);
     }
 
-    public async GetPlayer(discordId:string, message:IMessageInfo) { 
+    public async GetPlayer(discordId:string, message:IMessageInfo, discordDisplayName:string) { 
         // Check for cache
         var player = this.GetCachedPlayer(discordId);
         if (player) {
@@ -35,8 +35,8 @@ export default class GameManager {
         const success = await player.GET(discordId);
         
         if (success){
-            this.CachePlayer(discordId, player)
-
+            this.CachePlayer(discordId, player);
+            player.UpdateDiscordName(discordDisplayName);
             return player;
         }
 
@@ -46,7 +46,7 @@ export default class GameManager {
     public async CreateNewPlayer(command:IMessageInfo) {
         const discord_id = command.member.id;
         const player = new Player();
-        await player.POST(discord_id);
+        await player.POST(discord_id, command.member.displayName);
         this.CachePlayer(discord_id, player)
         return player;
     }
@@ -83,7 +83,7 @@ export default class GameManager {
 
         const message_info:IMessageInfo = DungeonWasbeer.ParseMessageToInfo(message, message.member);
 
-        var player = await this.GetPlayer(message.member.id, message_info);
+        var player = await this.GetPlayer(message.member.id, message_info, message.member.displayName);
 
         if (player == null) {
             player = await this.CreateNewPlayer(message_info);

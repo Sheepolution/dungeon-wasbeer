@@ -12,7 +12,7 @@ export default class PlayerModel extends Model {
         return 'players';
     }
 
-    public static async New(discord_id:string) {
+    public static async New(discord_id:string, discordDisplayName:string) {
         const player_id = Utils.UUID();
 
         const player = await PlayerModel.query()
@@ -21,7 +21,8 @@ export default class PlayerModel extends Model {
             discord_id: discord_id,
             active: 1,
             gold: 0,
-            message_points: 0
+            message_points: 0,
+            discord_name: discordDisplayName
         })
 
         return player;

@@ -40,8 +40,8 @@ export default class Player {
         return true;
     }
 
-    public async POST(discordId:string) {
-        const model = await PlayerModel.New(discordId);
+    public async POST(discordId:string, discordDisplayName:string) {
+        const model = await PlayerModel.New(discordId, discordDisplayName);
         await this.ApplyModel(model);
         return this;
     }
@@ -71,6 +71,10 @@ export default class Player {
     public UpdateLastActive() {
         this.lastActiveDate = Utils.GetNowString();
         this.UPDATE({active_date: this.lastActiveDate})
+    }
+
+    public UpdateDiscordName(discordDisplayName:string) {
+        this.UPDATE({discord_name: discordDisplayName});
     }
 
     // -- Send info methods
