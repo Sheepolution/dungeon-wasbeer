@@ -100,7 +100,7 @@ export default class GameManager {
             }
 
             const words = content.split(" ");
-            const command = words[0].substr(prefix.length);
+            const command = words[0].substr(prefix.length).toLowerCase();
             words.shift();
             const args = words;
             content = content.slice(content.indexOf(" ")).trim();
