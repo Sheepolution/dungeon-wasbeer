@@ -113,4 +113,9 @@ export default class GameManager {
             this.commandHandler.HandleNormalMessage(message_info, player)
         }
     }
+
+    public async RefreshAllCache() {
+        this.players = {};
+        CardHandler.BuildCardList();
+    }
 }
