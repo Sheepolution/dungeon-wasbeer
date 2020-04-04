@@ -11,7 +11,8 @@ interface Regexes {
 
 export default class DungeonWasbeer {
 
-    public static mainChannel:Discord.TextChannel;
+    public static readonly mainGuildId:string = process.env.MAIN_GUILD_ID || "";
+    public static readonly mainChannelId:string = process.env.MAIN_CHANNEL_ID || "";
 
     public static client:Discord.Client;
     private static readonly regexes:Regexes = {
@@ -45,7 +46,6 @@ export default class DungeonWasbeer {
 
     static async EventReady () {
         console.log("Dungeon Wasbeer: Connected");
-        DungeonWasbeer.mainChannel = <Discord.TextChannel> await DungeonWasbeer.client.channels.fetch(process.env.MAIN_CHANNEL_ID || "");
         DungeonWasbeer.OnReady();
     }
 
@@ -157,28 +157,29 @@ export default class DungeonWasbeer {
     // SEND ////////////////////////
 
     public static SendEmbed(embed:Discord.MessageEmbed, channel:Discord.Channel, content?:string) {
-        // channel = (<Discord.TextChannel>channel).guild == process.env.TEST_GUILD_CHANNEL ? channel : DungeonWasbeer.mainChannel;
-        return content ? DungeonWasbeer.mainChannel.send(content, embed) : DungeonWasbeer.mainChannel.send(embed)
+        const textChannel:Discord.TextChannel = <Discord.TextChannel>channel;
+        return content ? textChannel.send(content, embed) : textChannel.send(embed)
     }
 
     public static SendMessage(channel:Discord.TextChannel, message:string, embed?:Discord.MessageEmbed) {
+        const textChannel:Discord.TextChannel = <Discord.TextChannel>channel;
         if (embed) {
-            this.SendEmbed(embed, DungeonWasbeer.mainChannel, message)
+            this.SendEmbed(embed, textChannel, message)
             return;
         }
 
-        DungeonWasbeer.mainChannel.send(message);
+        textChannel.send(message);
     }
 
     public static ReplyMessage(channel:Discord.TextChannel, member:Discord.GuildMember, message:string, embed?:Discord.MessageEmbed) {
         const reply = `<@${member.user}> ${message}`;
 
         if (embed) {
-            this.SendEmbed(embed, DungeonWasbeer.mainChannel, reply)
+            this.SendEmbed(embed, channel, reply)
             return;
         }
 
-        DungeonWasbeer.mainChannel.send(reply);
+        channel.send(reply);
     }
 
 

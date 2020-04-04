@@ -92,7 +92,7 @@ export default class GameManager {
         var prefix = Constants.Defaults.Guild.Prefix;
         
         if (content.startsWith(prefix)) {
-            if (message.guild.id != process.env.TEST_GUILD_ID && message.channel.id != process.env.MAIN_CHANNEL_ID) {
+            if (message.guild.id == DungeonWasbeer.mainGuildId && message.channel.id != DungeonWasbeer.mainChannelId) {
                 return;
             }
 

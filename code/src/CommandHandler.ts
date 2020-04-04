@@ -202,9 +202,7 @@ export default class CommandHandler {
             return;
         }
 
-        commandMessage.channel = DungeonWasbeer.mainChannel;
-
-        if (commandMessage.message?.guild?.id == process.env.TEST_GUILD_ID) {
+        if (commandMessage.message?.guild?.id != DungeonWasbeer.mainGuildId) {
             switch (command) {
                 case "add":
                     this.AddNewCard(commandMessage, player, this.GetAssignedArguments(content));
