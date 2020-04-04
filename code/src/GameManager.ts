@@ -107,6 +107,9 @@ export default class GameManager {
             this.commandHandler.OnCommand(message_info, player, content, command, args);
         }
         else {
+            if (message_info.message?.guild != process.env.MAIN_CHANNEL_ID) {
+                return;
+            }
             this.commandHandler.HandleNormalMessage(message_info, player)
         }
     }

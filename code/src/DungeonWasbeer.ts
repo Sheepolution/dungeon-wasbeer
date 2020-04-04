@@ -12,6 +12,7 @@ interface Regexes {
 export default class DungeonWasbeer {
 
     public static mainChannel:Discord.TextChannel;
+    public static adminChannel:Discord.TextChannel;
 
     public static client:Discord.Client;
     private static readonly regexes:Regexes = {
@@ -46,11 +47,16 @@ export default class DungeonWasbeer {
     static async EventReady () {
         console.log("Dungeon Wasbeer: Connected");
         DungeonWasbeer.mainChannel = <Discord.TextChannel> await DungeonWasbeer.client.channels.fetch(process.env.MAIN_CHANNEL_ID || "");
+        DungeonWasbeer.adminChannel = <Discord.TextChannel> await DungeonWasbeer.client.channels.fetch(process.env.ADMIN_CHANNEL_ID || "");
         DungeonWasbeer.OnReady();
     }
 
     static async EventMessage (message:Discord.Message) {
         if (message.author.bot) {
+            return;
+        }
+
+        if (message.guild == null) {
             return;
         }
 
