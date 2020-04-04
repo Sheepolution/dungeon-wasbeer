@@ -1,5 +1,4 @@
 import Player from "./Player";
-import { Message, TextChannel, GuildMember, Guild } from "discord.js";
 import Embedder from "./Embedder";
 import { Redis, RedisAsync } from "./Redis";
 import IMessageInfo from "./IMessageInfo";
@@ -8,8 +7,6 @@ import GameManager from "./GameManager";
 import Card from "./Card";
 import CardModel from "./models/CardModel";
 import CardHandler from "./CardHandler";
-import PlayerCardModel from "./models/PlayerCardModel";
-import PlayerCard from "./PlayerCard";
 import MessageHandler from "./MessageHandler";
 
 export default class CommandHandler {
@@ -21,10 +18,12 @@ export default class CommandHandler {
         "edit",
         "random",
         "stats",
+        "refresh",
+
         "kaart",
         "lijst"
     ]
-        
+
     private game:GameManager;
     private cardHandler:CardHandler
 
@@ -203,7 +202,9 @@ export default class CommandHandler {
             return;
         }
 
-        if (commandMessage.message?.guild?.id == "693820353365147658") {
+        commandMessage.channel = DungeonWasbeer.mainChannel;
+
+        if (commandMessage.message?.guild?.id == process.env.TEST_GUILD_ID) {
             switch (command) {
                 case "add":
                     this.AddNewCard(commandMessage, player, this.GetAssignedArguments(content));
@@ -219,9 +220,11 @@ export default class CommandHandler {
                     break;
                 case "random":
                     this.SendRandomCard(commandMessage);
+                case "refresh":
+                    this.RefreshAllCache(commandMessage);
                 break;
-
             }
+            commandMessage.channel = DungeonWasbeer.adminChannel;
         }
 
         switch(command) {
@@ -237,7 +240,6 @@ export default class CommandHandler {
             default:
                 return;
         }
-
             // player.UpdateLastActive();
     }
 
@@ -378,5 +380,9 @@ export default class CommandHandler {
 
     private async SendPlayerCardList(command:IMessageInfo, player:Player) {
         Embedder.SendPlayerCardList(command, player.GetCards());
+    }
+
+    private async RefreshAllCache(command:IMessageInfo) {
+        this.game.RefreshAllCache();
     }
 }
