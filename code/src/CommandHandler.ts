@@ -224,7 +224,6 @@ export default class CommandHandler {
                     this.RefreshAllCache(commandMessage);
                 break;
             }
-            commandMessage.channel = DungeonWasbeer.adminChannel;
         }
 
         switch(command) {

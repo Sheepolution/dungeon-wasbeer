@@ -1,11 +1,8 @@
 import Player from "./Player";
-import { Message, TextChannel, GuildMember, Guild } from "discord.js";
-import Embedder from "./Embedder";
-import { Redis, RedisAsync } from "./Redis";
+import { Message } from "discord.js";
 import IMessageInfo from "./IMessageInfo";
 import DungeonWasbeer from "./DungeonWasbeer";
 import Constants from "./Constants";
-import { Utils } from "./Utils";
 import CommandHandler from "./CommandHandler";
 import CardHandler from "./CardHandler";
 
@@ -95,6 +92,10 @@ export default class GameManager {
         var prefix = Constants.Defaults.Guild.Prefix;
         
         if (content.startsWith(prefix)) {
+            if (message.guild.id != process.env.TEST_GUILD_ID && message.channel.id != process.env.MAIN_CHANNEL_ID) {
+                return;
+            }
+
             const words = content.split(" ");
             const command = words[0].substr(prefix.length).toLowerCase();
             words.shift();

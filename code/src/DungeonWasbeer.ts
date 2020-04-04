@@ -12,7 +12,6 @@ interface Regexes {
 export default class DungeonWasbeer {
 
     public static mainChannel:Discord.TextChannel;
-    public static adminChannel:Discord.TextChannel;
 
     public static client:Discord.Client;
     private static readonly regexes:Regexes = {
@@ -47,7 +46,6 @@ export default class DungeonWasbeer {
     static async EventReady () {
         console.log("Dungeon Wasbeer: Connected");
         DungeonWasbeer.mainChannel = <Discord.TextChannel> await DungeonWasbeer.client.channels.fetch(process.env.MAIN_CHANNEL_ID || "");
-        DungeonWasbeer.adminChannel = <Discord.TextChannel> await DungeonWasbeer.client.channels.fetch(process.env.ADMIN_CHANNEL_ID || "");
         DungeonWasbeer.OnReady();
     }
 
@@ -159,7 +157,7 @@ export default class DungeonWasbeer {
     // SEND ////////////////////////
 
     public static SendEmbed(embed:Discord.MessageEmbed, channel:Discord.Channel, content?:string) {
-        // const textChannel:Discord.TextChannel = (<Discord.TextChannel>channel);
+        // channel = (<Discord.TextChannel>channel).guild == process.env.TEST_GUILD_CHANNEL ? channel : DungeonWasbeer.mainChannel;
         return content ? DungeonWasbeer.mainChannel.send(content, embed) : DungeonWasbeer.mainChannel.send(embed)
     }
 
