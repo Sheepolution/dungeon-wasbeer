@@ -22,6 +22,14 @@ export default class Constants {
     // public static readonly StartingStamina = 100;
 
     public static readonly Emojis = {
+        Stars:  [
+            "",
+            "<:star1:695779662781218837>",
+            "<:star2:695779663196323840>",
+            "<:star3:695779663208775680>",
+            "<:star4:695778388660584509>",
+            "<:star5:695778014537187370>",
+        ],
         chicken:"<:chicken:602446447425880103>",
         cow: "<:cow_emoji2:602998554532904961>",
         sheep: "🐑"
