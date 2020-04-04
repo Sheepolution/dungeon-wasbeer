@@ -104,7 +104,7 @@ export default class GameManager {
             this.commandHandler.OnCommand(message_info, player, content, command, args);
         }
         else {
-            if (message_info.message?.guild != process.env.MAIN_CHANNEL_ID) {
+            if (message_info.message?.guild?.id != DungeonWasbeer.mainGuildId) {
                 return;
             }
             this.commandHandler.HandleNormalMessage(message_info, player)
