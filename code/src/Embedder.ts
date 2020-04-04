@@ -237,7 +237,7 @@ export default class Embedder {
                 for (const name in categoryData) {
                     if (categoryData.hasOwnProperty(name)) {
                         const amount = categoryData[name].amount;
-                        list += name + (amount == 1 ? "" : " (x" + amount + ")") + "\n"
+                        list += Constants.Emojis.Stars[categoryData[name].rank] + " " + name + (amount == 1 ? "" : " (x" + amount + ")") + "\n"
                     }
                 }
             }
