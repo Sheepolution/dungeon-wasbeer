@@ -12,7 +12,7 @@ export default class CardHandler {
     public static async GiveMemberCard(message:IMessageInfo, player:Player) {
         const card = await this.GetRandomCard(message);
         const playerCards = player.GetCards();
-        const existingPlayerCard = playerCards.find(x => x.GetId() == card.GetId());
+        const existingPlayerCard = playerCards.find(x => x.GetCard().GetId() == card.GetId());
         if (existingPlayerCard != null) {
             await existingPlayerCard.AddCard();
             Embedder.SendCardGetExtra(message, existingPlayerCard);
@@ -44,15 +44,15 @@ export default class CardHandler {
     }
 
     public static async BuildCardList() {
-        const cardList = new Array<Card>();
+        const card_list = new Array<Card>();
 
         const cardModels:any = await Card.GET_ALL();
         for (const cardModel of cardModels) {
             const card = new Card();
             await card.ApplyModel(cardModel);
-            cardList.push(card);
+            card_list.push(card);
         }
 
-        CardHandler.CardList = cardList;
+        CardHandler.CardList = card_list;
     }
 }
