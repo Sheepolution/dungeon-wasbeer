@@ -219,11 +219,11 @@ export default class Embedder {
             }
 
             if (cardData[category][name]) {
-                cardData[category][name].amount += 1;
+                cardData[category][name].amount += playerCard.GetAmount();
                 continue;
             }
 
-            cardData[category][name] = {rank: card.GetRank(), amount: 1};
+            cardData[category][name] = {rank: card.GetRank(), amount: playerCard.GetAmount()};
         }
 
         const embed = new MessageEmbed()
