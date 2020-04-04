@@ -194,10 +194,12 @@ export default class Embedder {
     }
 
     public static SendCardGet(message:IMessageInfo, playerCard:PlayerCard) {
+        message.channel =  DungeonWasbeer.mainChannel;
         this.SendMessage(message, "Je hebt een nieuwe kaart!", undefined, true, this.GetCardEmbed(playerCard.GetCard(), playerCard.GetAmount()))
     }
 
     public static SendCardGetExtra(message:IMessageInfo, playerCard:PlayerCard) {
+        message.channel =  DungeonWasbeer.mainChannel;
         this.SendMessage(message, "Je hebt een extra van deze kaart!", undefined, true, this.GetCardEmbed(playerCard.GetCard(), playerCard.GetAmount()))
     }
 

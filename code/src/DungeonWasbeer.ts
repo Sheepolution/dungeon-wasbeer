@@ -13,6 +13,7 @@ export default class DungeonWasbeer {
 
     public static readonly mainGuildId:string = process.env.MAIN_GUILD_ID || "";
     public static readonly mainChannelId:string = process.env.MAIN_CHANNEL_ID || "";
+    public static mainChannel:Discord.TextChannel;
 
     public static client:Discord.Client;
     private static readonly regexes:Regexes = {
@@ -39,7 +40,8 @@ export default class DungeonWasbeer {
         client.login(process.env.TOKEN);
     }
 
-    public static OnReady() {
+    public static async OnReady() {
+        this.client.channels.fetch(this.mainChannelId);
         this.HandleRedisStorage();
         CardHandler.BuildCardList();
     }
