@@ -41,7 +41,7 @@ export default class DungeonWasbeer {
     }
 
     public static async OnReady() {
-        this.client.channels.fetch(this.mainChannelId);
+        this.mainChannel = <Discord.TextChannel> await this.client.channels.fetch(this.mainChannelId);
         this.HandleRedisStorage();
         CardHandler.BuildCardList();
     }
