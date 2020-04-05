@@ -12,6 +12,7 @@ interface Regexes {
 export default class DungeonWasbeer {
 
     public static readonly mainGuildId:string = process.env.MAIN_GUILD_ID || "";
+    public static readonly adminGuildId:string = process.env.ADMIN_GUILD_ID || "";
     public static readonly mainChannelId:string = process.env.MAIN_CHANNEL_ID || "";
     public static mainChannel:Discord.TextChannel;
 

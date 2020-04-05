@@ -20,6 +20,7 @@ export default class CommandHandler {
         "random",
         "stats",
         "refresh",
+        "say",
 
         "kaart",
         "lijst",
@@ -199,7 +200,7 @@ export default class CommandHandler {
             return;
         }
 
-        if (commandMessage.message?.guild?.id != DungeonWasbeer.mainGuildId) {
+        if (commandMessage.message?.guild?.id == DungeonWasbeer.adminGuildId) {
             switch (command) {
                 case "add":
                     this.AddNewCard(commandMessage, player, this.GetAssignedArguments(content));
@@ -219,6 +220,8 @@ export default class CommandHandler {
                 case "refresh":
                     this.RefreshAllCache(commandMessage);
                     break;
+                case "say":
+                    this.SayMessage(commandMessage, args.join(" "));
                 break;
             }
         }
@@ -268,6 +271,19 @@ export default class CommandHandler {
         }
 
         Embedder.SendPlayerCardNotFound(commandMessage, name);
+    }
+
+    // TRADING ///////////
+    private static async StartTrade(command:IMessageInfo, player:Player, args:string) {
+        TradeHandler.OnTrade(command, player, args);
+    }
+
+    private static async AcceptTrade(command:IMessageInfo, player:Player) {
+        TradeHandler.AcceptTrade(command, player);
+    }
+
+    private static async CancelTrade(command:IMessageInfo, player:Player) {
+        TradeHandler.CancelTrade(command, player);
     }
 
 
@@ -393,15 +409,8 @@ export default class CommandHandler {
         Embedder.SendRefreshedCache(command);
     }
 
-    private static async StartTrade(command:IMessageInfo, player:Player, args:string) {
-        TradeHandler.OnTrade(command, player, args);
-    }
-
-    private static async AcceptTrade(command:IMessageInfo, player:Player) {
-        TradeHandler.AcceptTrade(command, player);
-    }
-
-    private static async CancelTrade(command:IMessageInfo, player:Player) {
-        TradeHandler.CancelTrade(command, player);
+    private static async SayMessage(command:IMessageInfo, message:string) {
+        command.channel = DungeonWasbeer.mainChannel;
+        Embedder.SendMessage(command, message);
     }
 }
