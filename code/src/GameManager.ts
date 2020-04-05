@@ -101,6 +101,11 @@ export default class GameManager {
             if (message_info.message?.guild?.id != DungeonWasbeer.mainGuildId) {
                 return;
             }
+
+            if (message_info.channel.id == DungeonWasbeer.mainChannelId) {
+                return;
+            }
+
             CommandHandler.HandleNormalMessage(message_info, player)
         }
     }
