@@ -229,7 +229,7 @@ export default class Embedder {
         .setTitle(card.GetName() + (amount == 1 ? "" : "(x"+ amount + ")"))
         .setDescription(card.GetDescription())
         .setImage(card.GetImageUrl())
-        .addField("Rank", card.GetRankString())
+        .addField("Level", card.GetRankString())
 
         return embed;
     }
