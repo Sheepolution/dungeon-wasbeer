@@ -14,6 +14,7 @@ export default class Player {
     private messagePoints:number;
     private playerCards:Array<PlayerCard>;
     private lastActiveDate:string;
+    private discordName:string;
 
     constructor() {
     }
@@ -57,7 +58,7 @@ export default class Player {
         this.discordId = model.discord_id;
         this.gold = model.gold;
         this.messagePoints = model.message_points;
-        this.playerCards = await model.GetPlayerCards();
+        this.playerCards = await model.GetPlayerCards(this);
     }
 
     public GetId() {
@@ -68,12 +69,21 @@ export default class Player {
         return this.discordId
     }
 
+    public GetMention() {
+        return `<@${this.discordId}>`;
+    }
+
+    public GetDiscordName() {
+        return this.discordName;
+    }
+
     public UpdateLastActive() {
         this.lastActiveDate = Utils.GetNowString();
         this.UPDATE({active_date: this.lastActiveDate})
     }
 
     public UpdateDiscordName(discordDisplayName:string) {
+        this.discordName = discordDisplayName;
         this.UPDATE({discord_name: discordDisplayName});
     }
 
@@ -84,6 +94,19 @@ export default class Player {
 
     public GetCards() {
         return this.playerCards;
+    }
+
+    public FindCard(name:string) {
+        return this.playerCards.find(c => c.GetCard().GetName().toLowerCase().includes(name.toLowerCase()));
+    }
+
+    public RemoveCard(playerCard:PlayerCard) {
+        for (let i = 0; i < this.playerCards.length; i++) {
+            if (this.playerCards[i] == playerCard) {
+                this.playerCards.splice(i, 1);
+                break;
+            }
+        }
     }
 
     public GiveCard(playerCard:PlayerCard) {
@@ -97,6 +120,10 @@ export default class Player {
 
     public GetMessagePoints() {
         return this.messagePoints;
+    }
+
+    public StartTrade(otherPlayer:Player, mine:PlayerCard, theirs:PlayerCard) {
+        
     }
 
     // public SendGold(command:IMessageInfo) {

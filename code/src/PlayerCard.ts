@@ -1,13 +1,17 @@
 import Card from "./Card";
 import PlayerCardModel from "./models/PlayerCardModel";
 import CardModel from "./models/CardModel";
+import Player from "./Player";
 
 export default class PlayerCard {
     protected id:string;
     private card:Card;
     private amount:number;
+    private deleted:boolean;
+    private player:Player;
 
-    constructor() {
+    constructor(player:Player) {
+        this.player = player;
     }
 
     public async GET(id:string) {
@@ -15,31 +19,14 @@ export default class PlayerCard {
         await this.ApplyModel(model);
     }
 
-    public static async GET_ALL()
-    {
-        const models = await PlayerCardModel.query();
-        return models;
-    }
-
-    public async FIND_SPECIFIC(cardId:string, playerId:string) {
-        const models:PlayerCardModel = await PlayerCardModel.query().where('player_id', playerId).where('card_id', cardId);
-        if (models.length == 0) {
-            return false;
-        }
-        
-        await this.ApplyModel(models[0]);
-        return true;
-    }
-
-    public static async FIND_BY_PLAYER_ID(playerId:string) {
-        const models:PlayerCardModel = await PlayerCardModel.query().where('player_id', playerId);
-        return models;
-    }
-
     public async POST(cardId:string, playerId:string) {
         const model = await PlayerCardModel.New(cardId, playerId);
         await this.ApplyModel(model);
         return this;
+    }
+
+    public async DELETE() {
+        await PlayerCardModel.query().deleteById(this.id);
     }
 
     public async UPDATE(data:any, trx?:any) {
@@ -61,11 +48,28 @@ export default class PlayerCard {
     public async AddCard() {
         this.amount += 1;
         const data = { amount: this.amount };
-        await this.UPDATE(data)
+        await this.UPDATE(data);
+    }
+
+    public async RemoveOne() {
+        this.amount -= 1;
+
+        if (this.amount > 0) {
+            const data = { amount: this.amount };
+            await this.UPDATE(data);
+            return;
+        }
+
+        await this.DELETE();
+        this.player.RemoveCard(this);
     }
 
     public GetCard() {
         return this.card;
+    }
+
+    public GetCardId() {
+        return this.card.GetId();
     }
 
     public GetAmount() {

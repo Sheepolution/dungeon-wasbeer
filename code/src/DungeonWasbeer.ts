@@ -22,16 +22,9 @@ export default class DungeonWasbeer {
         emoji: /<:[0-z]+:([0-9]+)>/
     }
 
-    private static game:GameManager;
-
-    constructor() {
-    }
-
     public static Init() {
         DungeonWasbeer.client = new Discord.Client();
-        DungeonWasbeer.game = new GameManager();
         const client = DungeonWasbeer.client;
-
 
         client.on('ready', async function () { await DungeonWasbeer.EventReady() });
 
@@ -60,7 +53,7 @@ export default class DungeonWasbeer {
             return;
         }
 
-        await DungeonWasbeer.game.OnMessage(message);
+        await GameManager.OnMessage(message);
     }
 
     static IsId = function (id:string) {

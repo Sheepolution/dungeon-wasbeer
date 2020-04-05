@@ -8,10 +8,11 @@ import Card from "./Card";
 import CardModel from "./models/CardModel";
 import CardHandler from "./CardHandler";
 import MessageHandler from "./MessageHandler";
+import TradeHandler from "./TradeHandler";
 
 export default class CommandHandler {
 
-    private commandList = [
+    private static commandList = [
         "test",
         "add",
         "card",
@@ -21,18 +22,14 @@ export default class CommandHandler {
         "refresh",
 
         "kaart",
-        "lijst"
+        "lijst",
+        "ruil",
+        "accepteer",
+        "annuleer",
+        "anuleer",
     ]
 
-    private game:GameManager;
-    private cardHandler:CardHandler
-
-    constructor(game:GameManager) {
-        this.game = game
-        this.cardHandler = new CardHandler();
-    }
-
-    private GetCommaArgs(content:string) {
+    private static GetCommaArgs(content:string) {
         const commaArgs = content.split(",");
         for (let i = 0; i < commaArgs.length; i++) {
             commaArgs[i] = commaArgs[i].trim();
@@ -40,7 +37,7 @@ export default class CommandHandler {
         return commaArgs;
     }
 
-    private GetNumberedArguments(content:string) {
+    private static GetNumberedArguments(content:string) {
         const obj:any = {};
         var success = false;
 
@@ -76,7 +73,7 @@ export default class CommandHandler {
     }
     
     // TODO: DRY???
-    private GetSingleNumberedArgument(content:string) {
+    private static GetSingleNumberedArgument(content:string) {
         const obj:any = {};
 
         const commaArgs = content.split(",");
@@ -110,7 +107,7 @@ export default class CommandHandler {
     }
 
 
-    private GetAssignedArguments(content:string) {
+    private static GetAssignedArguments(content:string) {
         const obj:any = {};
         var assignedArgs = (" " + content).split(" -").slice(1);
 
@@ -131,7 +128,7 @@ export default class CommandHandler {
         return obj;
     }
 
-    private ValidateArguments(command:IMessageInfo, args:any) {
+    private static ValidateArguments(command:IMessageInfo, args:any) {
         for (let i = 0; i < args.length; i++) {
             const arg = args[i];
             const val = arg.value;
@@ -164,7 +161,7 @@ export default class CommandHandler {
         return true;
     }
 
-    private async GetSpam(message:IMessageInfo) {
+    private static async GetSpam(message:IMessageInfo) {
 
         const spam_levels = [{amount: 40, expire: 60*5, message: "5 minutes"}, {amount: 10, expire: 60, message: "1 minute"}, {amount: 3, expire: 5, message: "5 seconds"}]
 
@@ -186,7 +183,7 @@ export default class CommandHandler {
         }
     }
 
-    public async OnCommand(commandMessage:IMessageInfo, player:Player, content:string, command:string, args:Array<string>) {
+    public static async OnCommand(commandMessage:IMessageInfo, player:Player, content:string, command:string, args:Array<string>) {
         if (!this.commandList.includes(command)) {
             return;
         }
@@ -218,8 +215,10 @@ export default class CommandHandler {
                     break;
                 case "random":
                     this.SendRandomCard(commandMessage);
+                    break;
                 case "refresh":
                     this.RefreshAllCache(commandMessage);
+                    break;
                 break;
             }
         }
@@ -230,7 +229,17 @@ export default class CommandHandler {
                 break;
             case "lijst":
                 this.SendPlayerCardList(commandMessage, player);
-            break;
+                break;
+            case "ruil":
+                this.StartTrade(commandMessage, player, args.join(" "));
+                break;
+            case "accepteer":
+                this.AcceptTrade(commandMessage, player);
+                break;
+            case "annuleer":
+            case "anuleer":
+                this.CancelTrade(commandMessage, player);
+                break;
             case "info":
                 // this.SendPlayerInfo(commandMessage, player, args[0])
                 break;
@@ -240,13 +249,13 @@ export default class CommandHandler {
             // player.UpdateLastActive();
     }
 
-    public async HandleNormalMessage(message:IMessageInfo, player:Player) {
+    public static async HandleNormalMessage(message:IMessageInfo, player:Player) {
         MessageHandler.OnMessage(message, player);
     }
 
     // PLAYER////////////////////
 
-    public async SendPlayerCard(commandMessage:IMessageInfo, player:Player, name:string) {
+    public static async SendPlayerCard(commandMessage:IMessageInfo, player:Player, name:string) {
         if (name == null) {
             Embedder.SendNoNameArgument(commandMessage);
             return;
@@ -264,7 +273,7 @@ export default class CommandHandler {
 
     // ADMIN ////////////////////
 
-    public async AddNewCard(command:IMessageInfo, player:Player, args:any) {
+    public static async AddNewCard(command:IMessageInfo, player:Player, args:any) {
         if (args == null) {
             Embedder.SendAssignedArgumentsParseError(command)
             return;
@@ -301,7 +310,7 @@ export default class CommandHandler {
         Embedder.SendNewCardCreated(command, card)
     }
 
-    public async EditCard(command:IMessageInfo, player:Player, args:any) {
+    public static async EditCard(command:IMessageInfo, player:Player, args:any) {
         if (args == null) {
             Embedder.SendAssignedArgumentsParseError(command)
             return;
@@ -338,7 +347,7 @@ export default class CommandHandler {
         Embedder.SendCardEdited(command, card)
     }
 
-    public async SendCard(command:IMessageInfo, name:string) {
+    public static async SendCard(command:IMessageInfo, name:string) {
         if (name == null) {
             this.SendRandomCard(command);
             return;
@@ -353,7 +362,7 @@ export default class CommandHandler {
         Embedder.SendCard(command, card);
     }
 
-    private async SendCardStats(command:IMessageInfo) {
+    private static async SendCardStats(command:IMessageInfo) {
         const cards:any = await Card.GET_ALL();
         const stats:any = {}
         for (const card of cards) {
@@ -367,7 +376,7 @@ export default class CommandHandler {
         Embedder.SendCardStats(command, stats, cards.length);
     }
 
-    private async SendRandomCard(command:IMessageInfo) {
+    private static async SendRandomCard(command:IMessageInfo) {
         const card_models:CardModel = await Card.GET_ALL();
         var cardModel = card_models.randomChoice();
         var card = new Card();
@@ -375,11 +384,24 @@ export default class CommandHandler {
         Embedder.SendCard(command, card);
     }
 
-    private async SendPlayerCardList(command:IMessageInfo, player:Player) {
+    private static async SendPlayerCardList(command:IMessageInfo, player:Player) {
         Embedder.SendPlayerCardList(command, player.GetCards());
     }
 
-    private async RefreshAllCache(command:IMessageInfo) {
-        this.game.RefreshAllCache();
+    private static async RefreshAllCache(command:IMessageInfo) {
+        await GameManager.RefreshAllCache();
+        Embedder.SendRefreshedCache(command);
+    }
+
+    private static async StartTrade(command:IMessageInfo, player:Player, args:string) {
+        TradeHandler.OnTrade(command, player, args);
+    }
+
+    private static async AcceptTrade(command:IMessageInfo, player:Player) {
+        TradeHandler.AcceptTrade(command, player);
+    }
+
+    private static async CancelTrade(command:IMessageInfo, player:Player) {
+        TradeHandler.CancelTrade(command, player);
     }
 }

@@ -12,6 +12,8 @@ export default class CardHandler {
     public static async GiveMemberCard(message:IMessageInfo, player:Player) {
         const card = await this.GetRandomCard(message);
         const playerCards = player.GetCards();
+
+        //TODO: Generalize this
         const existingPlayerCard = playerCards.find(x => x.GetCard().GetId() == card.GetId());
         if (existingPlayerCard != null) {
             await existingPlayerCard.AddCard();
@@ -19,7 +21,7 @@ export default class CardHandler {
             return;
         }
 
-        const newPlayerCard = new PlayerCard();
+        const newPlayerCard = new PlayerCard(player);
         await newPlayerCard.POST(card.GetId(), player.GetId());
 
         player.GiveCard(newPlayerCard);

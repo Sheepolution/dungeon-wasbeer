@@ -7,11 +7,14 @@ import Card from "./Card";
 import PlayerCard from "./PlayerCard";
 import PlayerCardModel from "./models/PlayerCardModel";
 import CardModel from "./models/CardModel";
+import ITradeInfo from "./Interfaces/ITradeInfo";
 
 const emojis = {
     good: ":white_check_mark:",
     bad: ":x:"
 }
+
+const tradeInstructions = 'Zeg beiden `;accepteer` als je de ruil wilt accepteren. Zeg `;annuleer` als je de ruil wilt annuleren.';
 
 export default class Embedder {
 
@@ -52,110 +55,13 @@ export default class Embedder {
     public static SendNoNameArgument(command:IMessageInfo) {
         this.SendMessage(command, "Ik mis de naam van de kaart.")
     }
-
-    // public static SendUpdatePrefix(command:IMessageInfo, prefix:string) {
-    //     this.SendMessage(command, "Changed the prefix to '" + prefix + "'.", true);
-    // }
     
-    public static SendPrefixTooLong(command:IMessageInfo, prefix:string) {
-        this.SendMessage(command, "You can't set a prefix longer than 10 characters. Yours is " + prefix.length + " characters long.", false);
-    }
-
-    public static SendNoValidChannels(command:IMessageInfo) {
-        this.SendMessage(command, "Those aren't valid channels. Make sure to either mention them with #[channel name] or by giving their ids, each channel separated with a space.", false);
-    }
-
-    public static SendChannelsAlreadySet(command:IMessageInfo, amount:number) {
-        this.SendMessage(command, (amount > 1 ? "These channels are" : "This channel is") + " already included.", false);
-    }
-
-    public static SendChannelsChanged(command:IMessageInfo, amount:number, added:boolean, inclusive:boolean) {
-        var str = "";
-
-        str += added ? "Added " : "Removed ";
-        str += amount == 1 ? "the channel" : (amount + " channels");
-        str += added ? " to " : " from ";
-        str += " the list of channels where you **can";
-        str += inclusive ? "" : "'t";
-        str += "** use the bot."
-
-        this.SendMessage(command, str, true);
-    }
-
-    public static SendChannelsSet(command:IMessageInfo, amount:number, inclusive:boolean) {
-        var str = "Set ";
-
-        str += amount == 1 ? "the channel" : (amount + " channels");
-        str +=  " as the list of channels where you **can";
-        str += inclusive ? "" : "'t";
-        str += "** use the bot."
-
-        this.SendMessage(command, str, true);
-    }
-
-    public static SendNewPlayer(command:IMessageInfo) {
-        const embed = new MessageEmbed()
-        .setColor(Constants.Colors.green)
-        .setAuthor(command.member.displayName, command.member.user.displayAvatarURL())
-        .setTitle("Starting your farm")
-        .setDescription(`To start your farming adventure type \`;start [time zone] [farm name]\`.\n\
-        You can change both of these whenever you want.\n\
-        This game is based on real time, so we need your time zone to make it accurate for you.\n\
-        You can check your time zone using this [this chart](http://upload.wikimedia.org/wikipedia/commons/8/88/World_Time_Zones_Map.png).\n\
-        Examples:\n\`;start +4 My Cool Farm\`\n\`;start -3 Farmy McFarmface\``)
-
-        DungeonWasbeer.SendEmbed(embed, command.channel);
-    }
-
-    public static SendCreatedFarm(command:IMessageInfo, farmName:string) {
-        const embed = new MessageEmbed()
-        .setColor(Constants.Colors.green)
-        .setAuthor(command.member.displayName, command.member.user.displayAvatarURL())
-        .setTitle("Welcome to Farmcord!")
-        .setDescription("You are now the proud owner of " + farmName + "!");
-
-        DungeonWasbeer.SendEmbed(embed, command.channel);
-    }
-
-    public static SendSetupComplete(command:IMessageInfo) {
-        const embed = new MessageEmbed()
-        .setColor(Constants.Colors.green)
-        .setAuthor(command.member.displayName, command.member.user.displayAvatarURL())
-        .setTitle("Setup complete!")
-        .setDescription("You now have your very own farm. You start with 500G, enough to buy a chicken or some seeds. Go check out the stores.\n`;store animals` and `;store seeds`")
-
-        DungeonWasbeer.SendEmbed(embed, command.channel);
-    }
-
-    public static SendPlayerAlreadyExists(command:IMessageInfo) {
-        const embed = new MessageEmbed()
-        .setColor(Constants.Colors.red)
-        .setAuthor(command.member.displayName, command.member.user.displayAvatarURL())
-        .setTitle("You already own a farm!")
-        .setDescription("You can only create one farm.")
-
-        DungeonWasbeer.SendEmbed(embed, command.channel);
-    }
-
-    public static SendCardList(command:IMessageInfo, cards:Array<Card>, animalName:string) {
-        // const embed = new MessageEmbed()
-        // .setColor(Constants.Colors.default)
-        // .setAuthor(farmName, "https://cdn.discordapp.com/attachments/593397362949488661/600030086355353612/farm-barn-icon.png")
-        // .setTitle(animalName);
-
-        // for (let i = 0; i < animals.length; i++) {
-        //     const animal = animals[i];
-        //     embed.addField((i+1) + ". " + animal.GetInfoName(), animal.GetShortInfo(), true);
-        // }
-
-        // DungeonWasbeer.SendEmbed(embed, command.channel);
-    }
+    // ADMIN ////////////////////
 
     public static SendCard(command:IMessageInfo, card:Card) {
         const embed = this.GetCardEmbed(card);
         DungeonWasbeer.SendEmbed(embed, command.channel);
     }
-
 
     public static SendNewCardCreated(command:IMessageInfo, card:Card) {
         this.SendMessage(command, "De kaart is toegevoegd!", true, true, this.GetCardEmbed(card));
@@ -173,10 +79,6 @@ export default class Embedder {
         this.SendMessage(command, "Er is geen kaart met de naam '" + name + "'.", false, true);
     }
 
-    public static SendPlayerCardNotFound(command:IMessageInfo, name:string) {
-        this.SendMessage(command, "Je hebt geen kaart met de naam '" + name + "'.", false, true);
-    }
-
     public static SendCardStats(command:IMessageInfo, stats:any, amount:number) {
         const embed = new MessageEmbed()
         .setTitle("Card statistics")
@@ -191,6 +93,16 @@ export default class Embedder {
         embed.setDescription("Total: " + amount + "\nRank 1/2/3/4/5")
 
         DungeonWasbeer.SendEmbed(embed, command.channel);
+    }
+
+    public static SendRefreshedCache(command:IMessageInfo) {
+        this.SendMessage(command, "Refreshed the cache.", true);
+    }
+
+    // PLAYERS /////////////////////////
+
+    public static SendPlayerCardNotFound(command:IMessageInfo, name:string) {
+        this.SendMessage(command, "Je hebt geen kaart met de naam '" + name + "'.", false, true);
     }
 
     public static SendCardGet(message:IMessageInfo, playerCard:PlayerCard) {
@@ -250,12 +162,70 @@ export default class Embedder {
         DungeonWasbeer.SendEmbed(embed, command.channel);
     }
 
+    // TRADE ///////////////////
+
+    public static SendTradeStarted(command:IMessageInfo,  tradeInfo:ITradeInfo) {
+        const embed = new MessageEmbed()
+        .setImage(tradeInfo.yourCard.GetCard().GetImageUrl())
+        .setThumbnail(tradeInfo.theirCard.GetCard().GetImageUrl());
+        this.SendMessage(command, `${tradeInfo.with.GetMention()}, wil jij jouw '${tradeInfo.theirCard.GetCard().GetName()}' ruilen voor de '${tradeInfo.yourCard.GetCard().GetName()}' van ${tradeInfo.trader.GetMention()}? ${tradeInstructions}`, undefined, false, embed);
+    }
+
+    public static SendTradeParseFailed(command:IMessageInfo) {
+        this.SendMessage(command, "Ik begrijp je niet helemaal. Zorg dat je het formaat aanhoudt:\n`;ruil @mention jouw kaart > hun kaart`", false);
+    }
+
+    public static SendTradeWithSelf(command:IMessageInfo) {
+        this.SendMessage(command, "Je kan niet met jezelf ruilen. Het klinkt ook wel een beetje zielig.", false);
+    }
+
+    public static SendTradeOtherPlayerNoCards(command:IMessageInfo) {
+        this.SendMessage(command, "Die gozer heeft nog helemaal geen kaarten joh.", false)
+    }
+
+    public static SendTradeNotWithBot(command:IMessageInfo) {
+        this.SendMessage(command, "Dat is een mooie kaart, maar nee bedankt.")
+    }
+
+    public static SendTradeBothAlreadyTrading(command:IMessageInfo) {
+        this.SendMessage(command, "Jullie twee zijn al aan het ruilen. " + tradeInstructions, false);
+    }
+
+    public static SendTradeYouAlreadyTrading(command:IMessageInfo, tradeInfo:ITradeInfo) {
+        this.SendMessage(command, `Jij bent al aan het ruilen met ${tradeInfo.with.GetDiscordName()}. ${tradeInstructions}`, false);
+    }
+
+    public static SendTradeTheyAlreadyTrading(command:IMessageInfo, tradeInfo:ITradeInfo) {
+        this.SendMessage(command, `${tradeInfo.trader.GetDiscordName()} is al aan het ruilen met ${tradeInfo.with.GetDiscordName()}`, false);
+    }
+
+    public static SendTradeYourCardNotFound(command:IMessageInfo, search:string) {
+        this.SendMessage(command, `Je hebt geen kaart die lijkt op ${search}.`, false);
+    }
+
+    public static SendTradeTheirCardNotFound(command:IMessageInfo, otherPlayer:Player, search:string) {
+        this.SendMessage(command, `${otherPlayer.GetDiscordName()} heeft geen kaart die lijkt op ${search}.`, false);
+    }
+
+    public static SendTradeNotFound(command:IMessageInfo, accept:boolean) {
+        this.SendMessage(command, "Wat loop je nou allemaal te " + (accept ? "accepteren" : "annuleren") + "? Je bent helemaal niet aan het ruilen!", false)
+    }
+
+    public static SendTradeCancelled(command:IMessageInfo) {
+        this.SendMessage(command, "De ruil is geannuleerd.")
+    }
+
+    public static SendTradeSuccessful(command:IMessageInfo, tradeInfo:ITradeInfo) {
+        this.SendMessage(command, `${tradeInfo.trader.GetMention()} en ${tradeInfo.with.GetMention()}, jullie hebben de kaarten geruild. Veel plezier ermee!`, true, false);
+    }
+
+
     // SETS ////////////////////
 
     public static GetCardEmbed(card:Card, amount:number = 1) {
         const embed = new MessageEmbed()
         .setColor(Constants.Colors.default)
-        .setAuthor(card.GetCategory(), "https://cdn.discordapp.com/attachments/693820455228014612/694328816985702500/chonky.png")
+        .setAuthor(card.GetCategory(), "https://cdn.discordapp.com/attachments/694331679204180029/696112797221650432/general.png")
         .setTitle(card.GetName() + (amount == 1 ? "" : "(x"+ amount + ")"))
         .setDescription(card.GetDescription())
         .setImage(card.GetImageUrl())
@@ -263,17 +233,4 @@ export default class Embedder {
 
         return embed;
     }
-
-    // public static SetAnimalInfo(embed:MessageEmbed, animal:Animal) {
-    //     embed.setImage(animal.GetImage());
-
-    //     const love = animal.GetLove();
-        
-    //     if (love > 0) {
-    //         embed.addField("Love", "❤".repeat(love))
-    //     }
-
-    //     embed.addField("Health", animal.GetHealthInfo())
-    //     .addField("State", animal.GetCollectStateInfo())
-    // }
 }

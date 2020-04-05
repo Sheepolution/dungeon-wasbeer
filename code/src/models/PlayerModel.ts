@@ -2,6 +2,7 @@ import Constants from "../Constants";
 import { Utils } from "../Utils";
 import PlayerCardModel from "./PlayerCardModel";
 import PlayerCard from "../PlayerCard";
+import Player from "../Player";
 const uuidv4 = require("uuid/v4");
 
 const { Model } = require('objection');
@@ -28,12 +29,12 @@ export default class PlayerModel extends Model {
         return player;
     }
 
-    public async GetPlayerCards() {
+    public async GetPlayerCards(player:Player) {
         const player_card_models = await this.$relatedQuery('player_cards');
         const player_cards_ret = new Array<PlayerCard>();
 
         for (let i = 0; i < player_card_models.length; i++) {
-            const player_card:PlayerCard = new PlayerCard();
+            const player_card:PlayerCard = new PlayerCard(player);
             await player_card.ApplyModel(player_card_models[i])
             player_cards_ret.push(player_card)
         }

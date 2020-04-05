@@ -30,9 +30,21 @@ export default class Constants {
             "<:star4:695778388660584509>",
             "<:star5:695778014537187370>",
         ],
-        chicken:"<:chicken:602446447425880103>",
-        cow: "<:cow_emoji2:602998554532904961>",
-        sheep: "🐑"
+        Status: {
+            good: "✅",
+            bad: "❌",
+        }
+    }
+
+    public static readonly Icons = {
+        Snacc: "https://cdn.discordapp.com/attachments/694331679204180029/695789904671539250/food.png",
+        Cosplay: "https://cdn.discordapp.com/attachments/694331679204180029/695791356089466950/cosplay.png",
+        Chonky: "",
+        Fashion: "",
+        Baby: "",
+        Feestdagen: "",
+        Vrienden: "",
+        Strijders: ""
     }
 
     // Money

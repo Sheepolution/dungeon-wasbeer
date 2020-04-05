@@ -8,18 +8,10 @@ import CardHandler from "./CardHandler";
 
 export default class GameManager {
 
-    private commandHandler:CommandHandler;
-    private players:any;
-    private cacheRefreshInterval:any;
+    private static players:any = {};
+    private static cacheRefreshInterval:any = setInterval(() => { GameManager.ProcessPlayerCache() }, 1000 * 60 * 5);
 
-    constructor() {
-        this.players = {};
-        this.commandHandler = new CommandHandler(this);
-        var that = this;
-        this.cacheRefreshInterval = setInterval(() => { that.RefreshCache() }, 1000 * 60 * 5);
-    }
-
-    public async GetPlayer(discordId:string, message:IMessageInfo, discordDisplayName:string) { 
+    public static async GetPlayer(discordId:string, discordDisplayName?:string) { 
         // Check for cache
         var player = this.GetCachedPlayer(discordId);
         if (player) {
@@ -33,14 +25,16 @@ export default class GameManager {
         
         if (success){
             this.CachePlayer(discordId, player);
-            player.UpdateDiscordName(discordDisplayName);
+            if (discordDisplayName) {
+                player.UpdateDiscordName(discordDisplayName);
+            }
             return player;
         }
 
         return null;
     }
 
-    public async CreateNewPlayer(command:IMessageInfo) {
+    private static async CreateNewPlayer(command:IMessageInfo) {
         const discord_id = command.member.id;
         const player = new Player();
         await player.POST(discord_id, command.member.displayName);
@@ -48,18 +42,18 @@ export default class GameManager {
         return player;
     }
 
-    public CachePlayer(discordId:string, player:Player) {
+    private static CachePlayer(discordId:string, player:Player) {
         this.players[discordId] = {time: 60, player: player}
     }
 
-    public GetCachedPlayer(discordId:string) {
+    private static GetCachedPlayer(discordId:string) {
         const data = this.players[discordId];
         if (data) {
             return data.player;
         }
     }
 
-    public RefreshCache() {
+    private static ProcessPlayerCache() {
         for (const key in this.players) {
             const element = this.players[key];
             element.time -= 1;
@@ -69,7 +63,7 @@ export default class GameManager {
         }
     }
 
-    public async OnMessage(message:Message) {
+    public static async OnMessage(message:Message) {
         if (message.guild == null) {
             return;
         }
@@ -80,7 +74,7 @@ export default class GameManager {
 
         const message_info:IMessageInfo = DungeonWasbeer.ParseMessageToInfo(message, message.member);
 
-        var player = await this.GetPlayer(message.member.id, message_info, message.member.displayName);
+        var player = await this.GetPlayer(message.member.id, message.member.displayName);
 
         if (player == null) {
             player = await this.CreateNewPlayer(message_info);
@@ -101,17 +95,17 @@ export default class GameManager {
             words.shift();
             const args = words;
             content = content.slice(content.indexOf(" ")).trim();
-            this.commandHandler.OnCommand(message_info, player, content, command, args);
+            CommandHandler.OnCommand(message_info, player, content, command, args);
         }
         else {
             if (message_info.message?.guild?.id != DungeonWasbeer.mainGuildId) {
                 return;
             }
-            this.commandHandler.HandleNormalMessage(message_info, player)
+            CommandHandler.HandleNormalMessage(message_info, player)
         }
     }
 
-    public async RefreshAllCache() {
+    public static async RefreshAllCache() {
         this.players = {};
         CardHandler.BuildCardList();
     }
