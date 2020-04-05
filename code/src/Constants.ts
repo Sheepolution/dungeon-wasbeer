@@ -63,8 +63,8 @@ export default class Constants {
         CardRankRollValue: [
             55,
             25,
-            10,
-            3
+            9,
+            1
         ]
     }
 }
