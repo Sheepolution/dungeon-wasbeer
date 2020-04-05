@@ -411,6 +411,6 @@ export default class CommandHandler {
 
     private static async SayMessage(command:IMessageInfo, message:string) {
         command.channel = DungeonWasbeer.mainChannel;
-        Embedder.SendMessage(command, message);
+        Embedder.SendMessage(command, message, undefined, false);
     }
 }
