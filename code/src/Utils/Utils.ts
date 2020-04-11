@@ -1,11 +1,13 @@
-const uuidv4 = require("uuid/v4");
-export const perfy = require("perfy");
+/* eslint-disable no-inner-declarations */
+const uuidv4 = require('uuid/v4');
+export const perfy = require('perfy');
 
 export module Utils {
+
     // Inclusive when floor = true
     export function Random(a?:number, b?:number, floor?:boolean) {
-        if (a==null) { a = 0; b = 1; };
-        if (b==null) { b = 0; };
+        if (a == null) { a = 0; b = 1; }
+        if (b == null) { b = 0; }
 
         const r = a + Math.random() * (b - a + (floor ? 1 : 0) );
         return floor ? Math.floor(r) : r;
@@ -40,10 +42,8 @@ export module Utils {
     export function ObjectToArray(obj:any) {
         var arr = [];
         for (const key in obj) {
-            if (obj.hasOwnProperty(key)) {
-                arr.push(key)
-                arr.push(obj[key])
-            }
+            arr.push(key)
+            arr.push(obj[key])
         }
         return arr;
     }
@@ -66,6 +66,11 @@ export module Utils {
         return n * 60 * 60
     }
 
+    export function GetMinutesInMiliSeconds(n:number)
+    {
+        return n * 60 * 1000;
+    }
+
     export function ParseHour(hour:string) {
         const match = hour.match(/^(\d{1,2})(:\d{2}|\s?[pPaA][mM])?$/);
         if (match == null) {
@@ -79,17 +84,17 @@ export module Utils {
             if (match[2] != null) { 
                 const not = match[2].toLowerCase();
 
-                if (not == "pm" || not == "am") {
+                if (not == 'pm' || not == 'am') {
                     if (time > 12) {
                         return null;
                     } 
                 }
-                if (not == "pm") {
+                if (not == 'pm') {
                     if (time < 12) {
                         time += 12;
                     }
                 }
-                else if (not == "am") {
+                else if (not == 'am') {
                     if (time == 12) {
                         time = 0;
                     }

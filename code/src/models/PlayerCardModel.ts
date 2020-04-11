@@ -1,6 +1,6 @@
-import Card from "../Card";
-import { Utils } from "../Utils";
-import CardModel from "./CardModel";
+import Card from '../Objects/Card';
+import CardModel from './CardModel';
+import { Utils } from '../Utils/Utils';
 const { Model } = require('objection');
 
 export default class PlayerCardModel extends Model {
@@ -13,12 +13,12 @@ export default class PlayerCardModel extends Model {
         const player_card_id = Utils.UUID();
 
         const player_card = await PlayerCardModel.query(trx)
-        .insert({
-            id:player_card_id,
-            player_id:playerId,
-            card_id:cardId,
-            amount: amount
-        })
+            .insert({
+                id:player_card_id,
+                player_id:playerId,
+                card_id:cardId,
+                amount: amount
+            })
 
         return player_card;
     }

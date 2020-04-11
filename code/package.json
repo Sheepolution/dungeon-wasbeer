@@ -20,9 +20,12 @@
   "dependencies": {
     "@types/pg": "^7.14.3",
     "@types/ws": "^7.2.3",
+    "@typescript-eslint/eslint-plugin": "^2.27.0",
+    "@typescript-eslint/parser": "^2.27.0",
     "async-redis": "^1.1.7",
     "discord.js": "^12.1.1",
     "dotenv": "^8.2.0",
+    "eslint": "^6.8.0",
     "knex": "^0.19.5",
     "objection": "^1.6.11",
     "perfy": "^1.1.5",

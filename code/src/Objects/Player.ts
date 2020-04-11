@@ -1,10 +1,6 @@
-import Embedder from "./Embedder";
-import PlayerModel from "./models/PlayerModel";
-import Constants from "./Constants";
-import { Utils } from "./Utils";
-import { Util } from "discord.js";
-import IMessageInfo from "./IMessageInfo";
-import PlayerCard from "./PlayerCard";
+import PlayerCard from './PlayerCard';
+import PlayerModel from '../Models/PlayerModel';
+import { Utils } from '../Utils/Utils';
 
 export default class Player {
 
@@ -15,9 +11,7 @@ export default class Player {
     private playerCards:Array<PlayerCard>;
     private lastActiveDate:string;
     private discordName:string;
-
-    constructor() {
-    }
+    private active:boolean;
 
     public async GET(id:string, isUuid?:boolean) {
         var models:PlayerModel;
@@ -34,7 +28,7 @@ export default class Player {
             if (models.length == 0) {
                 return false;
             }
-    
+
             await this.ApplyModel(models[0]);
         }
 
@@ -49,8 +43,8 @@ export default class Player {
 
     public async UPDATE(data:any) {
         await PlayerModel.query()
-        .findById(this.id)
-        .patch(data);
+            .findById(this.id)
+            .patch(data);
     }
 
     public async ApplyModel(model:PlayerModel) {
@@ -83,13 +77,9 @@ export default class Player {
     }
 
     public UpdateDiscordName(discordDisplayName:string) {
+        if (this.discordName == discordDisplayName) { return; }
         this.discordName = discordDisplayName;
         this.UPDATE({discord_name: discordDisplayName});
-    }
-
-    // -- Send info methods
-    public SendCardList(command:IMessageInfo, animalName:string) {
-        // Embedder.SendCardList();
     }
 
     public GetCards() {
@@ -121,28 +111,4 @@ export default class Player {
     public GetMessagePoints() {
         return this.messagePoints;
     }
-
-    public StartTrade(otherPlayer:Player, mine:PlayerCard, theirs:PlayerCard) {
-        
-    }
-
-    // public SendGold(command:IMessageInfo) {
-        // this.inventory.SendGold(command);
-    // }
-
-    // public BuyItem(command:IMessageInfo, storeName:string, itemName:any, amount:any) {
-    //     const item:(IItem|null) = StoreManager.BuyItem(command, storeName, itemName, amount, this.inventory.GetMoney());
-    //     var attempt:any;
-
-    //     // Store takes care of errors regarding incorrect category/item
-    //     if (item != null) {
-    //         attempt = this.CanBuyItem(item, amount)
-    //         if (attempt.success) {
-    //             this.OnBuyingItem(command, item, amount);
-    //             return;
-    //         }
-    //         Embedder.SendItemBoughtFailed(command, item, attempt.message);
-    //     }
-    // }
-
 }

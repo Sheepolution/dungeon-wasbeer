@@ -1,7 +1,6 @@
-import Card from "./Card";
-import PlayerCardModel from "./models/PlayerCardModel";
-import CardModel from "./models/CardModel";
-import Player from "./Player";
+import Card from './Card';
+import Player from './Player';
+import PlayerCardModel from '../Models/PlayerCardModel';
 
 export default class PlayerCard {
     protected id:string;
@@ -31,8 +30,8 @@ export default class PlayerCard {
 
     public async UPDATE(data:any, trx?:any) {
         await PlayerCardModel.query(trx)
-        .findById(this.id)
-        .patch(data);
+            .findById(this.id)
+            .patch(data);
     }
 
     public async ApplyModel(model:PlayerCardModel) {

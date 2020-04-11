@@ -10,6 +10,11 @@
 	"settings": {
 		"search.exclude": {
 			"*lib": true
-		}
+		},
+		"typescript.extension.sortImports.maxNamedImportsInSingleLine": 6,
+		"typescript.extension.sortImports.sortOnSave": true,
+		"workbench.editor.enablePreviewFromQuickOpen": false,
+		"sort-imports.on-save": false,
+		"typescript.preferences.quoteStyle": "single"
 	}
 }

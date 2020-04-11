@@ -1,4 +1,4 @@
-import { Channel, GuildMember, Message } from "discord.js";
+import { Channel, GuildMember, Message } from 'discord.js';
 
 export default interface IMessageInfo {
     channel: Channel;

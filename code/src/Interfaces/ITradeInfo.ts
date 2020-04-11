@@ -1,5 +1,5 @@
-import PlayerCard from "../PlayerCard";
-import Player from "../Player";
+import Player from '../Objects/Player';
+import PlayerCard from '../Objects/PlayerCard';
 
 export default interface ITradeInfo {
     trader: Player;

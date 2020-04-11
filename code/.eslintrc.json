@@ -1,0 +1,60 @@
+{
+    "env": {
+        "browser": true,
+        "es6": true
+    },
+    "extends": [
+        "eslint:recommended",
+        "plugin:@typescript-eslint/eslint-recommended"
+    ],
+    "globals": {
+        "Atomics": "readonly",
+        "SharedArrayBuffer": "readonly"
+    },
+    "parser": "@typescript-eslint/parser",
+    "parserOptions": {
+        "ecmaVersion": 2018,
+        "sourceType": "module",
+        "project": "./tsconfig.json"
+    },
+    "plugins": [
+        "@typescript-eslint"
+    ],
+    "rules": {
+        "no-multiple-empty-lines": ["error",{"max": 1}],
+        "keyword-spacing": "error",
+        "indent": [
+            "error",
+            4
+        ],
+        "linebreak-style": [
+            "error",
+            "windows"
+        ],
+        "quotes": [
+            "error",
+            "single"
+        ],
+        "class-methods-use-this":"error",
+        "consistent-this": ["error", "that"],
+        "brace-style": ["error", "1tbs", { "allowWSingleLine": true }],
+        "comma-dangle": ["error", "always-multiline"],
+        "no-unused-vars": "error",
+        "curly": ["error", "all"],
+        "no-useless-constructor": "error",
+        "no-trailing-spaces": "error",
+        "no-restricted-globals": "error",
+        "array-bracket-newline": ["error", "consistent"],
+        "@typescript-eslint/no-unused-vars": "error",
+        "@typescript-eslint/member-ordering": "error",
+        "@typescript-eslint/naming-convention": [
+            "error",
+            { "selector": "default", "format": ["camelCase"] },
+            { "selector": "function", "format": ["PascalCase"] },
+            { "selector": "property", "format": ["camelCase", "snake_case", "PascalCase", "UPPER_CASE"] },
+            { "selector": "variable", "format": ["camelCase", "UPPER_CASE", "PascalCase"] },
+            { "selector": "typeLike", "format": ["PascalCase"] },
+            { "selector": "method", "format": ["PascalCase", "UPPER_CASE"] }
+        ]
+    }
+}

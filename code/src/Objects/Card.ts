@@ -1,4 +1,4 @@
-import CardModel from "./models/CardModel";
+import CardModel from '../Models/CardModel';
 
 export default class Card {
     protected id:string;
@@ -16,15 +16,15 @@ export default class Card {
     constructor() {
     }
 
-    public async GET(id:string) {
-        const model:CardModel = await CardModel.query().findById(id);
-        await this.ApplyModel(model);
-    }
-
     public static async GET_ALL()
     {
         const models = await CardModel.query();
         return models;
+    }
+
+    public async GET(id:string) {
+        const model:CardModel = await CardModel.query().findById(id);
+        await this.ApplyModel(model);
     }
 
     public async FIND_BY_NAME(name:string) {
@@ -33,7 +33,7 @@ export default class Card {
         if (models.length == 0) {
             return false;
         }
-        
+
         await this.ApplyModel(models[0]);
         return true;
     }
@@ -46,8 +46,8 @@ export default class Card {
 
     public async UPDATE(data:any, trx?:any) {
         await CardModel.query(trx)
-        .findById(this.id)
-        .patch(data);
+            .findById(this.id)
+            .patch(data);
     }
 
     public async ApplyModel(model:CardModel) {
@@ -64,7 +64,7 @@ export default class Card {
         this.modifierAmount = model.modifier;
     }
 
-    public async UpdateCard(name?:string, description?:string, rank?:number, category?:string) {
+    public async EditCard(name?:string, description?:string, rank?:number, category?:string) {
         this.name = name || this.name;
         this.description = description || this.description;
         this.rank = rank || this.rank;
@@ -74,7 +74,7 @@ export default class Card {
             name: this.name,
             description: this.description,
             rank: this.rank,
-            category: this.category
+            category: this.category,
         })
     }
 
@@ -99,7 +99,7 @@ export default class Card {
     }
 
     public GetRankString() {
-        return ":star:".repeat(this.rank);
+        return ':star:'.repeat(this.rank);
     }
 
     public GetImageUrl() {

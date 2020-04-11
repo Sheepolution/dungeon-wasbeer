@@ -1,14 +1,18 @@
 require('dotenv').config();
 
-import DungeonWasbeer from "./DungeonWasbeer";
-import "./mpatches";
-import "./SQL";
+import './Utils/MonkeyPatches';
+import './Providers/SQL';
+
+import BotManager from './Managers/BotManager';
+import Discord from './Providers/Discord';
 
 class Main {
 
-	constructor() {
-		DungeonWasbeer.Init();
-	}
+    constructor() {
+        Discord.SetEventReadyCallback(BotManager.OnReady);
+        Discord.SetEventMessageCallback(BotManager.OnMessage);
+        Discord.Init();
+    }
 }
 
-const main = new Main();
+new Main();
