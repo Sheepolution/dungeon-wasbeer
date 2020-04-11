@@ -5,6 +5,7 @@ import MessageHandler from './MessageHandler';
 import PlayerCardHandler from './PlayerCardHandler';
 import TradeHandler from './TradeHandler';
 import SettingsConstants from '../Constants/SettingsConstants';
+import DungeonHandler from './DungeonHandler';
 
 export default class CommandHandler {
 
@@ -15,11 +16,13 @@ export default class CommandHandler {
         const args = words;
         content = content.slice(content.indexOf(' ')).trim();
 
-        if (AdminHandler.OnCommand(messageInfo, player, command, args, content)) {
+        if (await AdminHandler.OnCommand(messageInfo, player, command, args, content)) {
             return;
-        } else if (TradeHandler.OnCommand(messageInfo, player, command, args)) {
+        } else if (await TradeHandler.OnCommand(messageInfo, player, command, args)) {
             return;
-        } else if (PlayerCardHandler.OnCommand(messageInfo, player, command, args)) {
+        } else if (await PlayerCardHandler.OnCommand(messageInfo, player, command, args)) {
+            return;
+        } else if (await DungeonHandler.OnCommand(messageInfo, player, command, args)) {
             return;
         }
     }

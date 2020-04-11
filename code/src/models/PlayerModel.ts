@@ -2,6 +2,7 @@ import Player from '../Objects/Player';
 import PlayerCard from '../Objects/PlayerCard';
 import PlayerCardModel from './PlayerCardModel';
 import { Utils } from '../Utils/Utils';
+import { ClassType } from '../Enums/ClassType';
 
 const { Model } = require('objection');
 
@@ -49,5 +50,9 @@ export default class PlayerModel extends Model {
         }
 
         return playerCardsRet;
+    }
+
+    public GetClassType() {
+        return <ClassType>this.class;
     }
 }

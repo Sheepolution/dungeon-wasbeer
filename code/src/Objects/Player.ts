@@ -1,6 +1,7 @@
-import PlayerCard from './PlayerCard';
 import PlayerModel from '../Models/PlayerModel';
 import { Utils } from '../Utils/Utils';
+import { ClassType } from '../Enums/ClassType';
+import PlayerCard from './PlayerCard';
 
 export default class Player {
 
@@ -11,7 +12,7 @@ export default class Player {
     private playerCards:Array<PlayerCard>;
     private lastActiveDate:string;
     private discordName:string;
-    private active:boolean;
+    private classType:ClassType;
 
     public async GET(id:string, isUuid?:boolean) {
         var models:PlayerModel;
@@ -53,6 +54,7 @@ export default class Player {
         this.gold = model.gold;
         this.messagePoints = model.message_points;
         this.playerCards = await model.GetPlayerCards(this);
+        this.classType = model.GetClassType();
     }
 
     public GetId() {
@@ -110,5 +112,14 @@ export default class Player {
 
     public GetMessagePoints() {
         return this.messagePoints;
+    }
+
+    public SetClass(classType:ClassType) {
+        this.classType = classType;
+        this.UPDATE({class: classType})
+    }
+
+    public GetClassName() {
+        return <string>this.classType;
     }
 }
