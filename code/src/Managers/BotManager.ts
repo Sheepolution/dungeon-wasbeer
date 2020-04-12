@@ -10,8 +10,6 @@ import SettingsConstants from '../Constants/SettingsConstants';
 
 export default class BotManager {
 
-    // public static mainChannel:TextChannel;
-
     public static async OnReady() {
         console.log('Dungeon Wasbeer: Connected');
         // this.mainChannel = <TextChannel> await DiscordService.FindChannelById(this.mainChannelId);
@@ -30,16 +28,10 @@ export default class BotManager {
         const messageInfo:IMessageInfo = DiscordUtils.ParseMessageToInfo(message, message.member);
 
         var player = await PlayerManager.GetOrCreatePlayer(messageInfo);
-
         var content = message.content.trim();
-
         var prefix = SettingsConstants.PREFIX;
 
         if (content.startsWith(prefix)) {
-            if (message.guild.id == SettingsConstants.MAIN_GUILD_ID && message.channel.id != SettingsConstants.MAIN_CHANNEL_ID) {
-                return;
-            }
-
             CommandHandler.OnCommand(messageInfo, player, content);
         }
         else {

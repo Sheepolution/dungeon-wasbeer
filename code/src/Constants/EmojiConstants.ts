@@ -13,4 +13,13 @@ export default class EmojiConstants {
         GOOD: '✅',
         BAD: '❌',
     }
+
+    public static readonly CLASSES = {
+        BARD: ':violin:',
+        CLERIC: ':hospital:',
+        FIGHTER: ':crossed_swords:',
+        PALADIN: ':shield:',
+        RANGER: ':bow_and_arrow:',
+        WIZARD: ':man_mage:',
+    }
 }

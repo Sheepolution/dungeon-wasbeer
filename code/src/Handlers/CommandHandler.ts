@@ -18,7 +18,13 @@ export default class CommandHandler {
 
         if (await AdminHandler.OnCommand(messageInfo, player, command, args, content)) {
             return;
-        } else if (await TradeHandler.OnCommand(messageInfo, player, command, args)) {
+        }
+
+        if (messageInfo.message?.guild?.id == SettingsConstants.MAIN_GUILD_ID && messageInfo.channel.id != SettingsConstants.MAIN_CHANNEL_ID) {
+            return;
+        }
+        
+        if (await TradeHandler.OnCommand(messageInfo, player, command, args)) {
             return;
         } else if (await PlayerCardHandler.OnCommand(messageInfo, player, command, args)) {
             return;

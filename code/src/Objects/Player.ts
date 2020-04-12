@@ -120,6 +120,6 @@ export default class Player {
     }
 
     public GetClassName() {
-        return <string>this.classType;
+        return this.classType.toString();
     }
 }

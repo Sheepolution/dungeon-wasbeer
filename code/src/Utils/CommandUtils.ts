@@ -1,5 +1,3 @@
-import IMessageInfo from '../Interfaces/IMessageInfo';
-
 export default class CommandUtils {
 
     public static GetCommaArgs(content:string) {
@@ -100,14 +98,13 @@ export default class CommandUtils {
         return obj;
     }
 
-    public static ValidateArguments(messageInfo:IMessageInfo, args:any) {
+    public static ValidateArguments(args:any) {
         for (let i = 0; i < args.length; i++) {
             const arg = args[i];
             const val = arg.value;
 
             if (arg.required) {
                 if (val == null) {
-                    // Embedder.SendArgumentRequired(command, arg.requiredMessage);
                     return false;
                 }
             }

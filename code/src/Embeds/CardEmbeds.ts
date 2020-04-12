@@ -1,11 +1,12 @@
 import Card from '../Objects/Card';
 import { MessageEmbed } from 'discord.js';
 import SettingsConstants from '../Constants/SettingsConstants';
-import IMessageInfo from '../Interfaces/IMessageInfo';
 import Player from '../Objects/Player';
 import EmojiConstants from '../Constants/EmojiConstants';
 import PlayerCard from '../Objects/PlayerCard';
 import ITradeInfo from '../Interfaces/ITradeInfo';
+import CardService from '../Services/CardService';
+import ClassService from '../Services/ClassService';
 
 export default class CardEmbeds {
 
@@ -16,11 +17,20 @@ export default class CardEmbeds {
             .setTitle(card.GetName() + (amount == 1 ? '' : ' (x'+ amount + ')'))
             .setDescription(card.GetDescription())
             .setImage(card.GetImageUrl())
-            .addField('Level', card.GetRankString())
+            .addField('Level', card.GetRankString());
+
+        const modifiers = card.GetModifiers();
+        const modifierClass = card.GetModifierClass();
+
+        embed.addField('Modifiers', CardService.ParseModifierArrayToEmbedString(modifiers),  true)
+
+        if (modifierClass) {
+            embed.addField('Class', `${ClassService.GetClassEmoji(modifierClass)} ${modifierClass.toString()}`, true);
+        }
 
         return embed;
     }
-    
+
     public static GetCardStatsEmbed(cards:any) {
         const stats:any = {};
         for (const card of cards) {
@@ -52,7 +62,7 @@ export default class CardEmbeds {
             const card = playerCard.GetCard();
             const name = card.GetName();
             const category = card.GetCategory();
-            
+
             if (!cardData[category]) {
                 cardData[category] = {};
             }
@@ -85,7 +95,7 @@ export default class CardEmbeds {
 
         return embed;
     }
-    
+
     public static GetTradeEmbed(tradeInfo:ITradeInfo) {
         const embed = new MessageEmbed()
             .setImage(tradeInfo.yourCard.GetCard().GetImageUrl())
