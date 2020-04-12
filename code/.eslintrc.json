@@ -23,22 +23,13 @@
     "rules": {
         "no-multiple-empty-lines": ["error",{"max": 1}],
         "keyword-spacing": "error",
-        "indent": [
-            "error",
-            4
-        ],
-        "linebreak-style": [
-            "error",
-            "windows"
-        ],
-        "quotes": [
-            "error",
-            "single"
-        ],
+        "indent": ["error", 4, { "SwitchCase": 1 }],
+        "linebreak-style": ["error", "windows"],
+        "quotes": ["error", "single"],
         "class-methods-use-this":"error",
         "consistent-this": ["error", "that"],
-        "brace-style": ["error", "1tbs", { "allowWSingleLine": true }],
-        "comma-dangle": ["error", "always-multiline"],
+        "brace-style": ["error", "1tbs", { "allowSingleLine": true }],
+        "comma-dangle": ["error", "only-multiline"],
         "no-unused-vars": "error",
         "curly": ["error", "all"],
         "no-useless-constructor": "error",
@@ -49,12 +40,12 @@
         "@typescript-eslint/member-ordering": "error",
         "@typescript-eslint/naming-convention": [
             "error",
-            { "selector": "default", "format": ["camelCase"] },
             { "selector": "function", "format": ["PascalCase"] },
             { "selector": "property", "format": ["camelCase", "snake_case", "PascalCase", "UPPER_CASE"] },
             { "selector": "variable", "format": ["camelCase", "UPPER_CASE", "PascalCase"] },
             { "selector": "typeLike", "format": ["PascalCase"] },
-            { "selector": "method", "format": ["PascalCase", "UPPER_CASE"] }
+            { "selector": "method", "format": ["PascalCase", "UPPER_CASE"] },
+            { "selector": "enum", "format": ["PascalCase"] }
         ]
     }
 }

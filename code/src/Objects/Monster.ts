@@ -14,8 +14,7 @@ export default class Monster {
     private creatorId:string;
     private creationDate:string;
 
-    public static async GET_ALL()
-    {
+    public static async GET_ALL() {
         const models = await MonsterModel.query();
         return models;
     }

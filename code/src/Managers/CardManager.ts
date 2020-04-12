@@ -62,7 +62,7 @@ export default class CardManager {
         cardModifyResult.result = true;
         return cardModifyResult;
     }
-    
+
     public static async EditCard(originalName:string, name?:string, description?:string, rank?:number, category?:string, modifiers?:Array<ICardModifier>, modifierClass?:ClassType, imageUrl?:string) {
         const card = new Card();
         const cardModifyResult:IObjectModifyResult = { object: card, result: false };

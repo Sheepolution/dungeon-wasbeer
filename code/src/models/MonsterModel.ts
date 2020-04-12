@@ -8,11 +8,11 @@ export default class MonsterModel extends Model {
     }
 
     public static async New(name:string, description:string, level:number, category:string, type:string, health:number, attack:number, imageUrl:string, creatorId:string, trx?:any) {
-        const card_id = Utils.UUID();
+        const cardId = Utils.UUID();
 
         const card = await MonsterModel.query(trx)
             .insert({
-                id:card_id,
+                id:cardId,
                 name: name,
                 description: description,
                 level: level,

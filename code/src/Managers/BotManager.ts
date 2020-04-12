@@ -1,11 +1,10 @@
 import CardManager from './CardManager';
 import CommandHandler from '../Handlers/CommandHandler';
 import IMessageInfo from '../Interfaces/IMessageInfo';
-import { Message, TextChannel } from 'discord.js';
+import { Message } from 'discord.js';
 import MessageHandler from '../Handlers/MessageHandler';
 import PlayerManager from './PlayerManager';
 import DiscordUtils from '../Utils/DiscordUtils';
-import DiscordService from '../Services/DiscordService';
 import SettingsConstants from '../Constants/SettingsConstants';
 
 export default class BotManager {
@@ -33,8 +32,7 @@ export default class BotManager {
 
         if (content.startsWith(prefix)) {
             CommandHandler.OnCommand(messageInfo, player, content);
-        }
-        else {
+        } else {
             if (messageInfo.message?.guild?.id != SettingsConstants.MAIN_GUILD_ID) {
                 return;
             }

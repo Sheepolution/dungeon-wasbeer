@@ -56,18 +56,15 @@ export module Utils {
         return obj;
     }
 
-    export function GetMinutesInSeconds(n:number)
-    {
+    export function GetMinutesInSeconds(n:number) {
         return n * 60;
     }
 
-    export function GetHoursInSeconds(n:number)
-    {
+    export function GetHoursInSeconds(n:number) {
         return n * 60 * 60
     }
 
-    export function GetMinutesInMiliSeconds(n:number)
-    {
+    export function GetMinutesInMiliSeconds(n:number) {
         return n * 60 * 1000;
     }
 
@@ -75,26 +72,25 @@ export module Utils {
         const match = hour.match(/^(\d{1,2})(:\d{2}|\s?[pPaA][mM])?$/);
         if (match == null) {
             return null;
-        }
-        else {
+        } else {
             var time = parseInt(match[1]);
             if (time > 24) {
                 return null;
             }
-            if (match[2] != null) { 
+            if (match[2] != null) {
                 const not = match[2].toLowerCase();
 
                 if (not == 'pm' || not == 'am') {
                     if (time > 12) {
                         return null;
-                    } 
+                    }
                 }
+
                 if (not == 'pm') {
                     if (time < 12) {
                         time += 12;
                     }
-                }
-                else if (not == 'am') {
+                } else if (not == 'am') {
                     if (time == 12) {
                         time = 0;
                     }

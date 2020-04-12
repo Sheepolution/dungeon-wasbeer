@@ -18,8 +18,5 @@ export default class ClassService {
             case ClassType.Wizard:
                 return EmojiConstants.CLASSES.WIZARD
         }
-
-        return EmojiConstants.CLASSES.FIGHTER;
     }
-
 }

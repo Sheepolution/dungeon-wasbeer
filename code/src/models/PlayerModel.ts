@@ -53,6 +53,6 @@ export default class PlayerModel extends Model {
     }
 
     public GetClassType() {
-        return <ClassType>this.class;
+        return <ClassType> this.class;
     }
 }

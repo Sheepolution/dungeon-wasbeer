@@ -1,6 +1,5 @@
 import { Utils } from '../Utils/Utils';
 import CardService from '../Services/CardService';
-import { ModifierType } from '../Enums/ModifierType';
 import { ICardModifier } from '../Interfaces/ICardModifier';
 import { ClassType } from '../Enums/ClassType';
 const { Model } = require('objection');

@@ -1,5 +1,5 @@
-import Player from "../Objects/Player";
-import { ClassType } from "../Enums/ClassType";
+import Player from '../Objects/Player';
+import { ClassType } from '../Enums/ClassType';
 import MessageService from '../Services/MessageService';
 import IMessageInfo from '../Interfaces/IMessageInfo';
 
@@ -9,11 +9,11 @@ export default class DungeonHandler {
 
     public static async OnCommand(messageInfo:IMessageInfo, player:Player, command:string, args:Array<string>) {
         switch (command) {
-        case 'class':
-            this.ChooseClass(messageInfo, player, args[0]);
-            break;
-        default:
-            return false;
+            case 'class':
+                this.ChooseClass(messageInfo, player, args[0]);
+                break;
+            default:
+                return false;
         }
 
         return true;
@@ -44,6 +44,6 @@ export default class DungeonHandler {
     }
 
     private static async SendUnknownClassName(command:IMessageInfo) {
-        MessageService.SendMessage(command, `Kies een van de volgende classes:\n${this.classNames.join(", ")}`, false);
+        MessageService.SendMessage(command, `Kies een van de volgende classes:\n${this.classNames.join(', ')}`, false);
     }
 }

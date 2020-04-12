@@ -15,7 +15,7 @@ export default class MessageService {
             DiscordService.SendMessage(<TextChannel>messageInfo.channel, message, embed)
         }
     }
-    
+
     public static SendEmbed(messageInfo:IMessageInfo, embed:MessageEmbed, content?:string) {
         DiscordService.SendEmbed(messageInfo.channel, embed, content)
     }
@@ -35,6 +35,4 @@ export default class MessageService {
     public static SendNoImageAttached(messageInfo:IMessageInfo) {
         this.SendMessage(messageInfo, 'Zorg dat je een afbeelding meegeeft van het formaat .png, .jpg of .jpeg.', false, true);
     }
-
-
 }

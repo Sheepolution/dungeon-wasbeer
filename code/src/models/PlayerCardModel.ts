@@ -9,18 +9,29 @@ export default class PlayerCardModel extends Model {
         return 'player_cards';
     }
 
-    public static async New(cardId:string, playerId:string, amount:number = 1, trx?:any) {
-        const player_card_id = Utils.UUID();
+    static relationMappings = {
+        cards: {
+            relation: Model.BelongsToOneRelation,
+            modelClass: CardModel,
+            join: {
+                from: 'player_cards.card_id',
+                to: 'cards.id',
+            }
+        }
+    }
 
-        const player_card = await PlayerCardModel.query(trx)
+    public static async New(cardId:string, playerId:string, amount:number = 1, trx?:any) {
+        const playerCardId = Utils.UUID();
+
+        const playerCard = await PlayerCardModel.query(trx)
             .insert({
-                id:player_card_id,
+                id:playerCardId,
                 player_id:playerId,
                 card_id:cardId,
-                amount: amount
+                amount: amount,
             })
 
-        return player_card;
+        return playerCard;
     }
 
     public async GetCard() {
@@ -28,16 +39,4 @@ export default class PlayerCardModel extends Model {
         card.ApplyModel(await this.$relatedQuery('cards'));
         return card;
     }
-
-    static relationMappings = {
-        cards: {
-            relation: Model.BelongsToOneRelation,
-            modelClass: CardModel,
-            join: {
-                from: 'player_cards.card_id',
-                to: 'cards.id'
-            }
-        }
-    }
-
 }

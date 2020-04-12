@@ -1,8 +1,10 @@
 interface String {
+    // eslint-disable-next-line @typescript-eslint/naming-convention
     toTitleCase(keep?: boolean): string;
 }
 
 interface Array<T> {
+    // eslint-disable-next-line @typescript-eslint/naming-convention
     randomChoice(): T;
 }
 

@@ -7,14 +7,14 @@ export default class PlayerCardHandler {
 
     public static async OnCommand(messageInfo:IMessageInfo, player:Player, command:string, args:Array<string>) {
         switch (command) {
-        case 'kaart':
-            this.SendPlayerCard(messageInfo, player, args[0]);
-            break;
-        case 'lijst':
-            this.SendPlayerCard(messageInfo, player, args[0]);
-            break;
-        default:
-            return false;
+            case 'kaart':
+                this.SendPlayerCard(messageInfo, player, args[0]);
+                break;
+            case 'lijst':
+                this.SendPlayerCard(messageInfo, player, args[0]);
+                break;
+            default:
+                return false;
         }
 
         return true;

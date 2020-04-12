@@ -13,7 +13,7 @@ export default class TradeHandler {
     private static readonly tradeInstructions = 'Zeg beiden `;accepteer` als je de ruil wilt accepteren. Zeg `;annuleer` als je de ruil wilt annuleren.';
 
     public static async OnCommand(messageInfo:IMessageInfo, player:Player, command:string, args:Array<string>) {
-        switch(command) {
+        switch (command) {
             case 'ruil':
                 this.OnTrade(messageInfo, player, args[0]);
                 break;
@@ -44,8 +44,7 @@ export default class TradeHandler {
         if (otherPlayerGet == null) {
             if (match[1] == process.env.BOT_ID) {
                 MessageService.SendMessage(messageInfo, 'Dat is een mooie kaart, maar nee bedankt.');
-            }
-            else {
+            } else {
                 MessageService.SendMessage(messageInfo, 'Die gozer heeft nog helemaal geen kaarten joh.', false);
             }
             return;
@@ -104,8 +103,7 @@ export default class TradeHandler {
 
         if (tradeInfo.trader == player) {
             tradeInfo.youAccepted = true;
-        }
-        else {
+        } else {
             tradeInfo.theyAccepted = true;
         }
 
@@ -117,8 +115,7 @@ export default class TradeHandler {
                     break;
                 }
             }
-        }
-        else {
+        } else {
             messageInfo.message?.react(EmojiConstants.STATUS.GOOD);
         }
     }
@@ -158,8 +155,7 @@ export default class TradeHandler {
 
         if (existingTheirCard != null) {
             await existingTheirCard.AddCard();
-        }
-        else {
+        } else {
             const newPlayerCard = new PlayerCard(they);
             await newPlayerCard.POST(yourCard.GetCardId(), they.GetId());
             await they.GiveCard(newPlayerCard);
@@ -169,8 +165,7 @@ export default class TradeHandler {
 
         if (existingYourCard != null) {
             await existingYourCard.AddCard();
-        }
-        else {
+        } else {
             const newPlayerCard = new PlayerCard(you);
             await newPlayerCard.POST(theirCard.GetCardId(), you.GetId());
             await you.GiveCard(newPlayerCard);
@@ -195,7 +190,7 @@ export default class TradeHandler {
             }
         }
     }
-    
+
     private static async SendTradeNotFound(messageInfo:IMessageInfo, accept:boolean) {
         MessageService.SendMessage(messageInfo, 'Wat loop je nou allemaal te ' + (accept ? 'accepteren' : 'annuleren') + '? Je bent helemaal niet aan het ruilen!', false)
     }

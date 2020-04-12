@@ -23,8 +23,7 @@ export default class Player {
                 return false;
             }
             await this.ApplyModel(models);
-        }
-        else {
+        } else {
             models = await PlayerModel.query().where('discord_id', id).where('active', 1);
             if (models.length == 0) {
                 return false;

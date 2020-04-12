@@ -1,5 +1,3 @@
-import BotManager from '../Managers/BotManager';
-
 export default class SettingsConstants {
     public static readonly COLORS = {
         BAD:'#ff0000',
@@ -15,7 +13,6 @@ export default class SettingsConstants {
     public static readonly MAIN_CHANNEL_ID = process.env.MAIN_CHANNEL_ID || '';
 
     public static readonly MESSAGE_POINT_TIMEOUT_MINUTES = 15;
-
 
     public static readonly MESSAGE_POINT_AMOUNT_REWARDS: {
         CARD: 4

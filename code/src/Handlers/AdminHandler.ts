@@ -6,7 +6,6 @@ import SettingsConstants from '../Constants/SettingsConstants';
 import MessageService from '../Services/MessageService';
 import Card from '../Objects/Card';
 import CardEmbeds from '../Embeds/CardEmbeds';
-import DiscordService from '../Services/DiscordService';
 import CardModel from '../Models/CardModel';
 import CardManager from '../Managers/CardManager';
 import MonsterManager from '../Managers/MonsterManager';
@@ -14,7 +13,6 @@ import { AttackType } from '../Enums/AttackType';
 import Monster from '../Objects/Monster';
 import MonsterEmbeds from '../Embeds/MonsterEmbeds';
 import MonsterModel from '../Models/MonsterModel';
-import { ICardModifier } from '../Interfaces/ICardModifier';
 import { ModifierType } from '../Enums/ModifierType';
 import CardService from '../Services/CardService';
 import { ClassType } from '../Enums/ClassType';
@@ -146,11 +144,11 @@ export default class AdminHandler {
             return;
         }
 
-        const arg_keys = Object.keys(args);
+        const argKeys = Object.keys(args);
         const required = ['on'];
         const missing = [];
         for (const key of required) {
-            if (!arg_keys.includes(key)) {
+            if (!argKeys.includes(key)) {
                 missing.push(key);
             }
         }
@@ -206,8 +204,8 @@ export default class AdminHandler {
     }
 
     private static async SendRandomCard(messageInfo:IMessageInfo) {
-        const card_models:CardModel = await Card.GET_ALL();
-        var cardModel = card_models.randomChoice();
+        const cardModels:CardModel = await Card.GET_ALL();
+        var cardModel = cardModels.randomChoice();
         var card = new Card();
         card.ApplyModel(cardModel);
         this.SendCardEmbed(messageInfo, card);
@@ -272,11 +270,11 @@ export default class AdminHandler {
             return;
         }
 
-        const arg_keys = Object.keys(args);
+        const argKeys = Object.keys(args);
         const required = ['on'];
         const missing = [];
         for (const key of required) {
-            if (!arg_keys.includes(key)) {
+            if (!argKeys.includes(key)) {
                 missing.push(key);
             }
         }

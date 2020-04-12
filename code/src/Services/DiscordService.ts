@@ -59,8 +59,7 @@ export default class DiscordService {
                     await guild.fetch();
                     foundChannel = guild.channels.cache.get(id);
                 }
-            }
-            else {
+            } else {
                 foundChannel = this.client.channels.cache.get(id) || await this.client.channels.fetch(id);
             }
 
