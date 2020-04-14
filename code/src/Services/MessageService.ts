@@ -35,4 +35,12 @@ export default class MessageService {
     public static SendNoImageAttached(messageInfo:IMessageInfo) {
         this.SendMessage(messageInfo, 'Zorg dat je een afbeelding meegeeft van het formaat .png, .jpg of .jpeg.', false, true);
     }
+
+    public static SendMissingCardName(messageInfo:IMessageInfo) {
+        MessageService.SendMessage(messageInfo, 'Ik mis de naam van de kaart.', false);
+    }
+
+    public static SendNotOwningCard(messageInfo:IMessageInfo, name:string) {
+        MessageService.SendMessage(messageInfo, 'Je hebt geen kaart met de naam \'' + name + '\'.', false, true);
+    }
 }

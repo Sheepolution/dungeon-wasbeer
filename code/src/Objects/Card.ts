@@ -2,6 +2,9 @@ import CardModel from '../Models/CardModel';
 import { ICardModifier } from '../Interfaces/ICardModifier';
 import { ClassType } from '../Enums/ClassType';
 import CardService from '../Services/CardService';
+import ClassService from '../Services/ClassService';
+import { ModifierType } from '../Enums/ModifierType';
+import IModifierStats from '../Interfaces/IModifierStats';
 
 export default class Card {
     protected id:string;
@@ -9,9 +12,9 @@ export default class Card {
     private description:string;
     private rank:number;
     private category:string
-    private special:boolean;
     private modifiers:Array<ICardModifier>;
     private modifierClass:ClassType;
+    private modifierStats:IModifierStats;
     private imageUrl:string;
     private creatorId:string;
     private creationDate:string;
@@ -58,9 +61,9 @@ export default class Card {
         this.imageUrl = model.image_url;
         this.creatorId = model.creator_id;
         this.creationDate = model.creationDate;
-        this.special = model.special
         this.modifiers = model.GetModifiers();
         this.modifierClass = model.GetModifierClass();
+        this.modifierStats = this.CalculateModifierStats();
     }
 
     public async EditCard(name?:string, description?:string, rank?:number, category?:string, modifiers?:Array<ICardModifier>, modifierClass?:ClassType, imageUrl?:string) {
@@ -107,6 +110,10 @@ export default class Card {
         return ':star:'.repeat(this.rank);
     }
 
+    public HasBuffs() {
+        return this.modifiers.length > 0;
+    }
+
     public GetModifiers() {
         return this.modifiers;
     }
@@ -115,7 +122,45 @@ export default class Card {
         return this.modifierClass;
     }
 
+    public GetModifierStats() {
+        return this.modifierStats;
+    }
+
     public GetImageUrl() {
         return this.imageUrl;
+    }
+
+    private CalculateModifierStats() {
+        const modifierStats = ClassService.GetEmptyModifierStats();
+        for (const modifier of this.modifiers) {
+            switch (modifier.modifier) {
+                case ModifierType.Armor:
+                    modifierStats.armor = modifier.value;
+                    break;
+                case ModifierType.Charisma:
+                    modifierStats.charisma = modifier.value;
+                    break;
+                case ModifierType.Dexterity:
+                    modifierStats.dexterity = modifier.value;
+                    break;
+                case ModifierType.Healing:
+                    modifierStats.healing = modifier.value;
+                    break;
+                case ModifierType.Health:
+                    modifierStats.health = modifier.value;
+                    break;
+                case ModifierType.Regeneration:
+                    modifierStats.regeneration = modifier.value;
+                    break;
+                case ModifierType.Spell:
+                    modifierStats.spell = modifier.value;
+                    break;
+                case ModifierType.Strength:
+                    modifierStats.strength = modifier.value;
+                    break;
+            }
+        }
+
+        return modifierStats;
     }
 }

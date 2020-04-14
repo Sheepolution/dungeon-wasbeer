@@ -3,7 +3,6 @@ import { MessageEmbed } from 'discord.js';
 import SettingsConstants from '../Constants/SettingsConstants';
 import Player from '../Objects/Player';
 import EmojiConstants from '../Constants/EmojiConstants';
-import PlayerCard from '../Objects/PlayerCard';
 import ITradeInfo from '../Interfaces/ITradeInfo';
 import CardService from '../Services/CardService';
 import ClassService from '../Services/ClassService';
@@ -22,7 +21,9 @@ export default class CardEmbeds {
         const modifiers = card.GetModifiers();
         const modifierClass = card.GetModifierClass();
 
-        embed.addField('Modifiers', CardService.ParseModifierArrayToEmbedString(modifiers),  true)
+        if (modifiers.length > 0) {
+            embed.addField('Modifiers', CardService.ParseModifierArrayToEmbedString(modifiers),  true)
+        }
 
         if (modifierClass) {
             embed.addField('Class', `${ClassService.GetClassEmoji(modifierClass)} ${modifierClass.toString()}`, true);
@@ -55,8 +56,9 @@ export default class CardEmbeds {
         return embed;
     }
 
-    public static GetPlayerCardListEmbed(player:Player, playerCards:Array<PlayerCard>) {
+    public static GetPlayerCardListEmbed(player:Player) {
         const cardData:any = {};
+        const playerCards = player.GetCards();
 
         for (const playerCard of playerCards) {
             const card = playerCard.GetCard();

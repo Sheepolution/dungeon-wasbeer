@@ -6,8 +6,10 @@ export default class PlayerCard {
     protected id:string;
     private card:Card;
     private amount:number;
+    private slotted:number;
     private deleted:boolean;
     private player:Player;
+    private isUsedInTrade:boolean;
 
     constructor(player:Player) {
         this.player = player;
@@ -38,6 +40,7 @@ export default class PlayerCard {
         this.id = model.id;
         this.card = await model.GetCard();
         this.amount = model.amount;
+        this.slotted = model.slotted;
     }
 
     public GetId() {
@@ -73,5 +76,30 @@ export default class PlayerCard {
 
     public GetAmount() {
         return this.amount;
+    }
+
+    public CanBeTraded() {
+        return this.slotted != 1 || this.amount > 1;
+    }
+
+    public IsInSlot() {
+        return this.slotted == 1;
+    }
+
+    public StartUsingInTrade() {
+        this.isUsedInTrade = true;
+    }
+
+    public StopUsingInTrade() {
+        this.isUsedInTrade = false;
+    }
+
+    public IsUsedInTrade() {
+        return this.isUsedInTrade;
+    }
+
+    public async SetSlotted(slot:boolean) {
+        this.slotted = slot ? 1 : 0;
+        await this.UPDATE({slotted: this.slotted});
     }
 }

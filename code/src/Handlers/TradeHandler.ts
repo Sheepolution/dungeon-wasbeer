@@ -91,6 +91,14 @@ export default class TradeHandler {
             return;
         }
 
+        if (!yourCard.CanBeTraded()) {
+            MessageService.SendMessage(messageInfo, `Jouw kaart '${yourCard.GetCard().GetName()}' zit in je equipment en dus je kan deze niet ruilen.`, false);
+        }
+
+        if (!theirCard.CanBeTraded()) {
+            MessageService.SendMessage(messageInfo, `De kaart van ${otherPlayer.GetDiscordName()}, '${yourCard.GetCard().GetName()}', zit in hun equipment en dus kunnen ze deze niet ruilen.`, false);
+        }
+
         this.StartTrade(messageInfo, player, otherPlayer, yourCard, theirCard);
     }
 
@@ -141,6 +149,9 @@ export default class TradeHandler {
             theyAccepted: false,
         };
 
+        yourCard.StartUsingInTrade();
+        theirCard.StartUsingInTrade();
+
         this.trades.push(tradeInfo);
         MessageService.SendEmbed(messageInfo, CardEmbeds.GetTradeEmbed(tradeInfo), `${tradeInfo.with.GetMention()}, wil jij jouw '${tradeInfo.theirCard.GetCard().GetName()}' ruilen voor de '${tradeInfo.yourCard.GetCard().GetName()}' van ${tradeInfo.trader.GetMention()}? ${this.tradeInstructions}`)
     }
@@ -183,12 +194,11 @@ export default class TradeHandler {
     }
 
     private static RemoveTrade(tradeInfo:ITradeInfo) {
-        for (let i = 0; i < this.trades.length; i++) {
-            if (tradeInfo == this.trades[i]) {
-                this.trades.splice(i, 1);
-                break;
-            }
-        }
+        tradeInfo.yourCard.StopUsingInTrade();
+        tradeInfo.theirCard.StopUsingInTrade();
+
+        const index = this.trades.indexOf(tradeInfo);
+        this.trades.splice(index, 1);
     }
 
     private static async SendTradeNotFound(messageInfo:IMessageInfo, accept:boolean) {

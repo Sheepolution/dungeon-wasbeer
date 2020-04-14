@@ -1,9 +1,10 @@
 export enum ModifierType {
-    Attack = 'Attack',
+    Armor = 'Armor',
+    Charisma = 'Charisma',
+    Dexterity = 'Dexterity',
+    Healing = 'Healing',
+    Health = 'Health',
+    Regeneration = 'Regeneration',
     Spell = 'Spell',
     Strength = 'Strength',
-    Charisma = 'Charisma',
-    Healing = 'Healing',
-    Dexterity = 'Dexterity',
-    Health = 'Health',
 }
