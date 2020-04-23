@@ -12,10 +12,10 @@ export default class TradeHandler {
     private static trades:Array<ITradeInfo> = new Array<ITradeInfo>();
     private static readonly tradeInstructions = 'Zeg beiden `;accepteer` als je de ruil wilt accepteren. Zeg `;annuleer` als je de ruil wilt annuleren.';
 
-    public static async OnCommand(messageInfo:IMessageInfo, player:Player, command:string, args:Array<string>) {
+    public static async OnCommand(messageInfo:IMessageInfo, player:Player, command:string, content:string) {
         switch(command) {
             case 'ruil':
-                this.OnTrade(messageInfo, player, args[0]);
+                this.OnTrade(messageInfo, player, content);
                 break;
             case 'accept':
             case 'accepteer':
