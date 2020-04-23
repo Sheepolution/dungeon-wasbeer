@@ -11,6 +11,7 @@ export default class PlayerCardHandler {
             this.SendPlayerCard(messageInfo, player, args[0]);
             break;
         case 'lijst':
+        case 'kaarten':
             this.SendPlayerCardList(messageInfo, player);
             break;
         default:
