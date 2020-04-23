@@ -61,7 +61,7 @@ export default class AdminHandler {
                 this.ResetAllCache(messageInfo);
                 break;
             case 'say':
-                this.SayMessage(messageInfo, content);
+                this.SayMessage(content);
                 break;
             default:
                 return false;
@@ -75,8 +75,8 @@ export default class AdminHandler {
         MessageService.ReplyMessage(messageInfo, 'Alle cache is gereset.', true);
     }
 
-    private static async SayMessage(messageInfo:IMessageInfo, message:string) {
-        MessageService.ReplyMessageToMainChannel(messageInfo, message);
+    private static async SayMessage(message:string) {
+        MessageService.SendMessageToMainChannel(message);
     }
 
     // CARDS ////////////////

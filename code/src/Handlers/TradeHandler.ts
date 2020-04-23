@@ -13,7 +13,7 @@ export default class TradeHandler {
     private static readonly tradeInstructions = 'Zeg beiden `;accepteer` als je de ruil wilt accepteren. Zeg `;annuleer` als je de ruil wilt annuleren.';
 
     public static async OnCommand(messageInfo:IMessageInfo, player:Player, command:string, content:string) {
-        switch(command) {
+        switch (command) {
             case 'ruil':
                 this.OnTrade(messageInfo, player, content);
                 break;

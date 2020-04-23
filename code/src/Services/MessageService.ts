@@ -29,8 +29,8 @@ export default class MessageService {
         DiscordService.SendEmbed(messageInfo.channel, embed, message)
     }
 
-    public static SendMessageToMainChannel(messageInfo:IMessageInfo, message:string) {
-        this.ReplyMessage(BotManager.GetMainChannel(), message, undefined, false);
+    public static SendMessageToMainChannel(message:string) {
+        this.SendMessage(BotManager.GetMainChannel(), message);
     }
 
     public static ReplyMissingAssignedArguments(messageInfo:IMessageInfo, missing:Array<string>) {

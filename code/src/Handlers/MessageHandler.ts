@@ -60,6 +60,6 @@ export default class MessageHandler {
         playerCard.RemoveOne();
 
         messageInfo.channel = BotManager.GetMainChannel();
-        MessageService.SendMessage(messageInfo, 'Zij die bedelen worden gestraft. Deze kaart pak ik gewoon weer van je af. Dat zal je leren!', false, true, CardEmbeds.GetCardEmbed(playerCard.GetCard()))
+        MessageService.SendMessageToMainChannel('Zij die bedelen worden gestraft. Deze kaart pak ik gewoon weer van je af. Dat zal je leren!');
     }
 }

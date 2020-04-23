@@ -14,7 +14,6 @@ export default class SettingsConstants {
 
     public static readonly MESSAGE_POINT_TIMEOUT_MINUTES = 15;
 
-
     public static readonly MESSAGE_POINT_AMOUNT_REWARDS = {
         CARD: 8
     };

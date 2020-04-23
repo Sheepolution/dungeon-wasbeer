@@ -24,7 +24,7 @@ export default class CommandHandler {
             return;
         }
 
-        if (await TradeHandler.OnCommand(messageInfo, player, command, args)) {
+        if (await TradeHandler.OnCommand(messageInfo, player, command, content)) {
             return;
         } else if (await PlayerCardHandler.OnCommand(messageInfo, player, command, args)) {
             return;
