@@ -47,4 +47,8 @@ export default class MonsterManager {
         monsterModifyResult.result = true;
         return monsterModifyResult;
     }
+
+    public static GetRandomMonster() {
+        return this.monsterList.randomChoice();
+    }
 }

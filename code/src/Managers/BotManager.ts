@@ -1,18 +1,25 @@
 import CardManager from './CardManager';
 import CommandHandler from '../Handlers/CommandHandler';
 import IMessageInfo from '../Interfaces/IMessageInfo';
-import { Message } from 'discord.js';
+import { Message, TextChannel } from 'discord.js';
 import MessageHandler from '../Handlers/MessageHandler';
 import PlayerManager from './PlayerManager';
 import DiscordUtils from '../Utils/DiscordUtils';
 import SettingsConstants from '../Constants/SettingsConstants';
+import CampaignManager from './CampaignManager';
+import DiscordService from '../Services/DiscordService';
+import MonsterManager from './MonsterManager';
 
 export default class BotManager {
 
+    private static mainChannel:TextChannel;
+
     public static async OnReady() {
         console.log('Dungeon Wasbeer: Connected');
-        // this.mainChannel = <TextChannel> await DiscordService.FindChannelById(this.mainChannelId);
-        CardManager.BuildCardList();
+        this.mainChannel = <TextChannel> await DiscordService.FindChannelById(SettingsConstants.MAIN_CHANNEL_ID);
+        await CardManager.BuildCardList();
+        await MonsterManager.BuildMonsterList();
+        await CampaignManager.ContinueSession();
     }
 
     public static async OnMessage(message:Message) {
@@ -48,5 +55,9 @@ export default class BotManager {
     public static async ResetAllCache() {
         PlayerManager.ResetPlayerCache();
         CardManager.BuildCardList();
+    }
+
+    public static async GetMainChannel() {
+        return this.mainChannel || <TextChannel> await DiscordService.FindChannelById(SettingsConstants.MAIN_CHANNEL_ID);
     }
 }

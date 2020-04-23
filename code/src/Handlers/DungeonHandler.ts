@@ -35,7 +35,7 @@ export default class DungeonHandler {
     private static async ChooseClass(command:IMessageInfo, player:Player, className:string) {
         const playerClassName = player.GetClassName();
         if (playerClassName) {
-            MessageService.SendMessage(command, `Je bent al de class ${playerClassName}. Je kan hier pas van veranderen wanneer je dood bent, of wanneer je opnieuw begint met \`;reset\`.`, false);
+            MessageService.ReplyMessage(command, `Je bent al de class ${playerClassName}. Je kan hier pas van veranderen wanneer je dood bent, of wanneer je opnieuw begint met \`;reset\`.`, false);
             return;
         }
 
@@ -53,7 +53,7 @@ export default class DungeonHandler {
 
         const classType = (<any>ClassType)[className];
         await player.SetClass(classType);
-        MessageService.SendMessage(command, `Je bent nu de class ${className}!`, true)
+        MessageService.ReplyMessage(command, `Je bent nu de class ${className}!`, true)
     }
 
     private static async AddCardToSlot(messageInfo:IMessageInfo, player:Player, cardName:string) {
@@ -64,41 +64,40 @@ export default class DungeonHandler {
         // TODO: Dit mag je niet doen als je full health bent.
 
         if (cardName == null) {
-            MessageService.SendMissingCardName(messageInfo);
+            MessageService.ReplyMissingCardName(messageInfo);
             return;
         }
 
-
         const playerCard = player.FindCard(cardName);
         if (playerCard == null) {
-            MessageService.SendNotOwningCard(messageInfo, cardName);
+            MessageService.ReplyNotOwningCard(messageInfo, cardName);
             return;
         }
 
         if (!player.HasAvailableCardSlot()) {
-            MessageService.SendMessage(messageInfo, 'Je equipment zit vol. Haal een kaart weg voordat je er weer een toevoegt.', false);
+            MessageService.ReplyMessage(messageInfo, 'Je equipment zit vol. Haal een kaart weg voordat je er weer een toevoegt.', false);
             return;
         }
 
         const realCardName = playerCard.GetCard().GetName();
 
         if (!playerCard.GetCard().HasBuffs()) {
-            MessageService.SendMessage(messageInfo, `Je equipment is alleen voor kaarten met buffs. De kaart '${realCardName}' heeft geen buffs.`, false);
+            MessageService.ReplyMessage(messageInfo, `Je equipment is alleen voor kaarten met buffs. De kaart '${realCardName}' heeft geen buffs.`, false);
             return;
         }
 
         if (playerCard.IsInSlot()) {
-            MessageService.SendMessage(messageInfo, `De kaart '${realCardName}' zit al in je equipment. Je kan maar één van elke kaart in je equipment hebben.`, false);
+            MessageService.ReplyMessage(messageInfo, `De kaart '${realCardName}' zit al in je equipment. Je kan maar één van elke kaart in je equipment hebben.`, false);
             return;
         }
 
         if (playerCard.IsUsedInTrade()) {
-            MessageService.SendMessage(messageInfo, `Iemand is een ruil gestart met jouw kaart '${realCardName}', dus je kan deze nu niet equipment.`, false);
+            MessageService.ReplyMessage(messageInfo, `Iemand is een ruil gestart met jouw kaart '${realCardName}', dus je kan deze nu niet equipment.`, false);
             return;
         }
 
         await player.AddCardToSlot(playerCard);
-        MessageService.SendMessage(messageInfo, `De kaart '${realCardName}' is aan je equipment toegevoegd.`, true, true, PlayerEmbeds.GetCardSlotsEmbed(player));
+        MessageService.ReplyMessage(messageInfo, `De kaart '${realCardName}' is aan je equipment toegevoegd.`, true, true, PlayerEmbeds.GetCardSlotsEmbed(player));
     }
 
     private static async RemoveCardFromSlot(messageInfo:IMessageInfo, player:Player, cardName:string) {
@@ -106,37 +105,37 @@ export default class DungeonHandler {
         // TODO: Dit mag je niet doen als je full health bent.
 
         if (cardName == null) {
-            MessageService.SendMissingCardName(messageInfo);
+            MessageService.ReplyMissingCardName(messageInfo);
             return;
         }
 
         const playerCard = player.FindCard(cardName);
         if (playerCard == null) {
-            MessageService.SendNotOwningCard(messageInfo, cardName);
+            MessageService.ReplyNotOwningCard(messageInfo, cardName);
             return;
         }
 
         const realCardName = playerCard.GetCard().GetName();
 
         if (!playerCard.IsInSlot()) {
-            MessageService.SendMessage(messageInfo, `De kaart '${realCardName}' zit niet in je equipment.`, false);
+            MessageService.ReplyMessage(messageInfo, `De kaart '${realCardName}' zit niet in je equipment.`, false);
             return;
         }
 
         await player.RemoveCardFromSlot(playerCard);
-        MessageService.SendMessage(messageInfo, `De kaart '${realCardName}' is uit je equipment gehaald.`, true, true, PlayerEmbeds.GetCardSlotsEmbed(player));
+        MessageService.ReplyMessage(messageInfo, `De kaart '${realCardName}' is uit je equipment gehaald.`, true, true, PlayerEmbeds.GetCardSlotsEmbed(player));
     }
 
     // Messages
     private static async SendUnknownClassName(command:IMessageInfo) {
-        MessageService.SendMessage(command, `Kies een van de volgende classes:\n${this.classNames.join(', ')}`, false);
+        MessageService.ReplyMessage(command, `Kies een van de volgende classes:\n${this.classNames.join(', ')}`, false);
     }
 
     private static async SendModifierStats(messageInfo:IMessageInfo, player:Player) {
-        MessageService.SendEmbed(messageInfo, PlayerEmbeds.GetModifierStatsEmbed(player));
+        MessageService.ReplyEmbed(messageInfo, PlayerEmbeds.GetModifierStatsEmbed(player));
     }
 
     private static async SendCardSlots(messageInfo:IMessageInfo, player:Player) {
-        MessageService.SendEmbed(messageInfo, PlayerEmbeds.GetCardSlotsEmbed(player));
+        MessageService.ReplyEmbed(messageInfo, PlayerEmbeds.GetCardSlotsEmbed(player));
     }
 }

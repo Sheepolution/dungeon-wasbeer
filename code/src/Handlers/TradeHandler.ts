@@ -35,7 +35,7 @@ export default class TradeHandler {
     private static async OnTrade(messageInfo:IMessageInfo, player:Player, args:string) {
         var match = args.match(/<@!?(\d+)>\s(.+?)\s>\s(.+)/);
         if (match == null) {
-            MessageService.SendMessage(messageInfo, 'Ik begrijp je niet helemaal. Zorg dat je het formaat aanhoudt:\n`;ruil @mention jouw kaart > hun kaart`', false);
+            MessageService.ReplyMessage(messageInfo, 'Ik begrijp je niet helemaal. Zorg dat je het formaat aanhoudt:\n`;ruil @mention jouw kaart > hun kaart`', false);
             return;
         }
 
@@ -43,9 +43,9 @@ export default class TradeHandler {
 
         if (otherPlayerGet == null) {
             if (match[1] == process.env.BOT_ID) {
-                MessageService.SendMessage(messageInfo, 'Dat is een mooie kaart, maar nee bedankt.');
+                MessageService.ReplyMessage(messageInfo, 'Dat is een mooie kaart, maar nee bedankt.');
             } else {
-                MessageService.SendMessage(messageInfo, 'Die gozer heeft nog helemaal geen kaarten joh.', false);
+                MessageService.ReplyMessage(messageInfo, 'Die gozer heeft nog helemaal geen kaarten joh.', false);
             }
             return;
         }
@@ -53,7 +53,7 @@ export default class TradeHandler {
         const otherPlayer = <Player> otherPlayerGet;
 
         if (player == otherPlayer) {
-            MessageService.SendMessage(messageInfo, 'Je kan niet met jezelf ruilen. Het klinkt ook wel een beetje zielig.', false);
+            MessageService.ReplyMessage(messageInfo, 'Je kan niet met jezelf ruilen. Het klinkt ook wel een beetje zielig.', false);
             return;
         }
 
@@ -61,17 +61,17 @@ export default class TradeHandler {
         const theirTrade = this.FindExistingTrade(otherPlayer);
 
         if (yourTrade != null && yourTrade == theirTrade) {
-            MessageService.SendMessage(messageInfo, 'Jullie twee zijn al aan het ruilen. ' + this.tradeInstructions, false);
+            MessageService.ReplyMessage(messageInfo, 'Jullie twee zijn al aan het ruilen. ' + this.tradeInstructions, false);
             return;
         }
 
         if (yourTrade != null) {
-            MessageService.SendMessage(messageInfo, `Jij bent al aan het ruilen met ${yourTrade.with.GetDiscordName()}. ${this.tradeInstructions}`, false);
+            MessageService.ReplyMessage(messageInfo, `Jij bent al aan het ruilen met ${yourTrade.with.GetDiscordName()}. ${this.tradeInstructions}`, false);
             return;
         }
 
         if (theirTrade != null) {
-            MessageService.SendMessage(messageInfo, `${theirTrade.trader.GetDiscordName()} is al aan het ruilen met ${theirTrade.with.GetDiscordName()}`, false);
+            MessageService.ReplyMessage(messageInfo, `${theirTrade.trader.GetDiscordName()} is al aan het ruilen met ${theirTrade.with.GetDiscordName()}`, false);
             return;
         }
 
@@ -82,21 +82,21 @@ export default class TradeHandler {
         const theirCard = otherPlayer.FindCard(searchTheirs);
 
         if (yourCard == null) {
-            MessageService.SendMessage(messageInfo, `Je hebt geen kaart die lijkt op ${searchMine}.`, false);
+            MessageService.ReplyMessage(messageInfo, `Je hebt geen kaart die lijkt op ${searchMine}.`, false);
             return;
         }
 
         if (theirCard == null) {
-            MessageService.SendMessage(messageInfo, `${otherPlayer.GetDiscordName()} heeft geen kaart die lijkt op ${searchTheirs}.`, false);
+            MessageService.ReplyMessage(messageInfo, `${otherPlayer.GetDiscordName()} heeft geen kaart die lijkt op ${searchTheirs}.`, false);
             return;
         }
 
         if (!yourCard.CanBeTraded()) {
-            MessageService.SendMessage(messageInfo, `Jouw kaart '${yourCard.GetCard().GetName()}' zit in je equipment en dus je kan deze niet ruilen.`, false);
+            MessageService.ReplyMessage(messageInfo, `Jouw kaart '${yourCard.GetCard().GetName()}' zit in je equipment en dus je kan deze niet ruilen.`, false);
         }
 
         if (!theirCard.CanBeTraded()) {
-            MessageService.SendMessage(messageInfo, `De kaart van ${otherPlayer.GetDiscordName()}, '${yourCard.GetCard().GetName()}', zit in hun equipment en dus kunnen ze deze niet ruilen.`, false);
+            MessageService.ReplyMessage(messageInfo, `De kaart van ${otherPlayer.GetDiscordName()}, '${yourCard.GetCard().GetName()}', zit in hun equipment en dus kunnen ze deze niet ruilen.`, false);
         }
 
         this.StartTrade(messageInfo, player, otherPlayer, yourCard, theirCard);
@@ -136,7 +136,7 @@ export default class TradeHandler {
         }
 
         this.RemoveTrade(tradeInfo);
-        MessageService.SendMessage(messageInfo, 'De ruil is geannuleerd.');
+        MessageService.ReplyMessage(messageInfo, 'De ruil is geannuleerd.');
     }
 
     private static StartTrade(messageInfo:IMessageInfo, player:Player, otherPlayer:Player, yourCard:PlayerCard, theirCard:PlayerCard) {
@@ -153,7 +153,7 @@ export default class TradeHandler {
         theirCard.StartUsingInTrade();
 
         this.trades.push(tradeInfo);
-        MessageService.SendEmbed(messageInfo, CardEmbeds.GetTradeEmbed(tradeInfo), `${tradeInfo.with.GetMention()}, wil jij jouw '${tradeInfo.theirCard.GetCard().GetName()}' ruilen voor de '${tradeInfo.yourCard.GetCard().GetName()}' van ${tradeInfo.trader.GetMention()}? ${this.tradeInstructions}`)
+        MessageService.ReplyEmbed(messageInfo, CardEmbeds.GetTradeEmbed(tradeInfo), `${tradeInfo.with.GetMention()}, wil jij jouw '${tradeInfo.theirCard.GetCard().GetName()}' ruilen voor de '${tradeInfo.yourCard.GetCard().GetName()}' van ${tradeInfo.trader.GetMention()}? ${this.tradeInstructions}`)
     }
 
     private static async CompleteTrade(messageInfo:IMessageInfo, tradeInfo:ITradeInfo) {
@@ -185,7 +185,7 @@ export default class TradeHandler {
         await tradeInfo.yourCard.RemoveOne();
         await tradeInfo.theirCard.RemoveOne();
 
-        MessageService.SendMessage(messageInfo, `${tradeInfo.trader.GetMention()} en ${tradeInfo.with.GetMention()}, jullie hebben de kaarten geruild. Veel plezier ermee!`, true, false);
+        MessageService.ReplyMessage(messageInfo, `${tradeInfo.trader.GetMention()} en ${tradeInfo.with.GetMention()}, jullie hebben de kaarten geruild. Veel plezier ermee!`, true, false);
         this.RemoveTrade(tradeInfo);
     }
 
@@ -202,6 +202,6 @@ export default class TradeHandler {
     }
 
     private static async SendTradeNotFound(messageInfo:IMessageInfo, accept:boolean) {
-        MessageService.SendMessage(messageInfo, 'Wat loop je nou allemaal te ' + (accept ? 'accepteren' : 'annuleren') + '? Je bent helemaal niet aan het ruilen!', false)
+        MessageService.ReplyMessage(messageInfo, 'Wat loop je nou allemaal te ' + (accept ? 'accepteren' : 'annuleren') + '? Je bent helemaal niet aan het ruilen!', false)
     }
 }

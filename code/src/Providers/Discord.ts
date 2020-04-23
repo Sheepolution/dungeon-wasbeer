@@ -1,4 +1,5 @@
 import { Client, Message } from 'discord.js';
+import DiscordService from '../Services/DiscordService';
 
 export default class Discord {
 
@@ -17,11 +18,12 @@ export default class Discord {
 
     public static Init() {
         this.client = new Client();
-        const client = this.client;
 
-        client.on('ready', async () => { await Discord.EventReady() });
-        client.on('message', async (message) => { await Discord.EventMessage(message) });
-        client.login(process.env.TOKEN);
+        DiscordService.SetClient(this.client)
+
+        this.client.on('ready', async () => { await Discord.EventReady() });
+        this.client.on('message', async (message) => { await Discord.EventMessage(message) });
+        this.client.login(process.env.TOKEN);
     }
 
     private static async EventReady () {

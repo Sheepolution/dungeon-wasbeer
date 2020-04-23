@@ -72,24 +72,24 @@ export default class AdminHandler {
 
     private static async ResetAllCache(messageInfo:IMessageInfo) {
         await BotManager.ResetAllCache();
-        MessageService.SendMessage(messageInfo, 'Alle cache is gereset.', true);
+        MessageService.ReplyMessage(messageInfo, 'Alle cache is gereset.', true);
     }
 
     private static async SayMessage(messageInfo:IMessageInfo, message:string) {
-        MessageService.SendMessageToMainChannel(messageInfo, message);
+        MessageService.ReplyMessageToMainChannel(messageInfo, message);
     }
 
     // CARDS ////////////////
 
     private static async AddNewCard(messageInfo:IMessageInfo, player:Player, args:any) {
         if (args == null) {
-            MessageService.SendAssignedArgumentsParseError(messageInfo);
+            MessageService.ReplyAssignedArgumentsParseError(messageInfo);
             return;
         }
 
         const attachment = messageInfo.message?.attachments.first();
         if (attachment == null || !['.png', 'jpeg', '.jpg'].includes(attachment.name?.toLowerCase().slice(-4) || '')) {
-            MessageService.SendNoImageAttached(messageInfo);
+            MessageService.ReplyNoImageAttached(messageInfo);
             return;
         }
 
@@ -103,7 +103,7 @@ export default class AdminHandler {
         }
 
         if (missing.length > 0) {
-            MessageService.SendMissingAssignedArguments(messageInfo, missing);
+            MessageService.ReplyMissingAssignedArguments(messageInfo, missing);
             return;
         }
 
@@ -111,14 +111,14 @@ export default class AdminHandler {
         if (args.m) {
             modifiers = CardService.ParseModifierStringToArray(args.m);
             if (modifiers == null) {
-                MessageService.SendMessage(messageInfo, 'Ik kan de modifiers niet parsen. Zorg dat je het juist formaat aanhoudt:\nattack=2/health=3')
+                MessageService.ReplyMessage(messageInfo, 'Ik kan de modifiers niet parsen. Zorg dat je het juist formaat aanhoudt:\nattack=2/health=3')
                 return;
             }
 
             if (args.mc) {
                 modifierClass = (<any>ModifierType)[args.mc.toTitleCase()];
                 if (modifierClass == null) {
-                    MessageService.SendMessage(messageInfo, `'${args.mc}' is geen bestaande class.\nKies uit Bard, Cleric, Wizard, Paladin, Fighter en Ranger.`);
+                    MessageService.ReplyMessage(messageInfo, `'${args.mc}' is geen bestaande class.\nKies uit Bard, Cleric, Wizard, Paladin, Fighter en Ranger.`);
                     return;
                 }
             }
@@ -126,21 +126,21 @@ export default class AdminHandler {
 
         const cardModifyResult = await CardManager.AddNewCard(args.n, args.b, args.r, args.c, attachment?.proxyURL, player.GetId(), modifiers, modifierClass);
         if (cardModifyResult.result) {
-            MessageService.SendMessage(messageInfo, 'De kaart is toegevoegd!', true, true, CardEmbeds.GetCardEmbed(<Card>cardModifyResult.object));
+            MessageService.ReplyMessage(messageInfo, 'De kaart is toegevoegd!', true, true, CardEmbeds.GetCardEmbed(<Card>cardModifyResult.object));
         } else {
-            MessageService.SendMessage(messageInfo, 'Er is al een kaart met deze naam in deze categorie!', false, true, CardEmbeds.GetCardEmbed(<Card>cardModifyResult.object));
+            MessageService.ReplyMessage(messageInfo, 'Er is al een kaart met deze naam in deze categorie!', false, true, CardEmbeds.GetCardEmbed(<Card>cardModifyResult.object));
         }
     }
 
     private static async EditCard(messageInfo:IMessageInfo, args:any) {
         if (args == null) {
-            MessageService.SendAssignedArgumentsParseError(messageInfo);
+            MessageService.ReplyAssignedArgumentsParseError(messageInfo);
             return;
         }
 
         const attachment = messageInfo.message?.attachments.first();
         if (attachment != null && !['.png', 'jpeg', '.jpg'].includes(attachment.name?.toLowerCase().slice(-4) || '')) {
-            MessageService.SendNoImageAttached(messageInfo);
+            MessageService.ReplyNoImageAttached(messageInfo);
             return;
         }
 
@@ -154,7 +154,7 @@ export default class AdminHandler {
         }
 
         if (missing.length > 0) {
-            MessageService.SendMissingAssignedArguments(messageInfo, missing);
+            MessageService.ReplyMissingAssignedArguments(messageInfo, missing);
             return;
         }
 
@@ -162,14 +162,14 @@ export default class AdminHandler {
         if (args.m) {
             modifiers = CardService.ParseModifierStringToArray(args.m);
             if (modifiers == null) {
-                MessageService.SendMessage(messageInfo, 'Ik kan de modifiers niet parsen. Zorg dat je het juist formaat aanhoudt:\nattack=2/health=3')
+                MessageService.ReplyMessage(messageInfo, 'Ik kan de modifiers niet parsen. Zorg dat je het juist formaat aanhoudt:\nattack=2/health=3')
                 return;
             }
 
             if (args.mc) {
                 modifierClass = (<any>ClassType)[args.mc.toTitleCase()];
                 if (modifierClass == null) {
-                    MessageService.SendMessage(messageInfo, `'${args.mc}' is geen bestaande class.\nKies uit Bard, Cleric, Wizard, Paladin, Fighter en Ranger.`);
+                    MessageService.ReplyMessage(messageInfo, `'${args.mc}' is geen bestaande class.\nKies uit Bard, Cleric, Wizard, Paladin, Fighter en Ranger.`);
                     return;
                 }
             }
@@ -177,9 +177,9 @@ export default class AdminHandler {
 
         const cardModifyResult = await CardManager.EditCard(args.on, args.n, args.b, args.r, args.c, modifiers, modifierClass, attachment?.proxyURL);
         if (cardModifyResult.result) {
-            MessageService.SendMessage(messageInfo, 'De kaart is aangepast!', true, true, CardEmbeds.GetCardEmbed(<Card>cardModifyResult.object));
+            MessageService.ReplyMessage(messageInfo, 'De kaart is aangepast!', true, true, CardEmbeds.GetCardEmbed(<Card>cardModifyResult.object));
         } else {
-            MessageService.SendMessage(messageInfo, 'Er is geen kaart met de naam \'' + args.on + '\'.', false, true);
+            MessageService.ReplyMessage(messageInfo, 'Er is geen kaart met de naam \'' + args.on + '\'.', false, true);
         }
     }
 
@@ -191,7 +191,7 @@ export default class AdminHandler {
 
         var card = new Card();
         if (!await card.FIND_BY_NAME(name)) {
-            MessageService.SendMessage(messageInfo, 'Je hebt geen kaart met de naam \'' + name + '\'.', false, true);
+            MessageService.ReplyMessage(messageInfo, 'Je hebt geen kaart met de naam \'' + name + '\'.', false, true);
             return;
         }
 
@@ -200,7 +200,7 @@ export default class AdminHandler {
 
     private static async SendCardStats(messageInfo:IMessageInfo) {
         const cards:any = await Card.GET_ALL();
-        MessageService.SendEmbed(messageInfo, CardEmbeds.GetCardStatsEmbed(cards));
+        MessageService.ReplyEmbed(messageInfo, CardEmbeds.GetCardStatsEmbed(cards));
     }
 
     private static async SendRandomCard(messageInfo:IMessageInfo) {
@@ -212,20 +212,20 @@ export default class AdminHandler {
     }
 
     private static async SendCardEmbed(messageInfo:IMessageInfo, card:Card) {
-        MessageService.SendEmbed(messageInfo, CardEmbeds.GetCardEmbed(card));
+        MessageService.ReplyEmbed(messageInfo, CardEmbeds.GetCardEmbed(card));
     }
 
     // MONSTERS ////////////////
 
     private static async AddNewMonster(messageInfo:IMessageInfo, player:Player, args:any) {
         if (args == null) {
-            MessageService.SendAssignedArgumentsParseError(messageInfo);
+            MessageService.ReplyAssignedArgumentsParseError(messageInfo);
             return;
         }
 
         const attachment = messageInfo.message?.attachments.first();
         if (attachment == null || !['.png', 'jpeg', '.jpg'].includes(attachment.name?.toLowerCase().slice(-4) || '')) {
-            MessageService.SendNoImageAttached(messageInfo);
+            MessageService.ReplyNoImageAttached(messageInfo);
             return;
         }
 
@@ -239,34 +239,34 @@ export default class AdminHandler {
         }
 
         if (missing.length > 0) {
-            MessageService.SendMissingAssignedArguments(messageInfo, missing);
+            MessageService.ReplyMissingAssignedArguments(messageInfo, missing);
             return;
         }
 
         const type = (<any>AttackType)[args.t];
 
         if (type == null) {
-            MessageService.SendMessage(messageInfo, '', false);
+            MessageService.ReplyMessage(messageInfo, '', false);
             return;
         }
 
         const objectModifyResult = await MonsterManager.AddNewMonster(args.n, args.b, args.l, args.c, type, args.h, args.a, attachment?.proxyURL, player.GetId());
         if (objectModifyResult.result) {
-            MessageService.SendMessage(messageInfo, 'Het monster is toegevoegd!', true, true, MonsterEmbeds.GetMonsterEmbed(<Monster>objectModifyResult.object));
+            MessageService.ReplyMessage(messageInfo, 'Het monster is toegevoegd!', true, true, MonsterEmbeds.GetMonsterEmbed(<Monster>objectModifyResult.object));
         } else {
-            MessageService.SendMessage(messageInfo, 'Er is al een monster met deze naam!', false, true, MonsterEmbeds.GetMonsterEmbed(<Monster>objectModifyResult.object));
+            MessageService.ReplyMessage(messageInfo, 'Er is al een monster met deze naam!', false, true, MonsterEmbeds.GetMonsterEmbed(<Monster>objectModifyResult.object));
         }
     }
 
     private static async EditMonster(messageInfo:IMessageInfo, args:any) {
         if (args == null) {
-            MessageService.SendAssignedArgumentsParseError(messageInfo);
+            MessageService.ReplyAssignedArgumentsParseError(messageInfo);
             return;
         }
 
         const attachment = messageInfo.message?.attachments.first();
         if (attachment != null && !['.png', 'jpeg', '.jpg'].includes(attachment.name?.toLowerCase().slice(-4) || '')) {
-            MessageService.SendNoImageAttached(messageInfo);
+            MessageService.ReplyNoImageAttached(messageInfo);
             return;
         }
 
@@ -280,15 +280,15 @@ export default class AdminHandler {
         }
 
         if (missing.length > 0) {
-            MessageService.SendMissingAssignedArguments(messageInfo, missing);
+            MessageService.ReplyMissingAssignedArguments(messageInfo, missing);
             return;
         }
 
         const monsterModifyResult = await MonsterManager.EditMonster(args.on, args.n, args.b, args.l, args.c, args.t, args.h, args.a)
         if (monsterModifyResult.result) {
-            MessageService.SendMessage(messageInfo, 'Het monster is aangepast!', true, true, MonsterEmbeds.GetMonsterEmbed(<Monster>monsterModifyResult.object));
+            MessageService.ReplyMessage(messageInfo, 'Het monster is aangepast!', true, true, MonsterEmbeds.GetMonsterEmbed(<Monster>monsterModifyResult.object));
         } else {
-            MessageService.SendMessage(messageInfo, 'Er is geen monster met de naam \'' + args.on + '\'.', false, true);
+            MessageService.ReplyMessage(messageInfo, 'Er is geen monster met de naam \'' + args.on + '\'.', false, true);
         }
     }
 
@@ -300,7 +300,7 @@ export default class AdminHandler {
 
         var monster = new Monster();
         if (!await monster.FIND_BY_NAME(name)) {
-            MessageService.SendMessage(messageInfo, 'Je hebt geen monster met de naam \'' + name + '\'.', false, true);
+            MessageService.ReplyMessage(messageInfo, 'Je hebt geen monster met de naam \'' + name + '\'.', false, true);
             return;
         }
 
@@ -316,6 +316,6 @@ export default class AdminHandler {
     }
 
     private static async SendMonsterEmbed(messageInfo:IMessageInfo, monster:Monster) {
-        MessageService.SendEmbed(messageInfo, MonsterEmbeds.GetMonsterEmbed(monster));
+        MessageService.ReplyEmbed(messageInfo, MonsterEmbeds.GetMonsterEmbed(monster));
     }
 }

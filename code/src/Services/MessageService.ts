@@ -5,7 +5,15 @@ import EmojiConstants from '../Constants/EmojiConstants';
 
 export default class MessageService {
 
-    public static SendMessage(messageInfo:IMessageInfo, message:string, good?:boolean, mention?:boolean, embed?:MessageEmbed) {
+    public static SendMessage(channel:TextChannel, message:string, embed?:MessageEmbed) {
+        DiscordService.SendMessage(channel, message, embed)
+    }
+
+    public static SendEmbed(channel:TextChannel, embed:MessageEmbed, message?:string) {
+        DiscordService.SendEmbed(channel, embed, message)
+    }
+
+    public static ReplyMessage(messageInfo:IMessageInfo, message:string, good?:boolean, mention?:boolean, embed?:MessageEmbed) {
         if (good != null) {
             message = (good ?  EmojiConstants.STATUS.GOOD : EmojiConstants.STATUS.BAD) + ' ' + message;
         }
@@ -16,31 +24,31 @@ export default class MessageService {
         }
     }
 
-    public static SendEmbed(messageInfo:IMessageInfo, embed:MessageEmbed, content?:string) {
-        DiscordService.SendEmbed(messageInfo.channel, embed, content)
+    public static ReplyEmbed(messageInfo:IMessageInfo, embed:MessageEmbed, message?:string) {
+        DiscordService.SendEmbed(messageInfo.channel, embed, message)
     }
 
-    public static SendMessageToMainChannel(messageInfo:IMessageInfo, content:string) {
-        this.SendMessage(messageInfo, content, undefined, false);
+    public static ReplyMessageToMainChannel(messageInfo:IMessageInfo, message:string) {
+        this.ReplyMessage(messageInfo, message, undefined, false);
     }
 
-    public static SendMissingAssignedArguments(messageInfo:IMessageInfo, missing:Array<string>) {
-        this.SendMessage(messageInfo, 'Je vergeet één of meerdere parameters:\n' + missing.join(', ') , false, true);
+    public static ReplyMissingAssignedArguments(messageInfo:IMessageInfo, missing:Array<string>) {
+        this.ReplyMessage(messageInfo, 'Je vergeet één of meerdere parameters:\n' + missing.join(', ') , false, true);
     }
 
-    public static SendAssignedArgumentsParseError(messageInfo:IMessageInfo) {
-        this.SendMessage(messageInfo, 'Ik kon de parameters van je bericht niet verwerken.\nZorg dat dit het juiste format aanhoudt.\n\nVoorbeeld:\n;commando -voorbeeld Dit is een voorbeeld -getal 123', false, true);
+    public static ReplyAssignedArgumentsParseError(messageInfo:IMessageInfo) {
+        this.ReplyMessage(messageInfo, 'Ik kon de parameters van je bericht niet verwerken.\nZorg dat dit het juiste format aanhoudt.\n\nVoorbeeld:\n;commando -voorbeeld Dit is een voorbeeld -getal 123', false, true);
     }
 
-    public static SendNoImageAttached(messageInfo:IMessageInfo) {
-        this.SendMessage(messageInfo, 'Zorg dat je een afbeelding meegeeft van het formaat .png, .jpg of .jpeg.', false, true);
+    public static ReplyNoImageAttached(messageInfo:IMessageInfo) {
+        this.ReplyMessage(messageInfo, 'Zorg dat je een afbeelding meegeeft van het formaat .png, .jpg of .jpeg.', false, true);
     }
 
-    public static SendMissingCardName(messageInfo:IMessageInfo) {
-        MessageService.SendMessage(messageInfo, 'Ik mis de naam van de kaart.', false);
+    public static ReplyMissingCardName(messageInfo:IMessageInfo) {
+        MessageService.ReplyMessage(messageInfo, 'Ik mis de naam van de kaart.', false);
     }
 
-    public static SendNotOwningCard(messageInfo:IMessageInfo, name:string) {
-        MessageService.SendMessage(messageInfo, 'Je hebt geen kaart met de naam \'' + name + '\'.', false, true);
+    public static ReplyNotOwningCard(messageInfo:IMessageInfo, name:string) {
+        MessageService.ReplyMessage(messageInfo, 'Je hebt geen kaart met de naam \'' + name + '\'.', false, true);
     }
 }

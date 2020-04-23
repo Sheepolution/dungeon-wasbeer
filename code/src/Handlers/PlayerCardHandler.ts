@@ -22,20 +22,20 @@ export default class PlayerCardHandler {
 
     private static async SendPlayerCard(messageInfo:IMessageInfo, player:Player, cardName:string) {
         if (cardName == null) {
-            MessageService.SendMissingCardName(messageInfo);
+            MessageService.ReplyMissingCardName(messageInfo);
             return;
         }
 
         const playerCard = player.FindCard(cardName);
         if (playerCard == null) {
-            MessageService.SendNotOwningCard(messageInfo, cardName);
+            MessageService.ReplyNotOwningCard(messageInfo, cardName);
             return;
         }
 
-        MessageService.SendEmbed(messageInfo, CardEmbeds.GetCardEmbed(playerCard.GetCard(), playerCard.GetAmount()));
+        MessageService.ReplyEmbed(messageInfo, CardEmbeds.GetCardEmbed(playerCard.GetCard(), playerCard.GetAmount()));
     }
 
     private static async SendPlayerCardList(messageInfo:IMessageInfo, player:Player) {
-        MessageService.SendEmbed(messageInfo, CardEmbeds.GetPlayerCardListEmbed(player));
+        MessageService.ReplyEmbed(messageInfo, CardEmbeds.GetPlayerCardListEmbed(player));
     }
 }
