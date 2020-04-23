@@ -8,6 +8,7 @@ import CardEmbeds from '../Embeds/CardEmbeds';
 import RedisConstants from '../Constants/RedisConstants';
 import MessageService from '../Services/MessageService';
 import PlayerCard from '../Objects/PlayerCard';
+import BotManager from '../Managers/BotManager';
 
 export default class MessageHandler {
 
@@ -26,6 +27,15 @@ export default class MessageHandler {
             return;
         }
 
+        const content = messageInfo.message?.content;
+        if (content) {
+            const contentLower = content.toLowerCase();
+            if (contentLower.includes('kaart') && content.length <= 20) {
+                this.OnBegging(messageInfo, player);
+                return;
+            }
+        }
+
         player.AddMessagePoint();
         if (player.GetMessagePoints() % SettingsConstants.MESSAGE_POINT_AMOUNT_REWARDS.CARD == 0) {
             const cardModifyResult = await CardManager.GivePlayerCard(messageInfo, player);
@@ -38,5 +48,18 @@ export default class MessageHandler {
         }
 
         Redis.set(MessageHandler.messagePointTimeoutPrefix + memberId, '1', 'EX', Utils.GetMinutesInSeconds(SettingsConstants.MESSAGE_POINT_TIMEOUT_MINUTES));
+    }
+
+    public static OnBegging(messageInfo:IMessageInfo, player:Player) {
+        const playerCards = player.GetCards();
+        if (playerCards.length == 0) {
+            return;
+        }
+
+        const playerCard = playerCards.randomChoice();
+        playerCard.RemoveOne();
+
+        messageInfo.channel = BotManager.GetMainChannel();
+        MessageService.SendMessage(messageInfo, 'Zij die bedelen worden gestraft. Deze kaart pak ik gewoon weer van je af. Dat zal je leren!', false, true, CardEmbeds.GetCardEmbed(playerCard.GetCard()))
     }
 }

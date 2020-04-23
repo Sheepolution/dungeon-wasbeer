@@ -1,5 +1,3 @@
-import BotManager from '../Managers/BotManager';
-
 export default class SettingsConstants {
     public static readonly COLORS = {
         BAD:'#ff0000',
@@ -16,11 +14,11 @@ export default class SettingsConstants {
     public static readonly MESSAGE_POINT_TIMEOUT_MINUTES = 15;
 
 
-    public static readonly MESSAGE_POINT_AMOUNT_REWARDS: {
-        CARD: 4
+    public static readonly MESSAGE_POINT_AMOUNT_REWARDS = {
+        CARD: 8
     };
 
-    public static readonly CARD_RANK_ROLL_VALUE: [
+    public static readonly CARD_RANK_ROLL_VALUE = [
         55,
         25,
         9,

@@ -10,11 +10,11 @@ import SettingsConstants from '../Constants/SettingsConstants';
 
 export default class BotManager {
 
-    // public static mainChannel:TextChannel;
+    public static mainChannel:TextChannel;
 
     public static async OnReady() {
         console.log('Dungeon Wasbeer: Connected');
-        // this.mainChannel = <TextChannel> await DiscordService.FindChannelById(this.mainChannelId);
+        BotManager.mainChannel = <TextChannel> await DiscordService.FindChannelById(SettingsConstants.MAIN_CHANNEL_ID);
         CardManager.BuildCardList();
     }
 
@@ -58,5 +58,9 @@ export default class BotManager {
     public static async ResetAllCache() {
         PlayerManager.ResetPlayerCache();
         CardManager.BuildCardList();
+    }
+
+    public static GetMainChannel() {
+        return BotManager.mainChannel;
     }
 }

@@ -11,7 +11,7 @@ export default class PlayerCardHandler {
             this.SendPlayerCard(messageInfo, player, args[0]);
             break;
         case 'lijst':
-            this.SendPlayerCard(messageInfo, player, args[0]);
+            this.SendPlayerCardList(messageInfo, player);
             break;
         default:
             return false;
@@ -34,4 +34,9 @@ export default class PlayerCardHandler {
 
         MessageService.SendMessage(messageInfo, 'Je hebt geen kaart met de naam \'' + name + '\'.', false, true);
     }
+
+    private static async SendPlayerCardList(messageInfo:IMessageInfo, player:Player) {
+        MessageService.SendEmbed(messageInfo, CardEmbeds.GetPlayerCardListEmbed(player, player.GetCards()));
+    }
+
 }

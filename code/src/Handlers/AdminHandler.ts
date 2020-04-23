@@ -12,7 +12,7 @@ import CardManager from '../Managers/CardManager';
 
 export default class AdminHandler {
 
-    public static OnCommand(messageInfo:IMessageInfo, player:Player, command:string, args:Array<string>, content:string) {
+    public static async OnCommand(messageInfo:IMessageInfo, player:Player, command:string, args:Array<string>, content:string) {
         if (messageInfo.message?.guild?.id != SettingsConstants.ADMIN_GUILD_ID) {
             return;
         }
@@ -37,7 +37,7 @@ export default class AdminHandler {
                 this.ResetAllCache(messageInfo);
                 break;
             case 'say':
-                this.SayMessage(messageInfo, content);
+                this.SayMessage(content);
                 break;
             default:
                 return false;
@@ -147,8 +147,8 @@ export default class AdminHandler {
         MessageService.SendMessage(messageInfo, 'Alle cache is gereset.', true);
     }
 
-    private static async SayMessage(messageInfo:IMessageInfo, message:string) {
-        MessageService.SendMessageToMainChannel(messageInfo, message);
+    private static async SayMessage(message:string) {
+        MessageService.SendMessageToMainChannel(message);
     }
 
     private static async SendCardEmbed(messageInfo:IMessageInfo, card:Card) {
