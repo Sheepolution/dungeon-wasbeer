@@ -109,7 +109,14 @@ export default class Player {
     }
 
     public FindCard(name:string) {
-        return this.playerCards.find(c => c.GetCard().GetName().toLowerCase().includes(name.toLowerCase()));
+        const cards = this.playerCards.filter(c => c.GetCard().GetName().toLowerCase().includes(name.toLowerCase()));
+        if (cards.length == 0) {
+            return;
+        }
+
+        cards.sort((a, b) => a.GetCard().GetName().length - b.GetCard().GetName().length);
+
+        return cards[0];
     }
 
     public RemoveCard(playerCard:PlayerCard) {

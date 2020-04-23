@@ -2,6 +2,7 @@ import DiscordService from './DiscordService';
 import IMessageInfo from '../Interfaces/IMessageInfo';
 import { TextChannel, MessageEmbed } from 'discord.js';
 import EmojiConstants from '../Constants/EmojiConstants';
+import BotManager from '../Managers/BotManager';
 
 export default class MessageService {
 
@@ -28,8 +29,8 @@ export default class MessageService {
         DiscordService.SendEmbed(messageInfo.channel, embed, message)
     }
 
-    public static ReplyMessageToMainChannel(messageInfo:IMessageInfo, message:string) {
-        this.ReplyMessage(messageInfo, message, undefined, false);
+    public static SendMessageToMainChannel(messageInfo:IMessageInfo, message:string) {
+        this.ReplyMessage(BotManager.GetMainChannel(), message, undefined, false);
     }
 
     public static ReplyMissingAssignedArguments(messageInfo:IMessageInfo, missing:Array<string>) {
