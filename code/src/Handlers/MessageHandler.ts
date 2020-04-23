@@ -40,6 +40,7 @@ export default class MessageHandler {
         if (player.GetMessagePoints() % SettingsConstants.MESSAGE_POINT_AMOUNT_REWARDS.CARD == 0) {
             const cardModifyResult = await CardManager.GivePlayerCard(messageInfo, player);
             const playerCard = <PlayerCard>cardModifyResult.card;
+            messageInfo.channel = BotManager.GetMainChannel();
             if (cardModifyResult.result) {
                 MessageService.SendMessage(messageInfo, 'Je hebt een nieuwe kaart!', undefined, true, CardEmbeds.GetCardEmbed(playerCard.GetCard(), playerCard.GetAmount()));
             } else {
