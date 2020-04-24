@@ -19,21 +19,21 @@ export default class MessageHandler {
             return;
         }
 
+        const content = messageInfo.message?.content;
+        if (content) {
+            const contentLower = content.toLowerCase();
+            if ((contentLower.includes('kaart') || contentLower.includes('kaard') || contentLower.includes('card')) && content.length <= 20) {
+                this.OnBegging(messageInfo, player);
+                return;
+            }
+        }
+
         const memberId = messageInfo.member.id;
 
         var messagePointTimeout = await Redis.get(MessageHandler.messagePointTimeoutPrefix + memberId);
 
         if (messagePointTimeout) {
             return;
-        }
-
-        const content = messageInfo.message?.content;
-        if (content) {
-            const contentLower = content.toLowerCase();
-            if (contentLower.includes('kaart') && content.length <= 20) {
-                this.OnBegging(messageInfo, player);
-                return;
-            }
         }
 
         player.AddMessagePoint();
