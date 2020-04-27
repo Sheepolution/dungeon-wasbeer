@@ -13,7 +13,7 @@ export default class MonsterEmbeds {
             .setImage(monster.GetImageUrl())
             .addField('Level', monster.GetLevelString())
             .addField('Health', monster.GetHealth(), true)
-            .addField('Attack', monster.GetAttack(), true)
+            .addField('Attack', monster.GetAttackRoll(), true)
 
         return embed;
     }

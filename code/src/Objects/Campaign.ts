@@ -55,4 +55,14 @@ export default class Campaign {
         return this.id;
     }
 
+    public GetBattle() {
+        return this.battle;
+    }
+
+    public CompleteSession() {
+        this.UPDATE({
+            active: 0
+        })
+    }
+
 }

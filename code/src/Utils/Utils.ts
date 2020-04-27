@@ -13,6 +13,10 @@ export module Utils {
         return floor ? Math.floor(r) : r;
     }
 
+    export function Dice(n:number) {
+        return Utils.Random(1, n, true);
+    }
+
     export function GetNow() {
         const date = new Date;
         date.setHours(date.getUTCHours());
@@ -98,6 +102,10 @@ export module Utils {
             }
             return time;
         }
+    }
+
+    export async function Sleep(seconds:number) {
+        return new Promise( resolve => setTimeout(resolve, seconds * 1000) );
     }
 
 }

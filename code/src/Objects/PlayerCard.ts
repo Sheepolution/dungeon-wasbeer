@@ -6,7 +6,7 @@ export default class PlayerCard {
     protected id:string;
     private card:Card;
     private amount:number;
-    private slotted:number;
+    private equipped:number;
     private deleted:boolean;
     private player:Player;
     private isUsedInTrade:boolean;
@@ -40,7 +40,7 @@ export default class PlayerCard {
         this.id = model.id;
         this.card = await model.GetCard();
         this.amount = model.amount;
-        this.slotted = model.slotted;
+        this.equipped = model.equipped;
     }
 
     public GetId() {
@@ -79,11 +79,11 @@ export default class PlayerCard {
     }
 
     public CanBeTraded() {
-        return this.slotted != 1 || this.amount > 1;
+        return this.equipped != 1 || this.amount > 1;
     }
 
-    public IsInSlot() {
-        return this.slotted == 1;
+    public IsEquipped() {
+        return this.equipped == 1;
     }
 
     public StartUsingInTrade() {
@@ -98,8 +98,8 @@ export default class PlayerCard {
         return this.isUsedInTrade;
     }
 
-    public async SetSlotted(slot:boolean) {
-        this.slotted = slot ? 1 : 0;
-        await this.UPDATE({slotted: this.slotted});
+    public async SetEquipped(equipped:boolean) {
+        this.equipped = equipped ? 1 : 0;
+        await this.UPDATE({equipped: this.equipped});
     }
 }

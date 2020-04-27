@@ -19,7 +19,7 @@ import { ClassType } from '../Enums/ClassType';
 
 export default class AdminHandler {
 
-    public static OnCommand(messageInfo:IMessageInfo, player:Player, command:string, args:Array<string>, content:string) {
+    public static async OnCommand(messageInfo:IMessageInfo, player:Player, command:string, args:Array<string>, content:string) {
         if (messageInfo.message?.guild?.id != SettingsConstants.ADMIN_GUILD_ID) {
             return;
         }
@@ -76,7 +76,7 @@ export default class AdminHandler {
     }
 
     private static async SayMessage(message:string) {
-        MessageService.SendMessageToMainChannel(message);
+        MessageService.SendMessageToCardChannel(message);
     }
 
     // CARDS ////////////////
@@ -230,7 +230,7 @@ export default class AdminHandler {
         }
 
         const argKeys = Object.keys(args);
-        const required = ['n', 'b', 'c', 't', 'l', 'h', 'a'];
+        const required = ['n', 'b', 'c', 't', 'l', 'h', 's', 'a'];
         const missing = [];
         for (const key of required) {
             if (!argKeys.includes(key)) {
@@ -250,7 +250,7 @@ export default class AdminHandler {
             return;
         }
 
-        const objectModifyResult = await MonsterManager.AddNewMonster(args.n, args.b, args.l, args.c, type, args.h, args.a, attachment?.proxyURL, player.GetId());
+        const objectModifyResult = await MonsterManager.AddNewMonster(args.n, args.b, args.l, args.c, type, args.h, args.s, args.a, attachment?.proxyURL, player.GetId());
         if (objectModifyResult.result) {
             MessageService.ReplyMessage(messageInfo, 'Het monster is toegevoegd!', true, true, MonsterEmbeds.GetMonsterEmbed(<Monster>objectModifyResult.object));
         } else {
@@ -284,7 +284,7 @@ export default class AdminHandler {
             return;
         }
 
-        const monsterModifyResult = await MonsterManager.EditMonster(args.on, args.n, args.b, args.l, args.c, args.t, args.h, args.a)
+        const monsterModifyResult = await MonsterManager.EditMonster(args.on, args.n, args.b, args.l, args.c, args.t, args.h, args.s, args.a)
         if (monsterModifyResult.result) {
             MessageService.ReplyMessage(messageInfo, 'Het monster is aangepast!', true, true, MonsterEmbeds.GetMonsterEmbed(<Monster>monsterModifyResult.object));
         } else {

@@ -2,7 +2,8 @@ import Player from '../Objects/Player';
 import PlayerCard from '../Objects/PlayerCard';
 import PlayerCardModel from './PlayerCardModel';
 import { Utils } from '../Utils/Utils';
-import { ClassType } from '../Enums/ClassType';
+import CharacterModel from './CharacterModel';
+import Character from '../Objects/Character';
 
 const { Model } = require('objection');
 
@@ -21,6 +22,14 @@ export default class PlayerModel extends Model {
                 to: 'player_cards.player_id',
             },
         },
+        characters: {
+            relation: Model.BelongsToOneRelation,
+            modelClass: CharacterModel,
+            join: {
+                from: 'players.character_id',
+                to: 'characters.id',
+            }
+        },
     }
 
     public static async New(discordId:string, discordDisplayName:string) {
@@ -34,6 +43,7 @@ export default class PlayerModel extends Model {
                 gold: 0,
                 message_points: 0,
                 discord_name: discordDisplayName,
+                character: null
             })
 
         return player;
@@ -52,7 +62,13 @@ export default class PlayerModel extends Model {
         return playerCardsRet;
     }
 
-    public GetClassType() {
-        return <ClassType> this.class;
+    public async GetCharacter(player:Player) {
+        if (this.character_id == null) {
+            return undefined;
+        }
+
+        const character = new Character(player);
+        character.ApplyModel(await this.$relatedQuery('characters'));
+        return character;
     }
 }

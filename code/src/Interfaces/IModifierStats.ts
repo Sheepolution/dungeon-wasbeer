@@ -1,5 +1,6 @@
 export default interface IModifierStats {
     armor:number,
+    attack:number,
     charisma:number,
     dexterity:number,
     healing:number,

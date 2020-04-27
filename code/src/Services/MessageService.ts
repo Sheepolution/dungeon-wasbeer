@@ -6,31 +6,27 @@ import BotManager from '../Managers/BotManager';
 
 export default class MessageService {
 
-    public static SendMessage(channel:TextChannel, message:string, embed?:MessageEmbed) {
-        DiscordService.SendMessage(channel, message, embed)
-    }
-
-    public static SendEmbed(channel:TextChannel, embed:MessageEmbed, message?:string) {
-        DiscordService.SendEmbed(channel, embed, message)
-    }
-
     public static ReplyMessage(messageInfo:IMessageInfo, message:string, good?:boolean, mention?:boolean, embed?:MessageEmbed) {
         if (good != null) {
             message = (good ?  EmojiConstants.STATUS.GOOD : EmojiConstants.STATUS.BAD) + ' ' + message;
         }
         if (mention != false) {
-            DiscordService.ReplyMessage(<TextChannel>messageInfo.channel, messageInfo.member, message, embed)
+            return DiscordService.ReplyMessage(<TextChannel>messageInfo.channel, messageInfo.member, message, embed)
         } else {
-            DiscordService.SendMessage(<TextChannel>messageInfo.channel, message, embed)
+            return DiscordService.SendMessage(<TextChannel>messageInfo.channel, message, embed)
         }
     }
 
     public static ReplyEmbed(messageInfo:IMessageInfo, embed:MessageEmbed, message?:string) {
-        DiscordService.SendEmbed(messageInfo.channel, embed, message)
+        return DiscordService.SendEmbed(messageInfo.channel, embed, message)
     }
 
-    public static SendMessageToMainChannel(message:string) {
-        this.SendMessage(BotManager.GetMainChannel(), message);
+    public static SendMessageToCardChannel(message:string) {
+        this.SendMessage(BotManager.GetCardChannel(), message);
+    }
+
+    public static SendMessageToDNDChannel(message:string, embed?:MessageEmbed) {
+        this.SendMessage(BotManager.GetDNDChannel(), message, embed);
     }
 
     public static ReplyMissingAssignedArguments(messageInfo:IMessageInfo, missing:Array<string>) {
@@ -51,5 +47,9 @@ export default class MessageService {
 
     public static ReplyNotOwningCard(messageInfo:IMessageInfo, name:string) {
         MessageService.ReplyMessage(messageInfo, 'Je hebt geen kaart met de naam \'' + name + '\'.', false, true);
+    }
+
+    private static SendMessage(channel:TextChannel, message:string, embed?:MessageEmbed) {
+        return DiscordService.SendMessage(channel, message, embed)
     }
 }

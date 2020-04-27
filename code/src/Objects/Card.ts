@@ -66,14 +66,14 @@ export default class Card {
         this.modifierStats = this.CalculateModifierStats();
     }
 
-    public async EditCard(name?:string, description?:string, rank?:number, category?:string, modifiers?:Array<ICardModifier>, modifierClass?:ClassType, imageUrl?:string) {
-        this.name = name || this.name;
-        this.description = description || this.description;
-        this.rank = rank || this.rank;
-        this.category = category || this.category;
-        this.modifiers = modifiers || this.modifiers;
-        this.modifierClass = modifierClass || this.modifierClass;
-        this.imageUrl = imageUrl || this.imageUrl;
+    public async EditCard(name:string = this.name, description:string = this.description, rank:number = this.rank, category:string = this.category, modifiers:Array<ICardModifier> = this.modifiers, modifierClass:ClassType = this.modifierClass, imageUrl:string = this.imageUrl) {
+        this.name = name;
+        this.description = description;
+        this.rank = rank;
+        this.category = category;
+        this.modifiers = modifiers;
+        this.modifierClass = modifierClass;
+        this.imageUrl = imageUrl;
 
         this.UPDATE({
             name: this.name,

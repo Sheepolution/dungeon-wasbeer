@@ -1,29 +1,18 @@
 import PlayerModel from '../Models/PlayerModel';
 import { Utils } from '../Utils/Utils';
-import { ClassType } from '../Enums/ClassType';
 import PlayerCard from './PlayerCard';
-import IModifierStats from '../Interfaces/IModifierStats';
-import ClassService from '../Services/ClassService';
-import Card from './Card';
+import Character from './Character';
+import { ClassType } from '../Enums/ClassType';
 
 export default class Player {
 
     protected id:string;
     private discordId:string;
-    private gold:string;
     private messagePoints:number;
     private playerCards:Array<PlayerCard>;
     private lastActiveDate:string;
     private discordName:string;
-    private classType:ClassType;
-    private xp:number;
-    private level:number;
-    private cardSlots:Array<Card>;
-    private classModifierStats:IModifierStats;
-    private cardModifierStats:IModifierStats;
-    private fullModifierStats:IModifierStats;
-    private currentHealth:number;
-    private maxHealth:number;
+    private character?:Character;
 
     public async GET(id:string, isUuid?:boolean) {
         var models:PlayerModel;
@@ -61,19 +50,12 @@ export default class Player {
     public async ApplyModel(model:PlayerModel) {
         this.id = model.id;
         this.discordId = model.discord_id;
-        this.gold = model.gold;
         this.messagePoints = model.message_points;
         this.playerCards = await model.GetPlayerCards(this);
-        this.classType = model.GetClassType();
-        if (this.classType) {
-            this.xp = model.xp;
-            this.level = model.level;
-            this.cardSlots = this.playerCards.filter(pc => pc.IsInSlot()).map(c => c.GetCard());
-            this.classModifierStats = ClassService.GetClassModifierStats(this.classType);
-            this.cardModifierStats = this.CalculateCardModifierStats();
-            this.fullModifierStats = this.CalculateFullModifierStats();
-            this.currentHealth = model.health;
-            this.maxHealth = this.fullModifierStats.health;
+
+        const character = await model.GetCharacter(this);
+        if (character) {
+            this.character = character;
         }
     }
 
@@ -141,86 +123,26 @@ export default class Player {
         return this.messagePoints;
     }
 
-    public SetClass(classType:ClassType) {
-        this.classType = classType;
-        this.UPDATE({class: classType})
+    public async CreateCharacter(classType:ClassType) {
+        const character = new Character(this);
+        await character.POST(classType);
+
+        this.character = character;
+        await this.UPDATE({
+            character_id: character.GetId()
+        })
+
+        return character;
     }
 
-    public GetClassName() {
-        return this.classType.toString();
+    public async RemoveCharacter() {
+        this.character = undefined;
+        await this.UPDATE({
+            character_id: null
+        })
     }
 
-    public GetCurrentHealth() {
-        return this.currentHealth;
-    }
-
-    public GetMaxHealth() {
-        return this.maxHealth;
-    }
-
-    public GetLevel() {
-        return this.level;
-    }
-
-    public GetXP() {
-        return this.xp;
-    }
-
-    public GetTotalCardSlots() {
-        return this.cardSlots.length - this.cardSlots.length + 3;
-    }
-
-    public GetCardSlots() {
-        return this.cardSlots;
-    }
-
-    public HasAvailableCardSlot() {
-        return this.cardSlots.length < 3;
-    }
-
-    public async AddCardToSlot(playerCard:PlayerCard) {
-        await playerCard.SetSlotted(true);
-        this.cardSlots.push(playerCard.GetCard());
-        this.UpdateFullModifierStats();
-    }
-
-    public async RemoveCardFromSlot(playerCard:PlayerCard) {
-        await playerCard.SetSlotted(false);
-        const cardId = playerCard.GetCard().GetId();
-        const index = this.cardSlots.findIndex(c => c.GetId() == cardId);
-        this.cardSlots.splice(index, 1);
-        this.UpdateFullModifierStats();
-    }
-
-    public GetClassModifierStats() {
-        return this.classModifierStats;
-    }
-
-    public GetCardModifierStats() {
-        return this.cardModifierStats;
-    }
-
-    public GetFullModifierStats() {
-        return this.fullModifierStats;
-    }
-
-    private CalculateCardModifierStats() {
-        var cardModifierStats = ClassService.GetEmptyModifierStats();
-
-        for (const card of this.cardSlots) {
-            cardModifierStats = ClassService.GetSummedUpModifierStats(cardModifierStats, card.GetModifierStats());
-        }
-
-        return cardModifierStats
-    }
-
-    private CalculateFullModifierStats() {
-        return ClassService.GetSummedUpModifierStats(this.classModifierStats, this.cardModifierStats)
-    }
-
-    private UpdateFullModifierStats() {
-        this.classModifierStats = ClassService.GetClassModifierStats(this.classType);
-        this.cardModifierStats = this.CalculateCardModifierStats();
-        this.fullModifierStats = this.CalculateFullModifierStats();
+    public GetCharacter() {
+        return this.character;
     }
 }

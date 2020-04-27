@@ -6,10 +6,11 @@ export default class Monster {
     private name:string;
     private description:string;
     private level:number;
-    private category:string
-    private type:string
-    private health:number
-    private attack:number
+    private category:string;
+    private type:string;
+    private health:number;
+    private strength:number;
+    private attack:number;
     private imageUrl:string;
     private creatorId:string;
     private creationDate:string;
@@ -35,8 +36,8 @@ export default class Monster {
         return true;
     }
 
-    public async POST(name:string, description:string, level:number, category:string, type:AttackType, health:number, attack:number, imageUrl:string, creatorId:string) {
-        const model = await MonsterModel.New(name, description, level, category, type.toString(), health, attack, imageUrl, creatorId);
+    public async POST(name:string, description:string, level:number, category:string, type:AttackType, health:number, strength:number, attack:number, imageUrl:string, creatorId:string) {
+        const model = await MonsterModel.New(name, description, level, category, type.toString(), health, strength, attack, imageUrl, creatorId);
         await this.ApplyModel(model);
         return this;
     }
@@ -55,19 +56,21 @@ export default class Monster {
         this.category = model.category;
         this.type = model.type;
         this.health = model.health;
+        this.strength = model.strength;
         this.attack = model.attack;
         this.imageUrl = model.image_url;
         this.creatorId = model.creator_id;
         this.creationDate = model.creationDate;
     }
 
-    public async EditMonster(name?:string, description?:string, level?:number, category?:string, type?:AttackType, health?:number, attack?:number, imageUrl?:string) {
+    public async EditMonster(name?:string, description?:string, level?:number, category?:string, type?:AttackType, health?:number, strength?:number, attack?:number, imageUrl?:string) {
         this.name = name || this.name;
         this.description = description || this.description;
         this.level = level || this.level;
         this.category = category || this.category;
         this.type = type || this.type;
         this.health = health || this.health;
+        this.strength = strength || this.strength;
         this.attack = attack || this.attack;
         this.imageUrl = imageUrl || this.imageUrl;
 
@@ -115,12 +118,15 @@ export default class Monster {
         return this.health;
     }
 
-    public GetAttack() {
+    public GetAttackRoll() {
         return this.attack;
+    }
+
+    public GetAttackStrength(crit?:boolean) {
+        return this.strength * (crit ? 2 : 1);
     }
 
     public GetImageUrl() {
         return this.imageUrl;
     }
-
 }

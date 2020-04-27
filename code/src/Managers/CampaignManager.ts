@@ -4,7 +4,6 @@ import Monster from '../Objects/Monster';
 import MonsterManager from './MonsterManager';
 import { SessionType } from '../Enums/SessionType';
 import MessageService from '../Services/MessageService';
-import BotManager from './BotManager';
 import MonsterEmbeds from '../Embeds/MonsterEmbeds';
 
 export default class CampaignManager {
@@ -33,6 +32,15 @@ export default class CampaignManager {
     }
 
     public static async SendNewSessionMessage(campaign:Campaign, monster:Monster) {
-        MessageService.SendMessage(await BotManager.GetMainChannel(), `Jullie volgen het pad in het bos. Plots komen jullie een ${monster.GetName()} tegen!`, MonsterEmbeds.GetMonsterEmbed(monster));
+        MessageService.SendMessageToDNDChannel(`Jullie volgen het pad in het bos. Plots komen jullie een ${monster.GetName()} tegen!`, MonsterEmbeds.GetMonsterEmbed(monster));
+    }
+
+    public static GetBattle() {
+        return this.campaignObject.GetBattle();
+    }
+
+    public static OnCompletingSession() {
+        this.campaignObject.CompleteSession();
+        this.StartNewSession();
     }
 }

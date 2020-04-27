@@ -42,6 +42,7 @@ export default class ClassService {
     public static GetEmptyModifierStats():IModifierStats {
         return {
             armor: 0,
+            attack: 0,
             charisma: 0,
             dexterity: 0,
             healing: 0,
@@ -55,6 +56,7 @@ export default class ClassService {
     public static GetSummedUpModifierStats(a:IModifierStats, b:IModifierStats) {
         return {
             armor: a.armor + b.armor,
+            attack: a.attack + b.attack,
             charisma: a.charisma + b.charisma,
             dexterity: a.dexterity + b.dexterity,
             healing: a.healing + b.healing,

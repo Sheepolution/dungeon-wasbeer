@@ -40,6 +40,7 @@ export default class MessageHandler {
         if (player.GetMessagePoints() % SettingsConstants.MESSAGE_POINT_AMOUNT_REWARDS.CARD == 0) {
             const cardModifyResult = await CardManager.GivePlayerCard(messageInfo, player);
             const playerCard = <PlayerCard>cardModifyResult.object;
+            messageInfo.channel = BotManager.GetCardChannel();
             if (cardModifyResult.result) {
                 MessageService.ReplyMessage(messageInfo, 'Je hebt een nieuwe kaart!', undefined, true, CardEmbeds.GetCardEmbed(playerCard.GetCard(), playerCard.GetAmount()));
             } else {
@@ -56,10 +57,12 @@ export default class MessageHandler {
             return;
         }
 
-        const playerCard = playerCards.randomChoice();
-        playerCard.RemoveOne();
-
-        messageInfo.channel = BotManager.GetMainChannel();
-        MessageService.SendMessageToMainChannel('Zij die bedelen worden gestraft. Deze kaart pak ik gewoon weer van je af. Dat zal je leren!');
+        const unequipedCards = playerCards.filter(c => !c.IsEquipped());
+        if (unequipedCards.length > 0) {
+            const playerCard = playerCards.randomChoice();
+            playerCard.RemoveOne();
+            messageInfo.channel = BotManager.GetCardChannel();
+            MessageService.SendMessageToCardChannel('Zij die bedelen worden gestraft. Deze kaart pak ik gewoon weer van je af. Dat zal je leren!');
+        }
     }
 }

@@ -29,11 +29,46 @@ export default class Battle {
         this.id = model.id;
         this.active = model.active != 0;
         this.monster = await model.GetMonster();
-        this.monsterHealth = model.monsterHealth;
+        this.monsterHealth = model.monster_health;
     }
 
     public GetId() {
         return this.id;
     }
 
+    public GetMonster() {
+        return this.monster;
+    }
+
+    public GetMaxMonsterHealth() {
+        return this.monster.GetHealth();
+    }
+
+    public GetCurrentMonsterHealth() {
+        return this.monsterHealth;
+    }
+
+    public GetMonsterAttackStrength(crit?:boolean) {
+        return this.monster.GetAttackStrength(crit);
+    }
+
+    public GetMonsterAttackRoll() {
+        return this.monster.GetAttackRoll();
+    }
+
+    public async DealDamageToMonster(damage:number) {
+        this.monsterHealth = Math.max(0, this.monsterHealth - damage);
+        await this.UPDATE({monster_health: this.monsterHealth})
+        return damage;
+    }
+
+    public IsMonsterDead() {
+        return this.monsterHealth <= 0;
+    }
+
+    public async Complete() {
+        this.UPDATE({
+            active: 0
+        })
+    }
 }

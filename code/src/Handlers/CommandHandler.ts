@@ -5,7 +5,8 @@ import MessageHandler from './MessageHandler';
 import PlayerCardHandler from './PlayerCardHandler';
 import TradeHandler from './TradeHandler';
 import SettingsConstants from '../Constants/SettingsConstants';
-import DungeonHandler from './DungeonHandler';
+import BattleHandler from './BattleHandler';
+import CharacterHandler from './CharacterHandler';
 
 export default class CommandHandler {
 
@@ -20,16 +21,22 @@ export default class CommandHandler {
             return;
         }
 
-        if (messageInfo.message?.guild?.id == SettingsConstants.MAIN_GUILD_ID && messageInfo.channel.id != SettingsConstants.MAIN_CHANNEL_ID) {
+        if (messageInfo.message?.guild?.id != SettingsConstants.MAIN_GUILD_ID) {
             return;
         }
 
-        if (await TradeHandler.OnCommand(messageInfo, player, command, content)) {
-            return;
-        } else if (await PlayerCardHandler.OnCommand(messageInfo, player, command, args)) {
-            return;
-        } else if (await DungeonHandler.OnCommand(messageInfo, player, command, args)) {
-            return;
+        if (messageInfo.channel.id == SettingsConstants.CARD_CHANNEL_ID) {
+            if (await TradeHandler.OnCommand(messageInfo, player, command, content)) {
+                return;
+            } else if (await PlayerCardHandler.OnCommand(messageInfo, player, command, args)) {
+                return;
+            }
+        } else if (messageInfo.channel.id == SettingsConstants.DND_CHANNEL_ID) {
+            if (await CharacterHandler.OnCommand(messageInfo, player, command, args)) {
+                return;
+            } else if (await BattleHandler.OnCommand(messageInfo, player, command, args)) {
+                return;
+            }
         }
     }
 
