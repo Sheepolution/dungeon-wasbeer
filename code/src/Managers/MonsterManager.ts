@@ -19,7 +19,7 @@ export default class MonsterManager {
         this.monsterList = monsterList;
     }
 
-    public static async AddNewMonster(name:string, description:string, level:number, category:string, type:AttackType, health:number, strength:number, attack:number, imageUrl:string, creatorId:string) {
+    public static async AddNewMonster(name:string, description:string, level:number, category:string, type:AttackType, health:number, strength:number, attack:number, attackDescription:string, imageUrl:string, creatorId:string) {
         const monster = new Monster();
         const objectModifyResult:IObjectModifyResult = { object: monster, result: false };
 
@@ -27,14 +27,14 @@ export default class MonsterManager {
             return objectModifyResult;
         }
 
-        await monster.POST(name, description, level, category, type, health, strength, attack, imageUrl, creatorId);
+        await monster.POST(name, description, level, category, type, health, strength, attack, attackDescription, imageUrl, creatorId);
 
         objectModifyResult.result = true;
         return objectModifyResult;
 
     }
 
-    public static async EditMonster(originalName:string, name?:string, description?:string, level?:number, category?:string, type?:AttackType, health?:number, strength?:number, attack?:number, imageUrl?:string) {
+    public static async EditMonster(originalName:string, name?:string, description?:string, level?:number, category?:string, type?:AttackType, health?:number, strength?:number, attack?:number, attackDescription?:string, imageUrl?:string) {
         const monster = new Monster();
         const monsterModifyResult:IObjectModifyResult = { object: monster, result: false };
 
@@ -42,7 +42,7 @@ export default class MonsterManager {
             return monsterModifyResult;
         }
 
-        await monster.EditMonster(name, description, level, category, type, health, strength, attack, imageUrl);
+        await monster.EditMonster(name, description, level, category, type, health, strength, attack, attackDescription, imageUrl);
 
         monsterModifyResult.result = true;
         return monsterModifyResult;

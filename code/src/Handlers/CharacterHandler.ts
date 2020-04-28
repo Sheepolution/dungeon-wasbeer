@@ -38,7 +38,7 @@ export default class CharacterHandler {
         const character = player.GetCharacter();
         if (character != null) {
             const characterClassName = character.GetClassName();
-            MessageService.ReplyMessage(messageInfo, `Je bent al de class ${characterClassName}. Je kan hier pas van veranderen wanneer je dood bent, of wanneer je opnieuw begint met \`;reset\`.`, false);
+            MessageService.ReplyMessage(messageInfo, `Je hebt al een character van de class ${characterClassName}. Je kan een nieuw character aanmaken wanneer deze overlijdt, of wanneer je opnieuw begint met \`;reset\`.`, false);
             return;
         }
 
@@ -55,16 +55,14 @@ export default class CharacterHandler {
         }
 
         const classType = (<any>ClassType)[className];
-        await player.CreateCharacter(classType);
-        MessageService.ReplyMessage(messageInfo, `Je bent nu de class ${className}!`, true)
+        const newCharacter = await player.CreateCharacter(classType);
+        MessageService.ReplyMessage(messageInfo, 'Je character is aangemaakt!', undefined, true, CharacterEmbeds.GetNewCharacterEmbed(newCharacter));
     }
 
     private static async Equip(messageInfo:IMessageInfo, player:Player, cardName:string) {
         // TODO: Dit soort checks doe je ergens anders ook. Dat moet anders kunnen.
         // TODO: Dat je gewoon iets hebt van GetCardFromArgument() ofzo.
         // TODO: Net zoals met het aanmaken/aanpassen van kaarten en monsters. Dat moet minder DRY hebben.
-
-        // TODO: Dit mag je niet doen als je full health bent.
 
         const character = PlayerManager.GetCharacterFromPlayer(messageInfo, player);
         if (character == null) { return; }
@@ -112,8 +110,6 @@ export default class CharacterHandler {
     }
 
     private static async Unequip(messageInfo:IMessageInfo, player:Player, cardName:string) {
-
-        // TODO: Dit mag je niet doen als je full health bent.
 
         const character = PlayerManager.GetCharacterFromPlayer(messageInfo, player);
         if (character == null) { return; }

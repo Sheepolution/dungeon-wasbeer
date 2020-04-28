@@ -3,7 +3,8 @@ import SettingsConstants from '../Constants/SettingsConstants';
 import CardService from '../Services/CardService';
 import Character from '../Objects/Character';
 import Card from '../Objects/Card';
-import ImageConstants from '../Constants/ImageConstants';
+import CharacterConstants from '../Constants/CharacterConstants';
+import CharacterService from '../Services/CharacterService';
 
 export default class CharacterEmbeds {
 
@@ -53,10 +54,19 @@ export default class CharacterEmbeds {
         return embed;
     }
 
+    public static GetNewCharacterEmbed(character:Character) {
+        const embed = new MessageEmbed()
+            .setColor(SettingsConstants.COLORS.DEFAULT)
+            .setImage(CharacterService.GetClassImage(character.GetClass()))
+            .setTitle(`${character.GetName()}`)
+
+        return embed;
+    }
+
     public static async GetDeadCharacterEmbed(character:Character) {
         const embed = new MessageEmbed()
             .setColor(SettingsConstants.COLORS.BAD)
-            .setImage(ImageConstants.PLAYER_DIED)
+            .setImage(CharacterConstants.CHARACTER_DIED)
             .setTitle(`RIP ${character.GetName()}\n${character.GetBornDateString()} - ${character.GetDeathDateString()}`)
             .setDescription('--------------------')
             .addField('Level', character.GetLevel(), true)

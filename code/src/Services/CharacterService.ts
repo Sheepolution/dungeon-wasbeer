@@ -1,9 +1,9 @@
 import { ClassType } from '../Enums/ClassType';
 import EmojiConstants from '../Constants/EmojiConstants';
-import SettingsConstants from '../Constants/SettingsConstants';
 import IModifierStats from '../Interfaces/IModifierStats';
+import CharacterConstants from '../Constants/CharacterConstants';
 
-export default class ClassService {
+export default class CharacterService {
 
     public static GetClassEmoji(classType:ClassType) {
         switch (classType) {
@@ -25,17 +25,34 @@ export default class ClassService {
     public static GetClassModifierStats(classType:ClassType) {
         switch (classType) {
             case ClassType.Bard:
-                return SettingsConstants.CLASS_BASE_STATS.BARD;
+                return CharacterConstants.CLASS_BASE_STATS.BARD;
             case ClassType.Cleric:
-                return SettingsConstants.CLASS_BASE_STATS.CLERIC;
+                return CharacterConstants.CLASS_BASE_STATS.CLERIC;
             case ClassType.Fighter:
-                return SettingsConstants.CLASS_BASE_STATS.FIGHTER;
+                return CharacterConstants.CLASS_BASE_STATS.FIGHTER;
             case ClassType.Paladin:
-                return SettingsConstants.CLASS_BASE_STATS.PALADIN;
+                return CharacterConstants.CLASS_BASE_STATS.PALADIN;
             case ClassType.Ranger:
-                return SettingsConstants.CLASS_BASE_STATS.RANGER;
+                return CharacterConstants.CLASS_BASE_STATS.RANGER;
             case ClassType.Wizard:
-                return SettingsConstants.CLASS_BASE_STATS.WIZARD;
+                return CharacterConstants.CLASS_BASE_STATS.WIZARD;
+        }
+    }
+
+    public static GetClassImage(classType:ClassType) {
+        switch (classType) {
+            case ClassType.Bard:
+                return CharacterConstants.CHARACTER_IMAGE.BARD;
+            case ClassType.Cleric:
+                return CharacterConstants.CHARACTER_IMAGE.CLERIC;
+            case ClassType.Fighter:
+                return CharacterConstants.CHARACTER_IMAGE.FIGHTER;
+            case ClassType.Paladin:
+                return CharacterConstants.CHARACTER_IMAGE.PALADIN;
+            case ClassType.Ranger:
+                return CharacterConstants.CHARACTER_IMAGE.RANGER;
+            case ClassType.Wizard:
+                return CharacterConstants.CHARACTER_IMAGE.WIZARD;
         }
     }
 

@@ -11,7 +11,7 @@ export default class Monster {
     private health:number;
     private strength:number;
     private attack:number;
-    private attackDescription:number;
+    private attackDescription:string;
     private imageUrl:string;
     private creatorId:string;
     private creationDate:string;
@@ -65,7 +65,7 @@ export default class Monster {
         this.creationDate = model.creationDate;
     }
 
-    public async EditMonster(name:string = this.name, description:string = this.description, level:number = this.level, category:string = this.category, type:AttackType = this.type, health:number = this.health, strength:number = this.strength, attack:number = this.attack, imageUrl:string = this.imageUrl) {
+    public async EditMonster(name:string = this.name, description:string = this.description, level:number = this.level, category:string = this.category, type:AttackType = this.type, health:number = this.health, strength:number = this.strength, attack:number = this.attack, attackDescription:string = this.attackDescription, imageUrl:string = this.imageUrl) {
         this.name = name;
         this.description = description;
         this.level = level;
@@ -74,6 +74,7 @@ export default class Monster {
         this.health = health;
         this.strength = strength;
         this.attack = attack;
+        this.attackDescription = attackDescription;
         this.imageUrl = imageUrl;
 
         this.UPDATE({

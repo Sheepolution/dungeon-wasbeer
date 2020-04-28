@@ -2,7 +2,7 @@ import { ClassType } from '../Enums/ClassType';
 import { CharacterStatus } from '../Enums/CharacterStatus';
 import Player from '../Objects/Player';
 import { Utils } from '../Utils/Utils';
-import ClassService from '../Services/ClassService';
+import CharacterService from '../Services/CharacterService';
 
 const { Model } = require('objection');
 
@@ -26,7 +26,7 @@ export default class CharacterModel extends Model {
     public static async New(player:Player, classType:ClassType) {
         const characterId = Utils.UUID();
 
-        const stats = ClassService.GetClassModifierStats(classType)
+        const stats = CharacterService.GetClassModifierStats(classType)
 
         const character = await CharacterModel.query()
             .insert({

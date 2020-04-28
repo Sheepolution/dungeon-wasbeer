@@ -1,7 +1,6 @@
 import { CharacterStatus } from '../Enums/CharacterStatus';
 import { ClassType } from '../Enums/ClassType';
 import IModifierStats from '../Interfaces/IModifierStats';
-import ClassService from '../Services/ClassService';
 import Player from './Player';
 import Card from './Card';
 import CharacterModel from '../Models/CharacterModel';
@@ -9,6 +8,7 @@ import PlayerCard from './PlayerCard';
 import Attack from './Attack';
 import PlayerManager from '../Managers/PlayerManager';
 import { Utils } from '../Utils/Utils';
+import CharacterService from '../Services/CharacterService';
 
 export default class Character {
 
@@ -67,7 +67,7 @@ export default class Character {
         this.level = model.level;
         this.name = model.name;
         this.equipment = this.player.GetCards().filter(pc => pc.IsEquipped()).map(c => c.GetCard());
-        this.classModifierStats = ClassService.GetClassModifierStats(this.classType);
+        this.classModifierStats = CharacterService.GetClassModifierStats(this.classType);
         this.cardModifierStats = this.CalculateCardModifierStats();
         this.fullModifierStats = this.CalculateFullModifierStats();
         this.currentHealth = model.health;
@@ -79,6 +79,10 @@ export default class Character {
 
     public GetId() {
         return this.id;
+    }
+
+    public GetClass() {
+        return this.classType;
     }
 
     public GetClassName() {
@@ -111,7 +115,7 @@ export default class Character {
 
     public async Kill() {
         this.deathDate = Utils.GetNow();
-        this.status = CharacterStatus.Dead
+        this.status = CharacterStatus.Dead;
         await this.UPDATE({
             death_date: Utils.GetNowString(),
             status: this.status,
@@ -236,22 +240,22 @@ export default class Character {
     }
 
     private CalculateCardModifierStats() {
-        var cardModifierStats = ClassService.GetEmptyModifierStats();
+        var cardModifierStats = CharacterService.GetEmptyModifierStats();
 
         for (const card of this.equipment) {
-            cardModifierStats = ClassService.GetSummedUpModifierStats(cardModifierStats, card.GetModifierStats());
+            cardModifierStats = CharacterService.GetSummedUpModifierStats(cardModifierStats, card.GetModifierStats());
         }
 
         return cardModifierStats
     }
 
     private CalculateFullModifierStats() {
-        return ClassService.GetSummedUpModifierStats(this.classModifierStats, this.cardModifierStats)
+        return CharacterService.GetSummedUpModifierStats(this.classModifierStats, this.cardModifierStats)
     }
 
     private UpdateFullModifierStats() {
         if (this.classType == null) { return; }
-        this.classModifierStats = ClassService.GetClassModifierStats(this.classType);
+        this.classModifierStats = CharacterService.GetClassModifierStats(this.classType);
         this.cardModifierStats = this.CalculateCardModifierStats();
         this.fullModifierStats = this.CalculateFullModifierStats();
     }

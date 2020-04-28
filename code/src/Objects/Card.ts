@@ -2,9 +2,9 @@ import CardModel from '../Models/CardModel';
 import { ICardModifier } from '../Interfaces/ICardModifier';
 import { ClassType } from '../Enums/ClassType';
 import CardService from '../Services/CardService';
-import ClassService from '../Services/ClassService';
 import { ModifierType } from '../Enums/ModifierType';
 import IModifierStats from '../Interfaces/IModifierStats';
+import CharacterService from '../Services/CharacterService';
 
 export default class Card {
     protected id:string;
@@ -131,7 +131,7 @@ export default class Card {
     }
 
     private CalculateModifierStats() {
-        const modifierStats = ClassService.GetEmptyModifierStats();
+        const modifierStats = CharacterService.GetEmptyModifierStats();
         for (const modifier of this.modifiers) {
             switch (modifier.modifier) {
                 case ModifierType.Armor:

@@ -5,7 +5,7 @@ import Player from '../Objects/Player';
 import EmojiConstants from '../Constants/EmojiConstants';
 import ITradeInfo from '../Interfaces/ITradeInfo';
 import CardService from '../Services/CardService';
-import ClassService from '../Services/ClassService';
+import CharacterService from '../Services/CharacterService';
 
 export default class CardEmbeds {
 
@@ -26,7 +26,7 @@ export default class CardEmbeds {
         }
 
         if (modifierClass) {
-            embed.addField('Class', `${ClassService.GetClassEmoji(modifierClass)} ${modifierClass.toString()}`, true);
+            embed.addField('Class', `${CharacterService.GetClassEmoji(modifierClass)} ${modifierClass.toString()}`, true);
         }
 
         return embed;
