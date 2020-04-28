@@ -56,6 +56,10 @@ export default class Battle {
         return this.monster.GetAttackRoll();
     }
 
+    public GetMonsterAttackDescription() {
+        return this.monster.GetAttackDescription();
+    }
+
     public async DealDamageToMonster(damage:number) {
         this.monsterHealth = Math.max(0, this.monsterHealth - damage);
         await this.UPDATE({monster_health: this.monsterHealth})

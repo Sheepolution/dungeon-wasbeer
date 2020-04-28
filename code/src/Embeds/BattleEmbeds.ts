@@ -46,7 +46,7 @@ export default class BattleEmbeds {
                 embed.addField(`${characterName} wint${crit ? ' met een crit' : ''}!`, `Je doet een driedubbele salto en slaat de ${monsterName} recht in zijn bek.\nJe doet ${damage} damage.`);
                 embed.setColor(SettingsConstants.COLORS.GOOD)
             } else {
-                embed.addField(`De ${monsterName} wint${crit ? ' met een crit' : ''}!`, `Hij haalt uit met zijn knuppel en raakt je recht in je gezicht.\nHij doet ${damage} damage.`);
+                embed.addField(`De ${monsterName} wint${crit ? ' met een crit' : ''}!`, `${battle.GetMonsterAttackDescription()}\nHij doet ${damage} damage.`);
                 embed.setColor(SettingsConstants.COLORS.BAD)
             }
         }

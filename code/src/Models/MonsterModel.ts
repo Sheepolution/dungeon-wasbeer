@@ -7,7 +7,7 @@ export default class MonsterModel extends Model {
         return 'monsters';
     }
 
-    public static async New(name:string, description:string, level:number, category:string, type:string, health:number, strength:number, attack:number, imageUrl:string, creatorId:string, trx?:any) {
+    public static async New(name:string, description:string, level:number, category:string, type:string, health:number, strength:number, attack:number, attackDescription:string, imageUrl:string, creatorId:string, trx?:any) {
         const cardId = Utils.UUID();
 
         const card = await MonsterModel.query(trx)
@@ -21,6 +21,7 @@ export default class MonsterModel extends Model {
                 health: health,
                 strength: strength,
                 attack: attack,
+                attack_description: attackDescription,
                 image_url: imageUrl,
                 creator_id: creatorId,
                 creation_date: Utils.GetNowString(),
