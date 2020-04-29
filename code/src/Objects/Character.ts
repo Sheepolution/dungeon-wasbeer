@@ -164,7 +164,6 @@ export default class Character {
         return this.inBattle;
     }
 
-
     public GetAttackRoll() {
         return this.fullModifierStats.attack;
     }
@@ -200,6 +199,19 @@ export default class Character {
 
     public GetCooldown() {
         return CharacterConstants.BASE_COOLDOWN_DURATION - (this.fullModifierStats.dexterity * 2);
+    }
+
+    public async GetXPByMessage() {
+        this.xp += 1;
+        this.UPDATE({ xp: this.xp })
+    }
+
+
+    public async HealByMessage() {
+        if (this.IsFullHealth()) { return false; }
+        this.currentHealth = Math.min(this.maxHealth + CharacterConstants.HEAL_MESSAGE_AMOUNT);
+        this.UPDATE({ health: this.currentHealth })
+        return true;
     }
 
     public GetTotalEquipmentSpace() {

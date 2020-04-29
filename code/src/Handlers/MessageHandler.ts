@@ -37,6 +37,12 @@ export default class MessageHandler {
         }
 
         player.AddMessagePoint();
+
+        const character = player.GetCharacter();
+        if (character != null) {
+            character.HealByMessage();
+        }
+
         if (player.GetMessagePoints() % SettingsConstants.MESSAGE_POINT_AMOUNT_REWARDS.CARD == 0) {
             const cardModifyResult = await CardManager.GivePlayerCard(messageInfo, player);
             const playerCard = <PlayerCard>cardModifyResult.object;
