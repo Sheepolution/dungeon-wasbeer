@@ -9,6 +9,7 @@ import Attack from './Attack';
 import PlayerManager from '../Managers/PlayerManager';
 import { Utils } from '../Utils/Utils';
 import CharacterService from '../Services/CharacterService';
+import CharacterConstants from '../Constants/CharacterConstants';
 
 export default class Character {
 
@@ -28,6 +29,7 @@ export default class Character {
     private bornDate:Date;
     private deathDate:Date;
     private isSorcerer:boolean;
+    private inBattle:boolean;
 
     constructor(player?:Player) {
         if (player) {
@@ -154,6 +156,15 @@ export default class Character {
         return this.isSorcerer;
     }
 
+    public SetInBattle(inBattle:boolean) {
+        this.inBattle = inBattle;
+    }
+
+    public GetInBattle() {
+        return this.inBattle;
+    }
+
+
     public GetAttackRoll() {
         return this.fullModifierStats.attack;
     }
@@ -185,6 +196,10 @@ export default class Character {
 
     public CalculateDamageWithArmor(damage:number) {
         return Math.floor(damage * (1 - Math.min(50, this.fullModifierStats.armor)/100));
+    }
+
+    public GetCooldown() {
+        return CharacterConstants.BASE_COOLDOWN_DURATION - (this.fullModifierStats.dexterity * 2);
     }
 
     public GetTotalEquipmentSpace() {

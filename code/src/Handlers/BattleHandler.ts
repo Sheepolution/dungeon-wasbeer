@@ -10,8 +10,12 @@ import PlayerManager from '../Managers/PlayerManager';
 import Character from '../Objects/Character';
 import CharacterEmbeds from '../Embeds/CharacterEmbeds';
 import Attack from '../Objects/Attack';
+import RedisConstants from '../Constants/RedisConstants';
+import { Redis } from '../Providers/Redis';
 
 export default class BattleHandler {
+
+    private static readonly battleCooldownPrefix = RedisConstants.REDIS_KEY + RedisConstants.BATTLE_COOLDOWN_KEY;
 
     public static async OnCommand(messageInfo:IMessageInfo, player:Player, command:string, args:Array<string>) {
         switch (command) {
@@ -30,14 +34,26 @@ export default class BattleHandler {
         const character = PlayerManager.GetCharacterFromPlayer(messageInfo, player);
         if (character == null) { return; }
 
+        if (character.GetInBattle()) { return; }
+
         const battle = CampaignManager.GetBattle();
         if (battle == null) {
             this.ReplyNoBattle(messageInfo);
             return;
         }
 
-        // const monster = CampaignManager.GetBattle().GetMonster();
+        const cooldown = await this.GetCooldown(character);
 
+        if (cooldown > 0) {
+            const minutes = Utils.GetSecondsInMinutes(cooldown);
+            MessageService.ReplyMessage(messageInfo, `Je hebt nog ${minutes + (minutes == 1 ? ' minuut' : ' minuten')} cooldown voordat je weer mag aanvallen.`);
+            return;
+        }
+
+        this.SetCooldown(character);
+        character.SetInBattle(true);
+
+        // Start attack
         const message = await this.SendBattleEmbed(messageInfo, battle, character);
         await Utils.Sleep(3);
         const roll1 = Utils.Dice(20);
@@ -48,6 +64,7 @@ export default class BattleHandler {
             this.OnCharacterCrit(messageInfo, message, battle, character)
             return
         }
+
         this.UpdateBattleEmbed(message, battle, character, roll1);
         await Utils.Sleep(3);
         const roll2 = Utils.Dice(character.GetAttackRoll());
@@ -73,6 +90,7 @@ export default class BattleHandler {
 
     private static async SaveAttack(battle:Battle, character:Character, messageId:string, rollCharacterBase:number, rollCharacterModifier:number, rollCharacterModifierMax:number, rollMonsterBase:number, rollMonsterModifier:number, rollMonsterModifierMax:number, victory:boolean, damage:number, healthAfter:number) {
         Attack.STATIC_POST(battle, character, messageId, rollCharacterBase, rollCharacterModifier, rollCharacterModifierMax, rollMonsterBase, rollMonsterModifier, rollMonsterModifierMax, victory, damage, healthAfter);
+        character.SetInBattle(false);
     }
 
     private static async OnCharacterCrit(messageInfo:IMessageInfo, message:Message, battle:Battle, character:Character, roll1:number = 20, roll2:number = 0, roll3:number = 0) {
@@ -113,7 +131,15 @@ export default class BattleHandler {
         await Utils.Sleep(1);
         await MessageService.SendMessageToDNDChannel('', await CharacterEmbeds.GetDeadCharacterEmbed(character));
         await Utils.Sleep(3);
-        await MessageService.ReplyMessage(messageInfo, 'Je D&D character is dood. Je kan opnieuw beginnen door een class te kiezen met het commando `;class`.');
+        await MessageService.ReplyMessage(messageInfo, 'Je character is dood. Je kan opnieuw beginnen door een class te kiezen met het commando `;class`.');
+    }
+
+    private static async GetCooldown(character:Character) {
+        return await Redis.ttl(BattleHandler.battleCooldownPrefix + character.GetId());
+    }
+
+    private static async SetCooldown(character:Character) {
+        await Redis.set(BattleHandler.battleCooldownPrefix + character.GetId(), '1', 'EX', Utils.GetMinutesInSeconds(character.GetCooldown()));
     }
 
     private static async ReplyNoBattle(messageInfo:IMessageInfo) {

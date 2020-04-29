@@ -60,6 +60,10 @@ export module Utils {
         return obj;
     }
 
+    export function GetSecondsInMinutes(n:number) {
+        return Math.ceil(n/60);
+    }
+
     export function GetMinutesInSeconds(n:number) {
         return n * 60;
     }

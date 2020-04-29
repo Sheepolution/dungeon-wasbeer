@@ -27,5 +27,4 @@ export default class SettingsConstants {
     ];
 
     public static readonly STANDARD_DICE = 20;
-
 }
