@@ -40,7 +40,8 @@ export default class MessageHandler {
 
         const character = player.GetCharacter();
         if (character != null) {
-            character.HealByMessage();
+            character.GetHealthFromMessage();
+            character.GetXPFromMessage();
         }
 
         if (player.GetMessagePoints() % SettingsConstants.MESSAGE_POINT_AMOUNT_REWARDS.CARD == 0) {

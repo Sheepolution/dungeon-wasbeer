@@ -10,6 +10,7 @@ import PlayerManager from '../Managers/PlayerManager';
 import { Utils } from '../Utils/Utils';
 import CharacterService from '../Services/CharacterService';
 import CharacterConstants from '../Constants/CharacterConstants';
+import Heal from './Heal';
 
 export default class Character {
 
@@ -83,6 +84,10 @@ export default class Character {
         return this.id;
     }
 
+    public GetPlayer() {
+        return this.player;
+    }
+
     public GetClass() {
         return this.classType;
     }
@@ -123,7 +128,7 @@ export default class Character {
             status: this.status,
         })
 
-        this.player.RemoveCharacter();
+        await this.player.RemoveCharacter();
 
         for (const card of this.player.GetCards()) {
             if (card.IsEquipped()) {
@@ -197,19 +202,41 @@ export default class Character {
         return Math.floor(damage * (1 - Math.min(50, this.fullModifierStats.armor)/100));
     }
 
-    public GetCooldown() {
-        return CharacterConstants.BASE_COOLDOWN_DURATION - (this.fullModifierStats.dexterity * 2);
+    public GetMaxBattleCooldown() {
+        return CharacterConstants.BASE_COOLDOWN_DURATION - this.fullModifierStats.dexterity;
     }
 
-    public async GetXPByMessage() {
+    public async GetXPFromMessage() {
         this.xp += 1;
         this.UPDATE({ xp: this.xp })
     }
 
+    public CanHeal() {
+        return this.classType == ClassType.Cleric || this.classType == ClassType.Paladin;
+    }
 
-    public async HealByMessage() {
+    public GetMaxHealingCooldown() {
+        return CharacterConstants.BASE_COOLDOWN_DURATION - this.fullModifierStats.dexterity;
+    }
+
+    public GetHealingBasedOnRoll(roll:number) {
+        if (roll == 1) {
+            return 0;
+        }
+
+        return Math.floor((roll/10) * this.fullModifierStats.healing);
+    }
+
+    public async GetHealthFromMessage() {
         if (this.IsFullHealth()) { return false; }
-        this.currentHealth = Math.min(this.maxHealth + CharacterConstants.HEAL_MESSAGE_AMOUNT);
+        this.currentHealth = Math.min(this.maxHealth, this.currentHealth + CharacterConstants.HEAL_MESSAGE_AMOUNT);
+        this.UPDATE({ health: this.currentHealth })
+        return true;
+    }
+
+    public async GetHealthFromHealing(amount:number) {
+        if (this.IsFullHealth()) { return false; }
+        this.currentHealth = Math.min(this.maxHealth, this.currentHealth + amount);
         this.UPDATE({ health: this.currentHealth })
         return true;
     }
@@ -264,6 +291,10 @@ export default class Character {
 
     public async GetTotalDamageTaken() {
         return await Attack.FIND_TOTAL_DAMAGE_TAKEN(this);
+    }
+
+    public async GetTotalHealingDone() {
+        return await Heal.FIND_HEALED_BY_CHARACTER(this);
     }
 
     private CalculateCardModifierStats() {

@@ -31,12 +31,12 @@ export default class Attack {
     }
 
     public static async FIND_TOTAL_DAMAGE_GIVEN(character:Character) {
-        const totalDamageGiven = await AttackModel.query().where({character_id: character.GetId(), victory: 1}).count('id').sum('damage');
+        const totalDamageGiven = await AttackModel.query().where({character_id: character.GetId(), victory: 1}).sum('damage');
         return totalDamageGiven[0].sum || 0;
     }
 
     public static async FIND_TOTAL_DAMAGE_TAKEN(character:Character) {
-        const totalDamageTaken = await AttackModel.query().where({character_id: character.GetId(), victory: 0}).count('id').sum('damage');
+        const totalDamageTaken = await AttackModel.query().where({character_id: character.GetId(), victory: 0}).sum('damage');
         return totalDamageTaken[0].sum || 0;
     }
 

@@ -75,8 +75,13 @@ export default class CharacterEmbeds {
             .addField('Gewonnen', await character.GetVictories(), true)
             .addField('Verloren', await character.GetLosses(), true)
             .addField('Schade gedaan', await character.GetTotalDamageGiven(), true)
-            .addField('Schade gekregen', await character.GetTotalDamageTaken(), true)
-            .addField('Raadsels opgelost', 0, true)
+            .addField('Schade gekregen', await character.GetTotalDamageTaken(), true);
+
+        if (character.CanHeal()) {
+            embed.addField('Healing gedaan', await character.GetTotalHealingDone(), true);
+        }
+
+        embed.addField('Raadsels opgelost', 0, true)
             .addField('-----------------------------', 'Equipment')
 
         this.AddEquipmentToEmbed(embed, character.GetEquipment());
@@ -84,7 +89,43 @@ export default class CharacterEmbeds {
         return embed;
     }
 
+    public static GetHealingEmbed(character:Character, receiver:Character, roll?:number, healing?:number) {
+        const embed = new MessageEmbed();
+        if (healing != null) {
+            embed.setColor(healing == 0 ? SettingsConstants.COLORS.BAD : SettingsConstants.COLORS.GOOD)
+        } else {
+            embed.setColor(SettingsConstants.COLORS.DEFAULT)
+        }
+
+        const characterName = character.GetName();
+        const receiverName = receiver.GetName();
+
+        embed.setTitle('Healing roll')
+            .setDescription(`${character.GetName()} rollt om ${receiver == character ? 'zichzelf' : receiver.GetName()} te healen.\n\n-- Statistieken --`)
+            .addField(`Health van ${receiverName}`, `${receiver.GetCurrentHealth()}/${receiver.GetMaxHealth()}`)
+            .addField(`Healing van ${characterName}`, `${character.GetFullModifierStats().healing}`)
+            .addField('--------------------------------', '-- Roll --');
+
+        if (roll == null)  {
+            embed.addField(characterName, 'Rollt de D20...')
+        } else {
+            embed.addField(characterName, `D20 = ${roll}`)
+                .addField('--------------------------------', '-- Resultaat --')
+
+            if (healing == 0) {
+                embed.addField(`${characterName} faalt met healen!`, 'Je healt per ongeluk een steen. Er gebeurt weinig.');
+            } else {
+                embed.addField(`${characterName} slaagt er in te healen`, `${characterName} krijgt ${healing} health terug.`);
+            }
+        }
+
+        return embed;
+    }
+
     public static AddEquipmentToEmbed(embed:MessageEmbed, equipment:Array<Card>) {
+        if (equipment.length == 0) {
+            embed.addField('Empty', '-');
+        }
         for (const card of equipment) {
             embed.addField(card.GetName(), CardService.ParseModifierArrayToEmbedString(card.GetModifiers()), true);
         }

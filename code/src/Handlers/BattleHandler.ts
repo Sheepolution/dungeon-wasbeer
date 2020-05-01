@@ -42,7 +42,7 @@ export default class BattleHandler {
             return;
         }
 
-        const cooldown = await this.GetCooldown(character);
+        const cooldown = await this.GetBattleCooldown(character);
 
         if (cooldown > 0) {
             const minutes = Utils.GetSecondsInMinutes(cooldown);
@@ -50,7 +50,7 @@ export default class BattleHandler {
             return;
         }
 
-        this.SetCooldown(character);
+        this.SetBattleCooldown(character);
         character.SetInBattle(true);
 
         // Start attack
@@ -90,7 +90,6 @@ export default class BattleHandler {
 
     private static async SaveAttack(battle:Battle, character:Character, messageId:string, rollCharacterBase:number, rollCharacterModifier:number, rollCharacterModifierMax:number, rollMonsterBase:number, rollMonsterModifier:number, rollMonsterModifierMax:number, victory:boolean, damage:number, healthAfter:number) {
         Attack.STATIC_POST(battle, character, messageId, rollCharacterBase, rollCharacterModifier, rollCharacterModifierMax, rollMonsterBase, rollMonsterModifier, rollMonsterModifierMax, victory, damage, healthAfter);
-        character.SetInBattle(false);
     }
 
     private static async OnCharacterCrit(messageInfo:IMessageInfo, message:Message, battle:Battle, character:Character, roll1:number = 20, roll2:number = 0, roll3:number = 0) {
@@ -107,6 +106,7 @@ export default class BattleHandler {
         if (playerWon) {
             const receivedDamage = await battle.DealDamageToMonster(damage);
             await this.SaveAttack(battle, character, message.id, roll1, roll2, character.GetAttackRoll(), roll3, roll4, battle.GetMonsterAttackRoll(), true, receivedDamage, battle.GetCurrentMonsterHealth());
+            character.SetInBattle(false);
             if (battle.IsMonsterDead()) {
                 await this.OnDefeatingMonster(battle);
             }
@@ -116,6 +116,8 @@ export default class BattleHandler {
             await this.SaveAttack(battle, character, message.id, roll1, roll2, battle.GetMonsterAttackRoll(), roll3, roll4, battle.GetMonsterAttackRoll(), false, receivedDamage, character.GetCurrentHealth());
             if (character.IsDead()) {
                 await this.OnDefeatingCharacter(messageInfo, character);
+            } else {
+                character.SetInBattle(false);
             }
             return receivedDamage;
         }
@@ -134,12 +136,12 @@ export default class BattleHandler {
         await MessageService.ReplyMessage(messageInfo, 'Je character is dood. Je kan opnieuw beginnen door een class te kiezen met het commando `;class`.');
     }
 
-    private static async GetCooldown(character:Character) {
+    private static async GetBattleCooldown(character:Character) {
         return await Redis.ttl(BattleHandler.battleCooldownPrefix + character.GetId());
     }
 
-    private static async SetCooldown(character:Character) {
-        await Redis.set(BattleHandler.battleCooldownPrefix + character.GetId(), '1', 'EX', Utils.GetMinutesInSeconds(character.GetCooldown()));
+    private static async SetBattleCooldown(character:Character) {
+        await Redis.set(BattleHandler.battleCooldownPrefix + character.GetId(), '1', 'EX', Utils.GetMinutesInSeconds(character.GetMaxBattleCooldown()));
     }
 
     private static async ReplyNoBattle(messageInfo:IMessageInfo) {
@@ -147,10 +149,10 @@ export default class BattleHandler {
     }
 
     private static async SendBattleEmbed(messageInfo:IMessageInfo, battle:Battle, character:Character) {
-        return MessageService.ReplyEmbed(messageInfo, BattleEmbeds.GetBattleEmbed(battle, character));
+        return await MessageService.ReplyEmbed(messageInfo, BattleEmbeds.GetBattleEmbed(battle, character));
     }
 
     private static async UpdateBattleEmbed(message:Message, battle:Battle, character:Character, roll1?:number, roll2?:number, roll3?:number, roll4?:number, playerWon?:boolean, damage?:number, crit?:boolean) {
-        message.edit('', BattleEmbeds.GetBattleEmbed(battle, character, roll1, roll2, roll3, roll4, playerWon, damage, crit));
+        await message.edit('', BattleEmbeds.GetBattleEmbed(battle, character, roll1, roll2, roll3, roll4, playerWon, damage, crit));
     }
 }
