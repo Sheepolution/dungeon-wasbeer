@@ -124,8 +124,9 @@ export default class BattleHandler {
     }
 
     private static async OnDefeatingMonster(battle:Battle) {
-        battle.Complete()
+        battle.Complete();
         CampaignManager.OnCompletingSession();
+        await MessageService.SendMessageToDNDChannel(`De ${battle.GetMonster().GetName()} is verslagen! Iedereen die heeft meegeholpen in deze strijd heeft XP ontvangen.`)
     }
 
     private static async OnDefeatingCharacter(messageInfo:IMessageInfo, character:Character) {

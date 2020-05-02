@@ -64,6 +64,9 @@ export default class CharacterEmbeds {
     }
 
     public static async GetDeadCharacterEmbed(character:Character) {
+        const victories = await character.GetVictories();
+        const losses = await character.GetLosses();
+
         const embed = new MessageEmbed()
             .setColor(SettingsConstants.COLORS.BAD)
             .setImage(CharacterConstants.CHARACTER_DIED)
@@ -72,8 +75,9 @@ export default class CharacterEmbeds {
             .addField('Level', character.GetLevel(), true)
             .addField('XP', character.GetXP(), true)
             .addField('Monsters', await character.GetBattles(), true)
-            .addField('Gewonnen', await character.GetVictories(), true)
-            .addField('Verloren', await character.GetLosses(), true)
+            .addField('Gevechten', victories + losses, true)
+            .addField('Gewonnen', victories, true)
+            .addField('Verloren', losses, true)
             .addField('Schade gedaan', await character.GetTotalDamageGiven(), true)
             .addField('Schade gekregen', await character.GetTotalDamageTaken(), true);
 
@@ -126,6 +130,7 @@ export default class CharacterEmbeds {
         if (equipment.length == 0) {
             embed.addField('Empty', '-');
         }
+
         for (const card of equipment) {
             embed.addField(card.GetName(), CardService.ParseModifierArrayToEmbedString(card.GetModifiers()), true);
         }

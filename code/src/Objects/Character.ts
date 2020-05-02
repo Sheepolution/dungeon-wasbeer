@@ -28,7 +28,7 @@ export default class Character {
     private name:number;
     private equipment:Array<Card>;
     private bornDate:Date;
-    private deathDate:Date;
+    private deathDate?:Date;
     private isSorcerer:boolean;
     private inBattle:boolean;
 
@@ -38,10 +38,10 @@ export default class Character {
         }
     }
 
-    public Character(player?:Player) {
-        if (player != null) {
-            this.player = player;
-        }
+    public static async INCREASE_XP(amount:any, id:string, trx?:any) {
+        await CharacterModel.query(trx)
+            .where({id: id, status: '01'})
+            .increment('xp', amount);
     }
 
     public async GET(id:string) {
@@ -75,8 +75,8 @@ export default class Character {
         this.fullModifierStats = this.CalculateFullModifierStats();
         this.currentHealth = model.health;
         this.maxHealth = this.fullModifierStats.health;
-        this.bornDate = model.born_date;
-        this.deathDate = model.death_date;
+        this.bornDate = new Date(model.born_date);
+        this.deathDate = model.death_date ? new Date(model.death_date) : undefined;
         this.isSorcerer = this.classType == ClassType.Bard || this.classType == ClassType.Cleric || this.classType == ClassType.Wizard;
     }
 
@@ -150,11 +150,11 @@ export default class Character {
     }
 
     public GetBornDateString() {
-        return this.bornDate.toISOString().slice(0,10);
+        return this.bornDate.toISOString().slice(0, 10);
     }
 
     public GetDeathDateString() {
-        return this.deathDate.toISOString().slice(0,10);
+        return this.deathDate?.toISOString().slice(0, 10);
     }
 
     public IsSorcerer() {
@@ -206,7 +206,14 @@ export default class Character {
         return CharacterConstants.BASE_COOLDOWN_DURATION - this.fullModifierStats.dexterity;
     }
 
-    public async GetXPFromMessage() {
+    public async IncreaseXP(amount:number, updateData:boolean = true) {
+        this.xp += amount;
+        if (!updateData) {
+            this.UPDATE({ xp: this.xp })
+        }
+    }
+
+    public async IncreaseXPFromMessage() {
         this.xp += 1;
         this.UPDATE({ xp: this.xp })
     }

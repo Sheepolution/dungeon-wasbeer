@@ -19,6 +19,11 @@ export default class Heal {
         return totalHealed[0].sum || 0;
     }
 
+    public static async FIND_TOTAL_HEALED_IN_BATTLE_FOR_ALL_CHARACTERS(battle:Battle) {
+        const totalHealed = await HealModel.query().where({battle_id: battle.GetId()}).groupBy('character_id').select('character_id').sum('final_healing');
+        return totalHealed;
+    }
+
     public static async STATIC_POST(battle:Battle, character:Character, receiver:Character, receiverHealth:number, characterHealing:number, roll:number, finalHealing:number) {
         await HealModel.New(battle, character, receiver, receiverHealth, characterHealing, roll, finalHealing);
     }

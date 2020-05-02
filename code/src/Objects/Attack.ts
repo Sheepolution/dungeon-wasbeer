@@ -40,6 +40,11 @@ export default class Attack {
         return totalDamageTaken[0].sum || 0;
     }
 
+    public static async FIND_TOTAL_DAMAGE_GIVEN_IN_BATTLE_FOR_ALL_CHARACTERS(battle:Battle) {
+        const totalDamageGivenCollection = await AttackModel.query().where({battle_id: battle.GetId(), victory: 1}).groupBy('character_id').select('character_id').sum('damage');
+        return totalDamageGivenCollection;
+    }
+
     public static async STATIC_POST(battle:Battle, character:Character, messageId:string, rollCharacterBase:number, rollCharacterModifier:number, rollCharacterModifierMax:number, rollMonsterBase:number, rollMonsterModifier:number, rollMonsterModifierMax:number, victory:boolean, damage:number, healthAfter:number) {
         await AttackModel.New(battle, character, messageId, rollCharacterBase, rollCharacterModifier, rollCharacterModifierMax, rollMonsterBase, rollMonsterModifier, rollMonsterModifierMax, victory, damage, healthAfter);
     }

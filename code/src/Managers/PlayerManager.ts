@@ -70,6 +70,17 @@ export default class PlayerManager {
         return character;
     }
 
+    public static GetCachePlayerCharacterByCharacterId(characterId:string) {
+        for (const player of this.players) {
+            const character = player.GetCharacter();
+            if (character != null) {
+                if (character.GetId() == characterId) {
+                    return character;
+                }
+            }
+        }
+    }
+
     private static async CreateNewPlayer(messageInfo:IMessageInfo) {
         const discordId = messageInfo.member.id;
         const player = new Player();
