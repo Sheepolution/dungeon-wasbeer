@@ -25,6 +25,9 @@ export default class CharacterHandler {
         }
 
         switch (command) {
+            case 'info':
+                this.SendCharacterInfo(messageInfo, player);
+                break;
             case 'stats':
                 this.SendModifierStats(messageInfo, player);
                 break;
@@ -228,6 +231,14 @@ export default class CharacterHandler {
 
     private static async UpdateHealingEmbed(message:Message, character:Character, receiver:Character, roll:number, healing:number) {
         message.edit('', CharacterEmbeds.GetHealingEmbed(character, receiver, roll, healing));
+    }
+
+    private static async SendCharacterInfo(messageInfo:IMessageInfo, player:Player) {
+        const character = PlayerManager.GetCharacterFromPlayer(messageInfo, player);
+        if (character == null) {
+            return;
+        }
+        MessageService.ReplyEmbed(messageInfo, CharacterEmbeds.GetCharacterInfoEmbed(character));
     }
 
     private static async SendModifierStats(messageInfo:IMessageInfo, player:Player) {

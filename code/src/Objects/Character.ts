@@ -308,7 +308,7 @@ export default class Character {
         var cardModifierStats = CharacterService.GetEmptyModifierStats();
 
         for (const card of this.equipment) {
-            cardModifierStats = CharacterService.GetSummedUpModifierStats(cardModifierStats, card.GetModifierStats());
+            cardModifierStats = card.GetModifierStats();
         }
 
         return cardModifierStats

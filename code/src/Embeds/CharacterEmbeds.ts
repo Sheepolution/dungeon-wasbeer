@@ -8,6 +8,41 @@ import CharacterService from '../Services/CharacterService';
 
 export default class CharacterEmbeds {
 
+    public static GetCharacterInfoEmbed(character:Character) {
+        const embed = new MessageEmbed()
+            .setColor(SettingsConstants.COLORS.DEFAULT)
+            .setTitle(`${character.GetName()}`)
+            .setImage(CharacterService.GetClassImage(character.GetClass()))
+            .addField('XP', `${character.GetXP()}`, true)
+            .addField('Level', `${character.GetLevel()}`, true);
+
+        const modifiers = character.GetFullModifierStats();
+        const modifiersClass = character.GetClassModifierStats();
+        const modifiersCards = character.GetCardModifierStats();
+
+        embed.addField('Health', `${character.GetCurrentHealth()}/${character.GetMaxHealth()} ${modifiersCards.health > 0 ? `(${modifiersClass.health}+${modifiersCards.health})` : ''}`, true)
+            .addField('Regeneration', `${modifiers.regeneration} ${modifiersCards.regeneration > 0 ? `(${modifiersClass.regeneration}+${modifiersCards.regeneration})` : ''}`, true)
+            .addField('Armor', `${modifiers.armor} ${modifiersCards.armor > 0 ? `(${modifiersClass.armor}+${modifiersCards.armor})` : ''}`, true)
+
+        if (character.IsSorcerer()) {
+            embed.addField('Spell attack', `${modifiers.spell} ${modifiersCards.spell > 0 ? `(${modifiersClass.spell}+${modifiersCards.spell})` : ''}`, true);
+        } else {
+            embed.addField('Strength', `${modifiers.strength} ${modifiersCards.strength > 0 ? `(${modifiersClass.strength}+${modifiersCards.strength})` : ''}`, true);
+        }
+
+        embed.addField('Attack', `${modifiers.attack} ${modifiersCards.attack > 0 ? `(${modifiersClass.attack}+${modifiersCards.attack})` : ''}`, true)
+            .addField('Dexterity', `${modifiers.dexterity} ${modifiersCards.dexterity > 0 ? `(${modifiersClass.dexterity}+${modifiersCards.dexterity})` : ''}`, true)
+
+        if (character.CanHeal()) {
+            embed.addField('Healing', `${modifiers.healing} ${modifiersCards.healing > 0 ? `(${modifiersClass.healing}+${modifiersCards.healing})` : ''}`, true);
+        }
+
+        embed.addField('-----------------------------', 'Equipment')
+        this.AddEquipmentToEmbed(embed, character.GetEquipment());
+
+        return embed;
+    }
+
     public static GetModifierStatsEmbed(character:Character) {
         const embed = new MessageEmbed()
             .setColor(SettingsConstants.COLORS.DEFAULT)
@@ -128,7 +163,7 @@ export default class CharacterEmbeds {
 
     public static AddEquipmentToEmbed(embed:MessageEmbed, equipment:Array<Card>) {
         if (equipment.length == 0) {
-            embed.addField('Empty', '-');
+            embed.addField('Leeg', '-');
         }
 
         for (const card of equipment) {
