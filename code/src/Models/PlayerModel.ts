@@ -39,7 +39,7 @@ export default class PlayerModel extends Model {
             .insert({
                 id:playerId,
                 discord_id: discordId,
-                active: 1,
+                active: true,
                 gold: 0,
                 message_points: 0,
                 discord_name: discordDisplayName,

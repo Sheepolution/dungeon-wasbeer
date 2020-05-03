@@ -41,7 +41,7 @@ export default class Campaign {
 
     public async ApplyModel(model:CampaignModel) {
         this.id = model.id;
-        this.active = model.active != 0;
+        this.active = model.active;
         this.sessionType = await model.GetSessionType();
 
         if (this.sessionType == SessionType.Battle) {
@@ -61,7 +61,7 @@ export default class Campaign {
 
     public CompleteSession() {
         this.UPDATE({
-            active: 0
+            active: false
         })
     }
 

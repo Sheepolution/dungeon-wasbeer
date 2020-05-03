@@ -23,7 +23,7 @@ export default class CardModel extends Model {
                 image_url: imageUrl,
                 creator_id: creatorId,
                 creation_date: Utils.GetNowString(),
-                special: false,
+                active: false,
                 modifiers: CardService.ParseModifierArrayToDataString(modifiers),
                 modifier_class: modifierClass,
             })

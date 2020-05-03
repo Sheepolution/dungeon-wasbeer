@@ -12,6 +12,7 @@ import { Utils } from '../Utils/Utils';
 import { Message } from 'discord.js';
 import Heal from '../Objects/Heal';
 import CampaignManager from '../Managers/CampaignManager';
+import CardEmbeds from '../Embeds/CardEmbeds';
 
 export default class CharacterHandler {
 
@@ -30,6 +31,10 @@ export default class CharacterHandler {
                 break;
             case 'stats':
                 this.SendModifierStats(messageInfo, player);
+                break;
+            case 'lijst':
+            case 'kaarten':
+                this.SendModifierCardList(messageInfo, player);
                 break;
             case 'equipment':
                 this.SendEquipment(messageInfo, player);
@@ -247,6 +252,10 @@ export default class CharacterHandler {
             return;
         }
         MessageService.ReplyEmbed(messageInfo, CharacterEmbeds.GetModifierStatsEmbed(character));
+    }
+
+    private static async SendModifierCardList(messageInfo:IMessageInfo, player:Player) {
+        MessageService.ReplyEmbed(messageInfo, CardEmbeds.GetPlayerModifieCardListEmbed(player))
     }
 
     private static async SendEquipment(messageInfo:IMessageInfo, player:Player) {

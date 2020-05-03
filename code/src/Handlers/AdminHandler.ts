@@ -230,7 +230,7 @@ export default class AdminHandler {
         }
 
         const argKeys = Object.keys(args);
-        const required = ['n', 'b', 'c', 't', 'l', 'h', 's', 'a', 'ab'];
+        const required = ['n', 'b', 'c', 't', 'l', 'h', 's', 'a', 'ab', 'abc'];
         const missing = [];
         for (const key of required) {
             if (!argKeys.includes(key)) {
@@ -250,7 +250,7 @@ export default class AdminHandler {
             return;
         }
 
-        const objectModifyResult = await MonsterManager.AddNewMonster(args.n, args.b, args.l, args.c, type, args.h, args.s, args.a, args.ab, attachment?.proxyURL, player.GetId());
+        const objectModifyResult = await MonsterManager.AddNewMonster(args.n, args.b, args.l, args.c, type, args.h, args.s, args.a, args.ab, args.abc, attachment?.proxyURL, player.GetId());
         if (objectModifyResult.result) {
             MessageService.ReplyMessage(messageInfo, 'Het monster is toegevoegd!', true, true, MonsterEmbeds.GetMonsterEmbed(<Monster>objectModifyResult.object));
         } else {
@@ -284,7 +284,7 @@ export default class AdminHandler {
             return;
         }
 
-        const monsterModifyResult = await MonsterManager.EditMonster(args.on, args.n, args.b, args.l, args.c, args.t, args.h, args.s, args.a, args.ab)
+        const monsterModifyResult = await MonsterManager.EditMonster(args.on, args.n, args.b, args.l, args.c, args.t, args.h, args.s, args.a, args.ab, args.abc)
         if (monsterModifyResult.result) {
             MessageService.ReplyMessage(messageInfo, 'Het monster is aangepast!', true, true, MonsterEmbeds.GetMonsterEmbed(<Monster>monsterModifyResult.object));
         } else {

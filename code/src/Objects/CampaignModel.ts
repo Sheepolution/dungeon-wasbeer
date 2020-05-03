@@ -28,7 +28,7 @@ export default class CampaignModel extends Model {
         const campaign = await CampaignModel.query()
             .insert({
                 id:campaignId,
-                active: 1,
+                active: true,
                 session_type: sessionType,
                 session_id: sessionId
             })

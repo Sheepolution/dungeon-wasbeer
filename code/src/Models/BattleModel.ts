@@ -27,7 +27,7 @@ export default class BattleModel extends Model {
         const battle = await BattleModel.query()
             .insert({
                 id:battleId,
-                active: 1,
+                active: true,
                 monster_id: monster.GetId(),
                 monster_health: monster.GetHealth()
             })

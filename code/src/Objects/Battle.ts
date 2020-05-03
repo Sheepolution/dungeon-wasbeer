@@ -27,7 +27,7 @@ export default class Battle {
 
     public async ApplyModel(model:BattleModel) {
         this.id = model.id;
-        this.active = model.active != 0;
+        this.active = model.active;
         this.monster = await model.GetMonster();
         this.monsterHealth = model.monster_health;
     }
@@ -60,6 +60,10 @@ export default class Battle {
         return this.monster.GetAttackDescription();
     }
 
+    public GetMonsterAttackCritDescription() {
+        return this.monster.GetAttackCritDescription();
+    }
+
     public async DealDamageToMonster(damage:number) {
         this.monsterHealth = Math.max(0, this.monsterHealth - damage);
         await this.UPDATE({monster_health: this.monsterHealth})
@@ -72,7 +76,7 @@ export default class Battle {
 
     public async Complete() {
         this.UPDATE({
-            active: 0
+            active: false
         })
     }
 }
