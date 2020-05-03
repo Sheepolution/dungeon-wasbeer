@@ -5,6 +5,23 @@ import Character from '../Objects/Character';
 
 export default class BattleEmbeds {
 
+    public static GetBattleInfoEmbed(battle:Battle) {
+        const monster = battle.GetMonster();
+
+        const embed = new MessageEmbed()
+            .setColor(SettingsConstants.COLORS.MONSTER)
+            .setAuthor(monster.GetCategory(), 'https://cdn.discordapp.com/attachments/694331679204180029/698606955496734781/unknown.png')
+            .setTitle(monster.GetName())
+            .setDescription(monster.GetDescription())
+            .setImage(monster.GetImageUrl())
+            .addField('Level', monster.GetLevelString())
+            .addField('Health', `${battle.GetCurrentMonsterHealth()}/${monster.GetHealth()}`, true)
+            .addField('Strength', monster.GetAttackStrength(), true)
+            .addField('Attack', monster.GetAttackRoll(), true)
+
+        return embed;
+    }
+
     public static GetBattleEmbed(battle:Battle, character:Character, roll1?:number, roll2?:number, roll3?:number, roll4?:number, playerWon?:boolean, damage?:number, crit?:boolean) {
         const monster = battle.GetMonster();
 

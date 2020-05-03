@@ -23,6 +23,11 @@ export default class BattleHandler {
             case 'val-aan':
                 this.OnAttack(messageInfo, player, parseInt(args[0]));
                 break;
+            case 'battle':
+            case 'monster':
+            case 'gevecht':
+                this.SendBattleInfo(messageInfo);
+                break;
             default:
                 return false;
         }
@@ -147,6 +152,15 @@ export default class BattleHandler {
 
     private static async ReplyNoBattle(messageInfo:IMessageInfo) {
         MessageService.ReplyMessage(messageInfo, 'Er is niemand om aan te vallen!', false);
+    }
+
+    private static async SendBattleInfo(messageInfo:IMessageInfo) {
+        const battle = CampaignManager.GetBattle();
+        if (battle == null) {
+            this.ReplyNoBattle(messageInfo);
+            return;
+        }
+        return await MessageService.ReplyEmbed(messageInfo, BattleEmbeds.GetBattleInfoEmbed(battle));
     }
 
     private static async SendBattleEmbed(messageInfo:IMessageInfo, battle:Battle, character:Character) {
