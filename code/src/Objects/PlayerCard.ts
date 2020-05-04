@@ -7,7 +7,6 @@ export default class PlayerCard {
     private card:Card;
     private amount:number;
     private equipped:number;
-    private deleted:boolean;
     private player:Player;
     private isUsedInTrade:boolean;
 

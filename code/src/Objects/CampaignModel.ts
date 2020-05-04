@@ -2,6 +2,8 @@ import { Utils } from '../Utils/Utils';
 import Battle from './Battle';
 import { SessionType } from '../Enums/SessionType';
 import BattleModel from '../Models/BattleModel';
+import Puzzle from './Puzzle';
+import PuzzleModel from './PuzzleModel';
 
 const { Model } = require('objection');
 
@@ -18,6 +20,14 @@ export default class CampaignModel extends Model {
             join: {
                 from: 'campaign.session_id',
                 to: 'battles.id',
+            }
+        },
+        puzzles: {
+            relation: Model.BelongsToOneRelation,
+            modelClass: PuzzleModel,
+            join: {
+                from: 'campaign.session_id',
+                to: 'puzzles.id',
             }
         }
     }
@@ -44,5 +54,11 @@ export default class CampaignModel extends Model {
         const battle = new Battle();
         battle.ApplyModel(await this.$relatedQuery('battles'));
         return battle;
+    }
+
+    public async GetPuzzle() {
+        const puzzle = new Puzzle();
+        puzzle.ApplyModel(await this.$relatedQuery('puzzles'));
+        return puzzle;
     }
 }

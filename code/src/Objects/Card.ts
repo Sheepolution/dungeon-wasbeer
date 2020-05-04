@@ -20,7 +20,7 @@ export default class Card {
     private creationDate:string;
 
     public static async GET_ALL() {
-        const models = await CardModel.query();
+        const models = await CardModel.query().where({active: true})
         return models;
     }
 

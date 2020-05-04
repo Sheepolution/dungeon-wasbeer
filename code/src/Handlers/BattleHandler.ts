@@ -17,11 +17,11 @@ export default class BattleHandler {
 
     private static readonly battleCooldownPrefix = RedisConstants.REDIS_KEY + RedisConstants.BATTLE_COOLDOWN_KEY;
 
-    public static async OnCommand(messageInfo:IMessageInfo, player:Player, command:string, args:Array<string>) {
+    public static async OnCommand(messageInfo:IMessageInfo, player:Player, command:string) {
         switch (command) {
             case 'attack':
             case 'val-aan':
-                this.OnAttack(messageInfo, player, parseInt(args[0]));
+                this.OnAttack(messageInfo, player);
                 break;
             case 'battle':
             case 'monster':
@@ -35,7 +35,7 @@ export default class BattleHandler {
         return true;
     }
 
-    private static async OnAttack(messageInfo:IMessageInfo, player:Player, attack?:number) {
+    private static async OnAttack(messageInfo:IMessageInfo, player:Player) {
         const character = PlayerManager.GetCharacterFromPlayer(messageInfo, player);
         if (character == null) { return; }
 
@@ -151,7 +151,7 @@ export default class BattleHandler {
     }
 
     private static async ReplyNoBattle(messageInfo:IMessageInfo) {
-        MessageService.ReplyMessage(messageInfo, 'Er is niemand om aan te vallen!', false);
+        MessageService.ReplyMessage(messageInfo, 'Er is geen gevecht gaande momenteel.', false);
     }
 
     private static async SendBattleInfo(messageInfo:IMessageInfo) {

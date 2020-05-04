@@ -14,6 +14,7 @@ export default class MonsterEmbeds {
             .addField('Level', monster.GetLevelString())
             .addField('Health', monster.GetHealth(), true)
             .addField('Attack', monster.GetAttackRoll(), true)
+            .addField('Strength', monster.GetAttackStrength(), true)
 
         return embed;
     }

@@ -11,7 +11,7 @@ export default class CardService {
         const parsedModifiers = new Array<ICardModifier>();
         const modifierParts = modifierString.split('/');
         for (const modifierPart of modifierParts) {
-            const match = modifierPart.match(/(.+?)=(\d+)/);
+            const match = modifierPart.match(/(.+?)=(-?\d+)/);
             if (match == null) {
                 return;
             }

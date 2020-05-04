@@ -4,6 +4,15 @@ export const perfy = require('perfy');
 
 export module Utils {
 
+    export function Is(a:any, ...b:any) {
+        for (const n of b) {
+            if (a == n) {
+                return true;
+            }
+        }
+        return false;
+    }
+
     // Inclusive when floor = true
     export function Random(a?:number, b?:number, floor?:boolean) {
         if (a == null) { a = 0; b = 1; }
@@ -11,6 +20,10 @@ export module Utils {
 
         const r = a + Math.random() * (b - a + (floor ? 1 : 0) );
         return floor ? Math.floor(r) : r;
+    }
+
+    export function Chance(n:number) {
+        return Utils.Random(0, 100) <= n;
     }
 
     export function Dice(n:number) {
@@ -111,5 +124,4 @@ export module Utils {
     export async function Sleep(seconds:number) {
         return new Promise( resolve => setTimeout(resolve, seconds * 1000) );
     }
-
 }

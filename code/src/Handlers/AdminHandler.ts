@@ -13,7 +13,7 @@ import { AttackType } from '../Enums/AttackType';
 import Monster from '../Objects/Monster';
 import MonsterEmbeds from '../Embeds/MonsterEmbeds';
 import MonsterModel from '../Models/MonsterModel';
-import { ModifierType } from '../Enums/ModifierType';
+// import { ModifierType } from '../Enums/ModifierType';
 import CardService from '../Services/CardService';
 import { ClassType } from '../Enums/ClassType';
 
@@ -94,7 +94,7 @@ export default class AdminHandler {
         }
 
         const argKeys = Object.keys(args);
-        const required = ['n', 'b', 'c', 'r'];
+        const required = ['n', 'b', 'c', 'l'];
         const missing = [];
         for (const key of required) {
             if (!argKeys.includes(key)) {
@@ -116,7 +116,7 @@ export default class AdminHandler {
             }
 
             if (args.mc) {
-                modifierClass = (<any>ModifierType)[args.mc.toTitleCase()];
+                modifierClass = (<any>ClassType)[args.mc.toTitleCase()];
                 if (modifierClass == null) {
                     MessageService.ReplyMessage(messageInfo, `'${args.mc}' is geen bestaande class.\nKies uit Bard, Cleric, Wizard, Paladin, Fighter en Ranger.`);
                     return;
@@ -124,7 +124,7 @@ export default class AdminHandler {
             }
         }
 
-        const cardModifyResult = await CardManager.AddNewCard(args.n, args.b, args.r, args.c, attachment?.proxyURL, player.GetId(), modifiers, modifierClass);
+        const cardModifyResult = await CardManager.AddNewCard(args.n, args.b, args.l, args.c, attachment?.proxyURL, player.GetId(), modifiers, modifierClass);
         if (cardModifyResult.result) {
             MessageService.ReplyMessage(messageInfo, 'De kaart is toegevoegd!', true, true, CardEmbeds.GetCardEmbed(<Card>cardModifyResult.object));
         } else {
@@ -175,7 +175,7 @@ export default class AdminHandler {
             }
         }
 
-        const cardModifyResult = await CardManager.EditCard(args.on, args.n, args.b, args.r, args.c, modifiers, modifierClass, attachment?.proxyURL);
+        const cardModifyResult = await CardManager.EditCard(args.on, args.n, args.b, args.l, args.c, modifiers, modifierClass, attachment?.proxyURL);
         if (cardModifyResult.result) {
             MessageService.ReplyMessage(messageInfo, 'De kaart is aangepast!', true, true, CardEmbeds.GetCardEmbed(<Card>cardModifyResult.object));
         } else {
@@ -230,7 +230,7 @@ export default class AdminHandler {
         }
 
         const argKeys = Object.keys(args);
-        const required = ['n', 'b', 'c', 't', 'l', 'h', 's', 'a', 'ab', 'abc'];
+        const required = ['n', 'b', 'c', 'l', 'h', 's', 'a', 'ab', 'abc'];
         const missing = [];
         for (const key of required) {
             if (!argKeys.includes(key)) {
@@ -243,12 +243,7 @@ export default class AdminHandler {
             return;
         }
 
-        const type = (<any>AttackType)[args.t];
-
-        if (type == null) {
-            MessageService.ReplyMessage(messageInfo, '', false);
-            return;
-        }
+        const type = AttackType.Physical;
 
         const objectModifyResult = await MonsterManager.AddNewMonster(args.n, args.b, args.l, args.c, type, args.h, args.s, args.a, args.ab, args.abc, attachment?.proxyURL, player.GetId());
         if (objectModifyResult.result) {

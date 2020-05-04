@@ -27,7 +27,8 @@ export default class MonsterManager {
             return objectModifyResult;
         }
 
-        await monster.POST(name, description, level, category, type, health, strength, attack, attackDescription, attackCritDescription, imageUrl, creatorId);
+        this.monsterList.push(monster);
+        await monster.POST(name, description, level, category, type, health, strength, attack, attackDescription, attackCritDescription, imageUrl, creatorId, this.monsterList.length);
 
         objectModifyResult.result = true;
         return objectModifyResult;

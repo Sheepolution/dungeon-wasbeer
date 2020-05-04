@@ -10,6 +10,10 @@ import Character from '../Objects/Character';
 import Heal from '../Objects/Heal';
 import CharacterModel from '../Models/CharacterModel';
 import PlayerManager from './PlayerManager';
+import PuzzleManager from './PuzzleManager';
+import Puzzle from '../Objects/Puzzle';
+import PuzzleEmbeds from '../Embeds/PuzzleEmbeds';
+import { Utils } from '../Utils/Utils';
 const { transaction } = require('objection');
 
 export default class CampaignManager {
@@ -27,22 +31,41 @@ export default class CampaignManager {
         this.campaignObject = campaign;
     }
 
-    public static async StartNewSession() {
+    public static async StartNewSession(lastSessionType?:SessionType) {
         var campaign = new Campaign();
+
+        if (lastSessionType == SessionType.Battle) {
+            if (Utils.Chance(35)) {
+                const puzzle = await PuzzleManager.GetRandomPuzzle();
+                await campaign.POST(SessionType.Puzzle, puzzle.GetId());
+                this.campaignObject = campaign;
+                CampaignManager.SendNewPuzzleMessage(puzzle);
+                return;
+            }
+        }
+
         const battle = new Battle();
         const monster = MonsterManager.GetRandomMonster();
         await battle.POST(monster);
         await campaign.POST(SessionType.Battle, battle.GetId());
         this.campaignObject = campaign;
-        CampaignManager.SendNewSessionMessage(campaign, monster);
+        CampaignManager.SendNewBattleMessage(monster);
     }
 
-    public static async SendNewSessionMessage(campaign:Campaign, monster:Monster) {
+    public static async SendNewPuzzleMessage(puzzle:Puzzle) {
+        MessageService.SendMessageToDNDChannel('Jullie komen aan in een dorp. Daar zien jullie een oud vrouwtje. "Gegroet", zegt ze. "Als jullie door dit dorp willen zul je eerst deze puzzel moeten oplossen."', PuzzleEmbeds.GetSudokuEmbed(puzzle));
+    }
+
+    public static async SendNewBattleMessage(monster:Monster) {
         MessageService.SendMessageToDNDChannel(`Jullie volgen het pad in het bos. Plots komen jullie een ${monster.GetName()} tegen!`, MonsterEmbeds.GetMonsterEmbed(monster));
     }
 
     public static GetBattle() {
         return this.campaignObject.GetBattle();
+    }
+
+    public static GetPuzzle() {
+        return this.campaignObject.GetPuzzle();
     }
 
     public static OnCompletingSession() {

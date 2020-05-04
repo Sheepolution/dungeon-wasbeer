@@ -16,6 +16,7 @@ export default class Monster {
     private imageUrl:string;
     private creatorId:string;
     private creationDate:string;
+    private number:number;
 
     public static async GET_ALL() {
         const models = await MonsterModel.query();
@@ -38,8 +39,8 @@ export default class Monster {
         return true;
     }
 
-    public async POST(name:string, description:string, level:number, category:string, type:AttackType, health:number, strength:number, attack:number, attackDescription:string, attackCritDescription:string, imageUrl:string, creatorId:string) {
-        const model = await MonsterModel.New(name, description, level, category, type.toString(), health, strength, attack, attackDescription, attackCritDescription, imageUrl, creatorId);
+    public async POST(name:string, description:string, level:number, category:string, type:AttackType, health:number, strength:number, attack:number, attackDescription:string, attackCritDescription:string, imageUrl:string, creatorId:string, number:number) {
+        const model = await MonsterModel.New(name, description, level, category, type.toString(), health, strength, attack, attackDescription, attackCritDescription, imageUrl, creatorId, number);
         await this.ApplyModel(model);
         return this;
     }
@@ -65,6 +66,7 @@ export default class Monster {
         this.imageUrl = model.image_url;
         this.creatorId = model.creator_id;
         this.creationDate = model.creationDate;
+        this.number = model.number;
     }
 
     public async EditMonster(name:string = this.name, description:string = this.description, level:number = this.level, category:string = this.category, type:AttackType = this.type, health:number = this.health, strength:number = this.strength, attack:number = this.attack, attackDescription:string = this.attackDescription, attackCritDescription:string = this.attackCritDescription, imageUrl:string = this.imageUrl) {

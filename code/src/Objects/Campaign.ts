@@ -1,6 +1,7 @@
 import Battle from './Battle';
 import CampaignModel from './CampaignModel';
 import { SessionType } from '../Enums/SessionType';
+import Puzzle from './Puzzle';
 
 export default class Campaign {
 
@@ -8,7 +9,7 @@ export default class Campaign {
     private active:boolean;
     private sessionType:SessionType;
     private battle:Battle;
-    // private riddle:Riddle;
+    private puzzle:Puzzle;
 
     public async GET(id:string) {
         const model:CampaignModel = await CampaignModel.query().findById(id);
@@ -47,7 +48,7 @@ export default class Campaign {
         if (this.sessionType == SessionType.Battle) {
             this.battle = await model.GetBattle();
         } else {
-            // this.riddle = await model.GetRiddle();
+            this.puzzle = await model.GetPuzzle();
         }
     }
 
@@ -57,6 +58,10 @@ export default class Campaign {
 
     public GetBattle() {
         return this.battle;
+    }
+
+    public GetPuzzle() {
+        return this.puzzle;
     }
 
     public CompleteSession() {
