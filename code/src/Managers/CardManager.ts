@@ -37,7 +37,7 @@ export default class CardManager {
         const existingPlayerCard = playerCards.find(x => x.GetCard().GetId() == card.GetId());
         if (existingPlayerCard != null) {
             await existingPlayerCard.AddCard();
-            cardModifyResult.card = existingPlayerCard;
+            cardModifyResult.object = existingPlayerCard;
             return cardModifyResult;
         }
 
@@ -46,7 +46,7 @@ export default class CardManager {
 
         player.GiveCard(newPlayerCard);
 
-        cardModifyResult.card = newPlayerCard;
+        cardModifyResult.object = newPlayerCard;
         cardModifyResult.result = true;
         return cardModifyResult;
     }
