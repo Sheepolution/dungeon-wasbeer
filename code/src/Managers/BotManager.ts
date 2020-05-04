@@ -5,17 +5,23 @@ import { Message, TextChannel } from 'discord.js';
 import MessageHandler from '../Handlers/MessageHandler';
 import PlayerManager from './PlayerManager';
 import DiscordUtils from '../Utils/DiscordUtils';
-import DiscordService from '../Services/DiscordService';
 import SettingsConstants from '../Constants/SettingsConstants';
+// import CampaignManager from './CampaignManager';
+import DiscordService from '../Services/DiscordService';
+import MonsterManager from './MonsterManager';
 
 export default class BotManager {
 
-    public static mainChannel:TextChannel;
+    private static cardChannel:TextChannel;
+    private static dndChannel:TextChannel;
 
     public static async OnReady() {
         console.log('Dungeon Wasbeer: Connected');
-        BotManager.mainChannel = <TextChannel> await DiscordService.FindChannelById(SettingsConstants.MAIN_CHANNEL_ID);
-        CardManager.BuildCardList();
+        BotManager.cardChannel = <TextChannel> await DiscordService.FindChannelById(SettingsConstants.CARD_CHANNEL_ID);
+        // BotManager.dndChannel = <TextChannel> await DiscordService.FindChannelById(SettingsConstants.DND_CHANNEL_ID);
+        await CardManager.BuildCardList();
+        await MonsterManager.BuildMonsterList();
+        // await CampaignManager.ContinueSession();
     }
 
     public static async OnMessage(message:Message) {
@@ -30,24 +36,21 @@ export default class BotManager {
         const messageInfo:IMessageInfo = DiscordUtils.ParseMessageToInfo(message, message.member);
 
         var player = await PlayerManager.GetOrCreatePlayer(messageInfo);
-
         var content = message.content.trim();
-
         var prefix = SettingsConstants.PREFIX;
 
         if (content.startsWith(prefix)) {
-            if (message.guild.id == SettingsConstants.MAIN_GUILD_ID && message.channel.id != SettingsConstants.MAIN_CHANNEL_ID) {
-                return;
-            }
-
             CommandHandler.OnCommand(messageInfo, player, content);
-        }
-        else {
+        } else {
             if (messageInfo.message?.guild?.id != SettingsConstants.MAIN_GUILD_ID) {
                 return;
             }
 
-            if (messageInfo.channel.id == SettingsConstants.MAIN_CHANNEL_ID) {
+            if (messageInfo.channel.id == SettingsConstants.CARD_CHANNEL_ID) {
+                return;
+            }
+
+            if (messageInfo.channel.id == SettingsConstants.DND_CHANNEL_ID) {
                 return;
             }
 
@@ -60,7 +63,11 @@ export default class BotManager {
         CardManager.BuildCardList();
     }
 
-    public static GetMainChannel() {
-        return BotManager.mainChannel;
+    public static GetCardChannel() {
+        return BotManager.cardChannel;
+    }
+
+    public static GetDNDChannel() {
+        return BotManager.dndChannel;
     }
 }

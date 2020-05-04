@@ -7,37 +7,36 @@ export default class PlayerCardHandler {
 
     public static async OnCommand(messageInfo:IMessageInfo, player:Player, command:string, args:Array<string>) {
         switch (command) {
-        case 'kaart':
-            this.SendPlayerCard(messageInfo, player, args[0]);
-            break;
-        case 'lijst':
-        case 'kaarten':
-            this.SendPlayerCardList(messageInfo, player);
-            break;
-        default:
-            return false;
+            case 'kaart':
+                this.SendPlayerCard(messageInfo, player, args[0]);
+                break;
+            case 'lijst':
+            case 'kaarten':
+                this.SendPlayerCardList(messageInfo, player);
+                break;
+            default:
+                return false;
         }
 
         return true;
     }
 
-    private static async SendPlayerCard(messageInfo:IMessageInfo, player:Player, name:string) {
-        if (name == null) {
-            MessageService.SendMessage(messageInfo, 'Ik mis de naam van de kaart.', false);
+    private static async SendPlayerCard(messageInfo:IMessageInfo, player:Player, cardName:string) {
+        if (cardName == null) {
+            MessageService.ReplyMissingCardName(messageInfo);
             return;
         }
 
-        const playerCard = player.FindCard(name);
-        if (playerCard) {
-            MessageService.SendEmbed(messageInfo, CardEmbeds.GetCardEmbed(playerCard.GetCard(), playerCard.GetAmount()));
+        const playerCard = player.FindCard(cardName);
+        if (playerCard == null) {
+            MessageService.ReplyNotOwningCard(messageInfo, cardName);
             return;
         }
 
-        MessageService.SendMessage(messageInfo, 'Je hebt geen kaart met de naam \'' + name + '\'.', false, true);
+        MessageService.ReplyEmbed(messageInfo, CardEmbeds.GetCardEmbed(playerCard.GetCard(), playerCard.GetAmount()));
     }
 
     private static async SendPlayerCardList(messageInfo:IMessageInfo, player:Player) {
-        MessageService.SendEmbed(messageInfo, CardEmbeds.GetPlayerCardListEmbed(player, player.GetCards()));
+        MessageService.ReplyEmbed(messageInfo, CardEmbeds.GetPlayerCardListEmbed(player));
     }
-
 }

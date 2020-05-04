@@ -4,6 +4,15 @@ export const perfy = require('perfy');
 
 export module Utils {
 
+    export function Is(a:any, ...b:any) {
+        for (const n of b) {
+            if (a == n) {
+                return true;
+            }
+        }
+        return false;
+    }
+
     // Inclusive when floor = true
     export function Random(a?:number, b?:number, floor?:boolean) {
         if (a == null) { a = 0; b = 1; }
@@ -11,6 +20,14 @@ export module Utils {
 
         const r = a + Math.random() * (b - a + (floor ? 1 : 0) );
         return floor ? Math.floor(r) : r;
+    }
+
+    export function Chance(n:number) {
+        return Utils.Random(0, 100) <= n;
+    }
+
+    export function Dice(n:number) {
+        return Utils.Random(1, n, true);
     }
 
     export function GetNow() {
@@ -56,18 +73,19 @@ export module Utils {
         return obj;
     }
 
-    export function GetMinutesInSeconds(n:number)
-    {
+    export function GetSecondsInMinutes(n:number) {
+        return Math.ceil(n/60);
+    }
+
+    export function GetMinutesInSeconds(n:number) {
         return n * 60;
     }
 
-    export function GetHoursInSeconds(n:number)
-    {
+    export function GetHoursInSeconds(n:number) {
         return n * 60 * 60
     }
 
-    export function GetMinutesInMiliSeconds(n:number)
-    {
+    export function GetMinutesInMiliSeconds(n:number) {
         return n * 60 * 1000;
     }
 
@@ -75,26 +93,25 @@ export module Utils {
         const match = hour.match(/^(\d{1,2})(:\d{2}|\s?[pPaA][mM])?$/);
         if (match == null) {
             return null;
-        }
-        else {
+        } else {
             var time = parseInt(match[1]);
             if (time > 24) {
                 return null;
             }
-            if (match[2] != null) { 
+            if (match[2] != null) {
                 const not = match[2].toLowerCase();
 
                 if (not == 'pm' || not == 'am') {
                     if (time > 12) {
                         return null;
-                    } 
+                    }
                 }
+
                 if (not == 'pm') {
                     if (time < 12) {
                         time += 12;
                     }
-                }
-                else if (not == 'am') {
+                } else if (not == 'am') {
                     if (time == 12) {
                         time = 0;
                     }
@@ -104,4 +121,7 @@ export module Utils {
         }
     }
 
+    export async function Sleep(seconds:number) {
+        return new Promise( resolve => setTimeout(resolve, seconds * 1000) );
+    }
 }

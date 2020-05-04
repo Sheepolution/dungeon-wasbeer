@@ -1,5 +1,3 @@
-import IMessageInfo from '../Interfaces/IMessageInfo';
-
 export default class CommandUtils {
 
     public static GetCommaArgs(content:string) {
@@ -31,8 +29,7 @@ export default class CommandUtils {
                 if (count == 'all' || (!nan)) {
                     arg = arg.substring(count.length, arg.length).trim();
                     obj[arg] = count;
-                }
-                else {
+                } else {
                     obj[arg] = 1;
                 }
             }
@@ -67,12 +64,10 @@ export default class CommandUtils {
                 arg = arg.substring(count.length, arg.length).trim();
                 obj.name = arg;
                 obj.amount = count;
-            }
-            else {
+            } else {
                 obj.amount = 1;
             }
-        }
-        else {
+        } else {
             return null;
         }
 
@@ -91,8 +86,7 @@ export default class CommandUtils {
                 var name = argumentNameMatch[1];
                 const value = arg.substring(name.length).trim();
                 obj[name] = value;
-            }
-            else {
+            } else {
                 return null;
             }
         }
@@ -100,14 +94,13 @@ export default class CommandUtils {
         return obj;
     }
 
-    public static ValidateArguments(messageInfo:IMessageInfo, args:any) {
+    public static ValidateArguments(args:any) {
         for (let i = 0; i < args.length; i++) {
             const arg = args[i];
             const val = arg.value;
 
             if (arg.required) {
                 if (val == null) {
-                    // Embedder.SendArgumentRequired(command, arg.requiredMessage);
                     return false;
                 }
             }
@@ -117,8 +110,7 @@ export default class CommandUtils {
                 if (n != null && args.numeric == false) {
                     // No number
                     return false;
-                }
-                else if (n == null && args.numeric == true) {
+                } else if (n == null && args.numeric == true) {
                     return false;
                 }
             }

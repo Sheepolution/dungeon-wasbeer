@@ -59,8 +59,7 @@ export default class DiscordService {
                     await guild.fetch();
                     foundChannel = guild.channels.cache.get(id);
                 }
-            }
-            else {
+            } else {
                 foundChannel = this.client.channels.cache.get(id) || await this.client.channels.fetch(id);
             }
 
@@ -86,29 +85,27 @@ export default class DiscordService {
         return member.hasPermission('ADMINISTRATOR');
     }
 
-    public static SendEmbed(channel:Channel, embed:MessageEmbed, content?:string) {
+    public static async SendEmbed(channel:Channel, embed:MessageEmbed, content?:string) {
         const textChannel:TextChannel = <TextChannel>channel;
-        return content ? textChannel.send(content, embed) : textChannel.send(embed)
+        return await (content ? textChannel.send(content, embed) : textChannel.send(embed))
     }
 
-    public static SendMessage(channel:TextChannel, message:string, embed?:MessageEmbed) {
+    public static async SendMessage(channel:TextChannel, message:string, embed?:MessageEmbed) {
         const textChannel:TextChannel = <TextChannel>channel;
         if (embed) {
-            this.SendEmbed(textChannel, embed, message)
-            return;
+            return await this.SendEmbed(textChannel, embed, message)
         }
 
-        textChannel.send(message);
+        return await textChannel.send(message);
     }
 
-    public static ReplyMessage(channel:TextChannel, member:GuildMember, message:string, embed?:MessageEmbed) {
+    public static async ReplyMessage(textChannel:TextChannel, member:GuildMember, message:string, embed?:MessageEmbed) {
         const reply = `<@${member.user}> ${message}`;
 
         if (embed) {
-            this.SendEmbed(channel, embed, reply)
-            return;
+            return await this.SendEmbed(textChannel, embed, reply)
         }
 
-        channel.send(reply);
+        return await textChannel.send(reply);
     }
 }

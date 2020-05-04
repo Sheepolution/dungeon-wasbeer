@@ -6,9 +6,16 @@ import SettingsConstants from '../Constants/SettingsConstants';
 import MessageService from '../Services/MessageService';
 import Card from '../Objects/Card';
 import CardEmbeds from '../Embeds/CardEmbeds';
-import DiscordService from '../Services/DiscordService';
 import CardModel from '../Models/CardModel';
 import CardManager from '../Managers/CardManager';
+import MonsterManager from '../Managers/MonsterManager';
+import { AttackType } from '../Enums/AttackType';
+import Monster from '../Objects/Monster';
+import MonsterEmbeds from '../Embeds/MonsterEmbeds';
+import MonsterModel from '../Models/MonsterModel';
+// import { ModifierType } from '../Enums/ModifierType';
+import CardService from '../Services/CardService';
+import { ClassType } from '../Enums/ClassType';
 
 export default class AdminHandler {
 
@@ -18,20 +25,37 @@ export default class AdminHandler {
         }
 
         switch (command) {
-            case 'add':
+            case 'addcard':
+            case 'add-card':
                 this.AddNewCard(messageInfo, player, CommandUtils.GetAssignedArguments(content));
                 break;
-            case 'edit':
+            case 'edit-card':
+            case 'editcard':
                 this.EditCard(messageInfo, CommandUtils.GetAssignedArguments(content));
                 break;
-            case 'stats':
+            case 'addmonster':
+            case 'add-monster':
+                this.AddNewMonster(messageInfo, player, CommandUtils.GetAssignedArguments(content));
+                break;
+            case 'edit-monster':
+            case 'editmonster':
+                this.EditMonster(messageInfo, CommandUtils.GetAssignedArguments(content));
+                break;
+            case 'card-stats':
+            case 'cardstats':
                 this.SendCardStats(messageInfo);
                 break;
             case 'card':
                 this.SendCard(messageInfo, args[0]);
                 break;
-            case 'random':
+            case 'random-card':
                 this.SendRandomCard(messageInfo);
+                break;
+            case 'monster':
+                this.SendMonster(messageInfo, args[0]);
+                break;
+            case 'random-monster':
+                this.SendRandomMonster(messageInfo);
                 break;
             case 'refresh':
                 this.ResetAllCache(messageInfo);
@@ -46,20 +70,31 @@ export default class AdminHandler {
         return true;
     }
 
+    private static async ResetAllCache(messageInfo:IMessageInfo) {
+        await BotManager.ResetAllCache();
+        MessageService.ReplyMessage(messageInfo, 'Alle cache is gereset.', true);
+    }
+
+    private static async SayMessage(message:string) {
+        MessageService.SendMessageToCardChannel(message);
+    }
+
+    // CARDS ////////////////
+
     private static async AddNewCard(messageInfo:IMessageInfo, player:Player, args:any) {
         if (args == null) {
-            MessageService.SendAssignedArgumentsParseError(messageInfo);
+            MessageService.ReplyAssignedArgumentsParseError(messageInfo);
             return;
         }
 
         const attachment = messageInfo.message?.attachments.first();
         if (attachment == null || !['.png', 'jpeg', '.jpg'].includes(attachment.name?.toLowerCase().slice(-4) || '')) {
-            MessageService.SendNoImageAttached(messageInfo);
+            MessageService.ReplyNoImageAttached(messageInfo);
             return;
         }
 
         const argKeys = Object.keys(args);
-        const required = ['n', 'b', 'c', 'r'];
+        const required = ['n', 'b', 'c', 'l'];
         const missing = [];
         for (const key of required) {
             if (!argKeys.includes(key)) {
@@ -68,49 +103,83 @@ export default class AdminHandler {
         }
 
         if (missing.length > 0) {
-            MessageService.SendMissingAssignedArguments(messageInfo, missing);
+            MessageService.ReplyMissingAssignedArguments(messageInfo, missing);
             return;
         }
 
-        const cardModifyResult = await CardManager.AddNewCard(args.n, args.b, args.r, args.c, attachment?.proxyURL, player.GetId());
+        var modifiers, modifierClass;
+        if (args.m) {
+            modifiers = CardService.ParseModifierStringToArray(args.m);
+            if (modifiers == null) {
+                MessageService.ReplyMessage(messageInfo, 'Ik kan de modifiers niet parsen. Zorg dat je het juist formaat aanhoudt:\nattack=2/health=3')
+                return;
+            }
+
+            if (args.mc) {
+                modifierClass = (<any>ClassType)[args.mc.toTitleCase()];
+                if (modifierClass == null) {
+                    MessageService.ReplyMessage(messageInfo, `'${args.mc}' is geen bestaande class.\nKies uit Bard, Cleric, Wizard, Paladin, Fighter en Ranger.`);
+                    return;
+                }
+            }
+        }
+
+        const cardModifyResult = await CardManager.AddNewCard(args.n, args.b, args.l, args.c, attachment?.proxyURL, player.GetId(), modifiers, modifierClass);
         if (cardModifyResult.result) {
-            MessageService.SendMessage(messageInfo, 'De kaart is toegevoegd!', true, true, CardEmbeds.GetCardEmbed(<Card>cardModifyResult.card));
+            MessageService.ReplyMessage(messageInfo, 'De kaart is toegevoegd!', true, true, CardEmbeds.GetCardEmbed(<Card>cardModifyResult.object));
         } else {
-            MessageService.SendMessage(messageInfo, 'Er is al een kaart met deze naam in deze categorie!', false, true, CardEmbeds.GetCardEmbed(<Card>cardModifyResult.card));
+            MessageService.ReplyMessage(messageInfo, 'Er is al een kaart met deze naam in deze categorie!', false, true, CardEmbeds.GetCardEmbed(<Card>cardModifyResult.object));
         }
     }
 
     private static async EditCard(messageInfo:IMessageInfo, args:any) {
         if (args == null) {
-            MessageService.SendAssignedArgumentsParseError(messageInfo);
+            MessageService.ReplyAssignedArgumentsParseError(messageInfo);
             return;
         }
 
         const attachment = messageInfo.message?.attachments.first();
         if (attachment != null && !['.png', 'jpeg', '.jpg'].includes(attachment.name?.toLowerCase().slice(-4) || '')) {
-            MessageService.SendNoImageAttached(messageInfo);
+            MessageService.ReplyNoImageAttached(messageInfo);
             return;
         }
 
-        const arg_keys = Object.keys(args);
+        const argKeys = Object.keys(args);
         const required = ['on'];
         const missing = [];
         for (const key of required) {
-            if (!arg_keys.includes(key)) {
+            if (!argKeys.includes(key)) {
                 missing.push(key);
             }
         }
 
         if (missing.length > 0) {
-            MessageService.SendMissingAssignedArguments(messageInfo, missing);
+            MessageService.ReplyMissingAssignedArguments(messageInfo, missing);
             return;
         }
 
-        const cardModifyResult = await CardManager.EditCard(args.on, args.n, args.b, args.r, args.c)
+        var modifiers, modifierClass;
+        if (args.m) {
+            modifiers = CardService.ParseModifierStringToArray(args.m);
+            if (modifiers == null) {
+                MessageService.ReplyMessage(messageInfo, 'Ik kan de modifiers niet parsen. Zorg dat je het juist formaat aanhoudt:\nattack=2/health=3')
+                return;
+            }
+
+            if (args.mc) {
+                modifierClass = (<any>ClassType)[args.mc.toTitleCase()];
+                if (modifierClass == null) {
+                    MessageService.ReplyMessage(messageInfo, `'${args.mc}' is geen bestaande class.\nKies uit Bard, Cleric, Wizard, Paladin, Fighter en Ranger.`);
+                    return;
+                }
+            }
+        }
+
+        const cardModifyResult = await CardManager.EditCard(args.on, args.n, args.b, args.l, args.c, modifiers, modifierClass, attachment?.proxyURL);
         if (cardModifyResult.result) {
-            MessageService.SendMessage(messageInfo, 'De kaart is aangepast!', true, true, CardEmbeds.GetCardEmbed(<Card>cardModifyResult.card));
+            MessageService.ReplyMessage(messageInfo, 'De kaart is aangepast!', true, true, CardEmbeds.GetCardEmbed(<Card>cardModifyResult.object));
         } else {
-            MessageService.SendMessage(messageInfo, 'Er is geen kaart met de naam \'' + args.on + '\'.', false, true);
+            MessageService.ReplyMessage(messageInfo, 'Er is geen kaart met de naam \'' + args.on + '\'.', false, true);
         }
     }
 
@@ -122,7 +191,7 @@ export default class AdminHandler {
 
         var card = new Card();
         if (!await card.FIND_BY_NAME(name)) {
-            MessageService.SendMessage(messageInfo, 'Je hebt geen kaart met de naam \'' + name + '\'.', false, true);
+            MessageService.ReplyMessage(messageInfo, 'Je hebt geen kaart met de naam \'' + name + '\'.', false, true);
             return;
         }
 
@@ -131,27 +200,117 @@ export default class AdminHandler {
 
     private static async SendCardStats(messageInfo:IMessageInfo) {
         const cards:any = await Card.GET_ALL();
-        MessageService.SendEmbed(messageInfo, CardEmbeds.GetCardStatsEmbed(cards));
+        MessageService.ReplyEmbed(messageInfo, CardEmbeds.GetCardStatsEmbed(cards));
     }
 
     private static async SendRandomCard(messageInfo:IMessageInfo) {
-        const card_models:CardModel = await Card.GET_ALL();
-        var cardModel = card_models.randomChoice();
+        const cardModels:CardModel = await Card.GET_ALL();
+        var cardModel = cardModels.randomChoice();
         var card = new Card();
         card.ApplyModel(cardModel);
         this.SendCardEmbed(messageInfo, card);
     }
 
-    private static async ResetAllCache(messageInfo:IMessageInfo) {
-        await BotManager.ResetAllCache();
-        MessageService.SendMessage(messageInfo, 'Alle cache is gereset.', true);
-    }
-
-    private static async SayMessage(message:string) {
-        MessageService.SendMessageToMainChannel(message);
-    }
-
     private static async SendCardEmbed(messageInfo:IMessageInfo, card:Card) {
-        MessageService.SendEmbed(messageInfo, CardEmbeds.GetCardEmbed(card));
+        MessageService.ReplyEmbed(messageInfo, CardEmbeds.GetCardEmbed(card));
+    }
+
+    // MONSTERS ////////////////
+
+    private static async AddNewMonster(messageInfo:IMessageInfo, player:Player, args:any) {
+        if (args == null) {
+            MessageService.ReplyAssignedArgumentsParseError(messageInfo);
+            return;
+        }
+
+        const attachment = messageInfo.message?.attachments.first();
+        if (attachment == null || !['.png', 'jpeg', '.jpg'].includes(attachment.name?.toLowerCase().slice(-4) || '')) {
+            MessageService.ReplyNoImageAttached(messageInfo);
+            return;
+        }
+
+        const argKeys = Object.keys(args);
+        const required = ['n', 'b', 'c', 'l', 'h', 's', 'a', 'ab', 'abc'];
+        const missing = [];
+        for (const key of required) {
+            if (!argKeys.includes(key)) {
+                missing.push(key);
+            }
+        }
+
+        if (missing.length > 0) {
+            MessageService.ReplyMissingAssignedArguments(messageInfo, missing);
+            return;
+        }
+
+        const type = AttackType.Physical;
+
+        const objectModifyResult = await MonsterManager.AddNewMonster(args.n, args.b, args.l, args.c, type, args.h, args.s, args.a, args.ab, args.abc, attachment?.proxyURL, player.GetId());
+        if (objectModifyResult.result) {
+            MessageService.ReplyMessage(messageInfo, 'Het monster is toegevoegd!', true, true, MonsterEmbeds.GetMonsterEmbed(<Monster>objectModifyResult.object));
+        } else {
+            MessageService.ReplyMessage(messageInfo, 'Er is al een monster met deze naam!', false, true, MonsterEmbeds.GetMonsterEmbed(<Monster>objectModifyResult.object));
+        }
+    }
+
+    private static async EditMonster(messageInfo:IMessageInfo, args:any) {
+        if (args == null) {
+            MessageService.ReplyAssignedArgumentsParseError(messageInfo);
+            return;
+        }
+
+        const attachment = messageInfo.message?.attachments.first();
+        if (attachment != null && !['.png', 'jpeg', '.jpg'].includes(attachment.name?.toLowerCase().slice(-4) || '')) {
+            MessageService.ReplyNoImageAttached(messageInfo);
+            return;
+        }
+
+        const argKeys = Object.keys(args);
+        const required = ['on'];
+        const missing = [];
+        for (const key of required) {
+            if (!argKeys.includes(key)) {
+                missing.push(key);
+            }
+        }
+
+        if (missing.length > 0) {
+            MessageService.ReplyMissingAssignedArguments(messageInfo, missing);
+            return;
+        }
+
+        const monsterModifyResult = await MonsterManager.EditMonster(args.on, args.n, args.b, args.l, args.c, args.t, args.h, args.s, args.a, args.ab, args.abc)
+        if (monsterModifyResult.result) {
+            MessageService.ReplyMessage(messageInfo, 'Het monster is aangepast!', true, true, MonsterEmbeds.GetMonsterEmbed(<Monster>monsterModifyResult.object));
+        } else {
+            MessageService.ReplyMessage(messageInfo, 'Er is geen monster met de naam \'' + args.on + '\'.', false, true);
+        }
+    }
+
+    private static async SendMonster(messageInfo:IMessageInfo, name:string) {
+        if (name == null) {
+            this.SendRandomMonster(messageInfo);
+            return;
+        }
+
+        var monster = new Monster();
+        if (!await monster.FIND_BY_NAME(name)) {
+            MessageService.ReplyMessage(messageInfo, 'Je hebt geen monster met de naam \'' + name + '\'.', false, true);
+            return;
+        }
+
+        this.SendMonsterEmbed(messageInfo, monster);
+    }
+
+    private static async SendRandomMonster(messageInfo:IMessageInfo) {
+        const monsterModels:MonsterModel = await Monster.GET_ALL();
+        var monsterModel = monsterModels.randomChoice();
+        var monster = new Monster();
+        monster.ApplyModel(monsterModel);
+        this.SendMonsterEmbed(messageInfo, monster);
+    }
+
+    private static async SendMonsterEmbed(messageInfo:IMessageInfo, monster:Monster) {
+        MessageService.ReplyEmbed(messageInfo, MonsterEmbeds.GetMonsterEmbed(monster));
     }
 }

@@ -3,7 +3,9 @@ import IMessageInfo from '../Interfaces/IMessageInfo';
 import Player from '../Objects/Player';
 import PlayerCard from '../Objects/PlayerCard';
 import SettingsConstants from '../Constants/SettingsConstants';
-import ICardModifyResult from '../Interfaces/ICardModifyResult';
+import IObjectModifyResult from '../Interfaces/IObjectModifyResult';
+import { ICardModifier } from '../Interfaces/ICardModifier';
+import { ClassType } from '../Enums/ClassType';
 
 export default class CardManager {
 
@@ -19,7 +21,7 @@ export default class CardManager {
             cardList.push(card);
         }
 
-        CardManager.cardList = cardList;
+        this.cardList = cardList;
     }
 
     public static async GetCardList() {
@@ -29,7 +31,7 @@ export default class CardManager {
     public static async GivePlayerCard(messageInfo:IMessageInfo, player:Player) {
         const card = await this.GetRandomCard();
         const playerCards = player.GetCards();
-        const cardModifyResult:ICardModifyResult = { card: card, result: false };
+        const cardModifyResult:IObjectModifyResult = { object: card, result: false };
 
         //TODO: Generalize this
         const existingPlayerCard = playerCards.find(x => x.GetCard().GetId() == card.GetId());
@@ -49,29 +51,29 @@ export default class CardManager {
         return cardModifyResult;
     }
 
-    public static async AddNewCard(name:string, description:string, rank:number, category:string, url:string, creatorId:string) {
+    public static async AddNewCard(name:string, description:string, rank:number, category:string, url:string, creatorId:string, modifiers?:Array<ICardModifier>, modifierClass?:ClassType) {
         const card = new Card();
-        const cardModifyResult:ICardModifyResult = { card: card, result: false };
+        const cardModifyResult:IObjectModifyResult = { object: card, result: false };
 
         if (await card.FIND_BY_NAME(name)) {
             return cardModifyResult;
         }
 
-        await card.POST(name, description, rank, category, url, creatorId);
+        await card.POST(name, description, rank, category, url, creatorId, modifiers, modifierClass);
 
         cardModifyResult.result = true;
         return cardModifyResult;
     }
-    
-    public static async EditCard(originalName:string, name?:string, description?:string, rank?:number, category?:string) {
+
+    public static async EditCard(originalName:string, name?:string, description?:string, rank?:number, category?:string, modifiers?:Array<ICardModifier>, modifierClass?:ClassType, imageUrl?:string) {
         const card = new Card();
-        const cardModifyResult:ICardModifyResult = { card: card, result: false };
+        const cardModifyResult:IObjectModifyResult = { object: card, result: false };
 
         if (!await card.FIND_BY_NAME(originalName)) {
             return cardModifyResult;
         }
 
-        await card.EditCard(name, description, rank, category);
+        await card.EditCard(name, description, rank, category, modifiers, modifierClass, imageUrl);
 
         cardModifyResult.result = true;
         return cardModifyResult;

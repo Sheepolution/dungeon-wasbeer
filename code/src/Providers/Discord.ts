@@ -18,13 +18,12 @@ export default class Discord {
 
     public static Init() {
         this.client = new Client();
-        const client = this.client;
 
-        DiscordService.SetClient(this.client);
+        DiscordService.SetClient(this.client)
 
-        client.on('ready', async () => { await Discord.EventReady() });
-        client.on('message', async (message) => { await Discord.EventMessage(message) });
-        client.login(process.env.TOKEN);
+        this.client.on('ready', async () => { await Discord.EventReady() });
+        this.client.on('message', async (message) => { await Discord.EventMessage(message) });
+        this.client.login(process.env.TOKEN);
     }
 
     private static async EventReady () {

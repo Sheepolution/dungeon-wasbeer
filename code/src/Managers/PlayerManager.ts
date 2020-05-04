@@ -2,11 +2,14 @@ import CardManager from './CardManager';
 import IMessageInfo from '../Interfaces/IMessageInfo';
 import Player from '../Objects/Player';
 import { Utils } from '../Utils/Utils';
+import MessageService from '../Services/MessageService';
+import { ClassType } from '../Enums/ClassType';
 
 export default class PlayerManager {
 
     private static players:any = {};
     private static cacheRefreshInterval:any = setInterval(() => { PlayerManager.ProcessPlayerCache() }, Utils.GetMinutesInMiliSeconds(5));
+    private static readonly classNames = Object.keys(ClassType);
 
     public static async GetOrCreatePlayer(messageInfo:IMessageInfo) {
         var player = await this.GetPlayer(messageInfo.member.id, messageInfo.member.displayName);
@@ -21,6 +24,17 @@ export default class PlayerManager {
 
     public static ResetPlayerCache() {
         this.players = {};
+    }
+
+    public static async GetPlayerById(playerId:string) {
+        const cachedPlayer = Object.values(this.players).find((e:any) => e.player.GetId() == playerId);
+        if (cachedPlayer) {
+            return cachedPlayer;
+        }
+
+        const player = new Player();
+        await player.GET(playerId, true);
+        return player;
     }
 
     public static async GetPlayer(discordId:string, discordDisplayName?:string) {
@@ -44,6 +58,27 @@ export default class PlayerManager {
         }
 
         return null;
+    }
+
+    public static GetCharacterFromPlayer(messageInfo:IMessageInfo, player:Player) {
+        const character = player.GetCharacter();
+        if (character == null) {
+            MessageService.ReplyMessage(messageInfo, `Je hebt nog geen character aangemaakt. Kies een van de volgende classes met \`;class\`:\n${this.classNames.join(', ')}`, false);
+            return;
+        }
+
+        return character;
+    }
+
+    public static GetCachePlayerCharacterByCharacterId(characterId:string) {
+        for (const player of this.players) {
+            const character = player.GetCharacter();
+            if (character != null) {
+                if (character.GetId() == characterId) {
+                    return character;
+                }
+            }
+        }
     }
 
     private static async CreateNewPlayer(messageInfo:IMessageInfo) {

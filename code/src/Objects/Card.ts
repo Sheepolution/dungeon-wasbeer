@@ -1,4 +1,10 @@
 import CardModel from '../Models/CardModel';
+import { ICardModifier } from '../Interfaces/ICardModifier';
+import { ClassType } from '../Enums/ClassType';
+import CardService from '../Services/CardService';
+import { ModifierType } from '../Enums/ModifierType';
+import IModifierStats from '../Interfaces/IModifierStats';
+import CharacterService from '../Services/CharacterService';
 
 export default class Card {
     protected id:string;
@@ -6,19 +12,15 @@ export default class Card {
     private description:string;
     private rank:number;
     private category:string
-    private special:boolean;
-    private modifier:string;
-    private modifierAmount:string;
+    private modifiers:Array<ICardModifier>;
+    private modifierClass:ClassType;
+    private modifierStats:IModifierStats;
     private imageUrl:string;
     private creatorId:string;
     private creationDate:string;
 
-    constructor() {
-    }
-
-    public static async GET_ALL()
-    {
-        const models = await CardModel.query();
+    public static async GET_ALL() {
+        const models = await CardModel.query().where({active: true})
         return models;
     }
 
@@ -38,8 +40,8 @@ export default class Card {
         return true;
     }
 
-    public async POST(name:string, description:string, rank:number, category:string, imageUrl:string, creatorId:string) {
-        const model = await CardModel.New(name, description, rank, category, imageUrl, creatorId);
+    public async POST(name:string, description:string, rank:number, category:string, imageUrl:string, creatorId:string, modifiers?:Array<ICardModifier>, modifierClass?:ClassType) {
+        const model = await CardModel.New(name, description, rank, category, imageUrl, creatorId, modifiers, modifierClass);
         await this.ApplyModel(model);
         return this;
     }
@@ -59,22 +61,28 @@ export default class Card {
         this.imageUrl = model.image_url;
         this.creatorId = model.creator_id;
         this.creationDate = model.creationDate;
-        this.special = model.special;
-        this.modifier = model.modifier;
-        this.modifierAmount = model.modifier;
+        this.modifiers = model.GetModifiers();
+        this.modifierClass = model.GetModifierClass();
+        this.modifierStats = this.CalculateModifierStats();
     }
 
-    public async EditCard(name?:string, description?:string, rank?:number, category?:string) {
-        this.name = name || this.name;
-        this.description = description || this.description;
-        this.rank = rank || this.rank;
-        this.category = category || this.category;
+    public async EditCard(name:string = this.name, description:string = this.description, rank:number = this.rank, category:string = this.category, modifiers:Array<ICardModifier> = this.modifiers, modifierClass:ClassType = this.modifierClass, imageUrl:string = this.imageUrl) {
+        this.name = name;
+        this.description = description;
+        this.rank = rank;
+        this.category = category;
+        this.modifiers = modifiers;
+        this.modifierClass = modifierClass;
+        this.imageUrl = imageUrl;
 
         this.UPDATE({
             name: this.name,
             description: this.description,
             rank: this.rank,
             category: this.category,
+            modifiers: CardService.ParseModifierArrayToDataString(this.modifiers),
+            modifier_class: this.modifierClass?.toString(),
+            image_url: this.imageUrl,
         })
     }
 
@@ -102,7 +110,57 @@ export default class Card {
         return ':star:'.repeat(this.rank);
     }
 
+    public HasBuffs() {
+        return this.modifiers.length > 0;
+    }
+
+    public GetModifiers() {
+        return this.modifiers;
+    }
+
+    public GetModifierClass() {
+        return this.modifierClass;
+    }
+
+    public GetModifierStats() {
+        return this.modifierStats;
+    }
+
     public GetImageUrl() {
         return this.imageUrl;
+    }
+
+    private CalculateModifierStats() {
+        const modifierStats = CharacterService.GetEmptyModifierStats();
+        for (const modifier of this.modifiers) {
+            switch (modifier.modifier) {
+                case ModifierType.Armor:
+                    modifierStats.armor = modifier.value;
+                    break;
+                case ModifierType.Charisma:
+                    modifierStats.charisma = modifier.value;
+                    break;
+                case ModifierType.Dexterity:
+                    modifierStats.dexterity = modifier.value;
+                    break;
+                case ModifierType.Healing:
+                    modifierStats.healing = modifier.value;
+                    break;
+                case ModifierType.Health:
+                    modifierStats.health = modifier.value;
+                    break;
+                case ModifierType.Regeneration:
+                    modifierStats.regeneration = modifier.value;
+                    break;
+                case ModifierType.Spell:
+                    modifierStats.spell = modifier.value;
+                    break;
+                case ModifierType.Strength:
+                    modifierStats.strength = modifier.value;
+                    break;
+            }
+        }
+
+        return modifierStats;
     }
 }

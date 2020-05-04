@@ -6,36 +6,50 @@ import BotManager from '../Managers/BotManager';
 
 export default class MessageService {
 
-    public static SendMessage(messageInfo:IMessageInfo, message:string, good?:boolean, mention?:boolean, embed?:MessageEmbed) {
+    public static async ReplyMessage(messageInfo:IMessageInfo, message:string, good?:boolean, mention?:boolean, embed?:MessageEmbed) {
         if (good != null) {
             message = (good ?  EmojiConstants.STATUS.GOOD : EmojiConstants.STATUS.BAD) + ' ' + message;
         }
         if (mention != false) {
-            DiscordService.ReplyMessage(<TextChannel>messageInfo.channel, messageInfo.member, message, embed)
+            return DiscordService.ReplyMessage(<TextChannel>messageInfo.channel, messageInfo.member, message, embed)
         } else {
-            DiscordService.SendMessage(<TextChannel>messageInfo.channel, message, embed)
+            return DiscordService.SendMessage(<TextChannel>messageInfo.channel, message, embed)
         }
     }
-    
-    public static SendEmbed(messageInfo:IMessageInfo, embed:MessageEmbed, content?:string) {
-        DiscordService.SendEmbed(messageInfo.channel, embed, content)
+
+    public static async ReplyEmbed(messageInfo:IMessageInfo, embed:MessageEmbed, message?:string) {
+        return DiscordService.SendEmbed(messageInfo.channel, embed, message)
     }
 
-    public static SendMessageToMainChannel(content:string) {
-        DiscordService.SendMessage(BotManager.GetMainChannel(), content);
+    public static async SendMessageToCardChannel(message:string) {
+        this.SendMessage(BotManager.GetCardChannel(), message);
     }
 
-    public static SendMissingAssignedArguments(messageInfo:IMessageInfo, missing:Array<string>) {
-        this.SendMessage(messageInfo, 'Je vergeet één of meerdere parameters:\n' + missing.join(', ') , false, true);
+    public static async SendMessageToDNDChannel(message:string, embed?:MessageEmbed) {
+        this.SendMessage(BotManager.GetDNDChannel(), message, embed);
     }
 
-    public static SendAssignedArgumentsParseError(messageInfo:IMessageInfo) {
-        this.SendMessage(messageInfo, 'Ik kon de parameters van je bericht niet verwerken.\nZorg dat dit het juiste format aanhoudt.\n\nVoorbeeld:\n;commando -voorbeeld Dit is een voorbeeld -getal 123', false, true);
+    public static async ReplyMissingAssignedArguments(messageInfo:IMessageInfo, missing:Array<string>) {
+        this.ReplyMessage(messageInfo, 'Je vergeet één of meerdere parameters:\n' + missing.join(', ') , false, true);
     }
 
-    public static SendNoImageAttached(messageInfo:IMessageInfo) {
-        this.SendMessage(messageInfo, 'Zorg dat je een afbeelding meegeeft van het formaat .png, .jpg of .jpeg.', false, true);
+    public static async ReplyAssignedArgumentsParseError(messageInfo:IMessageInfo) {
+        this.ReplyMessage(messageInfo, 'Ik kon de parameters van je bericht niet verwerken.\nZorg dat dit het juiste format aanhoudt.\n\nVoorbeeld:\n;commando -voorbeeld Dit is een voorbeeld -getal 123', false, true);
     }
 
+    public static async ReplyNoImageAttached(messageInfo:IMessageInfo) {
+        this.ReplyMessage(messageInfo, 'Zorg dat je een afbeelding meegeeft van het formaat .png, .jpg of .jpeg.', false, true);
+    }
 
+    public static async ReplyMissingCardName(messageInfo:IMessageInfo) {
+        MessageService.ReplyMessage(messageInfo, 'Ik mis de naam van de kaart.', false);
+    }
+
+    public static async ReplyNotOwningCard(messageInfo:IMessageInfo, name:string) {
+        MessageService.ReplyMessage(messageInfo, 'Je hebt geen kaart met de naam \'' + name + '\'.', false, true);
+    }
+
+    private static async SendMessage(channel:TextChannel, message:string, embed?:MessageEmbed) {
+        return DiscordService.SendMessage(channel, message, embed)
+    }
 }

@@ -6,8 +6,9 @@ export default class PlayerCard {
     protected id:string;
     private card:Card;
     private amount:number;
-    private deleted:boolean;
+    private equipped:number;
     private player:Player;
+    private isUsedInTrade:boolean;
 
     constructor(player:Player) {
         this.player = player;
@@ -38,6 +39,7 @@ export default class PlayerCard {
         this.id = model.id;
         this.card = await model.GetCard();
         this.amount = model.amount;
+        this.equipped = model.equipped;
     }
 
     public GetId() {
@@ -73,5 +75,30 @@ export default class PlayerCard {
 
     public GetAmount() {
         return this.amount;
+    }
+
+    public CanBeTraded() {
+        return this.equipped != 1 || this.amount > 1;
+    }
+
+    public IsEquipped() {
+        return this.equipped == 1;
+    }
+
+    public StartUsingInTrade() {
+        this.isUsedInTrade = true;
+    }
+
+    public StopUsingInTrade() {
+        this.isUsedInTrade = false;
+    }
+
+    public IsUsedInTrade() {
+        return this.isUsedInTrade;
+    }
+
+    public async SetEquipped(equipped:boolean) {
+        this.equipped = equipped ? 1 : 0;
+        await this.UPDATE({equipped: this.equipped});
     }
 }
