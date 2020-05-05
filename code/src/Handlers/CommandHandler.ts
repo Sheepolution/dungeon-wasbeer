@@ -5,9 +5,9 @@ import MessageHandler from './MessageHandler';
 import PlayerCardHandler from './PlayerCardHandler';
 import TradeHandler from './TradeHandler';
 import SettingsConstants from '../Constants/SettingsConstants';
-// import BattleHandler from './BattleHandler';
-// import CharacterHandler from './CharacterHandler';
-// import PuzzleHandler from './PuzzleHandler';
+import BattleHandler from './BattleHandler';
+import CharacterHandler from './CharacterHandler';
+import PuzzleHandler from './PuzzleHandler';
 
 export default class CommandHandler {
 
@@ -32,14 +32,14 @@ export default class CommandHandler {
             } else if (await PlayerCardHandler.OnCommand(messageInfo, player, command, args)) {
                 return;
             }
-        // } else if (messageInfo.channel.id == SettingsConstants.DND_CHANNEL_ID) {
-            // if (await CharacterHandler.OnCommand(messageInfo, player, command, args)) {
-        //         return;
-            // } else if (await BattleHandler.OnCommand(messageInfo, player, command)) {
-        //         return;
-        //     } else if (await PuzzleHandler.OnCommand(messageInfo, player, command)) {
-        //         return;
-        //     }
+        } else if (messageInfo.channel.id == SettingsConstants.DND_CHANNEL_ID) {
+            if (await CharacterHandler.OnCommand(messageInfo, player, command, args)) {
+                return;
+            } else if (await BattleHandler.OnCommand(messageInfo, player, command)) {
+                return;
+            } else if (await PuzzleHandler.OnCommand(messageInfo, player, command)) {
+                return;
+            }
         }
     }
 

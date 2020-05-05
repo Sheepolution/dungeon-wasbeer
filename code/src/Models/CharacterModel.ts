@@ -12,17 +12,6 @@ export default class CharacterModel extends Model {
         return 'characters';
     }
 
-    // static relationMappings = {
-    //     monsters: {
-    //         relation: Model.BelongsToOneRelation,
-    //         modelClass: MonsterModel,
-    //         join: {
-    //             from: 'battles.monster_id',
-    //             to: 'monsters.id',
-    //         }
-    //     }
-    // }
-
     public static async New(player:Player, classType:ClassType) {
         const characterId = Utils.UUID();
 

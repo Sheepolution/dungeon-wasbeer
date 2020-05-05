@@ -5,7 +5,7 @@ import Player from '../Objects/Player';
 import EmojiConstants from '../Constants/EmojiConstants';
 import ITradeInfo from '../Interfaces/ITradeInfo';
 import CardService from '../Services/CardService';
-// import CharacterService from '../Services/CharacterService';
+import CharacterService from '../Services/CharacterService';
 
 export default class CardEmbeds {
 
@@ -18,16 +18,16 @@ export default class CardEmbeds {
             .setImage(card.GetImageUrl())
             .addField('Level', card.GetRankString());
 
-        // const modifiers = card.GetModifiers();
-        // const modifierClass = card.GetModifierClass();
+        const modifiers = card.GetModifiers();
+        const modifierClass = card.GetModifierClass();
 
-        // if (modifiers.length > 0) {
-        //     embed.addField('Modifiers', CardService.ParseModifierArrayToEmbedString(modifiers),  true)
-        // }
+        if (modifiers.length > 0) {
+            embed.addField('Modifiers', CardService.ParseModifierArrayToEmbedString(modifiers),  true)
+        }
 
-        // if (modifierClass) {
-        //     embed.addField('Class', `${CharacterService.GetClassEmoji(modifierClass)} ${modifierClass.toString()}`, true);
-        // }
+        if (modifierClass) {
+            embed.addField('Class', `${CharacterService.GetClassEmoji(modifierClass)} ${modifierClass.toString()}`, true);
+        }
 
         return embed;
     }

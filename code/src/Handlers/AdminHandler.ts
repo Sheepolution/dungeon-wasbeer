@@ -13,7 +13,7 @@ import { AttackType } from '../Enums/AttackType';
 import Monster from '../Objects/Monster';
 import MonsterEmbeds from '../Embeds/MonsterEmbeds';
 import MonsterModel from '../Models/MonsterModel';
-// import { ModifierType } from '../Enums/ModifierType';
+import { ModifierType } from '../Enums/ModifierType';
 import CardService from '../Services/CardService';
 import { ClassType } from '../Enums/ClassType';
 
