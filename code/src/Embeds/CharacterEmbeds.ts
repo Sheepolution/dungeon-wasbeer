@@ -110,7 +110,7 @@ export default class CharacterEmbeds {
             .addField('Level', character.GetLevel(), true)
             .addField('XP', character.GetXP(), true)
             .addField('Monsters', await character.GetBattles(), true)
-            .addField('Gevechten', victories + losses, true)
+            .addField('Gevechten', parseInt(victories) + parseInt(losses), true)
             .addField('Gewonnen', victories, true)
             .addField('Verloren', losses, true)
             .addField('Schade gedaan', await character.GetTotalDamageGiven(), true)

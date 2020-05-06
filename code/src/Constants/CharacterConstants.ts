@@ -23,4 +23,46 @@ export default class CharacterConstants {
         FIGHTER: { armor: 2, charisma: 0, dexterity: 1, healing: 0, health: 100, regeneration: 1, strength: 5, spell: 0, attack: 5 },
         RANGER: { armor: 0, charisma: 0, dexterity: 5, healing: 0, health: 100, regeneration: 1, strength: 1, spell: 0, attack: 5 },
     };
+
+    public static readonly CLASS_ATTACK_MESSAGES = {
+        BARD: [
+            'Je speelt een liedje. Je bent alleen niet zo goed en doet je tegenstander pijn aan zijn oren. Je doet [damage] damage.',
+        ],
+        CLERIC: [
+            'Bla bla je doet schade enzo [damage].',
+        ],
+        WIZARD: [
+            'Je doet een spreuk',
+        ],
+        PALADIN: [
+            'Je slaat met je zwaard.',
+        ],
+        FIGHTER: [
+            'Je slaat met je twee zwaarden.'
+        ],
+        RANGER: [
+            'Je schiet een pijl',
+        ]
+    }
+
+    public static readonly CLASS_ATTACK_CRIT_MESSAGES = {
+        BARD: [
+            'Bard Crit',
+        ],
+        CLERIC: [
+            'cleric crit',
+        ],
+        WIZARD: [
+            'Wizard spreuk crit',
+        ],
+        PALADIN: [
+            'Paladin crit',
+        ],
+        FIGHTER: [
+            'Fighter crit'
+        ],
+        RANGER: [
+            'Ranger crit',
+        ]
+    }
 }

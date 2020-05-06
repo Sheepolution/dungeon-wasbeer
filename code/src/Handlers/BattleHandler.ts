@@ -70,26 +70,37 @@ export default class BattleHandler {
             return
         }
 
-        this.UpdateBattleEmbed(message, battle, character, roll1);
-        await Utils.Sleep(3);
-        const roll2 = Utils.Dice(character.GetAttackRoll());
+        const playerAttackRoll = character.GetAttackRoll();
+        var roll2 = playerAttackRoll;
+        if (playerAttackRoll > 1) {
+            this.UpdateBattleEmbed(message, battle, character, roll1);
+            await Utils.Sleep(3);
+            roll2 = Utils.Dice(playerAttackRoll);
+        }
+
         this.UpdateBattleEmbed(message, battle, character, roll1, roll2);
         await Utils.Sleep(3);
+
         const roll3 = Utils.Dice(20);
 
-        if (roll1 == 20) {
+        if (roll3 == 20) {
             this.OnMonsterCrit(messageInfo, message, battle, character, roll1, roll2, roll3)
             return
-        } else if (roll1 == 1) {
+        } else if (roll3 == 1) {
             this.OnCharacterCrit(messageInfo, message, battle, character, roll1, roll2, roll3)
             return
         }
 
-        this.UpdateBattleEmbed(message, battle, character, roll1, roll2, roll3);
-        await Utils.Sleep(3);
-        const roll4 = Utils.Dice(battle.GetMonsterAttackRoll());
-        const playerWon = roll1 + roll2 >= roll3 + roll4;
-        const damage = await this.ResolveAttackResult(messageInfo, message, battle, character, playerWon, playerWon ? character.GetAttackStrength(): battle.GetMonsterAttackStrength(), roll1, roll2, roll3, roll4);
+        const monsterAttackRoll = battle.GetMonsterAttackRoll();
+        var roll4 = monsterAttackRoll;
+        if (monsterAttackRoll > 1) {
+            this.UpdateBattleEmbed(message, battle, character, roll1, roll2, roll3);
+            await Utils.Sleep(3);
+            roll4 = Utils.Dice(monsterAttackRoll);
+        }
+
+        const playerWon = roll1 + (roll2 || 0) >= roll3 + (roll4 || 0);
+        const damage = await this.ResolveAttackResult(messageInfo, message, battle, character, playerWon, playerWon ? character.GetAttackStrength(): battle.GetMonsterAttackStrength(), roll1, roll2 || 0, roll3, roll4 || 0);
         await this.UpdateBattleEmbed(message, battle, character, roll1, roll2, roll3, roll4, playerWon, damage);
     }
 
@@ -143,11 +154,12 @@ export default class BattleHandler {
     }
 
     private static async GetBattleCooldown(character:Character) {
-        return await Redis.ttl(BattleHandler.battleCooldownPrefix + character.GetId());
+        return 0;
+        // return await Redis.ttl(BattleHandler.battleCooldownPrefix + character.GetId());
     }
 
     private static async SetBattleCooldown(character:Character) {
-        await Redis.set(BattleHandler.battleCooldownPrefix + character.GetId(), '1', 'EX', Utils.GetMinutesInSeconds(character.GetMaxBattleCooldown()));
+        // await Redis.set(BattleHandler.battleCooldownPrefix + character.GetId(), '1', 'EX', Utils.GetMinutesInSeconds(character.GetMaxBattleCooldown()));
     }
 
     private static async ReplyNoBattle(messageInfo:IMessageInfo) {

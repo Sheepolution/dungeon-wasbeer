@@ -304,6 +304,10 @@ export default class Character {
         return await Heal.FIND_HEALED_BY_CHARACTER(this);
     }
 
+    public GetRandomAttackDescription(crit?:boolean) {
+        return CharacterService.GetClassAttackDescription(this.classType, crit).randomChoice();
+    }
+
     private CalculateCardModifierStats() {
         var cardModifierStats = CharacterService.GetEmptyModifierStats();
 
