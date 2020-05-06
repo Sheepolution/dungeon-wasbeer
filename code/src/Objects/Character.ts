@@ -137,6 +137,21 @@ export default class Character {
         }
     }
 
+    public async Stop() {
+        this.status = CharacterStatus.Stopped;
+        await this.UPDATE({
+            status: this.status,
+        })
+
+        await this.player.RemoveCharacter();
+
+        for (const card of this.player.GetCards()) {
+            if (card.IsEquipped()) {
+                await card.SetEquipped(false);
+            }
+        }
+    }
+
     public GetClassModifierStats() {
         return this.classModifierStats;
     }
@@ -276,7 +291,7 @@ export default class Character {
         this.equipment.splice(index, 1);
         this.UpdateFullModifierStats();
         this.UPDATE({
-            equipment: this.equipment.join(',')
+            equipment: this.equipment.map(c => c.GetId()).join(',')
         })
     }
 

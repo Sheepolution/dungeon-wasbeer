@@ -161,6 +161,17 @@ export default class CharacterEmbeds {
         return embed;
     }
 
+    public static GetResetCharacterWarningEmbed() {
+        var embed = new MessageEmbed();
+        embed.setTitle('WAARSCHUWING')
+            .setColor(SettingsConstants.COLORS.BAD)
+            .setDescription('Weet je zeker dat je wilt stoppen met je huidige character?\n**Je kan dit niet ongedaan maken**\n\
+Je zal een nieuw character moeten maken die **begint vanaf level 1 met 0 XP**.\n\n\
+Als je zeker weet dat je wilt stoppen met dit character, gebruik dan het commando `;ikweetzekerdatikwilstoppenmetditcharacter`');
+
+        return embed;
+    }
+
     public static AddEquipmentToEmbed(embed:MessageEmbed, equipment:Array<Card>) {
         if (equipment.length == 0) {
             embed.addField('Leeg', '-');

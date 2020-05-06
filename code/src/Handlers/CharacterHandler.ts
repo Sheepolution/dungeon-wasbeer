@@ -13,11 +13,14 @@ import { Message } from 'discord.js';
 import Heal from '../Objects/Heal';
 import CampaignManager from '../Managers/CampaignManager';
 import CardEmbeds from '../Embeds/CardEmbeds';
+import Discord from '../Providers/Discord';
+import CharacterConstants from '../Constants/CharacterConstants';
 
 export default class CharacterHandler {
 
     private static readonly classNames = Object.keys(ClassType);
     private static readonly  healingCooldownPrefix = RedisConstants.REDIS_KEY + RedisConstants.HEALING_COOLDOWN_KEY;
+    private static readonly  resetConfirmTimerPrefix = RedisConstants.REDIS_KEY + RedisConstants.RESET_CONFIRM_TIMER_KEY;
 
     public static async OnCommand(messageInfo:IMessageInfo, player:Player, command:string, args:Array<string>) {
         if (command == 'class') {
@@ -47,6 +50,12 @@ export default class CharacterHandler {
                 break;
             case 'heal':
                 this.OnHeal(messageInfo, player, args[0])
+                break;
+            case 'reset':
+                this.OnReset(messageInfo, player);
+                break;
+            case 'ikweetzekerdatikwilstoppenmetditcharacter':
+                this.OnResetConfirm(messageInfo, player);
                 break;
             default:
                 return false;
@@ -236,6 +245,41 @@ export default class CharacterHandler {
 
     private static async UpdateHealingEmbed(message:Message, character:Character, receiver:Character, roll:number, healing:number) {
         message.edit('', CharacterEmbeds.GetHealingEmbed(character, receiver, roll, healing));
+    }
+
+    private static async OnReset(messageInfo:IMessageInfo, player:Player) {
+        const character = PlayerManager.GetCharacterFromPlayer(messageInfo, player);
+        if (character == null) {
+            return;
+        }
+
+        this.SetResetCharacterTimer(character);
+
+        MessageService.ReplyEmbed(messageInfo, CharacterEmbeds.GetResetCharacterWarningEmbed());
+    }
+
+    private static async OnResetConfirm(messageInfo:IMessageInfo, player:Player) {
+        const character = PlayerManager.GetCharacterFromPlayer(messageInfo, player);
+        if (character == null) {
+            return;
+        }
+
+        const timer = await this.GetResetCharacterTimer(character);
+        if (timer <= 0) {
+            return;
+        }
+
+        await character.Stop()
+
+        MessageService.ReplyMessage(messageInfo, 'Je character heeft de party verlaten.\nJe kan een nieuw character maken met `;class [class]`', true);
+    }
+
+    private static async GetResetCharacterTimer(character:Character) {
+        return await Redis.ttl(CharacterHandler.resetConfirmTimerPrefix + character.GetId());
+    }
+
+    private static async SetResetCharacterTimer(character:Character) {
+        await Redis.set(CharacterHandler.resetConfirmTimerPrefix + character.GetId(), '1', 'EX', Utils.GetMinutesInSeconds(CharacterConstants.RESET_CHARACTER_TIMER_DURATION));
     }
 
     private static async SendCharacterInfo(messageInfo:IMessageInfo, player:Player) {

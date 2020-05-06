@@ -4,6 +4,8 @@ export default class CharacterConstants {
 
     public static readonly HEAL_MESSAGE_AMOUNT = 10;
 
+    public static readonly RESET_CHARACTER_TIMER_DURATION = 5;
+
     public static readonly CHARACTER_DIED = 'https://cdn.discordapp.com/attachments/694331679204180029/703293328552362014/unknown.png';
 
     public static readonly CHARACTER_IMAGE = {
