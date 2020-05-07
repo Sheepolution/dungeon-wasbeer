@@ -67,13 +67,13 @@ export default class CampaignManager {
         return this.campaignObject.GetPuzzle();
     }
 
-    public static OnCompletingSession() {
+    public static async OnCompletingSession() {
         const battle = this.campaignObject.GetBattle();
         if (battle != null) {
-            this.GiveXPToBattlers(battle);
+            await this.GiveXPToBattlers(battle);
         }
-        this.campaignObject.CompleteSession();
-        this.StartNewSession();
+        await this.campaignObject.CompleteSession();
+        await this.StartNewSession();
     }
 
     private static async GiveXPToBattlers(battle:Battle) {
@@ -101,9 +101,18 @@ export default class CampaignManager {
             }
         }
 
+        const characters = PlayerManager.GetAllCachedCharacters();
+
         await transaction(CharacterModel.knex(), async (trx:any) => {
             for (const characterId in data) {
                 await Character.INCREASE_XP(data[characterId], characterId, trx);
+            }
+
+            for (const character of characters) {
+                const xp = data[character.GetId()];
+                if (xp) {
+                    await character.IncreaseXP(xp, trx);
+                }
             }
         }).catch((error:any) => {
             console.log(error);

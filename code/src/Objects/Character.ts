@@ -11,8 +11,13 @@ import { Utils } from '../Utils/Utils';
 import CharacterService from '../Services/CharacterService';
 import CharacterConstants from '../Constants/CharacterConstants';
 import Heal from './Heal';
+import { Redis } from '../Providers/Redis';
+import RedisConstants from '../Constants/RedisConstants';
 
 export default class Character {
+
+    private static readonly battleCooldownPrefix = RedisConstants.REDIS_KEY + RedisConstants.BATTLE_COOLDOWN_KEY;
+    private static readonly healingCooldownPrefix = RedisConstants.REDIS_KEY + RedisConstants.HEALING_COOLDOWN_KEY;
 
     protected id:string;
     private player:Player;
@@ -74,7 +79,7 @@ export default class Character {
         this.cardModifierStats = this.CalculateCardModifierStats();
         this.fullModifierStats = this.CalculateFullModifierStats();
         this.currentHealth = model.health;
-        this.maxHealth = this.fullModifierStats.health;
+        this.maxHealth = this.CalculateMaxHealth()
         this.bornDate = new Date(model.born_date);
         this.deathDate = model.death_date ? new Date(model.death_date) : undefined;
         this.isSorcerer = this.classType == ClassType.Bard || this.classType == ClassType.Cleric || this.classType == ClassType.Wizard;
@@ -114,6 +119,11 @@ export default class Character {
 
     public GetXP() {
         return this.xp;
+    }
+
+    public GetXPForNextLevel() {
+        const nextLevel = this.level == 20 ? 20 : this.level + 1;
+        return CharacterConstants.XP_PER_LEVEL[nextLevel - 1];
     }
 
     public GetName() {
@@ -221,16 +231,55 @@ export default class Character {
         return CharacterConstants.BASE_COOLDOWN_DURATION - this.fullModifierStats.dexterity;
     }
 
-    public async IncreaseXP(amount:number, updateData:boolean = true) {
+    public async GetBattleCooldown() {
+        return await Redis.ttl(Character.battleCooldownPrefix + this.GetId());
+    }
+
+    public async SetBattleCooldown() {
+        await Redis.set(Character.battleCooldownPrefix + this.GetId(), '1', 'EX', Utils.GetMinutesInSeconds(this.GetMaxBattleCooldown()));
+    }
+
+    public async GetHealingCooldown() {
+        return await Redis.ttl(Character.healingCooldownPrefix + this.GetId());
+    }
+
+    public async SetHealingCooldown() {
+        await Redis.set(Character.healingCooldownPrefix + this.GetId(), '1', 'EX', Utils.GetMinutesInSeconds(this.GetMaxHealingCooldown()));
+    }
+
+    public async IncreaseXP(amount:number, trx?:any, updateData:boolean = true) {
         this.xp += amount;
         if (!updateData) {
-            this.UPDATE({ xp: this.xp })
+            this.UPDATE({ xp: this.xp }, trx)
         }
+
+        this.CheckLevelUp(trx);
     }
 
     public async IncreaseXPFromMessage() {
         this.xp += 1;
         this.UPDATE({ xp: this.xp })
+        this.CheckLevelUp();
+    }
+
+    public async CheckLevelUp(trx?:any) {
+        if (this.level == 20) {
+            return;
+        }
+
+        const oldLevel = this.level;
+
+        while (this.level < 20) {
+            if (this.xp >= CharacterConstants.XP_PER_LEVEL[this.level]) {
+                this.level += 1;
+            } else {
+                break;
+            }
+        }
+
+        if (this.level != oldLevel) {
+            await this.OnLevelUp(trx)
+        }
     }
 
     public CanHeal() {
@@ -264,7 +313,7 @@ export default class Character {
     }
 
     public GetTotalEquipmentSpace() {
-        return this.equipment.length - this.equipment.length + 3;
+        return CharacterConstants.EQUIPMENT_SPACE_PER_LEVEL[this.level - 1];
     }
 
     public GetEquipment() {
@@ -323,6 +372,10 @@ export default class Character {
         return CharacterService.GetClassAttackDescription(this.classType, crit).randomChoice();
     }
 
+    private CalculateMaxHealth() {
+        return this.fullModifierStats.health + CharacterConstants.HEALTH_ADDITION_PER_LEVEL[this.level - 1];
+    }
+
     private CalculateCardModifierStats() {
         var cardModifierStats = CharacterService.GetEmptyModifierStats();
 
@@ -342,5 +395,14 @@ export default class Character {
         this.classModifierStats = CharacterService.GetClassModifierStats(this.classType);
         this.cardModifierStats = this.CalculateCardModifierStats();
         this.fullModifierStats = this.CalculateFullModifierStats();
+    }
+
+    private async OnLevelUp(trx?:any) {
+        this.maxHealth = this.CalculateMaxHealth();
+        this.currentHealth = this.maxHealth;
+        await this.UPDATE({
+            health: this.currentHealth,
+            level: this.level,
+        }, trx)
     }
 }

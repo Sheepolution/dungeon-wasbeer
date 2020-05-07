@@ -64,8 +64,8 @@ export default class Campaign {
         return this.puzzle;
     }
 
-    public CompleteSession() {
-        this.UPDATE({
+    public async CompleteSession() {
+        await this.UPDATE({
             active: false
         })
     }

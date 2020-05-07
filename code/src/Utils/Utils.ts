@@ -77,6 +77,11 @@ export module Utils {
         return Math.ceil(n/60);
     }
 
+    export function GetSecondsInMinutesAndSeconds(n:number) {
+        const f = Math.ceil(n/60);
+        return `${f} minuten` + ((n/60 != f) ? ` en ${(n - (f-1)*60)} seconden` : '');
+    }
+
     export function GetMinutesInSeconds(n:number) {
         return n * 60;
     }

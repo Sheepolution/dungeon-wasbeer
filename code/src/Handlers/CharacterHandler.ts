@@ -13,13 +13,11 @@ import { Message } from 'discord.js';
 import Heal from '../Objects/Heal';
 import CampaignManager from '../Managers/CampaignManager';
 import CardEmbeds from '../Embeds/CardEmbeds';
-import Discord from '../Providers/Discord';
 import CharacterConstants from '../Constants/CharacterConstants';
 
 export default class CharacterHandler {
 
     private static readonly classNames = Object.keys(ClassType);
-    private static readonly  healingCooldownPrefix = RedisConstants.REDIS_KEY + RedisConstants.HEALING_COOLDOWN_KEY;
     private static readonly  resetConfirmTimerPrefix = RedisConstants.REDIS_KEY + RedisConstants.RESET_CONFIRM_TIMER_KEY;
 
     public static async OnCommand(messageInfo:IMessageInfo, player:Player, command:string, args:Array<string>) {
@@ -184,7 +182,7 @@ export default class CharacterHandler {
             return;
         }
 
-        const cooldown = await this.GetHealingCooldown(character);
+        const cooldown = await character.GetHealingCooldown();
         if (cooldown > 0) {
             const minutes = Utils.GetSecondsInMinutes(cooldown);
             MessageService.ReplyMessage(messageInfo, `Je hebt nog ${minutes + (minutes == 1 ? ' minuut' : ' minuten')} cooldown voordat je weer mag healen.`);
@@ -221,17 +219,9 @@ export default class CharacterHandler {
         const healing = character.GetHealingBasedOnRoll(roll);
 
         await receiver.GetHealthFromHealing(healing);
-        await this.SetHealingCooldown(character);
+        await character.SetHealingCooldown();
         await this.UpdateHealingEmbed(message, character, receiver, roll, healing)
         await this.SaveHeal(character, receiver, healthBefore, character.GetFullModifierStats().healing, roll, healing);
-    }
-
-    private static async GetHealingCooldown(character:Character) {
-        return await Redis.ttl(CharacterHandler.healingCooldownPrefix + character.GetId());
-    }
-
-    private static async SetHealingCooldown(character:Character) {
-        await Redis.set(CharacterHandler.healingCooldownPrefix + character.GetId(), '1', 'EX', Utils.GetMinutesInSeconds(character.GetMaxHealingCooldown()));
     }
 
     private static async SaveHeal(character:Character, receiver:Character, receiverHealth:number, characterHealing:number, roll:number, finalHealing:number) {
@@ -287,7 +277,7 @@ export default class CharacterHandler {
         if (character == null) {
             return;
         }
-        MessageService.ReplyEmbed(messageInfo, CharacterEmbeds.GetCharacterInfoEmbed(character));
+        MessageService.ReplyEmbed(messageInfo, await CharacterEmbeds.GetCharacterInfoEmbed(character));
     }
 
     private static async SendModifierStats(messageInfo:IMessageInfo, player:Player) {
