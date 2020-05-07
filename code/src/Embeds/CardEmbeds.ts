@@ -12,7 +12,7 @@ export default class CardEmbeds {
     public static GetCardEmbed(card:Card, amount:number = 1) {
         const embed = new MessageEmbed()
             .setColor(SettingsConstants.COLORS.DEFAULT)
-            .setAuthor(card.GetCategory(), 'https://cdn.discordapp.com/attachments/694331679204180029/706164324573380628/FashionIcoon4.png')
+            .setAuthor(card.GetCategory(), CardService.GetIconByCategory(card.GetCategory()))
             .setTitle(card.GetName() + (amount == 1 ? '' : ' (x'+ amount + ')'))
             .setDescription(card.GetDescription())
             .setImage(card.GetImageUrl())
