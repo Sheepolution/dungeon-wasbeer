@@ -14,6 +14,7 @@ import PuzzleManager from './PuzzleManager';
 import Puzzle from '../Objects/Puzzle';
 import PuzzleEmbeds from '../Embeds/PuzzleEmbeds';
 import { Utils } from '../Utils/Utils';
+import ConfigurationManager from './ConfigurationManager';
 const { transaction } = require('objection');
 
 export default class CampaignManager {
@@ -44,11 +45,32 @@ export default class CampaignManager {
         }
 
         const battle = new Battle();
-        const monster = MonsterManager.GetRandomMonster();
-        await battle.POST(monster);
-        await campaign.POST(SessionType.Battle, battle.GetId());
-        this.campaignObject = campaign;
-        CampaignManager.SendNewBattleMessage(monster);
+        var monster;
+        var monsterInOrderConfig = ConfigurationManager.GetConfigurationByName('monsters_in_order');
+        if (monsterInOrderConfig?.GetValueAsBoolean()) {
+            var latestBattle = this.campaignObject.GetBattle();
+            if (latestBattle == null) {
+                latestBattle = new Battle();
+                await latestBattle.GET_LATEST();
+            }
+
+            const number = latestBattle.GetMonster().GetNumber()
+            if (number == 60) {
+                await monsterInOrderConfig.SetValue(false);
+                monster = MonsterManager.GetRandomMonster();
+            } else {
+                monster = MonsterManager.GetMonsterByNumber(number + 1);
+            }
+        } else {
+            monster = MonsterManager.GetRandomMonster();
+        }
+
+        if (monster) {
+            await battle.POST(monster);
+            await campaign.POST(SessionType.Battle, battle.GetId());
+            this.campaignObject = campaign;
+            CampaignManager.SendNewBattleMessage(monster);
+        }
     }
 
     public static async SendNewPuzzleMessage(puzzle:Puzzle) {

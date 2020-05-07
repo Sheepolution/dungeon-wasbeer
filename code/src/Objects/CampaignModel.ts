@@ -40,7 +40,9 @@ export default class CampaignModel extends Model {
                 id:campaignId,
                 active: true,
                 session_type: sessionType,
-                session_id: sessionId
+                session_id: sessionId,
+                start_date: Utils.GetNowString(),
+                end_date: null,
             })
 
         return campaign;

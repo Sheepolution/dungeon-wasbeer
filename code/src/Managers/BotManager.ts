@@ -9,6 +9,7 @@ import SettingsConstants from '../Constants/SettingsConstants';
 import CampaignManager from './CampaignManager';
 import DiscordService from '../Services/DiscordService';
 import MonsterManager from './MonsterManager';
+import ConfigurationModel from '../Models/ConfigurationModel';
 
 export default class BotManager {
 
@@ -17,6 +18,7 @@ export default class BotManager {
 
     public static async OnReady() {
         console.log('Dungeon Wasbeer: Connected');
+        ConfigurationModel.BuildConfigurationList();
         BotManager.cardChannel = <TextChannel> await DiscordService.FindChannelById(SettingsConstants.CARD_CHANNEL_ID);
         BotManager.dndChannel = <TextChannel> await DiscordService.FindChannelById(SettingsConstants.DND_CHANNEL_ID);
         await CardManager.BuildCardList();

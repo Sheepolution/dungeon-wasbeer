@@ -148,4 +148,8 @@ export default class Monster {
     public GetImageUrl() {
         return this.imageUrl;
     }
+
+    public GetNumber() {
+        return this.number;
+    }
 }

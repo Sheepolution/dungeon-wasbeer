@@ -10,6 +10,8 @@ export default class Campaign {
     private sessionType:SessionType;
     private battle:Battle;
     private puzzle:Puzzle;
+    private startDate:Date;
+    private endDate:Date;
 
     public async GET(id:string) {
         const model:CampaignModel = await CampaignModel.query().findById(id);
@@ -50,6 +52,9 @@ export default class Campaign {
         } else {
             this.puzzle = await model.GetPuzzle();
         }
+
+        this.startDate = model.start_date;
+        this.endDate = model.end_date;
     }
 
     public GetId() {
