@@ -36,7 +36,7 @@ export default class Configuration {
 
     public async ApplyModel(model:ConfigurationModel) {
         this.id = model.id;
-        this.name = await model.GetBattle();
+        this.name = model.name;
         this.value = model.value;
         this.editDate = new Date(model.edit_date);
     }
