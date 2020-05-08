@@ -6,6 +6,7 @@ import EmojiConstants from '../Constants/EmojiConstants';
 import ITradeInfo from '../Interfaces/ITradeInfo';
 import CardService from '../Services/CardService';
 import CharacterService from '../Services/CharacterService';
+import CardManager from '../Managers/CardManager';
 
 export default class CardEmbeds {
 
@@ -104,7 +105,7 @@ export default class CardEmbeds {
         return embed;
     }
 
-    public static GetPlayerCardListEmbed(player:Player) {
+    public static GetPlayerCardListEmbed(player:Player, page?:number) {
         const cardData:any = {};
         const playerCards = player.GetCards();
 
@@ -125,10 +126,31 @@ export default class CardEmbeds {
             cardData[category][name] = {rank: card.GetRank(), amount: playerCard.GetAmount()};
         }
 
+        const cardsAmount = CardManager.GetCardList().length;
+
         const embed = new MessageEmbed()
-            .setTitle('De kaarten van ' + player.GetDiscordName());
+            .setTitle('De kaarten van ' + player.GetDiscordName())
+            .setDescription(`Cards: ${playerCards.length}/${cardsAmount}`)
+
+        var currentCategoryNumber = 0;
+        var pages = Math.ceil(Object.keys(cardData).length/3);
+        if (page != null) {
+            page = ((page - 1) % (pages)) + 1;
+        }
+
+        if (page != null) {
+            embed.setFooter(`Pagina ${page} van de ${pages}`);
+        }
 
         for (const category in cardData) {
+            currentCategoryNumber += 1;
+            if (page != null) {
+                if (currentCategoryNumber < (page-1) * 3) {
+                    continue;
+                } else if (currentCategoryNumber > page * 3) {
+                    break;
+                }
+            }
             var list = '';
             if ({}.hasOwnProperty.call(cardData, category)) {
                 const categoryData = cardData[category];

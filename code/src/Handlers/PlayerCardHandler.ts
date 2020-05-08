@@ -2,6 +2,12 @@ import IMessageInfo from '../Interfaces/IMessageInfo';
 import Player from '../Objects/Player';
 import MessageService from '../Services/MessageService';
 import CardEmbeds from '../Embeds/CardEmbeds';
+import { Utils } from '../Utils/Utils';
+import { MessageReaction } from 'discord.js';
+import PlayerManager from '../Managers/PlayerManager';
+import ReactionManager from '../Managers/ReactionManager';
+import { ReactionMessageType } from '../Enums/ReactionMessageType';
+import SettingsConstants from '../Constants/SettingsConstants';
 
 export default class PlayerCardHandler {
 
@@ -21,6 +27,17 @@ export default class PlayerCardHandler {
         return true;
     }
 
+    public static async OnReaction(obj:any, reaction:MessageReaction) {
+        const player = await PlayerManager.GetPlayer(obj.messageInfo.member.id);
+        if (reaction.emoji.name == '⬅️') {
+            obj.value -= 1;
+        } else if (reaction.emoji.name == '➡️') {
+            obj.value += 1;
+        }
+
+        await obj.message.edit(null, CardEmbeds.GetPlayerCardListEmbed(player, obj.value));
+    }
+
     private static async SendPlayerCard(messageInfo:IMessageInfo, player:Player, cardName:string) {
         if (cardName == null) {
             MessageService.ReplyMissingCardName(messageInfo);
@@ -37,6 +54,16 @@ export default class PlayerCardHandler {
     }
 
     private static async SendPlayerCardList(messageInfo:IMessageInfo, player:Player) {
-        MessageService.ReplyEmbed(messageInfo, CardEmbeds.GetPlayerCardListEmbed(player));
+
+        const cards = player.GetCards().length;
+        const page = cards > SettingsConstants.CARD_AMOUNT_SPLIT_PAGES ? 1 : undefined;
+
+        const message = await MessageService.ReplyEmbed(messageInfo, CardEmbeds.GetPlayerCardListEmbed(player, page));
+        if (page == 1) {
+            await message.react('⬅️')
+            await Utils.Sleep(.5)
+            await message.react('➡️')
+            ReactionManager.AddMessage(message, messageInfo, ReactionMessageType.PlayerCardList, 1);
+        }
     }
 }

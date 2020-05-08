@@ -6,6 +6,7 @@ import PlayerService from '../Services/PlayerService';
 import EmojiConstants from '../Constants/EmojiConstants';
 import MessageService from '../Services/MessageService';
 import CardEmbeds from '../Embeds/CardEmbeds';
+import SettingsConstants from '../Constants/SettingsConstants';
 
 export default class TradeHandler {
 
@@ -42,7 +43,7 @@ export default class TradeHandler {
         var otherPlayerGet = await PlayerService.GetPlayer(match[1]);
 
         if (otherPlayerGet == null) {
-            if (match[1] == process.env.BOT_ID) {
+            if (match[1] == SettingsConstants.BOT_ID) {
                 MessageService.ReplyMessage(messageInfo, 'Dat is een mooie kaart, maar nee bedankt.');
             } else {
                 MessageService.ReplyMessage(messageInfo, 'Die gozer heeft nog helemaal geen kaarten joh.', false);
