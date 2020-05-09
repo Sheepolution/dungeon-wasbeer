@@ -34,8 +34,8 @@ export default class CampaignManager {
     public static async StartNewSession(lastSessionType?:SessionType) {
         var campaign = new Campaign();
 
-        if (true || lastSessionType == SessionType.Battle) {
-            if (true || Utils.Chance(35)) {
+        if (lastSessionType == SessionType.Battle) {
+            if (Utils.Chance(35)) {
                 const puzzle = await PuzzleManager.GetRandomPuzzle();
                 await campaign.POST(SessionType.Puzzle, puzzle.GetId());
                 this.campaignObject = campaign;
@@ -79,7 +79,7 @@ export default class CampaignManager {
     }
 
     public static async SendNewBattleMessage(monster:Monster) {
-        MessageService.SendMessageToDNDChannel(`Jullie volgen het pad in het bos. Plots komen jullie een ${monster.GetName()} tegen!`, MonsterEmbeds.GetMonsterEmbed(monster));
+        MessageService.SendMessageToDNDChannel(`Jullie vervolgen jullie reis ${['in het bos', 'door de bergen', 'langs de rivier', 'in de grot'].randomChoice()}. Plots komen jullie een ${monster.GetName()} tegen! Vecht tegen het monster met \`;vecht\`.`, MonsterEmbeds.GetMonsterEmbed(monster));
     }
 
     public static GetBattle() {

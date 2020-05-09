@@ -26,11 +26,11 @@ export default class EmojiConstants {
     }
 
     public static readonly CLASSES = {
-        BARD: ':violin:',
-        CLERIC: ':hospital:',
-        FIGHTER: ':crossed_swords:',
-        PALADIN: ':shield:',
-        RANGER: ':bow_and_arrow:',
-        WIZARD: ':man_mage:',
+        BARD: '<:bard:708771356388622346>',
+        CLERIC: '<:cleric:708771356208136254>',
+        FIGHTER: '<:fighter:708771356228976693> ',
+        PALADIN: '<:paladin:708777095676821597>',
+        RANGER: '<:ranger:708771356329902121> ',
+        WIZARD: '<:wizard:708771356216524801>',
     }
 }

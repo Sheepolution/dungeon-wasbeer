@@ -12,7 +12,7 @@ export default class PuzzleEmbeds {
             .setAuthor('Puzzel', ImageConstants.ICONS.PUZZLE)
             .setTitle('Sudoku')
             .setDescription('Op de stipjes moeten de cijfers 1 tot en met 9 ingevuld worden op zo\'n manier dat in elke horizontale lijn\
- én in elke verticale kolom en in elk van de negen blokjes de cijfers 1 tot en met 9 één keer voorkomen.\n\n```\n' + puzzle.GetContent() +'\n```')
+ én in elke verticale kolom en in elk van de negen blokjes de cijfers 1 tot en met 9 één keer voorkomen.\nStuur je antwoord op met `;antwoord [antwoord]`.\n\n```\n' + puzzle.GetContent() +'\n```')
 
         return embed;
     }
