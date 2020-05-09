@@ -5,15 +5,16 @@ import Character from '../Objects/Character';
 import Card from '../Objects/Card';
 import CharacterConstants from '../Constants/CharacterConstants';
 import CharacterService from '../Services/CharacterService';
+import { Utils } from '../Utils/Utils';
 
 export default class CharacterEmbeds {
 
-    public static GetCharacterInfoEmbed(character:Character) {
+    public static async GetCharacterInfoEmbed(character:Character) {
         const embed = new MessageEmbed()
             .setColor(SettingsConstants.COLORS.DEFAULT)
             .setTitle(`${character.GetName()}`)
             .setImage(CharacterService.GetClassImage(character.GetClass()))
-            .addField('XP', `${character.GetXP()}`, true)
+            .addField('XP', `${character.GetXP()}/${character.GetXPForNextLevel()}`, true)
             .addField('Level', `${character.GetLevel()}`, true);
 
         const modifiers = character.GetFullModifierStats();
@@ -37,8 +38,26 @@ export default class CharacterEmbeds {
             embed.addField('Healing', `${modifiers.healing} ${modifiersCards.healing > 0 ? `(${modifiersClass.healing}+${modifiersCards.healing})` : ''}`, true);
         }
 
-        embed.addField('-----------------------------', 'Equipment')
-        this.AddEquipmentToEmbed(embed, character.GetEquipment());
+        const equipment = character.GetEquipment();
+        embed.addField('-----------------------------', `Equipment ${equipment.length}/${character.GetTotalEquipmentSpace()}`)
+        this.AddEquipmentToEmbed(embed, equipment);
+
+        embed.addField('-----------------------------', 'Cooldown(s)');
+        const battleCooldown = await character.GetBattleCooldown();
+        if (battleCooldown > 0) {
+            embed.addField('Vechten', `🕒 ${Utils.GetSecondsInMinutesAndSeconds(battleCooldown)}`, true)
+        } else {
+            embed.addField('Vechten', 'Klaar om te vechten!', true);
+        }
+
+        if (character.CanHeal()) {
+            const healingCooldown = await character.GetHealingCooldown();
+            if (healingCooldown > 0) {
+                embed.addField('Healen', `🕒 ${Utils.GetSecondsInMinutesAndSeconds(healingCooldown)}`, true)
+            } else {
+                embed.addField('Healen', 'Klaar om te healen!', true);
+            }
+        }
 
         return embed;
     }
@@ -110,7 +129,7 @@ export default class CharacterEmbeds {
             .addField('Level', character.GetLevel(), true)
             .addField('XP', character.GetXP(), true)
             .addField('Monsters', await character.GetBattles(), true)
-            .addField('Gevechten', victories + losses, true)
+            .addField('Gevechten', parseInt(victories) + parseInt(losses), true)
             .addField('Gewonnen', victories, true)
             .addField('Verloren', losses, true)
             .addField('Schade gedaan', await character.GetTotalDamageGiven(), true)
@@ -121,9 +140,12 @@ export default class CharacterEmbeds {
         }
 
         embed.addField('Raadsels opgelost', 0, true)
-            .addField('-----------------------------', 'Equipment')
 
-        this.AddEquipmentToEmbed(embed, character.GetEquipment());
+        const equipment = character.GetEquipment();
+        if (equipment.length > 0) {
+            embed.addField('-----------------------------', 'Equipment');
+            this.AddEquipmentToEmbed(embed, equipment);
+        }
 
         return embed;
     }
@@ -161,9 +183,20 @@ export default class CharacterEmbeds {
         return embed;
     }
 
+    public static GetResetCharacterWarningEmbed() {
+        var embed = new MessageEmbed();
+        embed.setTitle('WAARSCHUWING')
+            .setColor(SettingsConstants.COLORS.BAD)
+            .setDescription('Weet je zeker dat je wilt stoppen met je huidige character?\n**Je kan dit niet ongedaan maken**\n\
+Je zal een nieuw character moeten maken die **begint vanaf level 1 met 0 XP**.\n\n\
+Als je zeker weet dat je wilt stoppen met dit character, gebruik dan het commando `;ikweetzekerdatikwilstoppenmetditcharacter`');
+
+        return embed;
+    }
+
     public static AddEquipmentToEmbed(embed:MessageEmbed, equipment:Array<Card>) {
         if (equipment.length == 0) {
-            embed.addField('Leeg', '-');
+            embed.addField('Leeg', 'Voeg equipment toe met `;equip [kaart]`.');
         }
 
         for (const card of equipment) {

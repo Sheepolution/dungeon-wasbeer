@@ -11,7 +11,6 @@ import Character from '../Objects/Character';
 import CharacterEmbeds from '../Embeds/CharacterEmbeds';
 import Attack from '../Objects/Attack';
 import RedisConstants from '../Constants/RedisConstants';
-import { Redis } from '../Providers/Redis';
 
 export default class BattleHandler {
 
@@ -20,7 +19,9 @@ export default class BattleHandler {
     public static async OnCommand(messageInfo:IMessageInfo, player:Player, command:string) {
         switch (command) {
             case 'attack':
-            case 'val-aan':
+            case 'fight':
+            case 'vecht':
+            case 'aanvallen':
                 this.OnAttack(messageInfo, player);
                 break;
             case 'battle':
@@ -47,7 +48,7 @@ export default class BattleHandler {
             return;
         }
 
-        const cooldown = await this.GetBattleCooldown(character);
+        const cooldown = await character.GetBattleCooldown();
 
         if (cooldown > 0) {
             const minutes = Utils.GetSecondsInMinutes(cooldown);
@@ -55,7 +56,7 @@ export default class BattleHandler {
             return;
         }
 
-        this.SetBattleCooldown(character);
+        character.SetBattleCooldown();
         character.SetInBattle(true);
 
         // Start attack
@@ -70,26 +71,37 @@ export default class BattleHandler {
             return
         }
 
-        this.UpdateBattleEmbed(message, battle, character, roll1);
-        await Utils.Sleep(3);
-        const roll2 = Utils.Dice(character.GetAttackRoll());
+        const playerAttackRoll = character.GetAttackRoll();
+        var roll2 = playerAttackRoll;
+        if (playerAttackRoll > 1) {
+            this.UpdateBattleEmbed(message, battle, character, roll1);
+            await Utils.Sleep(3);
+            roll2 = Utils.Dice(playerAttackRoll);
+        }
+
         this.UpdateBattleEmbed(message, battle, character, roll1, roll2);
         await Utils.Sleep(3);
+
         const roll3 = Utils.Dice(20);
 
-        if (roll1 == 20) {
+        if (roll3 == 20) {
             this.OnMonsterCrit(messageInfo, message, battle, character, roll1, roll2, roll3)
             return
-        } else if (roll1 == 1) {
+        } else if (roll3 == 1) {
             this.OnCharacterCrit(messageInfo, message, battle, character, roll1, roll2, roll3)
             return
         }
 
-        this.UpdateBattleEmbed(message, battle, character, roll1, roll2, roll3);
-        await Utils.Sleep(3);
-        const roll4 = Utils.Dice(battle.GetMonsterAttackRoll());
-        const playerWon = roll1 + roll2 >= roll3 + roll4;
-        const damage = await this.ResolveAttackResult(messageInfo, message, battle, character, playerWon, playerWon ? character.GetAttackStrength(): battle.GetMonsterAttackStrength(), roll1, roll2, roll3, roll4);
+        const monsterAttackRoll = battle.GetMonsterAttackRoll();
+        var roll4 = monsterAttackRoll;
+        if (monsterAttackRoll > 1) {
+            this.UpdateBattleEmbed(message, battle, character, roll1, roll2, roll3);
+            await Utils.Sleep(3);
+            roll4 = Utils.Dice(monsterAttackRoll);
+        }
+
+        const playerWon = roll1 + (roll2 || 0) >= roll3 + (roll4 || 0);
+        const damage = await this.ResolveAttackResult(messageInfo, message, battle, character, playerWon, playerWon ? character.GetAttackStrength(): battle.GetMonsterAttackStrength(), roll1, roll2 || 0, roll3, roll4 || 0);
         await this.UpdateBattleEmbed(message, battle, character, roll1, roll2, roll3, roll4, playerWon, damage);
     }
 
@@ -129,8 +141,8 @@ export default class BattleHandler {
     }
 
     private static async OnDefeatingMonster(battle:Battle) {
-        battle.Complete();
-        CampaignManager.OnCompletingSession();
+        await battle.Complete();
+        await CampaignManager.OnCompletingSession();
         await MessageService.SendMessageToDNDChannel(`De ${battle.GetMonster().GetName()} is verslagen! Iedereen die heeft meegeholpen in deze strijd heeft XP ontvangen.`)
     }
 
@@ -140,14 +152,6 @@ export default class BattleHandler {
         await MessageService.SendMessageToDNDChannel('', await CharacterEmbeds.GetDeadCharacterEmbed(character));
         await Utils.Sleep(3);
         await MessageService.ReplyMessage(messageInfo, 'Je character is dood. Je kan opnieuw beginnen door een class te kiezen met het commando `;class`.');
-    }
-
-    private static async GetBattleCooldown(character:Character) {
-        return await Redis.ttl(BattleHandler.battleCooldownPrefix + character.GetId());
-    }
-
-    private static async SetBattleCooldown(character:Character) {
-        await Redis.set(BattleHandler.battleCooldownPrefix + character.GetId(), '1', 'EX', Utils.GetMinutesInSeconds(character.GetMaxBattleCooldown()));
     }
 
     private static async ReplyNoBattle(messageInfo:IMessageInfo) {

@@ -90,9 +90,10 @@ export default class Monster {
             type: this.type.toString(),
             health: this.health,
             attack: this.attack,
+            strength: this.strength,
             attack_description: this.attackDescription,
             attack_crit_description: this.attackCritDescription,
-            imageUrl: this.imageUrl,
+            image_url: this.imageUrl,
         })
     }
 
@@ -146,5 +147,9 @@ export default class Monster {
 
     public GetImageUrl() {
         return this.imageUrl;
+    }
+
+    public GetNumber() {
+        return this.number;
     }
 }

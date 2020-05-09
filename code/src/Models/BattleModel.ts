@@ -29,7 +29,9 @@ export default class BattleModel extends Model {
                 id:battleId,
                 active: true,
                 monster_id: monster.GetId(),
-                monster_health: monster.GetHealth()
+                monster_health: monster.GetHealth(),
+                start_date: Utils.GetNowString(),
+                end_date: null,
             })
 
         return battle;

@@ -56,6 +56,23 @@ export default class CharacterService {
         }
     }
 
+    public static GetClassAttackDescription(classType:ClassType, crit?:boolean) {
+        switch (classType) {
+            case ClassType.Bard:
+                return crit ? CharacterConstants.CLASS_ATTACK_CRIT_MESSAGES.BARD : CharacterConstants.CLASS_ATTACK_MESSAGES.BARD
+            case ClassType.Cleric:
+                return crit ? CharacterConstants.CLASS_ATTACK_CRIT_MESSAGES.CLERIC : CharacterConstants.CLASS_ATTACK_MESSAGES.CLERIC
+            case ClassType.Fighter:
+                return crit ? CharacterConstants.CLASS_ATTACK_CRIT_MESSAGES.FIGHTER : CharacterConstants.CLASS_ATTACK_MESSAGES.FIGHTER
+            case ClassType.Paladin:
+                return crit ? CharacterConstants.CLASS_ATTACK_CRIT_MESSAGES.PALADIN : CharacterConstants.CLASS_ATTACK_MESSAGES.PALADIN
+            case ClassType.Ranger:
+                return crit ? CharacterConstants.CLASS_ATTACK_CRIT_MESSAGES.RANGER : CharacterConstants.CLASS_ATTACK_MESSAGES.RANGER
+            case ClassType.Wizard:
+                return crit ? CharacterConstants.CLASS_ATTACK_CRIT_MESSAGES.WIZARD : CharacterConstants.CLASS_ATTACK_MESSAGES.WIZARD
+        }
+    }
+
     public static GetEmptyModifierStats():IModifierStats {
         return {
             armor: 0,

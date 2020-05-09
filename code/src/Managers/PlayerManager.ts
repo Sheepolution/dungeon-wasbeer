@@ -4,6 +4,7 @@ import Player from '../Objects/Player';
 import { Utils } from '../Utils/Utils';
 import MessageService from '../Services/MessageService';
 import { ClassType } from '../Enums/ClassType';
+import Character from '../Objects/Character';
 
 export default class PlayerManager {
 
@@ -79,6 +80,21 @@ export default class PlayerManager {
                 }
             }
         }
+    }
+
+    public static GetAllCachedCharacters() {
+        const characters = new Array<Character>();
+        for (const id in this.players) {
+            if ({}.hasOwnProperty.call(this.players, id)) {
+                const playerInfo = this.players[id];
+                const character = playerInfo.player.GetCharacter();
+                if (character) {
+                    characters.push(character);
+                }
+            }
+        }
+
+        return characters;
     }
 
     private static async CreateNewPlayer(messageInfo:IMessageInfo) {

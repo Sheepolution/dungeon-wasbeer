@@ -13,9 +13,9 @@ import { AttackType } from '../Enums/AttackType';
 import Monster from '../Objects/Monster';
 import MonsterEmbeds from '../Embeds/MonsterEmbeds';
 import MonsterModel from '../Models/MonsterModel';
-// import { ModifierType } from '../Enums/ModifierType';
 import CardService from '../Services/CardService';
 import { ClassType } from '../Enums/ClassType';
+import CampaignManager from '../Managers/CampaignManager';
 
 export default class AdminHandler {
 
@@ -25,6 +25,10 @@ export default class AdminHandler {
         }
 
         switch (command) {
+            case 'start-campaign':
+            case 'startcampaign':
+                this.StartCampaign();
+                break;
             case 'addcard':
             case 'add-card':
                 this.AddNewCard(messageInfo, player, CommandUtils.GetAssignedArguments(content));
@@ -77,6 +81,10 @@ export default class AdminHandler {
 
     private static async SayMessage(message:string) {
         MessageService.SendMessageToCardChannel(message);
+    }
+
+    private static async StartCampaign() {
+        CampaignManager.StartNewSession()
     }
 
     // CARDS ////////////////

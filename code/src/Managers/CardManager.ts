@@ -24,7 +24,7 @@ export default class CardManager {
         this.cardList = cardList;
     }
 
-    public static async GetCardList() {
+    public static GetCardList() {
         return this.cardList;
     }
 

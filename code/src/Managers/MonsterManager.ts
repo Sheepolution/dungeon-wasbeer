@@ -49,6 +49,10 @@ export default class MonsterManager {
         return monsterModifyResult;
     }
 
+    public static GetMonsterByNumber(n:number) {
+        return this.monsterList.find(m => m.GetNumber() == n);
+    }
+
     public static GetRandomMonster() {
         return this.monsterList.randomChoice();
     }

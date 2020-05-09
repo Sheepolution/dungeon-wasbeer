@@ -1,5 +1,6 @@
 import { ICardModifier } from '../Interfaces/ICardModifier';
 import { ModifierType } from '../Enums/ModifierType';
+import ImageConstants from '../Constants/ImageConstants';
 
 export default class CardService {
 
@@ -59,5 +60,26 @@ export default class CardService {
         }
 
         return modifierString
+    }
+
+    public static GetIconByCategory(category:string) {
+        switch (category) {
+            case 'Chonky':
+                return ImageConstants.ICONS.CHONKY;
+            case 'Feestdagen':
+                return ImageConstants.ICONS.HOLIDAYS;
+            case 'Fashion':
+                return ImageConstants.ICONS.FASHION;
+            case 'Baby':
+                return ImageConstants.ICONS.BABY;
+            case 'Cosplay':
+                return ImageConstants.ICONS.COSPLAY;
+            case 'Vrienden':
+                return ImageConstants.ICONS.FRIENDS;
+            case 'Strijders':
+                return ImageConstants.ICONS.FIGHTER;
+            case 'Snacc':
+                return ImageConstants.ICONS.SNACK;
+        }
     }
 }

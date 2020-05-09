@@ -42,17 +42,35 @@ export default class BattleEmbeds {
             .addField(`${monsterName}`, `Health: ${battle.GetCurrentMonsterHealth()}/${battle.GetMaxMonsterHealth()}\nStrength: ${monsterStrength}\nAttack: ${monsterAttack}`, true)
             .addField('--------------------------------', '-- Rolls --');
 
-        if (roll1 && roll2) {
-            embed.addField(`${characterName}`, `D20 = ${roll1}\nD${characterAttack} = ${roll2}\nTotaal = ${roll1 + roll2}`, true);
-            if (roll3 && roll4) {
-                embed.addField(`${monsterName}`, `D20 = ${roll3}\nD${monsterAttack} = ${roll4}\nTotaal = ${roll3 + roll4}`, true);
-            } else if (roll3) {
-                embed.addField(`${monsterName}`, `D20 = ${roll3}\nRolt de D${monsterAttack}...`, true);
+        if (roll1 != null && roll2 != null) {
+            var message = `D20 = ${roll1}`;
+            if (characterAttack > 1) {
+                message += `\nD${characterAttack} = ${roll2}`;
+            }
+
+            embed.addField(`${characterName}`, message += `\nTotaal = ${roll1 + roll2}`, true);
+            if (roll3 != null && roll4 != null) {
+                var message = `D20 = ${roll3}`;
+                if (monsterAttack > 1) {
+                    message += `\nD${monsterAttack} = ${roll4}`;
+                }
+                embed.addField(`${monsterName}`, message + `\nTotaal = ${roll3 + roll4}`, true);
+            } else if (roll3 != null) {
+                var message = `D20 = ${roll3}`;
+                if (monsterAttack > 1) {
+                    message += `\nRolt de D${monsterAttack}...`;
+                }
+                embed.addField(`${monsterName}`, message, true);
             } else {
                 embed.addField(`${monsterName}`, 'Rolt de D20...', true);
             }
-        } else if (roll1) {
-            embed.addField(`${characterName}`, `D20 = ${roll1}\nRolt de D${characterAttack}...`, true);
+        } else if (roll1 != null) {
+            var message = `D20 = ${roll1}`;
+            if (characterAttack > 1) {
+                message += `\nRolt de D${characterAttack}...`;
+            }
+
+            embed.addField(`${characterName}`, message, true);
         } else {
             embed.addField(`${characterName}`, 'Rolt de D20...', true);
         }
@@ -60,10 +78,19 @@ export default class BattleEmbeds {
         if (playerWon != null) {
             embed.addField('--------------------------------', '-- Resultaat --');
             if (playerWon) {
-                embed.addField(`${characterName} wint${crit ? ' met een crit' : ''}!`, `Je doet een driedubbele salto en slaat de ${monsterName} recht in zijn bek.\nJe doet ${damage} damage.`);
+                var attackDescription = character.GetRandomAttackDescription(crit);
+                if (!attackDescription.includes('[damage]')) {
+                    attackDescription += '\nJe doet [damage] damage op de [monster].'
+                }
+                embed.addField(`${characterName} wint${crit ? ' met een crit' : ''}!`, attackDescription.replace('[damage]', damage?.toString() || '').replace('[monster]', monsterName || ''));
                 embed.setColor(SettingsConstants.COLORS.GOOD)
             } else {
-                embed.addField(`De ${monsterName} wint${crit ? ' met een crit' : ''}!`, (crit ? battle.GetMonsterAttackCritDescription() : battle.GetMonsterAttackDescription()).replace('[damage]', damage?.toString() || '') );
+
+                var attackDescription = crit ? battle.GetMonsterAttackCritDescription() : battle.GetMonsterAttackDescription();
+                if (!attackDescription.includes('[damage]')) {
+                    attackDescription += '\nHij doet [damage] damage.'
+                }
+                embed.addField(`De ${monsterName} wint${crit ? ' met een crit' : ''}!`, attackDescription.replace('[damage]', damage?.toString() || '') );
                 embed.setColor(SettingsConstants.COLORS.BAD)
             }
         }

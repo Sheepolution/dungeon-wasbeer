@@ -13,9 +13,27 @@ import BotManager from '../Managers/BotManager';
 export default class MessageHandler {
 
     private static readonly messagePointTimeoutPrefix = RedisConstants.REDIS_KEY + RedisConstants.MESSAGE_POINT_TIMEOUT_KEY;
+    private static readonly characterUpdateTimeoutPrefix = RedisConstants.REDIS_KEY + RedisConstants.CHARACTER_UPDATE_TIMEOUT_KEY;
 
     public static async OnMessage(messageInfo:IMessageInfo, player:Player) {
         if (messageInfo.member == null) {
+            return;
+        }
+
+        const memberId = messageInfo.member.id;
+
+        const character = player.GetCharacter();
+        if (character != null) {
+            const characterId = character.GetId();
+            const characterUpdateTimeout = await Redis.get(MessageHandler.messagePointTimeoutPrefix + characterId);
+            character.GetHealthFromMessage();
+            character.IncreaseXPFromMessage();
+            Redis.set(characterUpdateTimeout + characterId, '1', 'EX', Utils.GetMinutesInSeconds(SettingsConstants.MESSAGE_POINT_TIMEOUT_MINUTES));
+        }
+
+        const messagePointTimeout = await Redis.get(MessageHandler.messagePointTimeoutPrefix + memberId);
+
+        if (messagePointTimeout) {
             return;
         }
 
@@ -37,12 +55,6 @@ export default class MessageHandler {
         }
 
         player.AddMessagePoint();
-
-        const character = player.GetCharacter();
-        if (character != null) {
-            character.GetHealthFromMessage();
-            character.IncreaseXPFromMessage();
-        }
 
         if (player.GetMessagePoints() % SettingsConstants.MESSAGE_POINT_AMOUNT_REWARDS.CARD == 0) {
             const cardModifyResult = await CardManager.GivePlayerCard(messageInfo, player);
