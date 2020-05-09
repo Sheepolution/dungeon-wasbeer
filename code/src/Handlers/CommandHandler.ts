@@ -33,7 +33,11 @@ export default class CommandHandler {
                 return;
             }
         } else if (messageInfo.channel.id == SettingsConstants.DND_CHANNEL_ID) {
-            if (await CharacterHandler.OnCommand(messageInfo, player, command, args)) {
+            if (await TradeHandler.OnCommand(messageInfo, player, command, content)) {
+                return;
+            } else if (await PlayerCardHandler.OnCommand(messageInfo, player, command, args)) {
+                return;
+            } else if (await CharacterHandler.OnCommand(messageInfo, player, command, args)) {
                 return;
             } else if (await BattleHandler.OnCommand(messageInfo, player, command)) {
                 return;
