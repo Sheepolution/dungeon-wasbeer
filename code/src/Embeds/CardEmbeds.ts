@@ -130,7 +130,7 @@ export default class CardEmbeds {
 
         const embed = new MessageEmbed()
             .setTitle('De kaarten van ' + player.GetDiscordName())
-            .setDescription(`Cards: ${playerCards.length}/${cardsAmount}`)
+            .setDescription(`Kaarten: ${playerCards.length}/${cardsAmount}`)
 
         var currentCategoryNumber = 0;
         var pages = Math.ceil(Object.keys(cardData).length/3);
