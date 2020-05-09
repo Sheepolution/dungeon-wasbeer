@@ -7,6 +7,7 @@ import EmojiConstants from '../Constants/EmojiConstants';
 import MessageService from '../Services/MessageService';
 import CardEmbeds from '../Embeds/CardEmbeds';
 import SettingsConstants from '../Constants/SettingsConstants';
+import Trade from '../Objects/Trade';
 
 export default class TradeHandler {
 
@@ -51,7 +52,7 @@ export default class TradeHandler {
             return;
         }
 
-        const otherPlayer = <Player> otherPlayerGet;
+        const otherPlayer = <Player>otherPlayerGet;
 
         if (player == otherPlayer) {
             MessageService.ReplyMessage(messageInfo, 'Je kan niet met jezelf ruilen. Het klinkt ook wel een beetje zielig.', false);
@@ -188,6 +189,7 @@ export default class TradeHandler {
 
         MessageService.ReplyMessage(messageInfo, `${tradeInfo.trader.GetMention()} en ${tradeInfo.with.GetMention()}, jullie hebben de kaarten geruild. Veel plezier ermee!`, true, false);
         this.RemoveTrade(tradeInfo);
+        await Trade.STATIC_POST(tradeInfo.trader, tradeInfo.with, tradeInfo.yourCard.GetCard(), tradeInfo.theirCard.GetCard());
     }
 
     private static FindExistingTrade(player:Player) {
