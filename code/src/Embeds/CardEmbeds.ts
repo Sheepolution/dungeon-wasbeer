@@ -57,113 +57,38 @@ export default class CardEmbeds {
         return embed;
     }
 
-    public static GetPlayerModifieCardListEmbed(player:Player) {
-        const cardData:any = {};
-        const playerCards = player.GetCards();
-
-        for (const playerCard of playerCards) {
-            const card = playerCard.GetCard();
-            const name = card.GetName();
-            const category = card.GetCategory();
-
-            const modifiers = card.GetModifiers();
-            if (modifiers.length == 0) {
-                continue;
-            }
-
-            if (!cardData[category]) {
-                cardData[category] = {};
-            }
-
-            if (cardData[category][name]) {
-                cardData[category][name].amount += playerCard.GetAmount();
-                continue;
-            }
-
-            cardData[category][name] = {rank: card.GetRank(), amount: playerCard.GetAmount(), modifiers: card.GetModifiers(), equipped: playerCard.IsEquipped()};
-        }
-
-        const embed = new MessageEmbed()
-            .setTitle('De modifier kaarten van ' + player.GetDiscordName());
-
-        for (const category in cardData) {
-            var list = '';
-            if ({}.hasOwnProperty.call(cardData, category)) {
-                const categoryData = cardData[category];
-                for (const name in categoryData) {
-                    if ({}.hasOwnProperty.call(categoryData, name)) {
-                        const card = categoryData[name];
-                        const amount = categoryData[name].amount;
-                        list += EmojiConstants.STARS[card.rank] + ' ' + name + (amount == 1 ? '' : ' (x' + amount + ')') + ( card.equipped ? ' ✅' : '') + '\n' + CardService.ParseModifierArrayToEmbedString(card.modifiers) + '\n';
-                    }
-                }
-            }
-
-            embed.addField(category, list, true);
-        }
-
-        return embed;
-    }
-
     public static GetPlayerCardListEmbed(player:Player, page?:number) {
-        const cardData:any = {};
         const playerCards = player.GetCards();
-
-        for (const playerCard of playerCards) {
-            const card = playerCard.GetCard();
-            const name = card.GetName();
-            const category = card.GetCategory();
-
-            if (!cardData[category]) {
-                cardData[category] = {};
-            }
-
-            if (cardData[category][name]) {
-                cardData[category][name].amount += playerCard.GetAmount();
-                continue;
-            }
-
-            cardData[category][name] = {rank: card.GetRank(), amount: playerCard.GetAmount()};
-        }
 
         const cardsAmount = CardManager.GetCardList().length;
 
         const embed = new MessageEmbed()
             .setTitle('De kaarten van ' + player.GetDiscordName())
-            .setDescription(`Kaarten: ${playerCards.length}/${cardsAmount}`)
 
-        var currentCategoryNumber = 0;
-        var pages = Math.ceil(Object.keys(cardData).length/3);
+        var split = SettingsConstants.CARD_AMOUNT_SPLIT_PAGES;
+        var pages = Math.ceil(playerCards.length/split);
+
         if (page != null) {
             page = ((page - 1) % (pages)) + 1;
         }
 
+        var start = page == null ? 0 : (page-1) * split;
+        var end = page == null ? playerCards.length : Math.min(playerCards.length, page * split);
+
         if (page != null) {
-            embed.setFooter(`Pagina ${page} van de ${pages}`);
+            embed.setFooter(`${start + 1}-${end} van de ${playerCards.length} kaarten`);
         }
 
-        for (const category in cardData) {
-            currentCategoryNumber += 1;
-            if (page != null) {
-                if (currentCategoryNumber < (page-1) * 3) {
-                    continue;
-                } else if (currentCategoryNumber > page * 3) {
-                    break;
-                }
-            }
-            var list = '';
-            if ({}.hasOwnProperty.call(cardData, category)) {
-                const categoryData = cardData[category];
-                for (const name in categoryData) {
-                    if ({}.hasOwnProperty.call(categoryData, name)) {
-                        const amount = categoryData[name].amount;
-                        list += EmojiConstants.STARS[categoryData[name].rank] + ' ' + name + (amount == 1 ? '' : ' (x' + amount + ')') + '\n'
-                    }
-                }
-            }
+        var list = '';
 
-            embed.addField(category, list, true);
+        for (let i = start; i < end; i++) {
+            const playerCard = playerCards[i];
+            const card = playerCard.GetCard();
+            const amount = playerCard.GetAmount();
+            list += EmojiConstants.STARS[card.GetRank()] + CardService.GetIconEmojiByCategory(card.GetCategory()) + ( playerCard.IsEquipped() ? ' ✅' : '') + ' ' + card.GetName() + (amount == 1 ? '' : ' (x' + amount + ')') + CardService.ParseCardModifersToEmbedString(card) + '\n';
         }
+
+        embed.setDescription(`Unieke kaarten: ${playerCards.length} van de ${cardsAmount}\n\n${list}`);
 
         return embed;
     }

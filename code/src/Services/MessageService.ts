@@ -21,8 +21,8 @@ export default class MessageService {
         return DiscordService.SendEmbed(messageInfo.channel, embed, message)
     }
 
-    public static async SendMessageToCardChannel(message:string) {
-        this.SendMessage(BotManager.GetCardChannel(), message);
+    public static async SendMessageToCardChannel(message:string, embed?:MessageEmbed) {
+        this.SendMessage(BotManager.GetCardChannel(), message, embed);
     }
 
     public static async SendMessageToDNDChannel(message:string, embed?:MessageEmbed) {

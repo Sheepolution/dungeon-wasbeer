@@ -1,6 +1,9 @@
 import { ICardModifier } from '../Interfaces/ICardModifier';
 import { ModifierType } from '../Enums/ModifierType';
 import ImageConstants from '../Constants/ImageConstants';
+import EmojiConstants from '../Constants/EmojiConstants';
+import Card from '../Objects/Card';
+import CharacterService from './CharacterService';
 
 export default class CardService {
 
@@ -45,6 +48,29 @@ export default class CardService {
         return modifierString
     }
 
+    public static ParseCardModifersToEmbedString(card:Card) {
+        const modifierArray = card.GetModifiers();
+        if (modifierArray == null || modifierArray.length == 0) {
+            return ''
+        }
+
+        var modifierString = ' | ';
+        for (let i = 0; i < modifierArray.length; i++) {
+            const modifier = modifierArray[i];
+            modifierString += `${modifier.modifier.toString()}: +${modifier.value}`;
+            if (i < modifierArray.length - 1) {
+                modifierString += ', ';
+            }
+        }
+
+        const modifierClass = card.GetModifierClass();
+        if (modifierClass != null) {
+            modifierString += ' | ' + `${CharacterService.GetClassEmoji(modifierClass)} ${modifierClass.toString()}`;
+        }
+
+        return modifierString
+    }
+
     public static ParseModifierArrayToEmbedString(modifierArray?:Array<ICardModifier>) {
         if (modifierArray == null || modifierArray.length == 0) {
             return ''
@@ -80,6 +106,27 @@ export default class CardService {
                 return ImageConstants.ICONS.FIGHTER;
             case 'Snacc':
                 return ImageConstants.ICONS.SNACK;
+        }
+    }
+
+    public static GetIconEmojiByCategory(category:string) {
+        switch (category) {
+            case 'Chonky':
+                return EmojiConstants.CARD_CATEGORIES.CHONKY;
+            case 'Feestdagen':
+                return EmojiConstants.CARD_CATEGORIES.HOLIDAYS;
+            case 'Fashion':
+                return EmojiConstants.CARD_CATEGORIES.FASHION;
+            case 'Baby':
+                return EmojiConstants.CARD_CATEGORIES.BABY;
+            case 'Cosplay':
+                return EmojiConstants.CARD_CATEGORIES.COSPLAY;
+            case 'Vrienden':
+                return EmojiConstants.CARD_CATEGORIES.FRIENDS;
+            case 'Strijders':
+                return EmojiConstants.CARD_CATEGORIES.FIGHTER;
+            case 'Snacc':
+                return EmojiConstants.CARD_CATEGORIES.SNACK;
         }
     }
 }

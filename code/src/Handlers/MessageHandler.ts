@@ -20,8 +20,6 @@ export default class MessageHandler {
             return;
         }
 
-        const memberId = messageInfo.member.id;
-
         const character = player.GetCharacter();
         if (character != null) {
             const characterId = character.GetId();
@@ -29,12 +27,6 @@ export default class MessageHandler {
             character.GetHealthFromMessage();
             character.IncreaseXPFromMessage();
             Redis.set(characterUpdateTimeout + characterId, '1', 'EX', Utils.GetMinutesInSeconds(SettingsConstants.MESSAGE_POINT_TIMEOUT_MINUTES));
-        }
-
-        const messagePointTimeout = await Redis.get(MessageHandler.messagePointTimeoutPrefix + memberId);
-
-        if (messagePointTimeout) {
-            return;
         }
 
         const content = messageInfo.message?.content;
@@ -81,7 +73,7 @@ export default class MessageHandler {
             const playerCard = playerCards.randomChoice();
             playerCard.RemoveOne();
             messageInfo.channel = BotManager.GetCardChannel();
-            MessageService.SendMessageToCardChannel('Zij die bedelen worden gestraft. Deze kaart pak ik gewoon weer van je af. Dat zal je leren!');
+            MessageService.SendMessageToCardChannel('Zij die bedelen worden gestraft. Deze kaart pak ik gewoon weer van je af. Dat zal je leren!', CardEmbeds.GetCardEmbed(playerCard.GetCard()));
         }
     }
 }
