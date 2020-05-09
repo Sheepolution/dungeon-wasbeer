@@ -24,8 +24,8 @@ export default class CharacterConstants {
         0,        50,        150,        450,
         1100,     2400,      3900,       5700,
         8000,     11000,     14500,      16500,
-        19000,    22750,     27500,      32500,
-        38000,    44000,     51000,      60000
+        22000,    29000,     37500,      47000,
+        57000,    68000,     82000,      100000
     ]
 
     public static readonly CHARACTER_DIED = 'https://cdn.discordapp.com/attachments/694331679204180029/703293328552362014/unknown.png';
