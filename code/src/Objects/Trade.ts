@@ -12,7 +12,7 @@ export default class Trade {
     private tradeDate:Date;
 
     public static async STATIC_POST(trader:Player, other:Player, traderCard:Card, otherCard:Card) {
-        await TradeModel.New(trader, other, traderCard, otherCard);
+        return await TradeModel.New(trader, other, traderCard, otherCard);
     }
 
     public GetId() {

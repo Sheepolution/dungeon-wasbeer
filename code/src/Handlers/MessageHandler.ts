@@ -9,6 +9,8 @@ import RedisConstants from '../Constants/RedisConstants';
 import MessageService from '../Services/MessageService';
 import PlayerCard from '../Objects/PlayerCard';
 import BotManager from '../Managers/BotManager';
+import Log from '../Objects/Log';
+import { LogType } from '../Enums/LogType';
 
 export default class MessageHandler {
 
@@ -54,8 +56,10 @@ export default class MessageHandler {
             messageInfo.channel = BotManager.GetCardChannel();
             if (cardModifyResult.result) {
                 MessageService.ReplyMessage(messageInfo, 'Je hebt een nieuwe kaart!', undefined, true, CardEmbeds.GetCardEmbed(playerCard.GetCard(), playerCard.GetAmount()));
+                Log.STATIC_POST(player, playerCard.GetCardId(), LogType.CardReceived, `${player.GetDiscordName()} heeft de kaart '${playerCard.GetCard().GetName()}' gekregen.`);
             } else {
                 MessageService.ReplyMessage(messageInfo, 'Je hebt een extra van deze kaart!', undefined, true, CardEmbeds.GetCardEmbed(playerCard.GetCard(), playerCard.GetAmount()));
+                Log.STATIC_POST(player, playerCard.GetCardId(), LogType.CardReceived, `${player.GetDiscordName()} heeft de kaart '${playerCard.GetCard().GetName()}' gekregen, en heeft daar nu ${playerCard.GetAmount()} van.`);
             }
         }
 
@@ -74,6 +78,7 @@ export default class MessageHandler {
             playerCard.RemoveOne();
             messageInfo.channel = BotManager.GetCardChannel();
             MessageService.SendMessageToCardChannel('Zij die bedelen worden gestraft. Deze kaart pak ik gewoon weer van je af. Dat zal je leren!', CardEmbeds.GetCardEmbed(playerCard.GetCard()));
+            Log.STATIC_POST(player, playerCard.GetCardId(), LogType.CardTaken, `${player.GetDiscordName()} heeft gebedeld met het bericht '${messageInfo.message?.content}' en waardoor de kaart '${playerCard.GetCard().GetName()}' is afgepakt.`);
         }
     }
 }

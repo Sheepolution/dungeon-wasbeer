@@ -63,6 +63,7 @@ export default class CardEmbeds {
         const cardsAmount = CardManager.GetCardList().length;
 
         const embed = new MessageEmbed()
+            .setColor(SettingsConstants.COLORS.DEFAULT)
             .setTitle('De kaarten van ' + player.GetDiscordName())
 
         var split = SettingsConstants.CARD_AMOUNT_SPLIT_PAGES;
@@ -95,6 +96,7 @@ export default class CardEmbeds {
 
     public static GetTradeEmbed(tradeInfo:ITradeInfo) {
         const embed = new MessageEmbed()
+            .setColor(SettingsConstants.COLORS.DEFAULT)
             .setImage(tradeInfo.yourCard.GetCard().GetImageUrl())
             .setThumbnail(tradeInfo.theirCard.GetCard().GetImageUrl());
 

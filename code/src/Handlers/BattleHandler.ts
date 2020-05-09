@@ -11,6 +11,8 @@ import Character from '../Objects/Character';
 import CharacterEmbeds from '../Embeds/CharacterEmbeds';
 import Attack from '../Objects/Attack';
 import RedisConstants from '../Constants/RedisConstants';
+import Log from '../Objects/Log';
+import { LogType } from '../Enums/LogType';
 
 export default class BattleHandler {
 
@@ -106,7 +108,8 @@ export default class BattleHandler {
     }
 
     private static async SaveAttack(battle:Battle, character:Character, messageId:string, rollCharacterBase:number, rollCharacterModifier:number, rollCharacterModifierMax:number, rollMonsterBase:number, rollMonsterModifier:number, rollMonsterModifierMax:number, victory:boolean, damage:number, healthAfter:number) {
-        Attack.STATIC_POST(battle, character, messageId, rollCharacterBase, rollCharacterModifier, rollCharacterModifierMax, rollMonsterBase, rollMonsterModifier, rollMonsterModifierMax, victory, damage, healthAfter);
+        const attack = await Attack.STATIC_POST(battle, character, messageId, rollCharacterBase, rollCharacterModifier, rollCharacterModifierMax, rollMonsterBase, rollMonsterModifier, rollMonsterModifierMax, victory, damage, healthAfter);
+        Log.STATIC_POST(character.GetPlayer(), attack.id, LogType.Attack, `${character.GetName()} heeft het monster '${battle.GetMonster().GetName()}' aangevallen en dit gevecht ${victory ? 'gewonnen' : 'verloren'}.`);
     }
 
     private static async OnCharacterCrit(messageInfo:IMessageInfo, message:Message, battle:Battle, character:Character, roll1:number = 20, roll2:number = 0, roll3:number = 0) {
@@ -152,6 +155,7 @@ export default class BattleHandler {
         await MessageService.SendMessageToDNDChannel('', await CharacterEmbeds.GetDeadCharacterEmbed(character));
         await Utils.Sleep(3);
         await MessageService.ReplyMessage(messageInfo, 'Je character is dood. Je kan opnieuw beginnen door een class te kiezen met het commando `;class`.');
+        Log.STATIC_POST(character.GetPlayer(), character.GetId(), LogType.CharacterDied, `De character van ${character.GetPlayer().GetDiscordName()} is overleden.`);
     }
 
     private static async ReplyNoBattle(messageInfo:IMessageInfo) {

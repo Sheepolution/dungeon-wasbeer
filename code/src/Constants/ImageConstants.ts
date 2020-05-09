@@ -10,4 +10,6 @@ export default class ImageConstants {
         FIGHTER: 'https://cdn.discordapp.com/attachments/694331679204180029/707981700122280056/Strijdersmol.png',
         FRIENDS: 'https://cdn.discordapp.com/attachments/694331679204180029/707984321507754016/Vriendensmol.png',
     }
+
+    public static readonly SOLVED = 'https://cdn.discordapp.com/attachments/694331679204180029/708732190485118986/solved.gif';
 }

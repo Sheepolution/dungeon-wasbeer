@@ -1,6 +1,7 @@
 import Character from './Character';
 import PuzzleModel from './PuzzleModel';
 import { PuzzleType } from '../Enums/PuzzleType';
+import { Utils } from '../Utils/Utils';
 
 export default class Puzzle {
 
@@ -49,7 +50,23 @@ export default class Puzzle {
         return this.content;
     }
 
+    public GetSolution() {
+        return this.solution;
+    }
+
     public GetPuzzleType() {
         return this.type;
+    }
+
+    public async Solve(character:Character) {
+        this.solver = character;
+        this.solvingDate = Utils.GetNow();
+        this.active = false;
+
+        await this.UPDATE({
+            active: false,
+            solver_id: character.GetId(),
+            solving_date: Utils.GetNowString(),
+        })
     }
 }

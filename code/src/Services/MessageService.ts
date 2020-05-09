@@ -22,11 +22,11 @@ export default class MessageService {
     }
 
     public static async SendMessageToCardChannel(message:string, embed?:MessageEmbed) {
-        this.SendMessage(BotManager.GetCardChannel(), message, embed);
+        return await this.SendMessage(BotManager.GetCardChannel(), message, embed);
     }
 
     public static async SendMessageToDNDChannel(message:string, embed?:MessageEmbed) {
-        this.SendMessage(BotManager.GetDNDChannel(), message, embed);
+        return await this.SendMessage(BotManager.GetDNDChannel(), message, embed);
     }
 
     public static async ReplyMissingAssignedArguments(messageInfo:IMessageInfo, missing:Array<string>) {
@@ -50,6 +50,6 @@ export default class MessageService {
     }
 
     private static async SendMessage(channel:TextChannel, message:string, embed?:MessageEmbed) {
-        return DiscordService.SendMessage(channel, message, embed)
+        return await DiscordService.SendMessage(channel, message, embed)
     }
 }

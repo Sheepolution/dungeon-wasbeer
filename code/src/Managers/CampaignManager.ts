@@ -34,8 +34,8 @@ export default class CampaignManager {
     public static async StartNewSession(lastSessionType?:SessionType) {
         var campaign = new Campaign();
 
-        if (lastSessionType == SessionType.Battle) {
-            if (Utils.Chance(35)) {
+        if (true || lastSessionType == SessionType.Battle) {
+            if (true || Utils.Chance(35)) {
                 const puzzle = await PuzzleManager.GetRandomPuzzle();
                 await campaign.POST(SessionType.Puzzle, puzzle.GetId());
                 this.campaignObject = campaign;
@@ -56,7 +56,7 @@ export default class CampaignManager {
 
             const number = latestBattle.GetMonster().GetNumber()
             if (number == 60) {
-                await monsterInOrderConfig.SetValue(false);
+                await monsterInOrderConfig?.SetValue(false);
                 monster = MonsterManager.GetRandomMonster();
             } else {
                 monster = MonsterManager.GetMonsterByNumber(number + 1);
@@ -70,6 +70,7 @@ export default class CampaignManager {
             await campaign.POST(SessionType.Battle, battle.GetId());
             this.campaignObject = campaign;
             CampaignManager.SendNewBattleMessage(monster);
+            return this.campaignObject;
         }
     }
 

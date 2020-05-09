@@ -14,6 +14,8 @@ import Heal from '../Objects/Heal';
 import CampaignManager from '../Managers/CampaignManager';
 import CharacterConstants from '../Constants/CharacterConstants';
 import CardEmbeds from '../Embeds/CardEmbeds';
+import Log from '../Objects/Log';
+import { LogType } from '../Enums/LogType';
 
 export default class CharacterHandler {
 
@@ -22,7 +24,7 @@ export default class CharacterHandler {
 
     public static async OnCommand(messageInfo:IMessageInfo, player:Player, command:string, args:Array<string>) {
         if (command == 'class') {
-            this.ChooseClass(messageInfo, player, args[0]);
+            this.CreateCharacter(messageInfo, player, args[0]);
             return;
         }
 
@@ -62,11 +64,10 @@ export default class CharacterHandler {
         return true;
     }
 
-    private static async ChooseClass(messageInfo:IMessageInfo, player:Player, className:string) {
+    private static async CreateCharacter(messageInfo:IMessageInfo, player:Player, className:string) {
         const character = player.GetCharacter();
         if (character != null) {
-            const characterClassName = character.GetClassName();
-            MessageService.ReplyMessage(messageInfo, `Je hebt al een character van de class ${characterClassName}. Je kan een nieuw character aanmaken wanneer deze overlijdt, of wanneer je opnieuw begint met \`;reset\`.`, false);
+            MessageService.ReplyMessage(messageInfo, `Je hebt al een character genaamd ${character.GetName()}. Je kan een nieuw character aanmaken wanneer deze overlijdt, of wanneer je opnieuw begint met \`;reset\`.`, false);
             return;
         }
 
@@ -85,6 +86,7 @@ export default class CharacterHandler {
         const classType = (<any>ClassType)[className];
         const newCharacter = await player.CreateCharacter(classType);
         MessageService.ReplyMessage(messageInfo, 'Je character is aangemaakt!', undefined, true, CharacterEmbeds.GetNewCharacterEmbed(newCharacter));
+        Log.STATIC_POST(player, newCharacter.GetId(), LogType.CharacterCreated, `${player.GetDiscordName()} heeft een nieuw character aangemaakt.`);
     }
 
     private static async Equip(messageInfo:IMessageInfo, player:Player, cardName:string) {
@@ -130,7 +132,7 @@ export default class CharacterHandler {
         }
 
         if (playerCard.IsUsedInTrade()) {
-            MessageService.ReplyMessage(messageInfo, `Iemand is een ruil gestart met jouw kaart '${realCardName}', dus je kan deze nu niet equipment.`, false);
+            MessageService.ReplyMessage(messageInfo, `Iemand is een ruil gestart met jouw kaart '${realCardName}', dus je kan deze nu niet equippen.`, false);
             return;
         }
 
@@ -226,7 +228,8 @@ export default class CharacterHandler {
 
     private static async SaveHeal(character:Character, receiver:Character, receiverHealth:number, characterHealing:number, roll:number, finalHealing:number) {
         const battle = CampaignManager.GetBattle();
-        Heal.STATIC_POST(battle, character, receiver, receiverHealth, characterHealing, roll, finalHealing);
+        const heal = await Heal.STATIC_POST(battle, character, receiver, receiverHealth, characterHealing, roll, finalHealing);
+        Log.STATIC_POST(character.GetPlayer(), heal.id, LogType.Heal, `De character van ${character.GetPlayer().GetDiscordName()} heeft een heal gedaan op de character van ${receiver.GetPlayer().GetDiscordName()}.`);
     }
 
     private static async SendHealingEmbed(messageInfo:IMessageInfo, character:Character, receiver:Character) {
@@ -262,6 +265,7 @@ export default class CharacterHandler {
         await character.Stop()
 
         MessageService.ReplyMessage(messageInfo, 'Je character heeft de party verlaten.\nJe kan een nieuw character maken met `;class [class]`', true);
+        Log.STATIC_POST(character.GetPlayer(), character.GetId(), LogType.CharacterStop, `De character van ${character.GetPlayer().GetDiscordName()} is gestopt.`);
     }
 
     private static async GetResetCharacterTimer(character:Character) {

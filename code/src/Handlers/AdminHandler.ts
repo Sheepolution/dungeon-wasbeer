@@ -16,6 +16,8 @@ import MonsterModel from '../Models/MonsterModel';
 import CardService from '../Services/CardService';
 import { ClassType } from '../Enums/ClassType';
 import CampaignManager from '../Managers/CampaignManager';
+import Log from '../Objects/Log';
+import { LogType } from '../Enums/LogType';
 
 export default class AdminHandler {
 
@@ -64,8 +66,13 @@ export default class AdminHandler {
             case 'refresh':
                 this.ResetAllCache(messageInfo);
                 break;
-            case 'say':
-                this.SayMessage(content);
+            case 'say-card':
+            case 'saycard':
+                this.SayMessageCard(messageInfo, content, player);
+                break;
+            case 'say-dnd':
+            case 'saydnd':
+                this.SayMessageDND(messageInfo, content, player);
                 break;
             default:
                 return false;
@@ -79,8 +86,16 @@ export default class AdminHandler {
         MessageService.ReplyMessage(messageInfo, 'Alle cache is gereset.', true);
     }
 
-    private static async SayMessage(message:string) {
-        MessageService.SendMessageToCardChannel(message);
+    private static async SayMessageCard(messageInfo:IMessageInfo, message:string, player:Player) {
+        const sentMessage = await MessageService.SendMessageToCardChannel(message);
+        MessageService.ReplyMessage(messageInfo, 'Ik heb het gezegd.', true, true);
+        Log.STATIC_POST(player, sentMessage.id, LogType.SayMessage, `${player.GetDiscordName()} zegt het bericht '${message}' in het kaarten kanaal.`);
+    }
+
+    private static async SayMessageDND(messageInfo:IMessageInfo, message:string, player:Player) {
+        const sentMessage = await MessageService.SendMessageToDNDChannel(message);
+        MessageService.ReplyMessage(messageInfo, 'Ik heb het gezegd.', true, true);
+        Log.STATIC_POST(player, sentMessage.id, LogType.SayMessage, `${player.GetDiscordName()} zegt het bericht '${message}' in het D&D kanaal.`);
     }
 
     private static async StartCampaign() {

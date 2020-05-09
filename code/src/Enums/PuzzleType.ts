@@ -1,4 +1,3 @@
 export enum PuzzleType {
-    Sudoku,
-    Cryptogram,
+    Sudoku = 'Sudoku'
 }

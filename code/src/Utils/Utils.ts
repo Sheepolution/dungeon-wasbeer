@@ -22,6 +22,10 @@ export module Utils {
         return floor ? Math.floor(r) : r;
     }
 
+    export function Coin() {
+        return Math.random() >= .5;
+    }
+
     export function Chance(n:number) {
         return Utils.Random(0, 100) <= n;
     }

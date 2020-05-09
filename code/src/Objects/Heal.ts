@@ -25,7 +25,7 @@ export default class Heal {
     }
 
     public static async STATIC_POST(battle:Battle, character:Character, receiver:Character, receiverHealth:number, characterHealing:number, roll:number, finalHealing:number) {
-        await HealModel.New(battle, character, receiver, receiverHealth, characterHealing, roll, finalHealing);
+        return await HealModel.New(battle, character, receiver, receiverHealth, characterHealing, roll, finalHealing);
     }
 
     public async GET(id:string) {

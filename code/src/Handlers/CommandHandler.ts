@@ -41,7 +41,7 @@ export default class CommandHandler {
                 return;
             } else if (await BattleHandler.OnCommand(messageInfo, player, command)) {
                 return;
-            } else if (await PuzzleHandler.OnCommand(messageInfo, player, command)) {
+            } else if (await PuzzleHandler.OnCommand(messageInfo, player, command, content)) {
                 return;
             }
         }
