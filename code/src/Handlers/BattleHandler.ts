@@ -13,10 +13,13 @@ import Attack from '../Objects/Attack';
 import RedisConstants from '../Constants/RedisConstants';
 import Log from '../Objects/Log';
 import { LogType } from '../Enums/LogType';
+import EmojiConstants from '../Constants/EmojiConstants';
 
 export default class BattleHandler {
 
     private static readonly battleCooldownPrefix = RedisConstants.REDIS_KEY + RedisConstants.BATTLE_COOLDOWN_KEY;
+    private static waitList:Array<IMessageInfo> = new Array<IMessageInfo>();
+    private static inBattle:boolean = false;
 
     public static async OnCommand(messageInfo:IMessageInfo, player:Player, command:string) {
         switch (command) {
@@ -38,7 +41,7 @@ export default class BattleHandler {
         return true;
     }
 
-    private static async OnAttack(messageInfo:IMessageInfo, player:Player) {
+    private static async OnAttack(messageInfo:IMessageInfo, player:Player, fromWaitlist?:boolean) {
         const character = PlayerManager.GetCharacterFromPlayer(messageInfo, player);
         if (character == null) { return; }
 
@@ -58,8 +61,22 @@ export default class BattleHandler {
             return;
         }
 
+        if (!fromWaitlist) {
+            if (BattleHandler.inBattle) {
+                const fight = this.waitList.find(b => b.member.id == messageInfo.member.id);
+                if (fight != null) {
+                    messageInfo.message?.react(EmojiConstants.STATUS.BAD);
+                    return;
+                }
+                this.waitList.push(messageInfo);
+                messageInfo.message?.react(EmojiConstants.STATUS.GOOD);
+                return;
+            }
+        }
+
         character.SetBattleCooldown();
         character.SetInBattle(true);
+        BattleHandler.inBattle = true;
 
         // Start attack
         const message = await this.SendBattleEmbed(messageInfo, battle, character);
@@ -105,6 +122,9 @@ export default class BattleHandler {
         const playerWon = roll1 + (roll2 || 0) >= roll3 + (roll4 || 0);
         const damage = await this.ResolveAttackResult(messageInfo, message, battle, character, playerWon, playerWon ? character.GetAttackStrength(): battle.GetMonsterAttackStrength(), roll1, roll2 || 0, roll3, roll4 || 0);
         await this.UpdateBattleEmbed(message, battle, character, roll1, roll2, roll3, roll4, playerWon, damage);
+        if (battle.IsMonsterDead()) {
+            return;
+        }
     }
 
     private static async SaveAttack(battle:Battle, character:Character, messageId:string, rollCharacterBase:number, rollCharacterModifier:number, rollCharacterModifierMax:number, rollMonsterBase:number, rollMonsterModifier:number, rollMonsterModifierMax:number, victory:boolean, damage:number, healthAfter:number) {
@@ -129,6 +149,8 @@ export default class BattleHandler {
             character.SetInBattle(false);
             if (battle.IsMonsterDead()) {
                 await this.OnDefeatingMonster(battle);
+            } else {
+                this.CheckWaitList();
             }
             return receivedDamage;
         } else {
@@ -139,6 +161,7 @@ export default class BattleHandler {
             } else {
                 character.SetInBattle(false);
             }
+            this.CheckWaitList();
             return receivedDamage;
         }
     }
@@ -156,6 +179,21 @@ export default class BattleHandler {
         await Utils.Sleep(3);
         await MessageService.ReplyMessage(messageInfo, 'Je character is dood. Je kan opnieuw beginnen door een class te kiezen met het commando `;class`.');
         Log.STATIC_POST(character.GetPlayer(), character.GetId(), LogType.CharacterDied, `De character van ${character.GetPlayer().GetDiscordName()} is overleden.`);
+    }
+
+    private static async CheckWaitList() {
+        if (BattleHandler.waitList.length == 0) {
+            return;
+        }
+
+        const nextBattle = BattleHandler.waitList.shift();
+        if (nextBattle == null) {
+            return;
+        }
+
+        const nextPlayer = await PlayerManager.GetPlayer(nextBattle?.member.id);
+        await Utils.Sleep(3);
+        this.OnAttack(<IMessageInfo>nextBattle, nextPlayer, true)
     }
 
     private static async ReplyNoBattle(messageInfo:IMessageInfo) {
