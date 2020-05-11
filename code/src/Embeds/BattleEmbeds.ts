@@ -2,6 +2,7 @@ import SettingsConstants from '../Constants/SettingsConstants';
 import Battle from '../Objects/Battle';
 import { MessageEmbed } from 'discord.js';
 import Character from '../Objects/Character';
+import { Utils } from '../Utils/Utils';
 
 export default class BattleEmbeds {
 
@@ -22,7 +23,7 @@ export default class BattleEmbeds {
         return embed;
     }
 
-    public static GetBattleEmbed(battle:Battle, character:Character, roll1?:number, roll2?:number, roll3?:number, roll4?:number, playerWon?:boolean, damage?:number, crit?:boolean) {
+    public static async GetBattleEmbed(battle:Battle, character:Character, roll1?:number, roll2?:number, roll3?:number, roll4?:number, playerWon?:boolean, damage?:number, crit?:boolean) {
         const monster = battle.GetMonster();
 
         const characterName = character.GetName();
@@ -92,6 +93,23 @@ export default class BattleEmbeds {
                 }
                 embed.addField(`De ${monsterName} wint${crit ? ' met een crit' : ''}!`, attackDescription.replace('[damage]', damage?.toString() || '') );
                 embed.setColor(SettingsConstants.COLORS.BAD)
+            }
+            embed.addField('--------------------------------', '-- Cooldown(s) --');
+
+            const battleCooldown = await character.GetBattleCooldown();
+            if (battleCooldown > 0) {
+                embed.addField('Vechten', `🕒 ${Utils.GetSecondsInMinutesAndSeconds(battleCooldown)}`, true)
+            } else {
+                embed.addField('Vechten', 'Klaar om te vechten!', true);
+            }
+
+            if (character.CanHeal()) {
+                const healingCooldown = await character.GetHealingCooldown();
+                if (healingCooldown > 0) {
+                    embed.addField('Healen', `🕒 ${Utils.GetSecondsInMinutesAndSeconds(healingCooldown)}`, true)
+                } else {
+                    embed.addField('Healen', 'Klaar om te healen!', true);
+                }
             }
         }
 
