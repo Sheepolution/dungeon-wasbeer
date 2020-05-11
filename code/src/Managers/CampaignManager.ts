@@ -48,13 +48,16 @@ export default class CampaignManager {
         var monster;
         var monsterInOrderConfig = ConfigurationManager.GetConfigurationByName('monsters_in_order');
         if (monsterInOrderConfig?.GetValueAsBoolean()) {
-            var latestBattle = this.campaignObject.GetBattle();
-            if (latestBattle == null) {
-                latestBattle = new Battle();
-                await latestBattle.GET_LATEST();
+            var number = 0;
+            if (this.campaignObject != null) {
+                var latestBattle = this.campaignObject.GetBattle();
+                if (latestBattle == null) {
+                    latestBattle = new Battle();
+                    await latestBattle.GET_LATEST();
+                }
+                number = latestBattle.GetMonster().GetNumber()
             }
 
-            const number = latestBattle.GetMonster().GetNumber()
             if (number == 60) {
                 await monsterInOrderConfig?.SetValue(false);
                 monster = MonsterManager.GetRandomMonster();
@@ -83,10 +86,16 @@ export default class CampaignManager {
     }
 
     public static GetBattle() {
+        if (this.campaignObject == null) {
+            return;
+        }
         return this.campaignObject.GetBattle();
     }
 
     public static GetPuzzle() {
+        if (this.campaignObject == null) {
+            return;
+        }
         return this.campaignObject.GetPuzzle();
     }
 
