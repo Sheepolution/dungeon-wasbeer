@@ -113,6 +113,10 @@ export default class Character {
         return this.currentHealth == this.maxHealth;
     }
 
+    public GetArmor() {
+        return this.fullModifierStats.armor;
+    }
+
     public GetLevel() {
         return this.level;
     }
