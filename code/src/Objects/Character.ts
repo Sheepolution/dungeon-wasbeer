@@ -375,7 +375,7 @@ export default class Character {
         this.equipment.push(playerCard.GetCard());
         this.UpdateFullModifierStats();
         this.UPDATE({
-            equipment: this.equipment.map(e => e.GetId()).join(',');
+            equipment: this.equipment.map(e => e.GetId()).join(',')
         })
     }
 
