@@ -105,6 +105,7 @@ export default class CampaignManager {
             await this.GiveXPToBattlers(battle);
         }
         await this.campaignObject.CompleteSession();
+        await Utils.Sleep(3);
         await this.StartNewSession();
     }
 
