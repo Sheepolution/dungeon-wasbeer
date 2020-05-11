@@ -18,6 +18,7 @@ export default class Character {
 
     private static readonly battleCooldownPrefix = RedisConstants.REDIS_KEY + RedisConstants.BATTLE_COOLDOWN_KEY;
     private static readonly healingCooldownPrefix = RedisConstants.REDIS_KEY + RedisConstants.HEALING_COOLDOWN_KEY;
+    private static readonly inspiringCooldownPrefix = RedisConstants.REDIS_KEY + RedisConstants.INSPIRING_COOLDOWN_KEY;
 
     protected id:string;
     private player:Player;
@@ -36,6 +37,7 @@ export default class Character {
     private deathDate?:Date;
     private isSorcerer:boolean;
     private inBattle:boolean;
+    private inspired:boolean;
 
     constructor(player?:Player) {
         if (player) {
@@ -82,6 +84,7 @@ export default class Character {
         this.maxHealth = this.CalculateMaxHealth()
         this.bornDate = new Date(model.born_date);
         this.deathDate = model.death_date ? new Date(model.death_date) : undefined;
+        this.inspired = model.inspired;
         this.isSorcerer = this.classType == ClassType.Bard || this.classType == ClassType.Cleric || this.classType == ClassType.Wizard;
     }
 
@@ -192,6 +195,9 @@ export default class Character {
 
     public SetInBattle(inBattle:boolean) {
         this.inBattle = inBattle;
+        if (!this.inBattle) {
+            this.StopBeingInspired()
+        }
     }
 
     public GetInBattle() {
@@ -227,6 +233,34 @@ export default class Character {
         return this.currentHealth <= 0;
     }
 
+    public CanInspire() {
+        return this.classType == ClassType.Bard;
+    }
+
+    public async BecomeInspired() {
+        this.inspired = true;
+        this.CalculateFullModifierStats();
+        await this.UPDATE({
+            inspired: true
+        })
+    }
+
+    public async StopBeingInspired() {
+        this.inspired = false;
+        this.CalculateFullModifierStats();
+        await this.UPDATE({
+            inspired: false
+        })
+    }
+
+    public IsInspired() {
+        return this.IsInspired;
+    }
+
+    public GetMaxInspiringCooldown() {
+        return CharacterConstants.BASE_COOLDOWN_DURATION - this.fullModifierStats.dexterity;
+    }
+
     public CalculateDamageWithArmor(damage:number) {
         return Math.floor(damage * (1 - Math.min(50, this.fullModifierStats.armor)/100));
     }
@@ -249,6 +283,14 @@ export default class Character {
 
     public async SetHealingCooldown() {
         await Redis.set(Character.healingCooldownPrefix + this.GetId(), '1', 'EX', Utils.GetMinutesInSeconds(this.GetMaxHealingCooldown()));
+    }
+
+    public async GetInspireCooldown() {
+        return await Redis.ttl(Character.inspiringCooldownPrefix + this.GetId());
+    }
+
+    public async SetInspireCooldown() {
+        await Redis.set(Character.inspiringCooldownPrefix + this.GetId(), '1', 'EX', Utils.GetMinutesInSeconds(this.GetMaxInspiringCooldown()));
     }
 
     public async IncreaseXP(amount:number, trx?:any, updateData:boolean = true) {
@@ -399,6 +441,11 @@ export default class Character {
         this.classModifierStats = CharacterService.GetClassModifierStats(this.classType);
         this.cardModifierStats = this.CalculateCardModifierStats();
         this.fullModifierStats = this.CalculateFullModifierStats();
+        if (this.inspired) {
+            const emptyModifierStats = CharacterService.GetEmptyModifierStats(1);
+            emptyModifierStats.health = 0;
+            this.fullModifierStats = CharacterService.GetSummedUpModifierStats(this.fullModifierStats, emptyModifierStats);
+        }
         this.maxHealth = this.CalculateMaxHealth();
     }
 

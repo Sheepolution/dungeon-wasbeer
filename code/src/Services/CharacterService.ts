@@ -73,17 +73,17 @@ export default class CharacterService {
         }
     }
 
-    public static GetEmptyModifierStats():IModifierStats {
+    public static GetEmptyModifierStats(n:number = 0):IModifierStats {
         return {
-            armor: 0,
-            attack: 0,
-            charisma: 0,
-            dexterity: 0,
-            healing: 0,
-            health: 0,
-            regeneration: 0,
-            strength: 0,
-            spell: 0,
+            armor: n,
+            attack: n,
+            charisma: n,
+            dexterity: n,
+            healing: n,
+            health: n,
+            regeneration: n,
+            strength: n,
+            spell: n,
         }
     }
 

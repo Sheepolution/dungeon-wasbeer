@@ -86,7 +86,6 @@ export default class BattleEmbeds {
                 embed.addField(`${characterName} wint${crit ? ' met een crit' : ''}!`, attackDescription.replace('[damage]', damage?.toString() || '').replace('[monster]', monsterName || ''));
                 embed.setColor(SettingsConstants.COLORS.GOOD)
             } else {
-
                 var attackDescription = crit ? battle.GetMonsterAttackCritDescription() : battle.GetMonsterAttackDescription();
                 if (!attackDescription.includes('[damage]')) {
                     attackDescription += '\nHij doet [damage] damage.'
@@ -109,6 +108,15 @@ export default class BattleEmbeds {
                     embed.addField('Healen', `🕒 ${Utils.GetSecondsInMinutesAndSeconds(healingCooldown)}`, true)
                 } else {
                     embed.addField('Healen', 'Klaar om te healen!', true);
+                }
+            }
+
+            if (character.CanInspire()) {
+                const inspiringCooldown = await character.GetInspireCooldown();
+                if (inspiringCooldown > 0) {
+                    embed.addField('Inspireren', `🕒 ${Utils.GetSecondsInMinutesAndSeconds(inspiringCooldown)}`, true)
+                } else {
+                    embed.addField('Inspireren', 'Klaar om een mooi lied te spelen!', true);
                 }
             }
         }

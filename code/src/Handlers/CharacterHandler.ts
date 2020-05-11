@@ -51,6 +51,10 @@ export default class CharacterHandler {
             case 'heal':
                 this.OnHeal(messageInfo, player, args[0])
                 break;
+            case 'inspireer':
+            case 'inspire':
+                this.OnInspire(messageInfo, player, args[0])
+                break;
             case 'reset':
                 this.OnReset(messageInfo, player);
                 break;
@@ -226,11 +230,53 @@ export default class CharacterHandler {
         await this.SaveHeal(character, receiver, healthBefore, character.GetFullModifierStats().healing, roll, healing);
     }
 
+    private static async OnInspire(messageInfo:IMessageInfo, player:Player, mention:string) {
+        const character = PlayerManager.GetCharacterFromPlayer(messageInfo, player);
+        if (character == null) {
+            return;
+        }
+
+        if (!character.CanInspire()) {
+            MessageService.ReplyMessage(messageInfo, `Alleen bards kunnen inspireren, en jij bent een ${character.GetClassName().toLowerCase()}.`, false);
+            return;
+        }
+
+        const cooldown = await character.GetInspireCooldown();
+        if (cooldown > 0) {
+            const minutes = Utils.GetSecondsInMinutes(cooldown);
+            MessageService.ReplyMessage(messageInfo, `Je hebt nog ${minutes + (minutes == 1 ? ' minuut' : ' minuten')} cooldown voordat je weer mag inspireren.`);
+            return;
+        }
+
+        var receiver = character;
+        if (mention != null) {
+            const receiverId = DiscordUtils.GetMemberId(mention);
+            if (receiverId == null) {
+                MessageService.ReplyMessage(messageInfo, 'Als je iemand anders dan jezelf wilt inspireren moet je die persoon taggen.\n`;inspireer @persoon`', false);
+                return;
+            }
+
+            const receiverPlayer = await PlayerManager.GetPlayer(receiverId);
+            receiver = receiverPlayer?.GetCharacter();
+            if (receiverPlayer == null || receiver == null) {
+                MessageService.ReplyMessage(messageInfo, 'Deze persoon heeft geen character.', false);
+                return;
+            }
+        }
+
+        const selfInspire = receiver == character;
+
+        await receiver.BecomeInspired();
+        await character.SetInspireCooldown();
+        await MessageService.ReplyMessage(messageInfo, `Je speelt prachtige muziek en inspireert ${selfInspire ? 'jezelf' : receiver.GetName()}. Al hun stats krijgen een +1 boost tot hun volgende gevecht.`, true);
+        Log.STATIC_POST(character.GetPlayer(), receiver.GetId(), LogType.Inspire, `De character van ${character.GetPlayer().GetDiscordName()} heeft ${character.GetId() == receiver.GetId() ? 'zichzelf' : `de character van ${receiver.GetPlayer().GetDiscordName()}`} geïnspireerd.`);
+    }
+
     private static async SaveHeal(character:Character, receiver:Character, receiverHealth:number, characterHealing:number, roll:number, finalHealing:number) {
         const battle = CampaignManager.GetBattle();
         if (battle == null) { return; }
         const heal = await Heal.STATIC_POST(battle, character, receiver, receiverHealth, characterHealing, roll, finalHealing);
-        Log.STATIC_POST(character.GetPlayer(), heal.id, LogType.Heal, `De character van ${character.GetPlayer().GetDiscordName()} heeft een heal gedaan op de character van ${receiver.GetPlayer().GetDiscordName()}.`);
+        Log.STATIC_POST(character.GetPlayer(), heal.id, LogType.Heal, `De character van ${character.GetPlayer().GetDiscordName()} heeft een heal gedaan op ${character.GetId() == receiver.GetId() ? 'zichzelf.' : `de character van ${receiver.GetPlayer().GetDiscordName()}.`}`);
     }
 
     private static async SendHealingEmbed(messageInfo:IMessageInfo, character:Character, receiver:Character) {

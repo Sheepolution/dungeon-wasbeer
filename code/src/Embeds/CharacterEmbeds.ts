@@ -59,6 +59,15 @@ export default class CharacterEmbeds {
             }
         }
 
+        if (character.CanInspire()) {
+            const inspiringCooldown = await character.GetInspireCooldown();
+            if (inspiringCooldown > 0) {
+                embed.addField('Inspireren', `🕒 ${Utils.GetSecondsInMinutesAndSeconds(inspiringCooldown)}`, true)
+            } else {
+                embed.addField('Inspireren', 'Klaar om een mooi lied te spelen!', true);
+            }
+        }
+
         return embed;
     }
 
