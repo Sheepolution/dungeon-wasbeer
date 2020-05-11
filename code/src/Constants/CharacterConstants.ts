@@ -2,8 +2,6 @@ export default class CharacterConstants {
 
     public static readonly BASE_COOLDOWN_DURATION = 30;
 
-    public static readonly HEAL_MESSAGE_AMOUNT = 10;
-
     public static readonly RESET_CHARACTER_TIMER_DURATION = 5;
 
     public static readonly EQUIPMENT_SPACE_PER_LEVEL = [

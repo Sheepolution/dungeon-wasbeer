@@ -304,7 +304,7 @@ export default class Character {
 
     public async GetHealthFromMessage() {
         if (this.IsFullHealth()) { return false; }
-        this.currentHealth = Math.min(this.maxHealth, this.currentHealth + CharacterConstants.HEAL_MESSAGE_AMOUNT);
+        this.currentHealth = Math.min(this.maxHealth, this.currentHealth + this.fullModifierStats.regeneration);
         this.UPDATE({ health: this.currentHealth })
         return true;
     }

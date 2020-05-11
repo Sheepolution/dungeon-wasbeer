@@ -25,10 +25,13 @@ export default class MessageHandler {
         const character = player.GetCharacter();
         if (character != null) {
             const characterId = character.GetId();
-            const characterUpdateTimeout = await Redis.get(MessageHandler.messagePointTimeoutPrefix + characterId);
-            character.GetHealthFromMessage();
-            character.IncreaseXPFromMessage();
-            Redis.set(characterUpdateTimeout + characterId, '1', 'EX', Utils.GetMinutesInSeconds(SettingsConstants.MESSAGE_POINT_TIMEOUT_MINUTES));
+            const characterUpdateTimeout = await Redis.get(MessageHandler.characterUpdateTimeoutPrefix + characterId);
+            if (characterUpdateTimeout > 0) {
+                character.GetHealthFromMessage();
+                character.IncreaseXPFromMessage();
+            }
+
+            Redis.set(characterUpdateTimeout + characterId, '1', 'EX', Utils.GetMinutesInSeconds(SettingsConstants.CHARACTER_POINT_TIMEOUT_MINUTES));
         }
 
         const content = messageInfo.message?.content;
