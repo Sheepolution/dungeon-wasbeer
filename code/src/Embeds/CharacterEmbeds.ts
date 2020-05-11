@@ -139,7 +139,7 @@ export default class CharacterEmbeds {
             embed.addField('Healing gedaan', await character.GetTotalHealingDone(), true);
         }
 
-        embed.addField('Raadsels opgelost', 0, true)
+        embed.addField('Puzzels opgelost', 0, true)
 
         const equipment = character.GetEquipment();
         if (equipment.length > 0) {
