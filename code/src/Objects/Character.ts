@@ -380,7 +380,7 @@ export default class Character {
         var cardModifierStats = CharacterService.GetEmptyModifierStats();
 
         for (const card of this.equipment) {
-            cardModifierStats = card.GetModifierStats();
+            cardModifierStats = CharacterService.GetSummedUpModifierStats(cardModifierStats, card.GetModifierStats());
         }
 
         return cardModifierStats
@@ -395,6 +395,7 @@ export default class Character {
         this.classModifierStats = CharacterService.GetClassModifierStats(this.classType);
         this.cardModifierStats = this.CalculateCardModifierStats();
         this.fullModifierStats = this.CalculateFullModifierStats();
+        this.maxHealth = this.CalculateMaxHealth();
     }
 
     private async OnLevelUp(trx?:any) {
