@@ -148,6 +148,7 @@ export default class BattleHandler {
             await this.SaveAttack(battle, character, message.id, roll1, roll2, character.GetAttackRoll(), roll3, roll4, battle.GetMonsterAttackRoll(), true, receivedDamage, battle.GetCurrentMonsterHealth());
             character.SetInBattle(false);
             if (battle.IsMonsterDead()) {
+                BattleHandler.inBattle = false;
                 await this.OnDefeatingMonster(battle);
             } else {
                 if (this.waitList.length == 0) {
