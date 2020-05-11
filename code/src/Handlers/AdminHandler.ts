@@ -188,13 +188,13 @@ export default class AdminHandler {
                 MessageService.ReplyMessage(messageInfo, 'Ik kan de modifiers niet parsen. Zorg dat je het juist formaat aanhoudt:\nattack=2/health=3')
                 return;
             }
+        }
 
-            if (args.mc) {
-                modifierClass = (<any>ClassType)[args.mc.toTitleCase()];
-                if (modifierClass == null) {
-                    MessageService.ReplyMessage(messageInfo, `'${args.mc}' is geen bestaande class.\nKies uit Bard, Cleric, Wizard, Paladin, Fighter en Ranger.`);
-                    return;
-                }
+        if (args.mc) {
+            modifierClass = (<any>ClassType)[args.mc.toTitleCase()];
+            if (modifierClass == null) {
+                MessageService.ReplyMessage(messageInfo, `'${args.mc}' is geen bestaande class.\nKies uit Bard, Cleric, Wizard, Paladin, Fighter en Ranger.`);
+                return;
             }
         }
 
