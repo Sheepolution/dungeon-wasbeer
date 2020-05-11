@@ -1,7 +1,7 @@
 import { Utils } from '../Utils/Utils';
 import CharacterModel from '../Models/CharacterModel';
-import Character from './Character';
 import { PuzzleType } from '../Enums/PuzzleType';
+import Character from '../Objects/Character';
 const { Model } = require('objection');
 
 export default class PuzzleModel extends Model {

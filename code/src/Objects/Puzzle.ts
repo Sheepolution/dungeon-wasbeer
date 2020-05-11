@@ -1,7 +1,7 @@
 import Character from './Character';
-import PuzzleModel from './PuzzleModel';
 import { PuzzleType } from '../Enums/PuzzleType';
 import { Utils } from '../Utils/Utils';
+import PuzzleModel from '../Models/PuzzleModel';
 
 export default class Puzzle {
 

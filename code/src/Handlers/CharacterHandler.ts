@@ -228,6 +228,7 @@ export default class CharacterHandler {
 
     private static async SaveHeal(character:Character, receiver:Character, receiverHealth:number, characterHealing:number, roll:number, finalHealing:number) {
         const battle = CampaignManager.GetBattle();
+        if (battle == null) { return; }
         const heal = await Heal.STATIC_POST(battle, character, receiver, receiverHealth, characterHealing, roll, finalHealing);
         Log.STATIC_POST(character.GetPlayer(), heal.id, LogType.Heal, `De character van ${character.GetPlayer().GetDiscordName()} heeft een heal gedaan op de character van ${receiver.GetPlayer().GetDiscordName()}.`);
     }

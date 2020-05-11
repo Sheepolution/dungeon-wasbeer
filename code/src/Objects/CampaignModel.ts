@@ -3,7 +3,7 @@ import Battle from './Battle';
 import { SessionType } from '../Enums/SessionType';
 import BattleModel from '../Models/BattleModel';
 import Puzzle from './Puzzle';
-import PuzzleModel from './PuzzleModel';
+import PuzzleModel from '../Models/PuzzleModel';
 
 const { Model } = require('objection');
 
