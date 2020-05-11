@@ -150,7 +150,11 @@ export default class BattleHandler {
             if (battle.IsMonsterDead()) {
                 await this.OnDefeatingMonster(battle);
             } else {
-                this.CheckWaitList();
+                if (this.waitList.length == 0) {
+                    BattleHandler.inBattle = false;
+                } else {
+                    this.ResolveWaitList();
+                }
             }
             return receivedDamage;
         } else {
@@ -161,7 +165,11 @@ export default class BattleHandler {
             } else {
                 character.SetInBattle(false);
             }
-            this.CheckWaitList();
+            if (this.waitList.length == 0) {
+                BattleHandler.inBattle = false;
+            } else {
+                this.ResolveWaitList();
+            }
             return receivedDamage;
         }
     }
@@ -181,7 +189,7 @@ export default class BattleHandler {
         Log.STATIC_POST(character.GetPlayer(), character.GetId(), LogType.CharacterDied, `De character van ${character.GetPlayer().GetDiscordName()} is overleden.`);
     }
 
-    private static async CheckWaitList() {
+    private static async ResolveWaitList() {
         if (BattleHandler.waitList.length == 0) {
             return;
         }
@@ -197,7 +205,7 @@ export default class BattleHandler {
     }
 
     private static async ReplyNoBattle(messageInfo:IMessageInfo) {
-        MessageService.ReplyMessage(messageInfo, 'Er is geen gevecht gaande momenteel.', false);
+        MessageService.ReplyMessage(messageInfo, 'Er is geen monster om tegen te vechten.', false);
     }
 
     private static async SendBattleInfo(messageInfo:IMessageInfo) {
