@@ -48,43 +48,43 @@ export default class CharacterConstants {
 
     public static readonly CLASS_ATTACK_MESSAGES = {
         BARD: [
-            'Je speelt een liedje. Je bent alleen niet zo goed en doet je tegenstander pijn aan zijn oren. Je doet [damage] damage.',
+            'De stemt je muziekinstrument, schraapt je keel en begint te pingelen. Het monster irriteert zich er mateloos aan en neemt [damage] damage.',
         ],
         CLERIC: [
-            'Bla bla je doet schade enzo [damage].',
+            'De goden zijn met je vandaag. Je mompelt een spreuk en doet [damage] damage.',
         ],
         WIZARD: [
-            'Je doet een spreuk',
+            'Je kijkt het monster in de ogen aan en mompelt snel een spreuk. Oef, dat vond het monster niet prettig! De spreuk doet [damage] damage.',
         ],
         PALADIN: [
-            'Je slaat met je zwaard.',
+            'Voordat je je wapen boven je hoofd tilt zeg je nog snel een schietgebedje en je haalt uit. Het schietgebedje heeft geholpen, want je raakt het monster voor [damage] damage.',
         ],
         FIGHTER: [
-            'Je slaat met je twee zwaarden.'
+            'Met een soepele beweging haal je uit met je zwaard. Dit raakt het monster voor [damage] damage.'
         ],
         RANGER: [
-            'Je schiet een pijl',
+            'Een wasbeer met een arendsoog. Je spant de boog en schiet je pijl op het monster af. De pijl raakt het monster voor [damage] damage.',
         ]
     }
 
     public static readonly CLASS_ATTACK_CRIT_MESSAGES = {
         BARD: [
-            'Bard Crit',
+            '‘Anyway here’s Wonderwall’ zeg je terwijl je je instrument erbij pakt. Je begint KEIHARD te spelen. Het monster schrikt zich een ongeluk. Bloed gutst uit de oren van het schepsel en je doet [damage] damage.',
         ],
         CLERIC: [
-            'cleric crit',
+            'Je merkt het meteen, de divine energy stroomt met flinke snelheid door je aderen! Je voelt dat je krachten verdubbeld zijn. Je schreeuwt de heilige woorden en je haalt uit met [damage] damage.',
         ],
         WIZARD: [
-            'Wizard spreuk crit',
+            'Je hebt van te voren goed je spellbook gelezen en je herinnert je opeens een enorm krachtige spreuk! Je pakt met beide handen je staf beet, richt op het monster en schreeuwt de magische woorden naar hem! De spreuk komt hard aan en doet [damage] damage.',
         ],
         PALADIN: [
-            'Paladin crit',
+            'Je slaat met je wapen op je schild om het monster te intimideren. Je voelt aan alles, je bent gezegend en nu is het moment om te strijden. Met een mokerslag haal je uit naar het monster en je doet [damage] damage!',
         ],
         FIGHTER: [
-            'Fighter crit'
+            'Je sprint als een bezetene op het monster af. Deze heeft je te laat door en je ziet de verbazing in de ogen wanneer je het monster een kopstoot geeft. Terwijl het monster verdwaasd kijkt hef je je zwaard en haalt met volle kracht uit. Je doet [damage] damage.'
         ],
         RANGER: [
-            'Ranger crit',
+            'Je ziet dat het monster op je af wilt komen en terwijl je ziet dat deze aanstalte maakt, gaat voor jou alles in slow motion te werken. In een fractie van een seconde heb je je boog al gespannen staan en op het monster gericht. Met een vlotte beweging zoeft de pijl met een flinke snelheid op het monster af en doorboord deze voor [damage] damage!',
         ]
     }
 }
