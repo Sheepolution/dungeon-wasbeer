@@ -103,7 +103,7 @@ export default class CharacterEmbeds {
         const equipment = character.GetEquipment();
         const embed = new MessageEmbed()
             .setColor(SettingsConstants.COLORS.DEFAULT)
-            .setTitle(`De equipment van Sheepolution (${equipment.length}/${character.GetTotalEquipmentSpace()})`);
+            .setTitle(`De equipment van ${character.GetName()} (${equipment.length}/${character.GetTotalEquipmentSpace()})`);
         this.AddEquipmentToEmbed(embed, equipment);
         return embed;
     }
