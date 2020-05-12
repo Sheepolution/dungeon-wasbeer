@@ -48,7 +48,7 @@ export default class CharacterConstants {
 
     public static readonly CLASS_ATTACK_MESSAGES = {
         BARD: [
-            'De stemt je muziekinstrument, schraapt je keel en begint te pingelen. Het monster irriteert zich er mateloos aan en neemt [damage] damage.',
+            'Je stemt je muziekinstrument, schraapt je keel en begint te pingelen. Het monster irriteert zich er mateloos aan en neemt [damage] damage.',
         ],
         CLERIC: [
             'De goden zijn met je vandaag. Je mompelt een spreuk en doet [damage] damage.',
