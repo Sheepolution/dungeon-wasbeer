@@ -367,7 +367,7 @@ export default class Character {
     }
 
     public HasEquipmentSpace() {
-        return this.equipment.length < 3;
+        return this.equipment.length < this.GetTotalEquipmentSpace();
     }
 
     public async Equip(playerCard:PlayerCard) {
