@@ -57,7 +57,7 @@ export default class BattleHandler {
 
         if (cooldown > 0) {
             const minutes = Utils.GetSecondsInMinutes(cooldown);
-            MessageService.ReplyMessage(messageInfo, `Je hebt nog ${minutes + (minutes == 1 ? ' minuut' : ' minuten')} cooldown voordat je weer mag aanvallen.`);
+            MessageService.ReplyMessage(messageInfo, `Je hebt nog ${Utils.GetSecondsInMinutesAndSeconds(cooldown)} cooldown voordat je weer mag aanvallen.`);
             return;
         }
 
