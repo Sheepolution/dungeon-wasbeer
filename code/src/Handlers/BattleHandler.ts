@@ -133,12 +133,12 @@ export default class BattleHandler {
 
     private static async OnCharacterCrit(messageInfo:IMessageInfo, message:Message, battle:Battle, character:Character, roll1:number, roll2:number = 0, roll3:number = 0) {
         const damage = await this.ResolveAttackResult(messageInfo, message, battle, character, true, character.GetAttackStrength(true), roll1, roll2, roll3, 0);
-        this.UpdateBattleEmbed(message, battle, character, roll1, roll2, roll3, undefined, true, damage, true);
+        this.UpdateBattleEmbed(message, battle, character, roll1, roll2, roll3, 0, true, damage, true);
     }
 
     private static async OnMonsterCrit(messageInfo:IMessageInfo, message:Message, battle:Battle, character:Character, roll1:number, roll2:number = 0, roll3:number = 0) {
         const damage = await this.ResolveAttackResult(messageInfo, message, battle, character, false, battle.GetMonsterAttackStrength(true), roll1, roll2, roll3, 0);
-        this.UpdateBattleEmbed(message, battle, character, roll1, roll2, roll3, undefined, false, damage, true);
+        this.UpdateBattleEmbed(message, battle, character, roll1, roll2, roll3, 0, false, damage, true);
     }
 
     private static async ResolveAttackResult(messageInfo:IMessageInfo, message:Message, battle:Battle, character:Character, playerWon:boolean, damage:number, roll1:number, roll2:number, roll3:number, roll4:number) {
