@@ -239,7 +239,7 @@ export default class Character {
 
     public async BecomeInspired() {
         this.inspired = true;
-        this.CalculateFullModifierStats();
+        this.UpdateFullModifierStats();
         await this.UPDATE({
             inspired: true
         })
@@ -247,7 +247,7 @@ export default class Character {
 
     public async StopBeingInspired() {
         this.inspired = false;
-        this.CalculateFullModifierStats();
+        this.UpdateFullModifierStats();
         await this.UPDATE({
             inspired: false
         })
