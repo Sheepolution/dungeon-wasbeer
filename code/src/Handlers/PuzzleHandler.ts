@@ -9,6 +9,7 @@ import Puzzle from '../Objects/Puzzle';
 import { LogType } from '../Enums/LogType';
 import Character from '../Objects/Character';
 import PlayerManager from '../Managers/PlayerManager';
+import PuzzleService from '../Services/PuzzleService';
 
 export default class PuzzleHandler {
 
@@ -60,7 +61,7 @@ export default class PuzzleHandler {
 
     private static async OnSolvingPuzzle(messageInfo:IMessageInfo, puzzle:Puzzle, character:Character) {
         await puzzle.Solve(character);
-        await MessageService.ReplyMessage(messageInfo, 'De oude vrouw kijkt naar je antwoord. "Alle drakenschubben nog aan toe zeg! Je hebt het goed!"', true, true, PuzzleEmbeds.GetPuzzleSolvedEmbed(puzzle));
+        await MessageService.ReplyMessage(messageInfo, PuzzleService.GetPuzzleOutro(puzzle), true, true, PuzzleEmbeds.GetPuzzleSolvedEmbed(puzzle));
         await Utils.Sleep(2)
         await CampaignManager.OnCompletingSession()
         Log.STATIC_POST(character.GetPlayer(), puzzle.GetId(), LogType.PuzzleSolved, `${character.GetPlayer().GetDiscordName()} lost een puzzel op.`);

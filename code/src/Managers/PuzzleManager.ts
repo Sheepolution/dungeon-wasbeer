@@ -6,7 +6,7 @@ export default class PuzzleManager {
     public static async GetRandomPuzzle() {
         const puzzle = new Puzzle();
         const sudoku = PuzzleService.GetPuzzleAndSolution();
-        await puzzle.POST(sudoku.puzzle, sudoku.solution);
+        await puzzle.POST(sudoku.puzzle, sudoku.solution, PuzzleService.GetRandomPuzzleType());
         return puzzle;
     }
 }

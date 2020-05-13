@@ -19,8 +19,8 @@ export default class Puzzle {
         await this.ApplyModel(model);
     }
 
-    public async POST(content:string, solution:string) {
-        const model = await PuzzleModel.New(content, solution, PuzzleType.Sudoku);
+    public async POST(content:string, solution:string, puzzleType:PuzzleType) {
+        const model = await PuzzleModel.New(content, solution, puzzleType);
         await this.ApplyModel(model);
         return this;
     }

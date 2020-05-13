@@ -15,6 +15,7 @@ import Puzzle from '../Objects/Puzzle';
 import PuzzleEmbeds from '../Embeds/PuzzleEmbeds';
 import { Utils } from '../Utils/Utils';
 import ConfigurationManager from './ConfigurationManager';
+import PuzzleService from '../Services/PuzzleService';
 const { transaction } = require('objection');
 
 export default class CampaignManager {
@@ -35,13 +36,11 @@ export default class CampaignManager {
         var campaign = new Campaign();
 
         if (lastSessionType == SessionType.Battle) {
-            if (Utils.Chance(35)) {
-                const puzzle = await PuzzleManager.GetRandomPuzzle();
-                await campaign.POST(SessionType.Puzzle, puzzle.GetId());
-                this.campaignObject = campaign;
-                CampaignManager.SendNewPuzzleMessage(puzzle);
-                return;
-            }
+            const puzzle = await PuzzleManager.GetRandomPuzzle();
+            await campaign.POST(SessionType.Puzzle, puzzle.GetId());
+            this.campaignObject = campaign;
+            CampaignManager.SendNewPuzzleMessage(puzzle);
+            return;
         }
 
         const battle = new Battle();
@@ -78,7 +77,7 @@ export default class CampaignManager {
     }
 
     public static async SendNewPuzzleMessage(puzzle:Puzzle) {
-        MessageService.SendMessageToDNDChannel('Jullie komen aan in een dorp. Daar zien jullie een oud vrouwtje. "Gegroet", zegt ze. "Als jullie door dit dorp willen zul je eerst deze puzzel moeten oplossen."', PuzzleEmbeds.GetSudokuEmbed(puzzle));
+        MessageService.SendMessageToDNDChannel(PuzzleService.GetPuzzleIntro(puzzle), PuzzleEmbeds.GetSudokuEmbed(puzzle));
     }
 
     public static async SendNewBattleMessage(monster:Monster) {

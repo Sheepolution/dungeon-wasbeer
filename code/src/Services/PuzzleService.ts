@@ -1,4 +1,7 @@
 import Sudoku from '../Providers/Sudoku';
+import Puzzle from '../Objects/Puzzle';
+import { PuzzleType } from '../Enums/PuzzleType';
+import PuzzleConstants from '../Constants/PuzzleConstants';
 
 export default class PuzzleService {
 
@@ -40,5 +43,34 @@ export default class PuzzleService {
         puzzleAndSolution.solution = solutionString;
 
         return puzzleAndSolution;
+    }
+
+    public static GetRandomPuzzleType() {
+        return [PuzzleType.Gate, PuzzleType.Merchant, PuzzleType.Tavern, PuzzleType.Village].randomChoice();
+    }
+
+    public static GetPuzzleIntro(puzzle:Puzzle) {
+        return this.GetPuzzleDescriptionsByType(puzzle.GetPuzzleType()).INTRO;
+    }
+
+    public static GetPuzzleOutro(puzzle:Puzzle) {
+        return this.GetPuzzleDescriptionsByType(puzzle.GetPuzzleType()).OUTRO;
+    }
+
+    public static GetPuzzleImage(puzzle:Puzzle) {
+        return this.GetPuzzleDescriptionsByType(puzzle.GetPuzzleType()).IMAGE;
+    }
+
+    private static GetPuzzleDescriptionsByType(puzzleType:PuzzleType) {
+        switch (puzzleType) {
+            case PuzzleType.Gate:
+                return PuzzleConstants.DESCRIPTIONS.GATE;
+            case PuzzleType.Merchant:
+                return PuzzleConstants.DESCRIPTIONS.MERCHANT;
+            case PuzzleType.Tavern:
+                return PuzzleConstants.DESCRIPTIONS.TAVERN;
+            case PuzzleType.Village:
+                return PuzzleConstants.DESCRIPTIONS.VILLAGE;
+        }
     }
 }
