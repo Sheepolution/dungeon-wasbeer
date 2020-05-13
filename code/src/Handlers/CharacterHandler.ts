@@ -118,8 +118,10 @@ export default class CharacterHandler {
             return;
         }
 
-        if (playerCard.GetCard().GetModifierClass() != character.GetClass()) {
-            MessageService.ReplyMessage(messageInfo, `Deze kaart is specifiek voor de class ${playerCard.GetCard().GetModifierClass()} en jouw class is ${character.GetClass()}.`, false);
+        const card = playerCard.GetCard();
+        const modifierClass = card.GetModifierClass();
+        if (modifierClass != null && modifierClass != character.GetClass()) {
+            MessageService.ReplyMessage(messageInfo, `Deze kaart is specifiek voor de class ${modifierClass} en jouw class is ${character.GetClass()}.`, false);
             return;
         }
 
@@ -128,9 +130,9 @@ export default class CharacterHandler {
             return;
         }
 
-        const realCardName = playerCard.GetCard().GetName();
+        const realCardName = card.GetName();
 
-        if (!playerCard.GetCard().HasBuffs()) {
+        if (!card.HasBuffs()) {
             MessageService.ReplyMessage(messageInfo, `Je equipment is alleen voor kaarten met buffs. De kaart '${realCardName}' heeft geen buffs.`, false);
             return;
         }
