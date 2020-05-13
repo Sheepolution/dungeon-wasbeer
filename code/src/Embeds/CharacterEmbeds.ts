@@ -185,7 +185,7 @@ export default class CharacterEmbeds {
             if (healing == 0) {
                 embed.addField(`${characterName} faalt met healen!`, 'Je healt per ongeluk een steen. Er gebeurt weinig.');
             } else {
-                embed.addField(`${characterName} slaagt er in te healen`, `${characterName} krijgt ${healing} health terug.`);
+                embed.addField(`${characterName} slaagt er in te healen`, `${receiverName} krijgt ${healing} health terug.`);
             }
         }
 
