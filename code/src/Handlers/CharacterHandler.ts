@@ -118,6 +118,11 @@ export default class CharacterHandler {
             return;
         }
 
+        if (playerCard.GetCard().GetModifierClass() != character.GetClass()) {
+            MessageService.ReplyMessage(messageInfo, `Deze kaart is specifiek voor de class ${playerCard.GetCard().GetModifierClass()} en jouw class is ${character.GetClass()}.`, false);
+            return;
+        }
+
         if (!character.HasEquipmentSpace()) {
             MessageService.ReplyMessage(messageInfo, 'Je equipment zit vol. Haal een kaart weg voordat je er weer een toevoegt.', false);
             return;

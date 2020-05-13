@@ -56,7 +56,6 @@ export default class BattleHandler {
         const cooldown = await character.GetBattleCooldown();
 
         if (cooldown > 0) {
-            const minutes = Utils.GetSecondsInMinutes(cooldown);
             MessageService.ReplyMessage(messageInfo, `Je hebt nog ${Utils.GetSecondsInMinutesAndSeconds(cooldown)} cooldown voordat je weer mag aanvallen.`);
             return;
         }
@@ -83,10 +82,10 @@ export default class BattleHandler {
         await Utils.Sleep(3);
         const roll1 = Utils.Dice(20);
         if (roll1 == 1) {
-            this.OnMonsterCrit(messageInfo, message, battle, character)
+            this.OnMonsterCrit(messageInfo, message, battle, character, roll1)
             return
         } else if (roll1 == 20) {
-            this.OnCharacterCrit(messageInfo, message, battle, character)
+            this.OnCharacterCrit(messageInfo, message, battle, character, roll1)
             return
         }
 
@@ -132,12 +131,12 @@ export default class BattleHandler {
         Log.STATIC_POST(character.GetPlayer(), attack.id, LogType.Attack, `${character.GetName()} heeft het monster '${battle.GetMonster().GetName()}' aangevallen en dit gevecht ${victory ? 'gewonnen' : 'verloren'}.`);
     }
 
-    private static async OnCharacterCrit(messageInfo:IMessageInfo, message:Message, battle:Battle, character:Character, roll1:number = 20, roll2:number = 0, roll3:number = 0) {
+    private static async OnCharacterCrit(messageInfo:IMessageInfo, message:Message, battle:Battle, character:Character, roll1:number, roll2:number = 0, roll3:number = 0) {
         const damage = await this.ResolveAttackResult(messageInfo, message, battle, character, true, character.GetAttackStrength(true), roll1, roll2, roll3, 0);
         this.UpdateBattleEmbed(message, battle, character, roll1, roll2, roll3, undefined, true, damage, true);
     }
 
-    private static async OnMonsterCrit(messageInfo:IMessageInfo, message:Message, battle:Battle, character:Character, roll1:number = 20, roll2:number = 0, roll3:number = 0) {
+    private static async OnMonsterCrit(messageInfo:IMessageInfo, message:Message, battle:Battle, character:Character, roll1:number, roll2:number = 0, roll3:number = 0) {
         const damage = await this.ResolveAttackResult(messageInfo, message, battle, character, false, battle.GetMonsterAttackStrength(true), roll1, roll2, roll3, 0);
         this.UpdateBattleEmbed(message, battle, character, roll1, roll2, roll3, undefined, false, damage, true);
     }
