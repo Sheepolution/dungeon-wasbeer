@@ -44,20 +44,35 @@ export default class BattleEmbeds {
             .addField('--------------------------------', '-- Rolls --');
 
         if (roll1 != null && roll2 != null) {
-            var message = `D20 = ${roll1}`;
+            var message;
+
+            if (roll1 > 0) {
+                message = `D20 = ${roll1}`;
+            }
+
             if (characterAttack > 1) {
                 message += `\nD${characterAttack} = ${roll2}`;
             }
 
             embed.addField(`${characterName}`, message += `\nTotaal = ${roll1 + roll2}`, true);
+
             if (roll3 != null && roll4 != null) {
-                var message = `D20 = ${roll3}`;
-                if (monsterAttack > 1) {
+                message = '';
+                if (roll3 > 0) {
+                    message = `D20 = ${roll3}`;
+                }
+
+                if (monsterAttack > 1 && roll4 > 0) {
                     message += `\nD${monsterAttack} = ${roll4}`;
                 }
-                embed.addField(`${monsterName}`, message + `\nTotaal = ${roll3 + roll4}`, true);
+
+                if (message.length > 0) {
+                    embed.addField(`${monsterName}`, message + `\nTotaal = ${roll3 + roll4}`, true);
+                } else {
+                    embed.addField(`${monsterName}`, 'Geen rolls.', true);
+                }
             } else if (roll3 != null) {
-                var message = `D20 = ${roll3}`;
+                message = `D20 = ${roll3}`;
                 if (monsterAttack > 1) {
                     message += `\nRolt de D${monsterAttack}...`;
                 }
@@ -66,7 +81,7 @@ export default class BattleEmbeds {
                 embed.addField(`${monsterName}`, 'Rolt de D20...', true);
             }
         } else if (roll1 != null) {
-            var message = `D20 = ${roll1}`;
+            message = `D20 = ${roll1}`;
             if (characterAttack > 1) {
                 message += `\nRolt de D${characterAttack}...`;
             }
