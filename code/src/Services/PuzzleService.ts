@@ -8,8 +8,9 @@ export default class PuzzleService {
     public static GetPuzzleAndSolution() {
         const puzzleAndSolution:any = {};
 
-        const puzzle = Sudoku.GetPuzzle();
-        const solution = Sudoku.GetPuzzleSolution(puzzle);
+        const sudoku = Sudoku.GetSudokuStrings();
+        const puzzle = sudoku[0].split('');
+        const solution = sudoku[1].split('');
 
         var puzzleString = '+-----+-----+-----+\n';
         var solutionString = puzzleString;
