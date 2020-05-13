@@ -61,6 +61,10 @@ export default class PuzzleService {
         return this.GetPuzzleDescriptionsByType(puzzle.GetPuzzleType()).IMAGE;
     }
 
+    public static GetPuzzleWrong(puzzle:Puzzle) {
+        return this.GetPuzzleDescriptionsByType(puzzle.GetPuzzleType()).WRONG;
+    }
+
     private static GetPuzzleDescriptionsByType(puzzleType:PuzzleType) {
         switch (puzzleType) {
             case PuzzleType.Gate:

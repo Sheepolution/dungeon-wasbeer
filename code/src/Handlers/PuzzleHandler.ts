@@ -55,7 +55,7 @@ export default class PuzzleHandler {
             return;
         }
 
-        MessageService.ReplyMessage(messageInfo, 'De oude vrouw kijkt naar je antwoord. "Een mooie poging maar helaas, daar klopt helemaal niks van!"', false, true);
+        MessageService.ReplyMessage(messageInfo, PuzzleService.GetPuzzleWrong(puzzle), false, true);
         Log.STATIC_POST(player, puzzle.GetId(), LogType.PuzzleWrong, `${player.GetDiscordName()} geeft het foute antwoord op een puzzel.`);
     }
 
