@@ -106,7 +106,7 @@ export default class CampaignManager {
         }
         await this.campaignObject.CompleteSession();
         await Utils.Sleep(3);
-        await this.StartNewSession();
+        await this.StartNewSession(battle != null ? SessionType.Battle : SessionType.Puzzle);
     }
 
     private static async GiveXPToBattlers(battle:Battle) {
