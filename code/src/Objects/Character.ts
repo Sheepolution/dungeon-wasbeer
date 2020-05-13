@@ -113,7 +113,7 @@ export default class Character {
     }
 
     public IsFullHealth() {
-        return this.currentHealth == this.maxHealth;
+        return this.currentHealth >= this.maxHealth;
     }
 
     public GetArmor() {
