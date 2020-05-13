@@ -2,6 +2,7 @@ import Battle from './Battle';
 import CampaignModel from './CampaignModel';
 import { SessionType } from '../Enums/SessionType';
 import Puzzle from './Puzzle';
+import { Utils } from '../Utils/Utils';
 
 export default class Campaign {
 
@@ -71,7 +72,8 @@ export default class Campaign {
 
     public async CompleteSession() {
         await this.UPDATE({
-            active: false
+            active: false,
+            end_date: Utils.GetNowString(),
         })
     }
 

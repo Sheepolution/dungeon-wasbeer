@@ -1,5 +1,6 @@
 import Monster from './Monster';
 import BattleModel from '../Models/BattleModel';
+import { Utils } from '../Utils/Utils';
 
 export default class Battle {
 
@@ -84,8 +85,9 @@ export default class Battle {
     }
 
     public async Complete() {
-        this.UPDATE({
-            active: false
+        await this.UPDATE({
+            active: false,
+            end_date: Utils.GetNowString(),
         })
     }
 }
