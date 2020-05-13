@@ -50,7 +50,7 @@ export default class BattleEmbeds {
                 message = `D20 = ${roll1}`;
             }
 
-            if (characterAttack > 1) {
+            if (characterAttack > 1 && roll2 > 0) {
                 message += `\nD${characterAttack} = ${roll2}`;
             }
 
