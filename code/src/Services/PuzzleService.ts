@@ -16,8 +16,8 @@ export default class PuzzleService {
         var solutionString = puzzleString;
 
         for (let i = 0; i < puzzle.length; i++) {
-            const n = puzzle[i] ? puzzle[i] + 1 : '.';
-            const ns = solution[i] + 1;
+            const n = puzzle[i] == '0' ? '.' : puzzle[i];
+            const ns = solution[i];
 
             if (i > 0 && i % 27 == 0) {
                 puzzleString += '|\n+-----+-----+-----+\n|';
