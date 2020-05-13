@@ -296,10 +296,10 @@ export default class Character {
     public async IncreaseXP(amount:number, trx?:any, updateData:boolean = true) {
         this.xp += amount;
         if (!updateData) {
-            this.UPDATE({ xp: this.xp }, trx)
+            await this.UPDATE({ xp: this.xp }, trx)
         }
 
-        this.CheckLevelUp(trx);
+        await this.CheckLevelUp(trx);
     }
 
     public async IncreaseXPFromMessage() {
