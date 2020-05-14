@@ -255,7 +255,7 @@ export default class Character {
     }
 
     public IsInspired() {
-        return this.IsInspired;
+        return this.inspired;
     }
 
     public GetMaxInspiringCooldown() {
