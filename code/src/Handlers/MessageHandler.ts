@@ -37,7 +37,7 @@ export default class MessageHandler {
         const content = messageInfo.message?.content;
         if (content) {
             const contentLower = content.toLowerCase();
-            if ((contentLower.includes('kaart') || contentLower.includes('kaard') || contentLower.includes('card')) && content.length <= 20) {
+            if ((contentLower.startsWith('kaart') || contentLower.includes(' kaart ')) && content.length <= 20) {
                 this.OnBegging(messageInfo, player);
                 return;
             }
