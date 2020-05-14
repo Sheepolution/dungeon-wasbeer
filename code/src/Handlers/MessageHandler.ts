@@ -80,7 +80,7 @@ export default class MessageHandler {
             const playerCard = playerCards.randomChoice();
             playerCard.RemoveOne();
             messageInfo.channel = BotManager.GetCardChannel();
-            MessageService.SendMessageToCardChannel('Zij die bedelen worden gestraft. Deze kaart pak ik gewoon weer van je af. Dat zal je leren!', CardEmbeds.GetCardEmbed(playerCard.GetCard()));
+            MessageService.ReplyMessage(messageInfo, 'Zij die bedelen worden gestraft. Deze kaart pak ik gewoon weer van je af. Dat zal je leren!', false, true, CardEmbeds.GetCardEmbed(playerCard.GetCard()));
             Log.STATIC_POST(player, playerCard.GetCardId(), LogType.CardTaken, `${player.GetDiscordName()} heeft gebedeld met het bericht '${messageInfo.message?.content}' en waardoor de kaart '${playerCard.GetCard().GetName()}' is afgepakt.`);
         }
     }
