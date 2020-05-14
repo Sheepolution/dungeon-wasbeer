@@ -273,6 +273,11 @@ export default class CharacterHandler {
 
         const selfInspire = receiver == character;
 
+        if (receiver.IsInspired()) {
+            MessageService.ReplyMessage(messageInfo, `${selfInspire ? 'Je bent ' : 'Deze persoon is '}al geïnspireerd.`, false);
+            return;
+        }
+
         await receiver.BecomeInspired();
         await character.SetInspireCooldown();
         await MessageService.ReplyMessage(messageInfo, `Je speelt prachtige muziek en inspireert ${selfInspire ? 'jezelf' : receiver.GetName()}. Al ${selfInspire ? 'je' : 'hun'} stats krijgen een +1 boost tot ${selfInspire ? 'je' : 'hun'} volgende gevecht.`, true);
