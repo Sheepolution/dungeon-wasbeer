@@ -86,6 +86,7 @@ export default class Character {
         this.deathDate = model.death_date ? new Date(model.death_date) : undefined;
         this.inspired = model.inspired;
         this.isSorcerer = this.classType == ClassType.Bard || this.classType == ClassType.Cleric || this.classType == ClassType.Wizard;
+        this.CheckLevelUp()
     }
 
     public GetId() {
@@ -315,13 +316,7 @@ export default class Character {
 
         const oldLevel = this.level;
 
-        while (this.level < 20) {
-            if (this.xp >= CharacterConstants.XP_PER_LEVEL[this.level]) {
-                this.level += 1;
-            } else {
-                break;
-            }
-        }
+        this.level = this.CalculateLevel(oldLevel);
 
         if (this.level != oldLevel) {
             await this.OnLevelUp(trx)
@@ -434,6 +429,17 @@ export default class Character {
 
     private CalculateFullModifierStats() {
         return CharacterService.GetSummedUpModifierStats(this.classModifierStats, this.cardModifierStats)
+    }
+
+    private CalculateLevel(level:number = 1) {
+        while (level < 20) {
+            if (this.xp >= CharacterConstants.XP_PER_LEVEL[level]) {
+                level += 1;
+            } else {
+                break;
+            }
+        }
+        return level;
     }
 
     private UpdateFullModifierStats() {
