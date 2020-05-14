@@ -97,10 +97,12 @@ export default class TradeHandler {
 
         if (!yourCard.CanBeTraded()) {
             MessageService.ReplyMessage(messageInfo, `Jouw kaart '${yourCard.GetCard().GetName()}' zit in je equipment en dus je kan deze niet ruilen.`, false);
+            return;
         }
 
         if (!theirCard.CanBeTraded()) {
             MessageService.ReplyMessage(messageInfo, `De kaart van ${otherPlayer.GetDiscordName()}, '${yourCard.GetCard().GetName()}', zit in hun equipment en dus kunnen ze deze niet ruilen.`, false);
+            return;
         }
 
         this.StartTrade(messageInfo, player, otherPlayer, yourCard, theirCard);
