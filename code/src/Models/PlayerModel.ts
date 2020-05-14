@@ -43,7 +43,7 @@ export default class PlayerModel extends Model {
                 gold: 0,
                 message_points: 0,
                 discord_name: discordDisplayName,
-                character: null
+                character_id: null
             })
 
         return player;

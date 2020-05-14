@@ -5,6 +5,11 @@ import { Utils } from '../Utils/Utils';
 import MessageService from '../Services/MessageService';
 import { ClassType } from '../Enums/ClassType';
 import Character from '../Objects/Character';
+import PlayerCard from '../Objects/PlayerCard';
+import BotManager from './BotManager';
+import CardEmbeds from '../Embeds/CardEmbeds';
+import { LogType } from '../Enums/LogType';
+import Log from '../Objects/Log';
 
 export default class PlayerManager {
 
@@ -18,7 +23,13 @@ export default class PlayerManager {
             player = await this.CreateNewPlayer(messageInfo);
 
             // New player, give them their first card.
-            await CardManager.GivePlayerCard(messageInfo, player);
+            const cardModifyResult = await CardManager.GivePlayerCard(messageInfo, player);
+            const playerCard = <PlayerCard>cardModifyResult.object;
+            messageInfo.channel = BotManager.GetCardChannel();
+            if (cardModifyResult.result) {
+                MessageService.ReplyMessage(messageInfo, 'Je hebt een nieuwe kaart!', undefined, true, CardEmbeds.GetCardEmbed(playerCard.GetCard(), playerCard.GetAmount()));
+                Log.STATIC_POST(player, playerCard.GetCardId(), LogType.CardReceived, `${player.GetDiscordName()} heeft de kaart '${playerCard.GetCard().GetName()}' gekregen.`);
+            }
         }
         return player;
     }
