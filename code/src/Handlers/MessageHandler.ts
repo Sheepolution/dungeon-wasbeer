@@ -75,7 +75,7 @@ export default class MessageHandler {
             return;
         }
 
-        const unequipedCards = playerCards.filter(c => !c.IsEquipped());
+        const unequipedCards = playerCards.filter(c => !c.IsEquipped() && !c.IsUsedInTrade());
         if (unequipedCards.length > 0) {
             const playerCard = playerCards.randomChoice();
             playerCard.RemoveOne();
