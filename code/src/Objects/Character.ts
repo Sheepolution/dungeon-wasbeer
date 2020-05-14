@@ -78,15 +78,11 @@ export default class Character {
         this.name = model.name;
         this.equipment = this.player.GetCards().filter(pc => pc.IsEquipped()).map(c => c.GetCard());
         this.inspired = model.inspired;
-        this.classModifierStats = CharacterService.GetClassModifierStats(this.classType);
-        this.cardModifierStats = this.CalculateCardModifierStats();
-        this.fullModifierStats = this.CalculateFullModifierStats();
-        this.currentHealth = model.health;
-        this.maxHealth = this.CalculateMaxHealth()
         this.bornDate = new Date(model.born_date);
         this.deathDate = model.death_date ? new Date(model.death_date) : undefined;
         this.isSorcerer = this.classType == ClassType.Bard || this.classType == ClassType.Cleric || this.classType == ClassType.Wizard;
-        this.CheckLevelUp()
+        await this.CheckLevelUp()
+        this.UpdateFullModifierStats();
     }
 
     public GetId() {
