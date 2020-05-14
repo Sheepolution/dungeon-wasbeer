@@ -146,6 +146,7 @@ export default class BattleHandler {
             const receivedDamage = await battle.DealDamageToMonster(damage);
             await this.SaveAttack(battle, character, message.id, roll1, roll2, character.GetAttackRoll(), roll3, roll4, battle.GetMonsterAttackRoll(), true, receivedDamage, battle.GetCurrentMonsterHealth());
             character.SetInBattle(false);
+            character.StopBeingInspired();
             if (battle.IsMonsterDead()) {
                 BattleHandler.inBattle = false;
                 await this.OnDefeatingMonster(battle);
@@ -163,6 +164,7 @@ export default class BattleHandler {
             if (character.IsDead()) {
                 await this.OnDefeatingCharacter(messageInfo, character);
             } else {
+                character.StopBeingInspired();
                 character.SetInBattle(false);
             }
             if (this.waitList.length == 0) {
