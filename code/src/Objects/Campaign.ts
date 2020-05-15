@@ -76,5 +76,4 @@ export default class Campaign {
             end_date: Utils.GetNowString(),
         })
     }
-
 }
