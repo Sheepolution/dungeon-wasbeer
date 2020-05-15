@@ -12,7 +12,7 @@ export default class CharacterEmbeds {
     public static async GetCharacterInfoEmbed(character:Character) {
         const embed = new MessageEmbed()
             .setColor(SettingsConstants.COLORS.DEFAULT)
-            .setTitle(`${character.GetName()}`)
+            .setTitle(`${character.GetName()}${(character.IsInspired() ? ' ✨' : '')}`)
             .setImage(CharacterService.GetClassImage(character.GetClass()))
             .addField('XP', `${character.GetXP()}/${character.GetXPForNextLevel()}`, true)
             .addField('Level', `${character.GetLevel()}`, true);
@@ -71,48 +71,11 @@ export default class CharacterEmbeds {
         return embed;
     }
 
-    public static GetModifierStatsEmbed(character:Character) {
-        const embed = new MessageEmbed()
-            .setColor(SettingsConstants.COLORS.DEFAULT)
-            .setTitle(`De statistieken van ${character.GetName()}`)
-            .addField('Health', `${character.GetCurrentHealth()}/${character.GetMaxHealth()}`, true)
-            .addField('XP', `${character.GetXP()}`, true)
-            .addField('Level', `${character.GetLevel()}`, true);
-
-        const modifiers = character.GetFullModifierStats();
-
-        if (modifiers.charisma != null) {
-            embed.addField('Armor', `+${modifiers.armor}`, true);
-        }
-
-        if (modifiers.dexterity != null) {
-            embed.addField('Dexterity', `+${modifiers.dexterity}`, true);
-        }
-
-        if (modifiers.healing != null) {
-            embed.addField('Healing', `+${modifiers.healing}`, true);
-        }
-
-        if (modifiers.regeneration != null) {
-            embed.addField('Regeneration', `+${modifiers.regeneration}`, true);
-        }
-
-        if (modifiers.strength != null) {
-            embed.addField('Strength', `+${modifiers.strength}`, true);
-        }
-
-        if (modifiers.spell != null) {
-            embed.addField('Spell attack', `+${modifiers.spell}`, true);
-        }
-
-        return embed;
-    }
-
     public static GetEquipmentEmbed(character:Character) {
         const equipment = character.GetEquipment();
         const embed = new MessageEmbed()
             .setColor(SettingsConstants.COLORS.DEFAULT)
-            .setTitle(`De equipment van ${character.GetName()} (${equipment.length}/${character.GetTotalEquipmentSpace()})`);
+            .setTitle(`De equipment van ${character.GetName()}${(character.IsInspired() ? ' ✨' : '')} (${equipment.length}/${character.GetTotalEquipmentSpace()})`);
         this.AddEquipmentToEmbed(embed, equipment);
         return embed;
     }
@@ -171,7 +134,7 @@ export default class CharacterEmbeds {
         const receiverName = receiver.GetName();
 
         embed.setTitle('Healing roll')
-            .setDescription(`${character.GetName()} rollt om ${receiver == character ? 'zichzelf' : receiver.GetName()} te healen.\n\n-- Statistieken --`)
+            .setDescription(`${character.GetName()}${(character.IsInspired() ? ' ✨' : '')} rollt om ${receiver == character ? 'zichzelf' : receiver.GetName()}${(character.IsInspired() ? ' ✨' : '')} te healen.\n\n-- Statistieken --`)
             .addField(`Health van ${receiverName}`, `${receiver.GetCurrentHealth()}/${receiver.GetMaxHealth()}`)
             .addField(`Healing van ${characterName}`, `${character.GetFullModifierStats().healing}`)
             .addField('--------------------------------', '-- Roll --');

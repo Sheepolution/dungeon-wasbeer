@@ -37,7 +37,7 @@ export default class BattleEmbeds {
             .setColor(SettingsConstants.COLORS.DEFAULT)
             .setAuthor('Aanval')
             .setThumbnail(monster.GetImageUrl())
-            .setTitle(`${characterName} VS ${monsterName}`)
+            .setTitle(`${characterName}${(character.IsInspired() ? ' ✨' : '')} VS ${monsterName}`)
             .setDescription('-- Statistieken --')
             .addField(`${characterName}`, `Health: ${character.GetCurrentHealth()}/${character.GetMaxHealth()}\n${character.GetAttackName()}: ${characterStrength}\nAttack: ${characterAttack}\nArmor: ${character.GetArmor()}`, true)
             .addField(`${monsterName}`, `Health: ${battle.GetCurrentMonsterHealth()}/${battle.GetMaxMonsterHealth()}\nStrength: ${monsterStrength}\nAttack: ${monsterAttack}`, true)
@@ -51,7 +51,7 @@ export default class BattleEmbeds {
             }
 
             if (characterAttack > 1 && roll2 > 0) {
-                message += `\nD${characterAttack} = ${roll2}`;
+                message += `\nD${Math.max(characterAttack, roll2)} = ${roll2}`;
             }
 
             embed.addField(`${characterName}`, message += `\nTotaal = ${roll1 + roll2}`, true);
