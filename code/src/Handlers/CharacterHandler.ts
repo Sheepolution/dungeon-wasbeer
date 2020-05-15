@@ -30,10 +30,8 @@ export default class CharacterHandler {
 
         switch (command) {
             case 'info':
-                this.SendCharacterInfo(messageInfo, player);
-                break;
             case 'stats':
-                this.SendModifierStats(messageInfo, player);
+                this.SendCharacterInfo(messageInfo, player);
                 break;
             case 'lijst':
             case 'kaarten':
@@ -361,14 +359,6 @@ export default class CharacterHandler {
             return;
         }
         MessageService.ReplyEmbed(messageInfo, await CharacterEmbeds.GetCharacterInfoEmbed(character));
-    }
-
-    private static async SendModifierStats(messageInfo:IMessageInfo, player:Player) {
-        const character = PlayerManager.GetCharacterFromPlayer(messageInfo, player);
-        if (character == null) {
-            return;
-        }
-        MessageService.ReplyEmbed(messageInfo, CharacterEmbeds.GetModifierStatsEmbed(character));
     }
 
     private static async SendCardList(messageInfo:IMessageInfo, player:Player) {
