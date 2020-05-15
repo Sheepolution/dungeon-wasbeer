@@ -76,6 +76,7 @@ export default class Character {
         this.xp = model.xp;
         this.level = model.level;
         this.name = model.name;
+        this.currentHealth = model.health;
         this.equipment = this.player.GetCards().filter(pc => pc.IsEquipped()).map(c => c.GetCard());
         this.inspired = model.inspired;
         this.bornDate = new Date(model.born_date);
