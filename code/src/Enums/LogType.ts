@@ -1,4 +1,5 @@
 export enum LogType {
+    NewPlayer = 'NewPlayer',
     SayMessage = 'SayMessage',
     CardReceived = 'CardReceived',
     CardTaken = 'CardTaken',

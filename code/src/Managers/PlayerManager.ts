@@ -113,6 +113,7 @@ export default class PlayerManager {
         const player = new Player();
         await player.POST(discordId, messageInfo.member.displayName);
         this.CachePlayer(discordId, player)
+        Log.STATIC_POST(player, player.GetId(), LogType.NewPlayer, `${player.GetDiscordName()} is een nieuwe speler.`);
         return player;
     }
 
