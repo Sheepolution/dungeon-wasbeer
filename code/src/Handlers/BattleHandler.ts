@@ -73,6 +73,7 @@ export default class BattleHandler {
             }
         }
 
+        const inspired = character.IsInspired();
         character.SetBattleCooldown();
         character.SetInBattle(true);
         BattleHandler.inBattle = true;
@@ -82,10 +83,10 @@ export default class BattleHandler {
         await Utils.Sleep(3);
         const roll1 = Utils.Dice(20);
         if (roll1 == 1) {
-            this.OnMonsterCrit(messageInfo, message, battle, character, roll1)
+            this.OnMonsterCrit(messageInfo, message, battle, character, roll1, undefined, undefined, inspired)
             return
         } else if (roll1 == 20) {
-            this.OnCharacterCrit(messageInfo, message, battle, character, roll1)
+            this.OnCharacterCrit(messageInfo, message, battle, character, roll1, undefined, undefined, inspired)
             return
         }
 
@@ -103,10 +104,10 @@ export default class BattleHandler {
         const roll3 = Utils.Dice(20);
 
         if (roll3 == 20) {
-            this.OnMonsterCrit(messageInfo, message, battle, character, roll1, roll2, roll3)
+            this.OnMonsterCrit(messageInfo, message, battle, character, roll1, roll2, roll3, inspired)
             return
         } else if (roll3 == 1) {
-            this.OnCharacterCrit(messageInfo, message, battle, character, roll1, roll2, roll3)
+            this.OnCharacterCrit(messageInfo, message, battle, character, roll1, roll2, roll3, inspired)
             return
         }
 
@@ -120,7 +121,7 @@ export default class BattleHandler {
 
         const playerWon = roll1 + (roll2 || 0) >= roll3 + (roll4 || 0);
         const damage = await this.ResolveAttackResult(messageInfo, message, battle, character, playerWon, playerWon ? character.GetAttackStrength(): battle.GetMonsterAttackStrength(), roll1, roll2 || 0, roll3, roll4 || 0);
-        await this.UpdateBattleEmbed(message, battle, character, roll1, roll2, roll3, roll4, playerWon, damage);
+        await this.UpdateBattleEmbed(message, battle, character, roll1, roll2, roll3, roll4, playerWon, damage, false, inspired);
         if (battle.IsMonsterDead()) {
             return;
         }
@@ -131,14 +132,14 @@ export default class BattleHandler {
         Log.STATIC_POST(character.GetPlayer(), attack.id, LogType.Attack, `${character.GetName()} heeft het monster '${battle.GetMonster().GetName()}' aangevallen en dit gevecht ${victory ? 'gewonnen' : 'verloren'}.`);
     }
 
-    private static async OnCharacterCrit(messageInfo:IMessageInfo, message:Message, battle:Battle, character:Character, roll1:number, roll2:number = 0, roll3:number = 0) {
+    private static async OnCharacterCrit(messageInfo:IMessageInfo, message:Message, battle:Battle, character:Character, roll1:number, roll2:number = 0, roll3:number = 0, inspired:boolean = false) {
         const damage = await this.ResolveAttackResult(messageInfo, message, battle, character, true, character.GetAttackStrength(true), roll1, roll2, roll3, 0);
-        this.UpdateBattleEmbed(message, battle, character, roll1, roll2, roll3, 0, true, damage, true);
+        this.UpdateBattleEmbed(message, battle, character, roll1, roll2, roll3, 0, true, damage, true, inspired);
     }
 
-    private static async OnMonsterCrit(messageInfo:IMessageInfo, message:Message, battle:Battle, character:Character, roll1:number, roll2:number = 0, roll3:number = 0) {
+    private static async OnMonsterCrit(messageInfo:IMessageInfo, message:Message, battle:Battle, character:Character, roll1:number, roll2:number = 0, roll3:number = 0, inspired:boolean = false) {
         const damage = await this.ResolveAttackResult(messageInfo, message, battle, character, false, battle.GetMonsterAttackStrength(true), roll1, roll2, roll3, 0);
-        this.UpdateBattleEmbed(message, battle, character, roll1, roll2, roll3, 0, false, damage, true);
+        this.UpdateBattleEmbed(message, battle, character, roll1, roll2, roll3, 0, false, damage, true, inspired);
     }
 
     private static async ResolveAttackResult(messageInfo:IMessageInfo, message:Message, battle:Battle, character:Character, playerWon:boolean, damage:number, roll1:number, roll2:number, roll3:number, roll4:number) {
@@ -223,7 +224,7 @@ export default class BattleHandler {
         return await MessageService.ReplyEmbed(messageInfo, await BattleEmbeds.GetBattleEmbed(battle, character));
     }
 
-    private static async UpdateBattleEmbed(message:Message, battle:Battle, character:Character, roll1?:number, roll2?:number, roll3?:number, roll4?:number, playerWon?:boolean, damage?:number, crit?:boolean) {
-        await message.edit('', await BattleEmbeds.GetBattleEmbed(battle, character, roll1, roll2, roll3, roll4, playerWon, damage, crit));
+    private static async UpdateBattleEmbed(message:Message, battle:Battle, character:Character, roll1?:number, roll2?:number, roll3?:number, roll4?:number, playerWon?:boolean, damage?:number, crit?:boolean, inspired?:boolean) {
+        await message.edit('', await BattleEmbeds.GetBattleEmbed(battle, character, roll1, roll2, roll3, roll4, playerWon, damage, crit, inspired));
     }
 }
