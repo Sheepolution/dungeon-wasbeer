@@ -196,7 +196,7 @@ export default class CharacterHandler {
         }
 
         if (character.IsInBattle()) {
-            MessageService.ReplyMessage(messageInfo, 'Je kan jezelf niet healen want je zit momenteel in een gevecht.', false);
+            MessageService.ReplyMessage(messageInfo, 'Je kan niet healen want je zit momenteel in een gevecht.', false);
             return;
         }
 
@@ -259,7 +259,7 @@ export default class CharacterHandler {
         }
 
         if (character.IsInBattle()) {
-            MessageService.ReplyMessage(messageInfo, 'Je kan jezelf niet inspireren want je zit momenteel in een gevecht.', false);
+            MessageService.ReplyMessage(messageInfo, 'Je kan niet inspireren want je zit momenteel in een gevecht.', false);
             return;
         }
 
