@@ -82,8 +82,8 @@ export default class Character {
         this.bornDate = new Date(model.born_date);
         this.deathDate = model.death_date ? new Date(model.death_date) : undefined;
         this.isSorcerer = this.classType == ClassType.Bard || this.classType == ClassType.Cleric || this.classType == ClassType.Wizard;
-        await this.CheckLevelUp()
         this.UpdateFullModifierStats();
+        await this.CheckLevelUp()
     }
 
     public GetId() {
