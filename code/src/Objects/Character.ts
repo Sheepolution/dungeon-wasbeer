@@ -198,7 +198,7 @@ export default class Character {
         }
     }
 
-    public GetInBattle() {
+    public IsInBattle() {
         return this.inBattle;
     }
 

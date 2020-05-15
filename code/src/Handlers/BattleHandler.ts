@@ -45,7 +45,7 @@ export default class BattleHandler {
         const character = PlayerManager.GetCharacterFromPlayer(messageInfo, player);
         if (character == null) { return; }
 
-        if (character.GetInBattle()) { return; }
+        if (character.IsInBattle()) { return; }
 
         const battle = CampaignManager.GetBattle();
         if (battle == null) {

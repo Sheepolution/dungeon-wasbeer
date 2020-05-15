@@ -195,6 +195,11 @@ export default class CharacterHandler {
             return;
         }
 
+        if (character.IsInBattle()) {
+            MessageService.ReplyMessage(messageInfo, 'Je kan jezelf niet healen want je zit momenteel in een gevecht.', false);
+            return;
+        }
+
         const cooldown = await character.GetHealingCooldown();
         if (cooldown > 0) {
             const minutes = Utils.GetSecondsInMinutes(cooldown);
@@ -220,6 +225,11 @@ export default class CharacterHandler {
 
         const selfHeal = receiver == character;
         const healthBefore = receiver.GetCurrentHealth();
+
+        if (receiver.IsInBattle()) {
+            MessageService.ReplyMessage(messageInfo, `Je kan ${receiver.GetName()} niet healen want die is momenteel in een gevecht.`, false);
+            return;
+        }
 
         if (receiver.IsFullHealth()) {
             MessageService.ReplyMessage(messageInfo, `${selfHeal ? 'Je bent' : receiver.GetName() + ' is'} al full health.`, false);
@@ -248,6 +258,11 @@ export default class CharacterHandler {
             return;
         }
 
+        if (character.IsInBattle()) {
+            MessageService.ReplyMessage(messageInfo, 'Je kan jezelf niet inspireren want je zit momenteel in een gevecht.', false);
+            return;
+        }
+
         const cooldown = await character.GetInspireCooldown();
         if (cooldown > 0) {
             const minutes = Utils.GetSecondsInMinutes(cooldown);
@@ -272,6 +287,11 @@ export default class CharacterHandler {
         }
 
         const selfInspire = receiver == character;
+
+        if (receiver.IsInBattle()) {
+            MessageService.ReplyMessage(messageInfo, `Je kan ${receiver.GetName()} niet inspireren want die is momenteel in een gevecht.`, false);
+            return;
+        }
 
         if (receiver.IsInspired()) {
             MessageService.ReplyMessage(messageInfo, `${selfInspire ? 'Je bent ' : 'Deze persoon is '}al geïnspireerd.`, false);
