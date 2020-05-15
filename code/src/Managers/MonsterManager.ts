@@ -56,4 +56,8 @@ export default class MonsterManager {
     public static GetRandomMonster() {
         return this.monsterList.randomChoice();
     }
+
+    public static GetNumberOfMonsters() {
+        return this.monsterList.length;
+    }
 }

@@ -57,7 +57,7 @@ export default class CampaignManager {
                 number = latestBattle.GetMonster().GetNumber()
             }
 
-            if (number == 60) {
+            if (number == MonsterManager.GetNumberOfMonsters()) {
                 await monsterInOrderConfig?.SetValue(false);
                 monster = MonsterManager.GetRandomMonster();
             } else {
