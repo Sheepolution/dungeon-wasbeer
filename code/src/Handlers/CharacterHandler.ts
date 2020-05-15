@@ -90,7 +90,7 @@ export default class CharacterHandler {
         const classType = (<any>ClassType)[className];
         const newCharacter = await player.CreateCharacter(classType);
         MessageService.ReplyMessage(messageInfo, 'Je character is aangemaakt!', undefined, true, CharacterEmbeds.GetNewCharacterEmbed(newCharacter));
-        Log.STATIC_POST(player, newCharacter.GetId(), LogType.CharacterCreated, `${player.GetDiscordName()} heeft een nieuw character aangemaakt.`);
+        Log.STATIC_POST(player, newCharacter.GetId(), LogType.CharacterCreated, `${player.GetDiscordName()} heeft een nieuw character aangemaakt van de class ${classType}.`);
     }
 
     private static async Equip(messageInfo:IMessageInfo, player:Player, cardName:string) {
