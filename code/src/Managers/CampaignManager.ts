@@ -118,7 +118,7 @@ export default class CampaignManager {
         }
 
         for (const row of healData) {
-            const xp = Math.min(Math.floor(battle.GetMaxMonsterHealth()/10), row.sum);
+            const xp = Math.min(Math.floor(battle.GetMaxMonsterHealth()/15), row.sum);
             if (data[row.character_id]) {
                 data[row.character_id] += xp;
             } else {
