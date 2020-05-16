@@ -195,7 +195,7 @@ export default class BattleHandler {
         await MessageService.SendMessageToDNDChannel('', await CharacterEmbeds.GetDeadCharacterEmbed(character));
         await Utils.Sleep(3);
         await MessageService.ReplyMessage(messageInfo, 'Je character is dood. Je kan opnieuw beginnen door een class te kiezen met het commando `;class`.');
-        LogService.Log(character.GetPlayer(), character.GetId(), LogType.CharacterDied, `De character van ${character.GetPlayer().GetDiscordName()} is overleden.`);
+        LogService.Log(character.GetPlayer(), character.GetId(), LogType.CharacterDied, `${character.GetName()} is overleden.`);
     }
 
     private static async ResolveWaitList() {

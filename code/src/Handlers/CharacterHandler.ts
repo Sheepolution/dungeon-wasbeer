@@ -299,14 +299,14 @@ export default class CharacterHandler {
         await character.SetInspireCooldown();
         await receiver.BecomeInspired();
         await MessageService.ReplyMessage(messageInfo, `Je speelt prachtige muziek en inspireert ${selfInspire ? 'jezelf' : receiver.GetName()} ✨. Al ${selfInspire ? 'je' : 'hun'} stats krijgen een +1 boost tot ${selfInspire ? 'je' : 'hun'} volgende gevecht.`, true);
-        LogService.Log(character.GetPlayer(), receiver.GetId(), LogType.Inspire, `De character van ${character.GetPlayer().GetDiscordName()} heeft ${character.GetId() == receiver.GetId() ? 'zichzelf' : `de character van ${receiver.GetPlayer().GetDiscordName()}`} geïnspireerd.`);
+        LogService.Log(character.GetPlayer(), receiver.GetId(), LogType.Inspire, `${character.GetName()} heeft ${character.GetId() == receiver.GetId() ? 'zichzelf' : `${receiver.GetName()}`} geïnspireerd.`);
     }
 
     private static async SaveHeal(character:Character, receiver:Character, receiverHealth:number, characterHealing:number, roll:number, finalHealing:number) {
         const battle = CampaignManager.GetBattle();
         if (battle == null) { return; }
         const heal = await Heal.STATIC_POST(battle, character, receiver, receiverHealth, characterHealing, roll, finalHealing);
-        LogService.Log(character.GetPlayer(), heal.id, LogType.Heal, `De character van ${character.GetPlayer().GetDiscordName()} heeft een heal gedaan op ${character.GetId() == receiver.GetId() ? 'zichzelf.' : `de character van ${receiver.GetPlayer().GetDiscordName()}.`}`);
+        LogService.Log(character.GetPlayer(), heal.id, LogType.Heal, `${character.GetName()} heeft een heal gedaan op ${character.GetId() == receiver.GetId() ? 'zichzelf.' : `${receiver.GetName()}.`}`);
     }
 
     private static async SendHealingEmbed(messageInfo:IMessageInfo, character:Character, receiver:Character) {
@@ -342,7 +342,7 @@ export default class CharacterHandler {
         await character.Stop()
 
         MessageService.ReplyMessage(messageInfo, 'Je character heeft de party verlaten.\nJe kan een nieuw character maken met `;class [class]`', true);
-        LogService.Log(character.GetPlayer(), character.GetId(), LogType.CharacterStop, `De character van ${character.GetPlayer().GetDiscordName()} is gestopt.`);
+        LogService.Log(character.GetPlayer(), character.GetId(), LogType.CharacterStop, `${character.GetName()} is gestopt.`);
     }
 
     private static async GetResetCharacterTimer(character:Character) {
