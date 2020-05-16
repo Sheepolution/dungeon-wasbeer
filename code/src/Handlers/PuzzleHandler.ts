@@ -4,12 +4,12 @@ import CampaignManager from '../Managers/CampaignManager';
 import MessageService from '../Services/MessageService';
 import PuzzleEmbeds from '../Embeds/PuzzleEmbeds';
 import { Utils } from '../Utils/Utils';
-import Log from '../Objects/Log';
 import Puzzle from '../Objects/Puzzle';
 import { LogType } from '../Enums/LogType';
 import Character from '../Objects/Character';
 import PlayerManager from '../Managers/PlayerManager';
 import PuzzleService from '../Services/PuzzleService';
+import LogService from '../Services/LogService';
 
 export default class PuzzleHandler {
 
@@ -56,7 +56,7 @@ export default class PuzzleHandler {
         }
 
         MessageService.ReplyMessage(messageInfo, PuzzleService.GetPuzzleWrong(puzzle), false, true);
-        Log.STATIC_POST(player, puzzle.GetId(), LogType.PuzzleWrong, `${player.GetDiscordName()} geeft het foute antwoord op een puzzel.`);
+        LogService.Log(player, puzzle.GetId(), LogType.PuzzleWrong, `${player.GetDiscordName()} geeft het foute antwoord op een puzzel.`);
     }
 
     private static async OnSolvingPuzzle(messageInfo:IMessageInfo, puzzle:Puzzle, character:Character) {
@@ -64,7 +64,7 @@ export default class PuzzleHandler {
         await MessageService.ReplyMessage(messageInfo, PuzzleService.GetPuzzleOutro(puzzle), true, true, PuzzleEmbeds.GetPuzzleSolvedEmbed(puzzle));
         await Utils.Sleep(2)
         await CampaignManager.OnCompletingSession()
-        Log.STATIC_POST(character.GetPlayer(), puzzle.GetId(), LogType.PuzzleSolved, `${character.GetPlayer().GetDiscordName()} lost een puzzel op.`);
+        LogService.Log(character.GetPlayer(), puzzle.GetId(), LogType.PuzzleSolved, `${character.GetPlayer().GetDiscordName()} lost een puzzel op.`);
     }
 
     private static async ReplyNoPuzzle(messageInfo:IMessageInfo) {

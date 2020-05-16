@@ -13,6 +13,7 @@ export default class SettingsConstants {
     public static readonly MAIN_GUILD_ID = process.env.MAIN_GUILD_ID || '';
     public static readonly CARD_CHANNEL_ID = process.env.CARD_CHANNEL_ID || '';
     public static readonly DND_CHANNEL_ID = process.env.DND_CHANNEL_ID || '';
+    public static readonly LOG_CHANNEL_ID = process.env.LOG_CHANNEL_ID || '';
 
     public static readonly MESSAGE_POINT_TIMEOUT_MINUTES = 15;
     public static readonly CHARACTER_POINT_TIMEOUT_MINUTES = 5;

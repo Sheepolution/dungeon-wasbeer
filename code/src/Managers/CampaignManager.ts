@@ -16,7 +16,7 @@ import PuzzleEmbeds from '../Embeds/PuzzleEmbeds';
 import { Utils } from '../Utils/Utils';
 import ConfigurationManager from './ConfigurationManager';
 import PuzzleService from '../Services/PuzzleService';
-import LogXP from '../Objects/LogXP';
+import LogService from '../Services/LogService';
 const { transaction } = require('objection');
 
 export default class CampaignManager {
@@ -135,19 +135,20 @@ export default class CampaignManager {
         }
 
         const characters = PlayerManager.GetAllCachedCharacters();
+        const battleId = battle.GetId();
         const nowString = Utils.GetNowString();
 
         await transaction(CharacterModel.knex(), async (trx:any) => {
             for (const characterId in data) {
                 await Character.INCREASE_XP(data[characterId], characterId, trx);
-                await LogXP.STATIC_POST(characterId, data[characterId], nowString, trx);
+                await LogService.LogXP(battleId, characterId, data[characterId], nowString, trx);
             }
 
             for (const character of characters) {
                 const xp = data[character.GetId()];
                 if (xp) {
                     await character.IncreaseXP(xp, trx);
-                    await LogXP.STATIC_POST(character.GetId(), xp, nowString, trx);
+                    await LogService.LogXP(battleId, character.GetId(), xp, nowString, trx);
                 }
             }
         }).catch((error:any) => {

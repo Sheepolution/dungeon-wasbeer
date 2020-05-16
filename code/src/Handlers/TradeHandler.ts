@@ -8,8 +8,8 @@ import MessageService from '../Services/MessageService';
 import CardEmbeds from '../Embeds/CardEmbeds';
 import SettingsConstants from '../Constants/SettingsConstants';
 import Trade from '../Objects/Trade';
-import Log from '../Objects/Log';
 import { LogType } from '../Enums/LogType';
+import LogService from '../Services/LogService';
 
 export default class TradeHandler {
 
@@ -194,7 +194,7 @@ export default class TradeHandler {
         MessageService.ReplyMessage(messageInfo, `${tradeInfo.trader.GetMention()} en ${tradeInfo.with.GetMention()}, jullie hebben de kaarten geruild. Veel plezier ermee!`, true, false);
         this.RemoveTrade(tradeInfo);
         const trade = await Trade.STATIC_POST(tradeInfo.trader, tradeInfo.with, tradeInfo.yourCard.GetCard(), tradeInfo.theirCard.GetCard());
-        Log.STATIC_POST(tradeInfo.trader, trade.id, LogType.Trade, `${tradeInfo.trader.GetDiscordName()} heeft de kaart '${tradeInfo.yourCard.GetCard().GetName()}' geruild met '${tradeInfo.with.GetDiscordName()}' voor de kaart ${tradeInfo.theirCard.GetCard()}.`);
+        LogService.Log(tradeInfo.trader, trade.id, LogType.Trade, `${tradeInfo.trader.GetDiscordName()} heeft de kaart '${tradeInfo.yourCard.GetCard().GetName()}' geruild met '${tradeInfo.with.GetDiscordName()}' voor de kaart ${tradeInfo.theirCard.GetCard()}.`);
     }
 
     private static FindExistingTrade(player:Player) {

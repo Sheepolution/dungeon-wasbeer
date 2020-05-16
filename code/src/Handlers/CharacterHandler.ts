@@ -14,8 +14,8 @@ import Heal from '../Objects/Heal';
 import CampaignManager from '../Managers/CampaignManager';
 import CharacterConstants from '../Constants/CharacterConstants';
 import CardEmbeds from '../Embeds/CardEmbeds';
-import Log from '../Objects/Log';
 import { LogType } from '../Enums/LogType';
+import LogService from '../Services/LogService';
 
 export default class CharacterHandler {
 
@@ -88,7 +88,7 @@ export default class CharacterHandler {
         const classType = (<any>ClassType)[className];
         const newCharacter = await player.CreateCharacter(classType);
         MessageService.ReplyMessage(messageInfo, 'Je character is aangemaakt!', undefined, true, CharacterEmbeds.GetNewCharacterEmbed(newCharacter));
-        Log.STATIC_POST(player, newCharacter.GetId(), LogType.CharacterCreated, `${player.GetDiscordName()} heeft een nieuw character aangemaakt van de class ${classType}.`);
+        LogService.Log(player, newCharacter.GetId(), LogType.CharacterCreated, `${player.GetDiscordName()} heeft een nieuw character aangemaakt van de class ${classType}.`);
     }
 
     private static async Equip(messageInfo:IMessageInfo, player:Player, cardName:string) {
@@ -299,14 +299,14 @@ export default class CharacterHandler {
         await character.SetInspireCooldown();
         await receiver.BecomeInspired();
         await MessageService.ReplyMessage(messageInfo, `Je speelt prachtige muziek en inspireert ${selfInspire ? 'jezelf' : receiver.GetName()} ✨. Al ${selfInspire ? 'je' : 'hun'} stats krijgen een +1 boost tot ${selfInspire ? 'je' : 'hun'} volgende gevecht.`, true);
-        Log.STATIC_POST(character.GetPlayer(), receiver.GetId(), LogType.Inspire, `De character van ${character.GetPlayer().GetDiscordName()} heeft ${character.GetId() == receiver.GetId() ? 'zichzelf' : `de character van ${receiver.GetPlayer().GetDiscordName()}`} geïnspireerd.`);
+        LogService.Log(character.GetPlayer(), receiver.GetId(), LogType.Inspire, `De character van ${character.GetPlayer().GetDiscordName()} heeft ${character.GetId() == receiver.GetId() ? 'zichzelf' : `de character van ${receiver.GetPlayer().GetDiscordName()}`} geïnspireerd.`);
     }
 
     private static async SaveHeal(character:Character, receiver:Character, receiverHealth:number, characterHealing:number, roll:number, finalHealing:number) {
         const battle = CampaignManager.GetBattle();
         if (battle == null) { return; }
         const heal = await Heal.STATIC_POST(battle, character, receiver, receiverHealth, characterHealing, roll, finalHealing);
-        Log.STATIC_POST(character.GetPlayer(), heal.id, LogType.Heal, `De character van ${character.GetPlayer().GetDiscordName()} heeft een heal gedaan op ${character.GetId() == receiver.GetId() ? 'zichzelf.' : `de character van ${receiver.GetPlayer().GetDiscordName()}.`}`);
+        LogService.Log(character.GetPlayer(), heal.id, LogType.Heal, `De character van ${character.GetPlayer().GetDiscordName()} heeft een heal gedaan op ${character.GetId() == receiver.GetId() ? 'zichzelf.' : `de character van ${receiver.GetPlayer().GetDiscordName()}.`}`);
     }
 
     private static async SendHealingEmbed(messageInfo:IMessageInfo, character:Character, receiver:Character) {
@@ -342,7 +342,7 @@ export default class CharacterHandler {
         await character.Stop()
 
         MessageService.ReplyMessage(messageInfo, 'Je character heeft de party verlaten.\nJe kan een nieuw character maken met `;class [class]`', true);
-        Log.STATIC_POST(character.GetPlayer(), character.GetId(), LogType.CharacterStop, `De character van ${character.GetPlayer().GetDiscordName()} is gestopt.`);
+        LogService.Log(character.GetPlayer(), character.GetId(), LogType.CharacterStop, `De character van ${character.GetPlayer().GetDiscordName()} is gestopt.`);
     }
 
     private static async GetResetCharacterTimer(character:Character) {

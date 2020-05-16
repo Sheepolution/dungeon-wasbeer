@@ -16,12 +16,14 @@ export default class BotManager {
 
     private static cardChannel:TextChannel;
     private static dndChannel:TextChannel;
+    private static logChannel:TextChannel;
 
     public static async OnReady() {
         console.log('Dungeon Wasbeer: Connected');
         ConfigurationManager.BuildConfigurationList();
         BotManager.cardChannel = <TextChannel> await DiscordService.FindChannelById(SettingsConstants.CARD_CHANNEL_ID);
         BotManager.dndChannel = <TextChannel> await DiscordService.FindChannelById(SettingsConstants.DND_CHANNEL_ID);
+        BotManager.logChannel = <TextChannel> await DiscordService.FindChannelById(SettingsConstants.LOG_CHANNEL_ID);
         await CardManager.BuildCardList();
         await MonsterManager.BuildMonsterList();
         await CampaignManager.ContinueSession();
@@ -80,5 +82,9 @@ export default class BotManager {
 
     public static GetDNDChannel() {
         return BotManager.dndChannel;
+    }
+
+    public static GetLogChannel() {
+        return BotManager.logChannel;
     }
 }

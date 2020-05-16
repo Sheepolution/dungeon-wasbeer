@@ -29,6 +29,10 @@ export default class MessageService {
         return await this.SendMessage(BotManager.GetDNDChannel(), message, embed);
     }
 
+    public static async SendMessageToLogChannel(message:string) {
+        return await this.SendMessage(BotManager.GetLogChannel(), message);
+    }
+
     public static async ReplyMissingAssignedArguments(messageInfo:IMessageInfo, missing:Array<string>) {
         this.ReplyMessage(messageInfo, 'Je vergeet één of meerdere parameters:\n' + missing.join(', ') , false, true);
     }

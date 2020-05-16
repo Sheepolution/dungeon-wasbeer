@@ -10,14 +10,12 @@ import PlayerManager from '../Managers/PlayerManager';
 import Character from '../Objects/Character';
 import CharacterEmbeds from '../Embeds/CharacterEmbeds';
 import Attack from '../Objects/Attack';
-import RedisConstants from '../Constants/RedisConstants';
-import Log from '../Objects/Log';
 import { LogType } from '../Enums/LogType';
 import EmojiConstants from '../Constants/EmojiConstants';
+import LogService from '../Services/LogService';
 
 export default class BattleHandler {
 
-    private static readonly battleCooldownPrefix = RedisConstants.REDIS_KEY + RedisConstants.BATTLE_COOLDOWN_KEY;
     private static waitList:Array<IMessageInfo> = new Array<IMessageInfo>();
     private static inBattle:boolean = false;
 
@@ -189,7 +187,7 @@ export default class BattleHandler {
         await MessageService.SendMessageToDNDChannel('', await CharacterEmbeds.GetDeadCharacterEmbed(character));
         await Utils.Sleep(3);
         await MessageService.ReplyMessage(messageInfo, 'Je character is dood. Je kan opnieuw beginnen door een class te kiezen met het commando `;class`.');
-        Log.STATIC_POST(character.GetPlayer(), character.GetId(), LogType.CharacterDied, `De character van ${character.GetPlayer().GetDiscordName()} is overleden.`);
+        LogService.Log(character.GetPlayer(), character.GetId(), LogType.CharacterDied, `De character van ${character.GetPlayer().GetDiscordName()} is overleden.`);
     }
 
     private static async ResolveWaitList() {

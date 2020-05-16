@@ -9,7 +9,7 @@ import PlayerCard from '../Objects/PlayerCard';
 import BotManager from './BotManager';
 import CardEmbeds from '../Embeds/CardEmbeds';
 import { LogType } from '../Enums/LogType';
-import Log from '../Objects/Log';
+import LogService from '../Services/LogService';
 
 export default class PlayerManager {
 
@@ -28,7 +28,7 @@ export default class PlayerManager {
             messageInfo.channel = BotManager.GetCardChannel();
             if (cardModifyResult.result) {
                 MessageService.ReplyMessage(messageInfo, 'Je hebt een nieuwe kaart!', undefined, true, CardEmbeds.GetCardEmbed(playerCard.GetCard(), playerCard.GetAmount()));
-                Log.STATIC_POST(player, playerCard.GetCardId(), LogType.CardReceived, `${player.GetDiscordName()} heeft de kaart '${playerCard.GetCard().GetName()}' gekregen.`);
+                LogService.Log(player, playerCard.GetCardId(), LogType.CardReceived, `${player.GetDiscordName()} heeft de kaart '${playerCard.GetCard().GetName()}' gekregen.`);
             }
         }
         return player;
@@ -113,7 +113,7 @@ export default class PlayerManager {
         const player = new Player();
         await player.POST(discordId, messageInfo.member.displayName);
         this.CachePlayer(discordId, player)
-        Log.STATIC_POST(player, player.GetId(), LogType.NewPlayer, `${player.GetDiscordName()} is een nieuwe speler.`);
+        LogService.Log(player, player.GetId(), LogType.NewPlayer, `${player.GetDiscordName()} is een nieuwe speler.`);
         return player;
     }
 

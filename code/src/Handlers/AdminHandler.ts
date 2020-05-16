@@ -16,8 +16,8 @@ import MonsterModel from '../Models/MonsterModel';
 import CardService from '../Services/CardService';
 import { ClassType } from '../Enums/ClassType';
 import CampaignManager from '../Managers/CampaignManager';
-import Log from '../Objects/Log';
 import { LogType } from '../Enums/LogType';
+import LogService from '../Services/LogService';
 
 export default class AdminHandler {
 
@@ -89,13 +89,13 @@ export default class AdminHandler {
     private static async SayMessageCard(messageInfo:IMessageInfo, message:string, player:Player) {
         const sentMessage = await MessageService.SendMessageToCardChannel(message);
         MessageService.ReplyMessage(messageInfo, 'Ik heb het gezegd.', true, true);
-        Log.STATIC_POST(player, sentMessage.id, LogType.SayMessage, `${player.GetDiscordName()} zegt het bericht '${message}' in het kaarten kanaal.`);
+        LogService.Log(player, sentMessage.id, LogType.SayMessage, `${player.GetDiscordName()} zegt het bericht '${message}' in het kaarten kanaal.`);
     }
 
     private static async SayMessageDND(messageInfo:IMessageInfo, message:string, player:Player) {
         const sentMessage = await MessageService.SendMessageToDNDChannel(message);
         MessageService.ReplyMessage(messageInfo, 'Ik heb het gezegd.', true, true);
-        Log.STATIC_POST(player, sentMessage.id, LogType.SayMessage, `${player.GetDiscordName()} zegt het bericht '${message}' in het D&D kanaal.`);
+        LogService.Log(player, sentMessage.id, LogType.SayMessage, `${player.GetDiscordName()} zegt het bericht '${message}' in het D&D kanaal.`);
     }
 
     private static async StartCampaign() {
