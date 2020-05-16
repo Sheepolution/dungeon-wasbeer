@@ -127,7 +127,15 @@ export default class BattleHandler {
 
     private static async SaveAttack(battle:Battle, character:Character, messageId:string, rollCharacterBase:number, rollCharacterModifier:number, rollCharacterModifierMax:number, rollMonsterBase:number, rollMonsterModifier:number, rollMonsterModifierMax:number, victory:boolean, damage:number, healthAfter:number) {
         const attack = await Attack.STATIC_POST(battle, character, messageId, rollCharacterBase, rollCharacterModifier, rollCharacterModifierMax, rollMonsterBase, rollMonsterModifier, rollMonsterModifierMax, victory, damage, healthAfter);
-        Log.STATIC_POST(character.GetPlayer(), attack.id, LogType.Attack, `${character.GetName()} heeft het monster '${battle.GetMonster().GetName()}' aangevallen en dit gevecht ${victory ? 'gewonnen' : 'verloren'}.`);
+        if (healthAfter <= 0) {
+            if (victory) {
+                LogService.Log(character.GetPlayer(), attack.id, LogType.AttackKill, `${character.GetName()} heeft het monster '${battle.GetMonster().GetName()}' aangevallen en dit gevecht gewonnen en hiermee het monster gedood.`);
+            } else {
+                LogService.Log(character.GetPlayer(), attack.id, LogType.AttackKilled, `${character.GetName()} heeft het monster '${battle.GetMonster().GetName()}' aangevallen en dit gevecht verloren en is hierdoor gedood.`);
+            }
+        } else {
+            LogService.Log(character.GetPlayer(), attack.id, LogType.Attack, `${character.GetName()} heeft het monster '${battle.GetMonster().GetName()}' aangevallen en dit gevecht ${victory ? 'gewonnen' : 'verloren'}.`);
+        }
     }
 
     private static async OnCharacterCrit(messageInfo:IMessageInfo, message:Message, battle:Battle, character:Character, roll1:number, roll2:number = 0, roll3:number = 0, inspired:boolean = false) {

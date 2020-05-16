@@ -8,6 +8,8 @@ export enum LogType {
     CharacterDied = 'CharacterDied',
     CharacterStop = 'CharacterStop',
     Attack = 'Attack',
+    AttackKill = 'AttackKill',
+    AttackKilled = 'AttackKilled',
     Heal = 'Heal',
     Inspire = 'Inspire',
     PuzzleSolved = 'PuzzleSolved',
