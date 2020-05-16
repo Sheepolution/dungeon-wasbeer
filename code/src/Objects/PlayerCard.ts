@@ -48,21 +48,20 @@ export default class PlayerCard {
 
     public async AddCard() {
         this.amount += 1;
-        const data = { amount: this.amount };
-        await this.UPDATE(data);
+        await this.UPDATE({ amount: this.amount });
     }
 
     public async RemoveOne() {
         this.amount -= 1;
 
         if (this.amount > 0) {
-            const data = { amount: this.amount };
-            await this.UPDATE(data);
-            return;
+            await this.UPDATE({ amount: this.amount });
+            return false;
         }
 
         await this.DELETE();
         this.player.RemoveCard(this);
+        return true;
     }
 
     public GetCard() {

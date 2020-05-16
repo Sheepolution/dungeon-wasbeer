@@ -147,7 +147,10 @@ export default class Character {
 
         for (const card of this.player.GetCards()) {
             if (card.IsEquipped()) {
-                await card.RemoveOne();
+                const deleted = await card.RemoveOne();
+                if (!deleted) {
+                    await card.SetEquipped(false);
+                }
             }
         }
     }
