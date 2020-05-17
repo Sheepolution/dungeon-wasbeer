@@ -127,14 +127,15 @@ export default class BattleHandler {
 
     private static async SaveAttack(battle:Battle, character:Character, messageId:string, rollCharacterBase:number, rollCharacterModifier:number, rollCharacterModifierMax:number, rollMonsterBase:number, rollMonsterModifier:number, rollMonsterModifierMax:number, victory:boolean, damage:number, healthAfter:number) {
         const attack = await Attack.STATIC_POST(battle, character, messageId, rollCharacterBase, rollCharacterModifier, rollCharacterModifierMax, rollMonsterBase, rollMonsterModifier, rollMonsterModifierMax, victory, damage, healthAfter);
+        const crit = rollCharacterBase == 20 || rollCharacterBase == 1 || rollMonsterBase == 20 || rollMonsterBase == 1;
         if (healthAfter <= 0) {
             if (victory) {
-                LogService.Log(character.GetPlayer(), attack.id, LogType.AttackKill, `${character.GetName()} heeft het monster '${battle.GetMonster().GetName()}' aangevallen en dit gevecht gewonnen en hiermee het monster gedood.`);
+                LogService.Log(character.GetPlayer(), attack.id, LogType.AttackKill, `${character.GetName()} heeft het monster '${battle.GetMonster().GetName()}' aangevallen en dit gevecht gewonnen${crit ? ' met een crit' : ''} en hiermee het monster gedood.`);
             } else {
-                LogService.Log(character.GetPlayer(), attack.id, LogType.AttackKilled, `${character.GetName()} heeft het monster '${battle.GetMonster().GetName()}' aangevallen en dit gevecht verloren en is hierdoor gedood.`);
+                LogService.Log(character.GetPlayer(), attack.id, LogType.AttackKilled, `${character.GetName()} heeft het monster '${battle.GetMonster().GetName()}' aangevallen en dit gevecht verloren${crit ? ' met een crit' : ''} en is hierdoor gedood.`);
             }
         } else {
-            LogService.Log(character.GetPlayer(), attack.id, LogType.Attack, `${character.GetName()} heeft het monster '${battle.GetMonster().GetName()}' aangevallen en dit gevecht ${victory ? 'gewonnen' : 'verloren'}.`);
+            LogService.Log(character.GetPlayer(), attack.id, victory ? LogType.AttackWon : LogType.AttackLost, `${character.GetName()} heeft het monster '${battle.GetMonster().GetName()}' aangevallen en dit gevecht ${victory ? 'gewonnen' : 'verloren'}${crit ? ' met een crit' : ''}.`);
         }
     }
 
@@ -191,7 +192,7 @@ export default class BattleHandler {
 
     private static async OnDefeatingCharacter(messageInfo:IMessageInfo, character:Character) {
         await character.Kill();
-        await Utils.Sleep(1);
+        await Utils.Sleep(2);
         await MessageService.SendMessageToDNDChannel('', await CharacterEmbeds.GetDeadCharacterEmbed(character));
         await Utils.Sleep(3);
         await MessageService.ReplyMessage(messageInfo, 'Je character is dood. Je kan opnieuw beginnen door een class te kiezen met het commando `;class`.');
