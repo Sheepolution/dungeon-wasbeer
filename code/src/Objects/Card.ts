@@ -15,6 +15,7 @@ export default class Card {
     private modifiers:Array<ICardModifier>;
     private modifierClass:ClassType;
     private modifierStats:IModifierStats;
+    private season:number;
     private imageUrl:string;
     private creatorId:string;
     private creationDate:string;
@@ -64,6 +65,7 @@ export default class Card {
         this.modifiers = model.GetModifiers();
         this.modifierClass = model.GetModifierClass();
         this.modifierStats = this.CalculateModifierStats();
+        this.season = model.season;
     }
 
     public async EditCard(name:string = this.name, description:string = this.description, rank:number = this.rank, category:string = this.category, modifiers:Array<ICardModifier> = this.modifiers, modifierClass:ClassType = this.modifierClass, imageUrl:string = this.imageUrl) {
@@ -124,6 +126,10 @@ export default class Card {
 
     public GetModifierStats() {
         return this.modifierStats;
+    }
+
+    public GetSeason() {
+        return this.season;
     }
 
     public GetImageUrl() {

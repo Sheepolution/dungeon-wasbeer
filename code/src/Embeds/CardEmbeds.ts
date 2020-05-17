@@ -16,6 +16,7 @@ export default class CardEmbeds {
             .setAuthor(card.GetCategory(), CardService.GetIconByCategory(card.GetCategory()))
             .setTitle(card.GetName() + (amount == 1 ? '' : ' (x'+ amount + ')'))
             .setDescription(card.GetDescription())
+            .setFooter(`Seizoen ${card.GetSeason()}`)
             .setImage(card.GetImageUrl())
             .addField('Level', card.GetRankString());
 

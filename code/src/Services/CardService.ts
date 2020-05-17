@@ -33,7 +33,7 @@ export default class CardService {
 
     public static ParseModifierArrayToDataString(modifierArray?:Array<ICardModifier>) {
         if (modifierArray == null || modifierArray.length == 0) {
-            return ''
+            return undefined;
         }
 
         var modifierString = '';
