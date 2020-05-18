@@ -38,12 +38,12 @@ export default class CharacterConstants {
     }
 
     public static readonly CLASS_BASE_STATS = {
-        BARD: { armor: 5, charisma: 0, dexterity: 5, healing: 0, health: 100,  regeneration: 3, strength: 0, spell: 20, attack: 2 },
+        BARD: { armor: 2, charisma: 0, dexterity: 2, healing: 0, health: 100,  regeneration: 3, strength: 0, spell: 20, attack: 2 },
         CLERIC: { armor: 5, charisma: 0, dexterity: 8, healing: 15, health: 100, regeneration: 1, strength: 0, spell: 5, attack: 3 },
-        WIZARD: { armor: 0, charisma: 0, dexterity: 4, healing: 0, health: 120, regeneration: 1, strength: 0, spell: 30, attack: 4 },
+        WIZARD: { armor: 0, charisma: 0, dexterity: 5, healing: 0, health: 120, regeneration: 1, strength: 0, spell: 30, attack: 0 },
         PALADIN: { armor: 10, charisma: 0, dexterity: 5, healing: 10, health: 100, regeneration: 1, strength: 10, spell: 0, attack: 5 },
         FIGHTER: { armor: 5, charisma: 0, dexterity: 0, healing: 0, health: 90, regeneration: 1, strength: 15, spell: 0, attack: 8 },
-        RANGER: { armor: 5, charisma: 0, dexterity: 10, healing: 0, health: 100, regeneration: 1, strength: 5, spell: 0, attack: 8 },
+        RANGER: { armor: 5, charisma: 0, dexterity: 10, healing: 0, health: 100, regeneration: 1, strength: 7, spell: 0, attack: 8 },
     };
 
     public static readonly CLASS_ATTACK_MESSAGES = {
