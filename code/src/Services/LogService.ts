@@ -8,7 +8,7 @@ import LogXP from '../Objects/LogXP';
 export default class LogService {
     public static async Log(player:Player, subjectId:string, logType:LogType, description:string) {
         await Log.STATIC_POST(player, subjectId, logType, description);
-        MessageService.SendMessageToLogChannel(`${Utils.GetNowString().slice(0, -5).replace('T', ' ')}: ${logType} - ${description}`);
+        MessageService.SendMessageToLogChannel(`${Utils.GetNowString().slice(0, -5).replace('T', ' ')}: ${logType} - ${description} (${player.GetId()})`);
     }
 
     public static async LogXP(battleId:string, characterId:string, xp:number, dateString:string, trx:any) {
