@@ -15,7 +15,7 @@ export default class CharacterEmbeds {
             .setTitle(`${character.GetName()}${(character.IsInspired() ? ' ✨' : '')}`)
             .setImage(CharacterService.GetClassImage(character.GetClass()))
             .addField('XP', `${character.GetXP()}/${character.GetXPForNextLevel()}`, true)
-            .addField('Level', `${character.GetLevel()}`, true);
+            .addField('Level', character.GetLevel(), true);
 
         const modifiers = character.GetFullModifierStats();
         const modifiersClass = character.GetClassModifierStats();
@@ -84,7 +84,7 @@ export default class CharacterEmbeds {
         const embed = new MessageEmbed()
             .setColor(SettingsConstants.COLORS.DEFAULT)
             .setImage(CharacterService.GetClassImage(character.GetClass()))
-            .setTitle(`${character.GetName()}`)
+            .setTitle(character.GetName())
 
         return embed;
     }
@@ -136,7 +136,7 @@ export default class CharacterEmbeds {
         embed.setTitle('Healing roll')
             .setDescription(`${character.GetName()}${(character.IsInspired() ? ' ✨' : '')} rollt om ${receiver == character ? 'zichzelf' : receiver.GetName()}${(character.IsInspired() ? ' ✨' : '')} te healen.\n\n-- Statistieken --`)
             .addField(`Health van ${receiverName}`, `${receiver.GetCurrentHealth()}/${receiver.GetMaxHealth()}`)
-            .addField(`Healing van ${characterName}`, `${character.GetFullModifierStats().healing}`)
+            .addField(`Healing van ${characterName}`, character.GetFullModifierStats().healing)
             .addField('--------------------------------', '-- Roll --');
 
         if (roll == null)  {

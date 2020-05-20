@@ -378,6 +378,6 @@ export default class CharacterHandler {
     }
 
     private static async ReplyNotFullHealth(messageInfo:IMessageInfo, character:Character) {
-        MessageService.ReplyMessage(messageInfo, `Je mag dit alleen doen wanneer je full health bent.\nHealth:${character.GetCurrentHealth()}/${character.GetMaxHealth()}`, false);
+        MessageService.ReplyMessage(messageInfo, `Je mag dit alleen doen wanneer je full health bent.\nHealth: ${character.GetCurrentHealth()}/${character.GetMaxHealth()}`, false);
     }
 }

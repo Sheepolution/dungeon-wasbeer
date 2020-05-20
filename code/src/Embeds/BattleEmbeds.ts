@@ -39,8 +39,8 @@ export default class BattleEmbeds {
             .setThumbnail(monster.GetImageUrl())
             .setTitle(`${characterName}${((inspired || character.IsInspired() ) ? ' ✨' : '')} VS ${monsterName}`)
             .setDescription('-- Statistieken --')
-            .addField(`${characterName}`, `Health: ${character.GetCurrentHealth()}/${character.GetMaxHealth()}\n${character.GetAttackName()}: ${characterStrength}\nAttack: ${characterAttack}\nArmor: ${character.GetArmor()}`, true)
-            .addField(`${monsterName}`, `Health: ${battle.GetCurrentMonsterHealth()}/${battle.GetMaxMonsterHealth()}\nStrength: ${monsterStrength}\nAttack: ${monsterAttack}`, true)
+            .addField(characterName, `Health: ${character.GetCurrentHealth()}/${character.GetMaxHealth()}\n${character.GetAttackName()}: ${characterStrength}\nAttack: ${characterAttack}\nArmor: ${character.GetArmor()}`, true)
+            .addField(monsterName, `Health: ${battle.GetCurrentMonsterHealth()}/${battle.GetMaxMonsterHealth()}\nStrength: ${monsterStrength}\nAttack: ${monsterAttack}`, true)
             .addField('--------------------------------', '-- Rolls --');
 
         if (roll1 != null && roll2 != null) {
@@ -54,7 +54,7 @@ export default class BattleEmbeds {
                 message += `\nD${Math.max(characterAttack, roll2)} = ${roll2}`;
             }
 
-            embed.addField(`${characterName}`, message += `\nTotaal = ${roll1 + roll2}`, true);
+            embed.addField(characterName, message += `\nTotaal = ${roll1 + roll2}`, true);
 
             if (roll3 != null && roll4 != null) {
                 message = '';
@@ -67,18 +67,18 @@ export default class BattleEmbeds {
                 }
 
                 if (message.length > 0) {
-                    embed.addField(`${monsterName}`, message + `\nTotaal = ${roll3 + roll4}`, true);
+                    embed.addField(monsterName, message + `\nTotaal = ${roll3 + roll4}`, true);
                 } else {
-                    embed.addField(`${monsterName}`, 'Geen rolls.', true);
+                    embed.addField(monsterName, 'Geen rolls.', true);
                 }
             } else if (roll3 != null) {
                 message = `D20 = ${roll3}`;
                 if (monsterAttack > 1) {
                     message += `\nRolt de D${monsterAttack}...`;
                 }
-                embed.addField(`${monsterName}`, message, true);
+                embed.addField(monsterName, message, true);
             } else {
-                embed.addField(`${monsterName}`, 'Rolt de D20...', true);
+                embed.addField(monsterName, 'Rolt de D20...', true);
             }
         } else if (roll1 != null) {
             message = `D20 = ${roll1}`;
@@ -86,9 +86,9 @@ export default class BattleEmbeds {
                 message += `\nRolt de D${characterAttack}...`;
             }
 
-            embed.addField(`${characterName}`, message, true);
+            embed.addField(characterName, message, true);
         } else {
-            embed.addField(`${characterName}`, 'Rolt de D20...', true);
+            embed.addField(characterName, 'Rolt de D20...', true);
         }
 
         if (playerWon != null) {
