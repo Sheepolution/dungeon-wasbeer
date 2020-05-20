@@ -26,7 +26,7 @@ export default class MessageHandler {
         if (character != null) {
             const characterId = character.GetId();
             const characterUpdateTimeout = await Redis.get(MessageHandler.characterUpdateTimeoutPrefix + characterId);
-            if (characterUpdateTimeout > 0) {
+            if (!characterUpdateTimeout) {
                 character.GetHealthFromMessage();
                 character.IncreaseXPFromMessage();
             }
