@@ -91,12 +91,12 @@ export default class BattleHandler {
         const playerAttackRoll = character.GetAttackRoll();
         var roll2 = playerAttackRoll;
         if (playerAttackRoll > 1) {
-            this.UpdateBattleEmbed(message, battle, character, roll1);
+            await this.UpdateBattleEmbed(message, battle, character, roll1);
             await Utils.Sleep(3);
             roll2 = Utils.Dice(playerAttackRoll);
         }
 
-        this.UpdateBattleEmbed(message, battle, character, roll1, roll2);
+        await this.UpdateBattleEmbed(message, battle, character, roll1, roll2);
         await Utils.Sleep(3);
 
         const roll3 = Utils.Dice(20);
@@ -112,7 +112,7 @@ export default class BattleHandler {
         const monsterAttackRoll = battle.GetMonsterAttackRoll();
         var roll4 = monsterAttackRoll;
         if (monsterAttackRoll > 1) {
-            this.UpdateBattleEmbed(message, battle, character, roll1, roll2, roll3);
+            await this.UpdateBattleEmbed(message, battle, character, roll1, roll2, roll3);
             await Utils.Sleep(3);
             roll4 = Utils.Dice(monsterAttackRoll);
         }
@@ -141,12 +141,12 @@ export default class BattleHandler {
 
     private static async OnCharacterCrit(messageInfo:IMessageInfo, message:Message, battle:Battle, character:Character, roll1:number, roll2:number = 0, roll3:number = 0, inspired:boolean = false) {
         const damage = await this.ResolveAttackResult(messageInfo, message, battle, character, true, character.GetAttackStrength(true), roll1, roll2, roll3, 0);
-        this.UpdateBattleEmbed(message, battle, character, roll1, roll2, roll3, 0, true, damage, true, inspired);
+        await this.UpdateBattleEmbed(message, battle, character, roll1, roll2, roll3, 0, true, damage, true, inspired);
     }
 
     private static async OnMonsterCrit(messageInfo:IMessageInfo, message:Message, battle:Battle, character:Character, roll1:number, roll2:number = 0, roll3:number = 0, inspired:boolean = false) {
         const damage = await this.ResolveAttackResult(messageInfo, message, battle, character, false, battle.GetMonsterAttackStrength(true), roll1, roll2, roll3, 0);
-        this.UpdateBattleEmbed(message, battle, character, roll1, roll2, roll3, 0, false, damage, true, inspired);
+        await this.UpdateBattleEmbed(message, battle, character, roll1, roll2, roll3, 0, false, damage, true, inspired);
     }
 
     private static async ResolveAttackResult(messageInfo:IMessageInfo, message:Message, battle:Battle, character:Character, playerWon:boolean, damage:number, roll1:number, roll2:number, roll3:number, roll4:number) {
