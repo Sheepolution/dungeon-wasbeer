@@ -106,6 +106,18 @@ export default class CardService {
                 return ImageConstants.ICONS.FIGHTER;
             case 'Snacc':
                 return ImageConstants.ICONS.SNACK;
+            case 'Trash':
+                return ImageConstants.ICONS.TRASH;
+            case 'Sleepy':
+                return ImageConstants.ICONS.SLEEP;
+            case 'Stream':
+                return ImageConstants.ICONS.STREAM;
+            case 'Vintage':
+                return ImageConstants.ICONS.VINTAGE;
+            case 'Drunk':
+                return ImageConstants.ICONS.DRUNK;
+            case 'Voertuigen':
+                return ImageConstants.ICONS.DRIVE;
         }
     }
 
@@ -127,6 +139,18 @@ export default class CardService {
                 return EmojiConstants.CARD_CATEGORIES.FIGHTER;
             case 'Snacc':
                 return EmojiConstants.CARD_CATEGORIES.SNACK;
+            case 'Trash':
+                return EmojiConstants.CARD_CATEGORIES.TRASH;
+            case 'Sleepy':
+                return EmojiConstants.CARD_CATEGORIES.SLEEP;
+            case 'Stream':
+                return EmojiConstants.CARD_CATEGORIES.STREAM;
+            case 'Vintage':
+                return EmojiConstants.CARD_CATEGORIES.VINTAGE;
+            case 'Drunk':
+                return EmojiConstants.CARD_CATEGORIES.DRUNK;
+            case 'Voertuigen':
+                return EmojiConstants.CARD_CATEGORIES.DRIVE;
         }
     }
 }

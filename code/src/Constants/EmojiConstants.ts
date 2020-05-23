@@ -18,6 +18,12 @@ export default class EmojiConstants {
         CHONKY: '<:chonky:708627202027159607>',
         FRIENDS: '<:vrienden:708628425874866196>',
         FIGHTER: '<:strijder:708627202270298135>',
+        TRASH: '<:afval:713837297568579617>',
+        SLEEP: '<:sleepy:713837299820920892>',
+        STREAM: '<:stream:713837297140891659>',
+        VINTAGE: '<:vintage:713837300223705210>',
+        DRUNK: '<:drunk:713837296952016898>',
+        DRIVE: '<:voertuigen:713837297677631548>',
     }
 
     public static readonly STATUS = {
