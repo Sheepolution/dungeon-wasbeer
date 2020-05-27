@@ -8,11 +8,12 @@ export default class LogService {
     public static async Log(player:Player, subjectId:string, logType:LogType, description:string) {
         await Log.STATIC_POST(player, subjectId, logType, description);
 
-        if (logType.startsWith('Attack')) {
-            logType.replace('Attack', 'Attack ');
+        var logTypeString = logType.toString();
+        if (logTypeString.startsWith('Attack')) {
+            logTypeString = logTypeString.replace('Attack', 'Attack ');
         }
 
-        MessageService.SendMessageToLogChannel(`${player.GetId()} - ${logType} - ${description}`);
+        MessageService.SendMessageToLogChannel(`${player.GetId()} - ${logTypeString} - ${description}`);
     }
 
     public static async LogXP(battleId:string, characterId:string, xp:number, dateString:string, trx:any) {
