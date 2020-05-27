@@ -21,7 +21,10 @@ export default class SettingsConstants {
     public static readonly CARD_AMOUNT_SPLIT_PAGES = 20;
 
     public static readonly MESSAGE_POINT_AMOUNT_REWARDS = {
-        CARD: 8
+        CARD1: 4,
+        CARD2: 8,
+        CARD3: 16,
+        CARD4: 24,
     };
 
     public static readonly CARD_RANK_ROLL_VALUE = [

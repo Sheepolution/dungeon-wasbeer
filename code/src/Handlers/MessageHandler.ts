@@ -53,7 +53,18 @@ export default class MessageHandler {
 
         player.AddMessagePoint();
 
-        if (player.GetMessagePoints() % SettingsConstants.MESSAGE_POINT_AMOUNT_REWARDS.CARD == 0) {
+        var amount = SettingsConstants.MESSAGE_POINT_AMOUNT_REWARDS.CARD1;
+        var cardAmount = player.GetCards().length;
+
+        if (cardAmount >= 100) {
+            amount = SettingsConstants.MESSAGE_POINT_AMOUNT_REWARDS.CARD4;
+        } else if (cardAmount >= 50) {
+            amount = SettingsConstants.MESSAGE_POINT_AMOUNT_REWARDS.CARD3;
+        } else if (cardAmount >= 10) {
+            amount = SettingsConstants.MESSAGE_POINT_AMOUNT_REWARDS.CARD2;
+        }
+
+        if (player.GetMessagePoints() % amount == 0) {
             const cardModifyResult = await CardManager.GivePlayerCard(messageInfo, player);
             const playerCard = <PlayerCard>cardModifyResult.object;
             messageInfo.channel = BotManager.GetCardChannel();
