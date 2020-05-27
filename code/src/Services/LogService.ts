@@ -7,6 +7,11 @@ import LogXP from '../Objects/LogXP';
 export default class LogService {
     public static async Log(player:Player, subjectId:string, logType:LogType, description:string) {
         await Log.STATIC_POST(player, subjectId, logType, description);
+
+        if (logType.startsWith('Attack')) {
+            logType.replace('Attack', 'Attack ');
+        }
+
         MessageService.SendMessageToLogChannel(`${player.GetId()} - ${logType} - ${description}`);
     }
 
