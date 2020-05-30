@@ -74,6 +74,10 @@ export default class AdminHandler {
             case 'saydnd':
                 this.SayMessageDND(messageInfo, content, player);
                 break;
+            case 'say-chat':
+            case 'saychat':
+                this.SayMessageChat(messageInfo, content, player);
+                break;
             default:
                 return false;
         }
@@ -97,8 +101,11 @@ export default class AdminHandler {
         MessageService.ReplyMessage(messageInfo, 'Ik heb het gezegd.', true, true);
         LogService.Log(player, player.GetId(), LogType.SayMessage, `${player.GetDiscordName()} zegt het bericht '${message}' in het D&D-kanaal.`);
     }
+
+    private static async SayMessageChat(messageInfo:IMessageInfo, message:string, player:Player) {
+        await MessageService.SendMessageToChatChannel(message);
         MessageService.ReplyMessage(messageInfo, 'Ik heb het gezegd.', true, true);
-        LogService.Log(player, sentMessage.id, LogType.SayMessage, `${player.GetDiscordName()} zegt het bericht '${message}' in het D&D kanaal.`);
+        LogService.Log(player, player.GetId(), LogType.SayMessage, `${player.GetDiscordName()} zegt het bericht '${message}' in het chat-kanaal.`);
     }
 
     private static async StartCampaign() {

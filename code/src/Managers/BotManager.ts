@@ -16,6 +16,7 @@ export default class BotManager {
 
     private static cardChannel:TextChannel;
     private static dndChannel:TextChannel;
+    private static chatChannel:TextChannel;
     private static logChannel:TextChannel;
 
     public static async OnReady() {
@@ -23,6 +24,7 @@ export default class BotManager {
         ConfigurationManager.BuildConfigurationList();
         BotManager.cardChannel = <TextChannel> await DiscordService.FindChannelById(SettingsConstants.CARD_CHANNEL_ID);
         BotManager.dndChannel = <TextChannel> await DiscordService.FindChannelById(SettingsConstants.DND_CHANNEL_ID);
+        BotManager.chatChannel = <TextChannel> await DiscordService.FindChannelById(SettingsConstants.CHAT_CHANNEL_ID);
         BotManager.logChannel = <TextChannel> await DiscordService.FindChannelById(SettingsConstants.LOG_CHANNEL_ID);
         await CardManager.BuildCardList();
         await MonsterManager.BuildMonsterList();
@@ -82,6 +84,10 @@ export default class BotManager {
 
     public static GetDNDChannel() {
         return BotManager.dndChannel;
+    }
+
+    public static GetChatChannel() {
+        return BotManager.chatChannel;
     }
 
     public static GetLogChannel() {
