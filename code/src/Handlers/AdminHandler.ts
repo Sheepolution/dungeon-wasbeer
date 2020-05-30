@@ -87,13 +87,16 @@ export default class AdminHandler {
     }
 
     private static async SayMessageCard(messageInfo:IMessageInfo, message:string, player:Player) {
-        const sentMessage = await MessageService.SendMessageToCardChannel(message);
+        await MessageService.SendMessageToCardChannel(message);
         MessageService.ReplyMessage(messageInfo, 'Ik heb het gezegd.', true, true);
-        LogService.Log(player, sentMessage.id, LogType.SayMessage, `${player.GetDiscordName()} zegt het bericht '${message}' in het kaarten kanaal.`);
+        LogService.Log(player, player.GetId(), LogType.SayMessage, `${player.GetDiscordName()} zegt het bericht '${message}' in het kaarten-kanaal.`);
     }
 
     private static async SayMessageDND(messageInfo:IMessageInfo, message:string, player:Player) {
-        const sentMessage = await MessageService.SendMessageToDNDChannel(message);
+        await MessageService.SendMessageToDNDChannel(message);
+        MessageService.ReplyMessage(messageInfo, 'Ik heb het gezegd.', true, true);
+        LogService.Log(player, player.GetId(), LogType.SayMessage, `${player.GetDiscordName()} zegt het bericht '${message}' in het D&D-kanaal.`);
+    }
         MessageService.ReplyMessage(messageInfo, 'Ik heb het gezegd.', true, true);
         LogService.Log(player, sentMessage.id, LogType.SayMessage, `${player.GetDiscordName()} zegt het bericht '${message}' in het D&D kanaal.`);
     }
