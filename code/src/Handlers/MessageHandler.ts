@@ -28,7 +28,6 @@ export default class MessageHandler {
             const characterUpdateTimeout = await Redis.get(MessageHandler.characterUpdateTimeoutPrefix + characterId);
             if (!characterUpdateTimeout) {
                 character.GetHealthFromMessage();
-                character.IncreaseXPFromMessage();
             }
 
             Redis.set(characterUpdateTimeout + characterId, '1', 'EX', Utils.GetMinutesInSeconds(SettingsConstants.CHARACTER_POINT_TIMEOUT_MINUTES));
