@@ -28,9 +28,9 @@ export default class SettingsConstants {
     };
 
     public static readonly CARD_RANK_ROLL_VALUE = [
-        55,
-        25,
-        9,
+        38,
+        14,
+        5,
         1,
     ];
 
