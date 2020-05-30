@@ -143,9 +143,6 @@ export default class Card {
                 case ModifierType.Armor:
                     modifierStats.armor = modifier.value;
                     break;
-                case ModifierType.Charisma:
-                    modifierStats.charisma = modifier.value;
-                    break;
                 case ModifierType.Dexterity:
                     modifierStats.dexterity = modifier.value;
                     break;

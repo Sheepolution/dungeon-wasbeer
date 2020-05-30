@@ -77,7 +77,6 @@ export default class CharacterService {
         return {
             armor: n,
             attack: n,
-            charisma: n,
             dexterity: n,
             healing: n,
             health: n,
@@ -91,7 +90,6 @@ export default class CharacterService {
         return {
             armor: a.armor + b.armor,
             attack: a.attack + b.attack,
-            charisma: a.charisma + b.charisma,
             dexterity: a.dexterity + b.dexterity,
             healing: a.healing + b.healing,
             health: a.health + b.health,
