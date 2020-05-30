@@ -421,14 +421,14 @@ export default class Character {
         var cardModifierStats = CharacterService.GetEmptyModifierStats();
 
         for (const card of this.equipment) {
-            cardModifierStats = CharacterService.GetSummedUpModifierStats(cardModifierStats, card.GetModifierStats());
+            cardModifierStats = CharacterService.GetSummedUpModifierStats(cardModifierStats, card.GetModifierStats(), this.classType);
         }
 
         return cardModifierStats
     }
 
     private CalculateFullModifierStats() {
-        return CharacterService.GetSummedUpModifierStats(this.classModifierStats, this.cardModifierStats)
+        return CharacterService.GetSummedUpModifierStats(this.classModifierStats, this.cardModifierStats, this.classType)
     }
 
     private CalculateLevel(level:number = 1) {
@@ -450,7 +450,7 @@ export default class Character {
         if (this.inspired) {
             const emptyModifierStats = CharacterService.GetEmptyModifierStats(1);
             emptyModifierStats.health = 0;
-            this.fullModifierStats = CharacterService.GetSummedUpModifierStats(this.fullModifierStats, emptyModifierStats);
+            this.fullModifierStats = CharacterService.GetSummedUpModifierStats(this.fullModifierStats, emptyModifierStats, this.classType);
         }
         this.maxHealth = this.CalculateMaxHealth();
     }

@@ -38,6 +38,8 @@ export default class CharacterConstants {
     }
 
     public static readonly CLASS_BASE_STATS = {
+        BASE: { armor: 5, dexterity: 5, healing: 15, health: 100,  regeneration: 2, strength: 10, spell: 13, attack: 5 },
+        MAX: { armor: 25, dexterity: 20, healing: 50, health: 250,  regeneration: 10, strength: 50, spell: 60, attack: 20 },
         BARD: { armor: 2, dexterity: 2, healing: 0, health: 100,  regeneration: 3, strength: 0, spell: 13, attack: 2 },
         CLERIC: { armor: 5, dexterity: 7, healing: 5, health: 100, regeneration: 2, strength: 0, spell: 5, attack: 3 },
         WIZARD: { armor: 0, dexterity: 0, healing: 0, health: 120, regeneration: 2, strength: 0, spell: 18, attack: 2 },
