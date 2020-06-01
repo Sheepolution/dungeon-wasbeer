@@ -76,6 +76,7 @@ export default class BotManager {
     public static async ResetAllCache() {
         PlayerManager.ResetPlayerCache();
         CardManager.BuildCardList();
+        MonsterManager.BuildMonsterList();
     }
 
     public static GetCardChannel() {
