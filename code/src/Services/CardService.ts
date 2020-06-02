@@ -79,7 +79,7 @@ export default class CardService {
         var modifierString = '';
         for (let i = 0; i < modifierArray.length; i++) {
             const modifier = modifierArray[i];
-            modifierString += `${modifier.modifier.toString()}: +${modifier.value}`;
+            modifierString += `${modifier.modifier.toString()}: ${modifier.value >= 0 ? '+' : ''}${modifier.value}`;
             if (i < modifierArray.length - 1) {
                 modifierString += '\n';
             }
