@@ -49,6 +49,11 @@ export default class PuzzleHandler {
             return;
         }
 
+        if (puzzle.IsSolved()) {
+            MessageService.ReplyMessage(messageInfo, 'Iemand anders heeft de puzzel al opgelost. Je bent net te laat!');
+            return;
+        }
+
         const solution = puzzle.GetSolution().replaceAll('\n', '')
         if (solution == content.trim().replaceAll('\n', '')) {
             await this.OnSolvingPuzzle(messageInfo, puzzle, character);
