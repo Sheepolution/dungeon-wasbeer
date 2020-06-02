@@ -374,8 +374,11 @@ export default class Character {
         await playerCard.SetEquipped(true);
         this.equipment.push(playerCard.GetCard());
         this.UpdateFullModifierStats();
+        this.currentHealth = this.GetMaxHealth();
+
         this.UPDATE({
-            equipment: this.equipment.map(e => e.GetId()).join(',')
+            health: this.currentHealth,
+            equipment: this.equipment.map(e => e.GetId()).join(','),
         })
     }
 
