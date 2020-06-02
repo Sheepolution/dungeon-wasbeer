@@ -13,7 +13,7 @@ export default class LogService {
             logTypeString = logTypeString.replace('Attack', 'Attack ');
         }
 
-        MessageService.SendMessageToLogChannel(`${player.GetId()} - ${logTypeString} - ${description}`);
+        MessageService.SendMessageToLogChannel(`${player.GetDiscordId()} - ${logTypeString} - ${description}`);
     }
 
     public static async LogXP(battleId:string, characterId:string, xp:number, dateString:string, trx:any) {
