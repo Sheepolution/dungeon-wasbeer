@@ -82,7 +82,19 @@ export default class CampaignManager {
     }
 
     public static async SendNewBattleMessage(monster:Monster) {
-        MessageService.SendMessageToDNDChannel(`Jullie vervolgen jullie reis ${['in het bos', 'door de bergen', 'langs de rivier', 'in de grot'].randomChoice()}. Plots komen jullie een ${monster.GetName()} tegen! Vecht tegen het monster met \`;vecht\`.`, MonsterEmbeds.GetMonsterEmbed(monster));
+        MessageService.SendMessageToDNDChannel(`Jullie vervolgen jullie reis ${[
+            'in het bos',
+            'door de bergen',
+            'langs de rivier',
+            'in een grot',
+            'langs de zee',
+            'over een brug',
+            'onder een brug',
+            'door een open veld',
+            'door een uitgestrekte vlakte',
+            'door een woestijnlandschap'
+        ].randomChoice()}. Plots komen jullie een ${monster.GetName()} tegen! Vecht tegen het monster met \`;vecht\`.`,
+        MonsterEmbeds.GetMonsterEmbed(monster));
     }
 
     public static GetBattle() {
