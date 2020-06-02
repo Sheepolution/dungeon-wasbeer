@@ -58,6 +58,10 @@ export default class Puzzle {
         return this.type;
     }
 
+    public IsSolved() {
+        return this.solver != null;
+    }
+
     public async Solve(character:Character) {
         this.solver = character;
         this.solvingDate = Utils.GetNow();
