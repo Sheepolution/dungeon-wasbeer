@@ -50,6 +50,7 @@ export default class Player {
     public async ApplyModel(model:PlayerModel) {
         this.id = model.id;
         this.discordId = model.discord_id;
+        this.discordName = model.discord_name;
         this.messagePoints = model.message_points;
         this.playerCards = await model.GetPlayerCards(this);
 
@@ -84,6 +85,10 @@ export default class Player {
         if (this.discordName == discordDisplayName) { return; }
         this.discordName = discordDisplayName;
         this.UPDATE({discord_name: discordDisplayName});
+        const character = this.GetCharacter();
+        if (character != null) {
+            character.UpdateName(this.discordName);
+        }
     }
 
     public GetCards() {

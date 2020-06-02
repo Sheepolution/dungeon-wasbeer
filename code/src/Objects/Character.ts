@@ -31,7 +31,7 @@ export default class Character {
     private fullModifierStats:IModifierStats;
     private currentHealth:number;
     private maxHealth:number;
-    private name:number;
+    private name:string;
     private equipment:Array<Card>;
     private bornDate:Date;
     private deathDate?:Date;
@@ -133,6 +133,11 @@ export default class Character {
 
     public GetName() {
         return this.name;
+    }
+
+    public async UpdateName(name:string) {
+        this.name = `${name} de ${this.classType}`;
+        this.UPDATE({ name: this.name });
     }
 
     public async Kill() {
