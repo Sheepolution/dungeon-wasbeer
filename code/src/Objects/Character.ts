@@ -38,6 +38,7 @@ export default class Character {
     private isSorcerer:boolean;
     private inBattle:boolean;
     private inspired:boolean;
+    private avatarUrl:string;
 
     constructor(player?:Player) {
         if (player) {
@@ -79,6 +80,7 @@ export default class Character {
         this.currentHealth = model.health;
         this.equipment = this.player.GetCards().filter(pc => pc.IsEquipped()).map(c => c.GetCard());
         this.inspired = model.inspired;
+        this.avatarUrl = model.avatar_url;
         this.bornDate = new Date(model.born_date);
         this.deathDate = model.death_date ? new Date(model.death_date) : undefined;
         this.isSorcerer = this.classType == ClassType.Bard || this.classType == ClassType.Cleric || this.classType == ClassType.Wizard;
@@ -135,9 +137,18 @@ export default class Character {
         return this.name;
     }
 
+    public GetAvatarUrl() {
+        return this.avatarUrl || CharacterService.GetClassImage(this.classType);
+    }
+
     public async UpdateName(name:string) {
         this.name = name;
-        this.UPDATE({ name: this.name });
+        await this.UPDATE({ name: this.name });
+    }
+
+    public async UpdateAvatarUrl(avatarUrl:string) {
+        this.avatarUrl = avatarUrl
+        await this.UPDATE({ avatar_url: this.avatarUrl });
     }
 
     public async Kill() {

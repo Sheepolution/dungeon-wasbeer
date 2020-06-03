@@ -63,6 +63,11 @@ export default class CharacterHandler {
             case 'inspire':
                 this.OnInspire(messageInfo, player, args[0])
                 break;
+            case 'art':
+            case 'avatar':
+            case 'oc':
+                this.EditAvatar(messageInfo, player, content);
+                break;
             case 'name':
             case 'naam':
                 this.EditName(messageInfo, player, content);
@@ -329,6 +334,30 @@ export default class CharacterHandler {
 
     private static async UpdateHealingEmbed(message:Message, character:Character, receiver:Character, roll:number, healing:number) {
         message.edit('', CharacterEmbeds.GetHealingEmbed(character, receiver, roll, healing));
+    }
+
+    private static async EditAvatar(messageInfo:IMessageInfo, player:Player, url?:string) {
+        const character = PlayerManager.GetCharacterFromPlayer(messageInfo, player);
+        if (character == null) {
+            return;
+        }
+
+        if (url != null && url != '') {
+            if (!url.includes('http')) {
+                MessageService.ReplyMessage(messageInfo, 'Zorg dat de url die je meegeeft begint met \'http\'.', false);
+                return;
+            }
+        } else {
+            const attachment = messageInfo.message?.attachments.first();
+            if (attachment == null || !['.png', 'jpeg', '.jpg'].includes(attachment.name?.toLowerCase().slice(-4) || '')) {
+                MessageService.ReplyNoImageAttached(messageInfo);
+                return;
+            }
+            url = attachment.url;
+        }
+
+        await character.UpdateAvatarUrl(url);
+        MessageService.ReplyMessage(messageInfo, 'De avatar van je character is aangepast.', true, true, await CharacterEmbeds.GetCharacterInfoEmbed(character));
     }
 
     private static async EditName(messageInfo:IMessageInfo, player:Player, name:string) {

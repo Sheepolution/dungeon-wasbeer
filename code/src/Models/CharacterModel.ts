@@ -31,6 +31,7 @@ export default class CharacterModel extends Model {
                 born_date: Utils.GetNowString(),
                 death_date: null,
                 inspired: false,
+                avatar_url: null,
             })
 
         return character;
