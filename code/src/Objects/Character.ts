@@ -388,8 +388,11 @@ export default class Character {
         const index = this.equipment.findIndex(c => c.GetId() == cardId);
         this.equipment.splice(index, 1);
         this.UpdateFullModifierStats();
+        this.currentHealth = this.GetMaxHealth();
+
         this.UPDATE({
-            equipment: this.equipment.map(c => c.GetId()).join(',')
+            health: this.currentHealth,
+            equipment: this.equipment.map(c => c.GetId()).join(','),
         })
     }
 
