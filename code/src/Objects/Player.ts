@@ -85,10 +85,6 @@ export default class Player {
         if (this.discordName == discordDisplayName) { return; }
         this.discordName = discordDisplayName;
         this.UPDATE({discord_name: discordDisplayName});
-        const character = this.GetCharacter();
-        if (character != null) {
-            character.UpdateName(this.discordName);
-        }
     }
 
     public GetCards() {

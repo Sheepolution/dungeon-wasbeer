@@ -37,7 +37,7 @@ export default class CommandHandler {
                 return;
             } else if (await PlayerCardHandler.OnCommand(messageInfo, player, command, args)) {
                 return;
-            } else if (await CharacterHandler.OnCommand(messageInfo, player, command, args)) {
+            } else if (await CharacterHandler.OnCommand(messageInfo, player, command, args, content)) {
                 return;
             } else if (await BattleHandler.OnCommand(messageInfo, player, command)) {
                 return;

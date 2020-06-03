@@ -136,7 +136,7 @@ export default class Character {
     }
 
     public async UpdateName(name:string) {
-        this.name = `${name} de ${this.classType}`;
+        this.name = name;
         this.UPDATE({ name: this.name });
     }
 

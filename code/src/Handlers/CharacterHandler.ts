@@ -22,7 +22,7 @@ export default class CharacterHandler {
     private static readonly classNames = Object.keys(ClassType);
     private static readonly  resetConfirmTimerPrefix = RedisConstants.REDIS_KEY + RedisConstants.RESET_CONFIRM_TIMER_KEY;
 
-    public static async OnCommand(messageInfo:IMessageInfo, player:Player, command:string, args:Array<string>) {
+    public static async OnCommand(messageInfo:IMessageInfo, player:Player, command:string, args:Array<string>, content:string) {
         if (command == 'class') {
             this.CreateCharacter(messageInfo, player, args[0]);
             return;
@@ -62,6 +62,10 @@ export default class CharacterHandler {
             case 'inspireer':
             case 'inspire':
                 this.OnInspire(messageInfo, player, args[0])
+                break;
+            case 'name':
+            case 'naam':
+                this.EditName(messageInfo, player, content);
                 break;
             case 'reset':
                 this.OnReset(messageInfo, player);
@@ -327,6 +331,21 @@ export default class CharacterHandler {
         message.edit('', CharacterEmbeds.GetHealingEmbed(character, receiver, roll, healing));
     }
 
+    private static async EditName(messageInfo:IMessageInfo, player:Player, name:string) {
+        const character = PlayerManager.GetCharacterFromPlayer(messageInfo, player);
+        if (character == null) {
+            return;
+        }
+
+        if (name.length > 50) {
+            MessageService.ReplyMessage(messageInfo, 'De naam van je character mag niet langer zijn dan 50 tekens.', false);
+            return;
+        }
+
+        await character.UpdateName(name);
+        MessageService.ReplyMessage(messageInfo, `Je naam is aangepast naar ${name}.`);
+    }
+
     private static async OnReset(messageInfo:IMessageInfo, player:Player) {
         const character = PlayerManager.GetCharacterFromPlayer(messageInfo, player);
         if (character == null) {
@@ -386,7 +405,6 @@ export default class CharacterHandler {
         }
         MessageService.ReplyEmbed(messageInfo, await CharacterEmbeds.GetCharacterStatsEmbed(character));
     }
-
 
     private static async SendCardList(messageInfo:IMessageInfo, player:Player) {
         MessageService.ReplyEmbed(messageInfo, CardEmbeds.GetPlayerCardListEmbed(player))
