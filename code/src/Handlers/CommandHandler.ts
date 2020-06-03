@@ -16,7 +16,11 @@ export default class CommandHandler {
         const command = words[0].substr(SettingsConstants.PREFIX.length).toLowerCase();
         words.shift();
         const args = words;
-        content = content.slice(content.indexOf(' ')).trim();
+        if (content.trim().includes(' ')) {
+            content = content.slice(content.indexOf(' ')).trim();
+        } else {
+            content = '';
+        }
 
         if (await AdminHandler.OnCommand(messageInfo, player, command, args, content)) {
             return;
