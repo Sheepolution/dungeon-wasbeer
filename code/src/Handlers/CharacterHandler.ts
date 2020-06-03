@@ -33,6 +33,10 @@ export default class CharacterHandler {
             case 'stats':
                 this.SendCharacterInfo(messageInfo, player);
                 break;
+            case 'cooldowns':
+            case 'cooldown':
+                this.SendCooldownsInfo(messageInfo, player);
+                break;
             case 'lijst':
             case 'kaarten':
                 this.SendCardList(messageInfo, player);
@@ -359,6 +363,14 @@ export default class CharacterHandler {
             return;
         }
         MessageService.ReplyEmbed(messageInfo, await CharacterEmbeds.GetCharacterInfoEmbed(character));
+    }
+
+    private static async SendCooldownsInfo(messageInfo:IMessageInfo, player:Player) {
+        const character = PlayerManager.GetCharacterFromPlayer(messageInfo, player);
+        if (character == null) {
+            return;
+        }
+        MessageService.ReplyEmbed(messageInfo, await CharacterEmbeds.GetCharacterCooldownsEmbed(character));
     }
 
     private static async SendCardList(messageInfo:IMessageInfo, player:Player) {

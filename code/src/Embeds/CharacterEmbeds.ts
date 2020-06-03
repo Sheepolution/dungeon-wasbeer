@@ -71,6 +71,40 @@ export default class CharacterEmbeds {
         return embed;
     }
 
+    public static async GetCharacterCooldownsEmbed(character:Character) {
+        const embed = new MessageEmbed()
+            .setColor(SettingsConstants.COLORS.DEFAULT)
+            .setTitle(`${character.GetName()}${(character.IsInspired() ? ' ✨' : '')}`)
+
+        embed.addField('-----------------------------', 'Cooldown(s)');
+        const battleCooldown = await character.GetBattleCooldown();
+        if (battleCooldown > 0) {
+            embed.addField('Vechten', `🕒 ${Utils.GetSecondsInMinutesAndSeconds(battleCooldown)}`, true)
+        } else {
+            embed.addField('Vechten', 'Klaar om te vechten!', true);
+        }
+
+        if (character.CanHeal()) {
+            const healingCooldown = await character.GetHealingCooldown();
+            if (healingCooldown > 0) {
+                embed.addField('Healen', `🕒 ${Utils.GetSecondsInMinutesAndSeconds(healingCooldown)}`, true)
+            } else {
+                embed.addField('Healen', 'Klaar om te healen!', true);
+            }
+        }
+
+        if (character.CanInspire()) {
+            const inspiringCooldown = await character.GetInspireCooldown();
+            if (inspiringCooldown > 0) {
+                embed.addField('Inspireren', `🕒 ${Utils.GetSecondsInMinutesAndSeconds(inspiringCooldown)}`, true)
+            } else {
+                embed.addField('Inspireren', 'Klaar om een mooi lied te spelen!', true);
+            }
+        }
+
+        return embed;
+    }
+
     public static GetEquipmentEmbed(character:Character) {
         const equipment = character.GetEquipment();
         const embed = new MessageEmbed()
