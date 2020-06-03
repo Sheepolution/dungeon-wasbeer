@@ -51,6 +51,11 @@ export default class BattleHandler {
             return;
         }
 
+        if (battle.IsMonsterDead()) {
+            this.SendMonsterDefeated(messageInfo);
+            return;
+        }
+
         const cooldown = await character.GetBattleCooldown();
 
         if (cooldown > 0) {
@@ -157,7 +162,7 @@ export default class BattleHandler {
             character.StopBeingInspired();
             if (battle.IsMonsterDead()) {
                 BattleHandler.inBattle = false;
-                await this.OnDefeatingMonster(battle);
+                this.OnDefeatingMonster(battle);
             } else {
                 if (this.waitList.length == 0) {
                     BattleHandler.inBattle = false;
@@ -170,7 +175,7 @@ export default class BattleHandler {
             const receivedDamage = await character.ReceiveDamage(damage);
             await this.SaveAttack(battle, character, message.id, roll1, roll2, battle.GetMonsterAttackRoll(), roll3, roll4, battle.GetMonsterAttackRoll(), false, receivedDamage, character.GetCurrentHealth());
             if (character.IsDead()) {
-                await this.OnDefeatingCharacter(messageInfo, character);
+                this.OnDefeatingCharacter(messageInfo, character);
             } else {
                 character.StopBeingInspired();
                 character.SetInBattle(false);
@@ -224,7 +229,17 @@ export default class BattleHandler {
             this.ReplyNoBattle(messageInfo);
             return;
         }
+
+        if (battle.IsMonsterDead()) {
+            this.SendMonsterDefeated(messageInfo);
+            return;
+        }
+
         return await MessageService.ReplyEmbed(messageInfo, BattleEmbeds.GetBattleInfoEmbed(battle));
+    }
+
+    private static async SendMonsterDefeated(messageInfo:IMessageInfo) {
+        MessageService.ReplyMessage(messageInfo, 'Het monster is al verslagen.', false);
     }
 
     private static async SendBattleEmbed(messageInfo:IMessageInfo, battle:Battle, character:Character) {
