@@ -14,6 +14,11 @@ export default class Heal {
     private roll:number;
     private finalHealing:number;
 
+    public static async FIND_HEALS_BY_CHARACTER(character:Character) {
+        const totalHeals = await HealModel.query().where({character_id: character.GetId()}).count('id');
+        return totalHeals[0].count || 0;
+    }
+
     public static async FIND_HEALED_BY_CHARACTER(character:Character) {
         const totalHealed = await HealModel.query().where({character_id: character.GetId()}).sum('final_healing');
         return totalHealed[0].sum || 0;

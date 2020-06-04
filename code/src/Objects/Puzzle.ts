@@ -14,6 +14,11 @@ export default class Puzzle {
     private solvingDate?:Date;
     private solver?:Character;
 
+    public static async FIND_SOLVED_BY_CHARACTER(character:Character) {
+        const puzzles = await PuzzleModel.query().where('solver_id', character.GetId()).count('id');
+        return puzzles[0].count || 0;
+    }
+
     public async GET(id:string) {
         const model:PuzzleModel = await PuzzleModel.query().findById(id);
         await this.ApplyModel(model);

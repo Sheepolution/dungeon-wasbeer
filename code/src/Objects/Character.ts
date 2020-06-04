@@ -13,6 +13,8 @@ import CharacterConstants from '../Constants/CharacterConstants';
 import Heal from './Heal';
 import { Redis } from '../Providers/Redis';
 import RedisConstants from '../Constants/RedisConstants';
+import Puzzle from './Puzzle';
+import Log from './Log';
 
 export default class Character {
 
@@ -427,8 +429,20 @@ export default class Character {
         return await Attack.FIND_TOTAL_DAMAGE_TAKEN(this);
     }
 
+    public async GetTotalHealsDone() {
+        return await Heal.FIND_HEALS_BY_CHARACTER(this);
+    }
+
     public async GetTotalHealingDone() {
         return await Heal.FIND_HEALED_BY_CHARACTER(this);
+    }
+
+    public async GetTotalInspiresDone() {
+        return await Log.FIND_TOTAL_INSPIRES_BY_CHARACTER(this);
+    }
+
+    public async GetTotalPuzzlesSolved() {
+        return await Puzzle.FIND_SOLVED_BY_CHARACTER(this);
     }
 
     public GetRandomAttackDescription(crit?:boolean) {

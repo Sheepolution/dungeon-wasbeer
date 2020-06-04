@@ -174,10 +174,15 @@ export default class CharacterEmbeds {
             .addField('Schade gekregen', await character.GetTotalDamageTaken(), true);
 
         if (character.CanHeal()) {
+            embed.addField('Heals gedaan', await character.GetTotalHealsDone(), true);
             embed.addField('Healing gedaan', await character.GetTotalHealingDone(), true);
         }
 
-        embed.addField('Puzzels opgelost', 0, true)
+        if (character.CanInspire()) {
+            embed.addField('Geïnspireerd', await character.GetTotalInspiresDone(), true);
+        }
+
+        embed.addField('Puzzels opgelost', await character.GetTotalPuzzlesSolved(), true);
 
         const equipment = character.GetEquipment();
         if (equipment.length > 0) {
