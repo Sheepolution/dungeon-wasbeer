@@ -76,7 +76,6 @@ export default class CharacterEmbeds {
         const embed = new MessageEmbed()
             .setColor(SettingsConstants.COLORS.DEFAULT)
             .setTitle(`${character.GetName()}${(character.IsInspired() ? ' ✨' : '')}`)
-            .setImage(CharacterService.GetClassImage(character.GetClass()))
             .addField('XP', `${character.GetXP()}/${character.GetXPForNextLevel()}`, true)
             .addField('Level', character.GetLevel(), true);
 
