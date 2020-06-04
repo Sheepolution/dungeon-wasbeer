@@ -148,7 +148,7 @@ export default class CampaignManager {
                 const charId = character.GetId();
                 const xp = data[charId];
                 if (xp) {
-                    await character.IncreaseXP(xp, trx);
+                    await character.IncreaseXP(xp, trx, true);
                     await LogService.LogXP(battleId, character.GetId(), xp, nowString, trx);
                     delete data[charId];
                 }
