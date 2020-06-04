@@ -139,29 +139,24 @@ export default class CampaignManager {
             }
         }
 
-        for (const characterId in data) {
-            const character = PlayerManager.GetCachePlayerCharacterByCharacterId(characterId);
-            if (character != null) {
-                character.IncreaseXP(data[characterId], false);
-            }
-        }
-
         const characters = PlayerManager.GetAllCachedCharacters();
         const battleId = battle.GetId();
         const nowString = Utils.GetNowString();
 
         await transaction(CharacterModel.knex(), async (trx:any) => {
-            for (const characterId in data) {
-                await Character.INCREASE_XP(data[characterId], characterId, trx);
-                await LogService.LogXP(battleId, characterId, data[characterId], nowString, trx);
-            }
-
             for (const character of characters) {
-                const xp = data[character.GetId()];
+                const charId = character.GetId();
+                const xp = data[charId];
                 if (xp) {
                     await character.IncreaseXP(xp, trx);
                     await LogService.LogXP(battleId, character.GetId(), xp, nowString, trx);
+                    delete data[charId];
                 }
+            }
+
+            for (const characterId in data) {
+                await Character.INCREASE_XP(data[characterId], characterId, trx);
+                await LogService.LogXP(battleId, characterId, data[characterId], nowString, trx);
             }
         }).catch((error:any) => {
             console.log(error);
