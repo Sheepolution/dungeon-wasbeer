@@ -83,6 +83,11 @@ export module Utils {
 
     export function GetSecondsInMinutesAndSeconds(n:number) {
         const f = Math.floor(n/60);
+        const minutes = f > 0 ? (`${f} ${f == 1 ? 'minuut' : 'minuten'}`) : null;
+        if (minutes == null) {
+            return (n/60 != f) ? `${(n - (f)*60)} seconden` : '';
+        }
+
         return `${f} ${f == 1 ? 'minuut' : 'minuten'}${(n/60 != f) ? ` en ${(n - (f)*60)} seconden` : ''}`;
     }
 
