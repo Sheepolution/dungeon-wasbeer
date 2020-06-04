@@ -43,6 +43,11 @@ export default class CharacterHandler {
             case 'statistieken':
                 this.SendStatsInfo(messageInfo, player);
                 break;
+            case 'history':
+            case 'geschiedenis':
+            case 'verleden':
+                this.SendHistoryInfo(messageInfo, player);
+                break;
             case 'lijst':
             case 'kaarten':
                 this.SendCardList(messageInfo, player);
@@ -433,6 +438,14 @@ export default class CharacterHandler {
             return;
         }
         MessageService.ReplyEmbed(messageInfo, await CharacterEmbeds.GetCharacterStatsEmbed(character));
+    }
+
+    private static async SendHistoryInfo(messageInfo:IMessageInfo, player:Player) {
+        const character = PlayerManager.GetCharacterFromPlayer(messageInfo, player);
+        if (character == null) {
+            return;
+        }
+        MessageService.ReplyEmbed(messageInfo, await CharacterEmbeds.GetCharacterHistoryEmbed(character));
     }
 
     private static async SendCardList(messageInfo:IMessageInfo, player:Player) {

@@ -155,6 +155,36 @@ export default class CharacterEmbeds {
         return embed;
     }
 
+    public static async GetCharacterHistoryEmbed(character:Character) {
+        const victories = await character.GetVictories();
+        const losses = await character.GetLosses();
+
+        const embed = new MessageEmbed()
+            .setColor(SettingsConstants.COLORS.DEFAULT)
+            .setAuthor(character.GetClassName())
+            .setTitle(`De geschiedenis van ${character.GetName()}${(character.IsInspired() ? ' ✨' : '')}`)
+            .setImage(character.GetAvatarUrl())
+            .addField('Monsters', await character.GetBattles(), true)
+            .addField('Gevechten', parseInt(victories) + parseInt(losses), true)
+            .addField('Gewonnen', victories, true)
+            .addField('Verloren', losses, true)
+            .addField('Schade gedaan', await character.GetTotalDamageGiven(), true)
+            .addField('Schade gekregen', await character.GetTotalDamageTaken(), true);
+
+        if (character.CanHeal()) {
+            embed.addField('Heals gedaan', await character.GetTotalHealsDone(), true);
+            embed.addField('Healing gedaan', await character.GetTotalHealingDone(), true);
+        }
+
+        if (character.CanInspire()) {
+            embed.addField('Geïnspireerd', await character.GetTotalInspiresDone(), true);
+        }
+
+        embed.addField('Puzzels opgelost', await character.GetTotalPuzzlesSolved(), true);
+
+        return embed;
+    }
+
     public static async GetDeadCharacterEmbed(character:Character) {
         const victories = await character.GetVictories();
         const losses = await character.GetLosses();
