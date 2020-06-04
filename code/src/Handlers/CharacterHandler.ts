@@ -37,6 +37,7 @@ export default class CharacterHandler {
                 break;
             case 'cooldowns':
             case 'cooldown':
+            case 'cd':
                 this.SendCooldownsInfo(messageInfo, player);
                 break;
             case 'stats':
