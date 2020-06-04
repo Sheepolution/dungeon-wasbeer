@@ -12,6 +12,7 @@ export default class CharacterEmbeds {
     public static async GetCharacterInfoEmbed(character:Character) {
         const embed = new MessageEmbed()
             .setColor(SettingsConstants.COLORS.DEFAULT)
+            .setAuthor(character.GetClassName())
             .setTitle(`${character.GetName()}${(character.IsInspired() ? ' ✨' : '')}`)
             .setImage(character.GetAvatarUrl())
             .addField('XP', `${character.GetXP()}/${character.GetXPForNextLevel()}`, true)
