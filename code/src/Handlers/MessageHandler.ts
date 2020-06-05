@@ -30,7 +30,7 @@ export default class MessageHandler {
                 character.GetHealthFromMessage();
             }
 
-            Redis.set(characterUpdateTimeout + characterId, '1', 'EX', Utils.GetMinutesInSeconds(SettingsConstants.CHARACTER_POINT_TIMEOUT_MINUTES));
+            Redis.set(MessageHandler.characterUpdateTimeoutPrefix + characterId, '1', 'EX', Utils.GetMinutesInSeconds(SettingsConstants.CHARACTER_POINT_TIMEOUT_MINUTES));
         }
 
         const content = messageInfo.message?.content;
