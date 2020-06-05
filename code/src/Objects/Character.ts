@@ -329,7 +329,7 @@ export default class Character {
 
     public async IncreaseXP(amount:number, trx?:any, updateData:boolean = true) {
         this.xp += amount;
-        if (!updateData) {
+        if (updateData) {
             await this.UPDATE({ xp: this.xp }, trx)
         }
 
