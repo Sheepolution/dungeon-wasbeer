@@ -492,6 +492,15 @@ export default class Character {
             emptyModifierStats.health = 0;
             this.fullModifierStats = CharacterService.GetSummedUpModifierStats(this.fullModifierStats, emptyModifierStats, this.classType);
         }
+
+        this.fullModifierStats.armor = Math.max(0, this.fullModifierStats.armor);
+        this.fullModifierStats.attack = Math.max(0, this.fullModifierStats.attack);
+        this.fullModifierStats.healing = Math.max(0, this.fullModifierStats.healing);
+        this.fullModifierStats.health = Math.max(0, this.fullModifierStats.health);
+        this.fullModifierStats.regeneration = Math.max(0, this.fullModifierStats.regeneration);
+        this.fullModifierStats.spell = Math.max(0, this.fullModifierStats.spell);
+        this.fullModifierStats.strength = Math.max(0, this.fullModifierStats.strength);
+
         this.maxHealth = this.CalculateMaxHealth();
     }
 
