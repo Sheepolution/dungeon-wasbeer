@@ -114,6 +114,10 @@ export default class Character {
         return this.maxHealth;
     }
 
+    public GetBaseHealth() {
+        return this.classModifierStats.health + CharacterConstants.HEALTH_ADDITION_PER_LEVEL[this.level - 1];
+    }
+
     public IsFullHealth() {
         return this.currentHealth >= this.maxHealth;
     }
