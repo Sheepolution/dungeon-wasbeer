@@ -18,6 +18,11 @@ export default class CharacterEmbeds {
             .addField('XP', `${character.GetXP()}/${character.GetXPForNextLevel()}`, true)
             .addField('Level', character.GetLevel(), true);
 
+        const lore = character.GetLore();
+        if (lore != null) {
+            embed.setDescription(lore);
+        }
+
         const modifiers = character.GetFullModifierStats();
         const modifiersClass = character.GetClassModifierStats();
         const modifiersCards = character.GetCardModifierStats();

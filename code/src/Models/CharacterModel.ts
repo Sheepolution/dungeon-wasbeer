@@ -32,6 +32,7 @@ export default class CharacterModel extends Model {
                 death_date: null,
                 inspired: false,
                 avatar_url: null,
+                lore: null,
             })
 
         return character;

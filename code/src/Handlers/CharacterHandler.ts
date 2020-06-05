@@ -74,6 +74,11 @@ export default class CharacterHandler {
             case 'oc':
                 this.EditAvatar(messageInfo, player, content);
                 break;
+            case 'lore':
+            case 'description':
+            case 'beschrijving':
+                this.EditLore(messageInfo, player, content);
+                break;
             case 'name':
             case 'naam':
                 this.EditName(messageInfo, player, content);
@@ -364,6 +369,27 @@ export default class CharacterHandler {
 
         await character.UpdateAvatarUrl(url);
         MessageService.ReplyMessage(messageInfo, 'De avatar van je character is aangepast.', true, true, await CharacterEmbeds.GetCharacterInfoEmbed(character));
+    }
+
+    private static async EditLore(messageInfo:IMessageInfo, player:Player, lore:string) {
+        const character = PlayerManager.GetCharacterFromPlayer(messageInfo, player);
+        if (character == null) {
+            return;
+        }
+
+        if (lore == null || lore == '') {
+            MessageService.ReplyMessage(messageInfo, 'Zorg dat je een lore meegeeft. `;lore [lore]`', false);
+            return;
+        }
+
+        if (lore.length > 500) {
+            MessageService.ReplyMessage(messageInfo, 'Je lore mag niet langer dan 500 tekens zijn.', false);
+            return;
+        }
+
+        await character.UpdateLore(lore);
+        MessageService.ReplyMessage(messageInfo, 'De lore van je character is aangepast.', true, true, await CharacterEmbeds.GetCharacterInfoEmbed(character));
+
     }
 
     private static async EditName(messageInfo:IMessageInfo, player:Player, name:string) {
