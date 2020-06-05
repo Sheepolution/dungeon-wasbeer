@@ -85,6 +85,9 @@ export default class CardEmbeds {
 
         for (let i = start; i < end; i++) {
             const playerCard = playerCards[i];
+            if (playerCard == null) {
+                continue;
+            }
             const card = playerCard.GetCard();
             const amount = playerCard.GetAmount();
             list += EmojiConstants.STARS[card.GetRank()] + CardService.GetIconEmojiByCategory(card.GetCategory()) + ( playerCard.IsEquipped() ? ' ✅' : '') + ' ' + card.GetName() + (amount == 1 ? '' : ' (x' + amount + ')') + CardService.ParseCardModifersToEmbedString(card) + '\n';
