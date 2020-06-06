@@ -152,11 +152,13 @@ export default class CampaignManager {
                     await LogService.LogXP(battleId, character.GetId(), xp, nowString, trx);
                     delete data[charId];
                 }
+                await character.RestoreToFullHealth(trx);
             }
 
             for (const characterId in data) {
                 await Character.INCREASE_XP(data[characterId], characterId, trx);
                 await LogService.LogXP(battleId, characterId, data[characterId], nowString, trx);
+                await Character.RESTORE_HEALTH(characterId, trx);
             }
         }).catch((error:any) => {
             console.log(error);

@@ -55,6 +55,12 @@ export default class Character {
             .increment('xp', amount);
     }
 
+    public static async RESTORE_HEALTH(id:string, trx:any) {
+        await CharacterModel.query(trx)
+            .where({id: id, status: '01'})
+            .increment('health', 10000);
+    }
+
     public async GET(id:string) {
         const model:CharacterModel = await CharacterModel.query().findById(id);
         await this.ApplyModel(model);
@@ -122,6 +128,11 @@ export default class Character {
 
     public IsFullHealth() {
         return this.currentHealth >= this.maxHealth;
+    }
+
+    public RestoreToFullHealth(trx:any) {
+        this.currentHealth = this.GetMaxHealth();
+        this.UPDATE({health: this.currentHealth}, trx);
     }
 
     public GetArmor() {
@@ -513,6 +524,7 @@ export default class Character {
         this.fullModifierStats.strength = Math.max(0, this.fullModifierStats.strength);
 
         this.maxHealth = this.CalculateMaxHealth();
+        this.currentHealth = Math.min(this.maxHealth, this.currentHealth);
     }
 
     private async OnLevelUp(trx?:any) {
