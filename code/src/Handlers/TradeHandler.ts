@@ -101,7 +101,7 @@ export default class TradeHandler {
         }
 
         if (!theirCard.CanBeTraded()) {
-            MessageService.ReplyMessage(messageInfo, `De kaart van ${otherPlayer.GetDiscordName()}, '${yourCard.GetCard().GetName()}', zit in hun equipment en dus kunnen ze deze niet ruilen.`, false);
+            MessageService.ReplyMessage(messageInfo, `De kaart van ${otherPlayer.GetDiscordName()}, '${theirCard.GetCard().GetName()}', zit in hun equipment en dus kunnen ze deze niet ruilen.`, false);
             return;
         }
 
