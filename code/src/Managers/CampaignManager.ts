@@ -125,18 +125,23 @@ export default class CampaignManager {
         const attackData = await Attack.FIND_TOTAL_DAMAGE_GIVEN_IN_BATTLE_FOR_ALL_CHARACTERS(battle);
         const healData = await Heal.FIND_TOTAL_HEALED_IN_BATTLE_FOR_ALL_CHARACTERS(battle);
         const data:any = {};
+
         for (const row of attackData) {
-            const xp = Math.min(Math.floor(battle.GetMaxMonsterHealth()/10), row.sum);
+            const xp = row.sum;
             data[row.character_id] = xp;
         }
 
         for (const row of healData) {
-            const xp = Math.min(Math.floor(battle.GetMaxMonsterHealth()/15), row.sum);
+            const xp = row.sum;
             if (data[row.character_id]) {
                 data[row.character_id] += xp;
             } else {
                 data[row.character_id] = xp;
             }
+        }
+
+        for (const characterId in data) {
+            data[characterId] = Math.min(Math.floor(battle.GetMaxMonsterHealth()/10), data[characterId]);
         }
 
         const characters = PlayerManager.GetAllCachedCharacters();
