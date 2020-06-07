@@ -132,7 +132,7 @@ export default class CampaignManager {
         }
 
         for (const row of healData) {
-            const xp = row.sum;
+            const xp = Math.floor(row.sum/2);
             if (data[row.character_id]) {
                 data[row.character_id] += xp;
             } else {
