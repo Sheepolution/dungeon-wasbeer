@@ -71,7 +71,11 @@ export default class CardEmbeds {
         var pages = Math.ceil(playerCards.length/split);
 
         if (page != null) {
-            page = ((page - 1) % (pages)) + 1;
+            if (page == 0) {
+                page = pages;
+            } else {
+                page = ((page - 1) % (pages)) + 1;
+            }
         }
 
         var start = page == null ? 0 : (page-1) * split;
