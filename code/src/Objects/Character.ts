@@ -130,9 +130,9 @@ export default class Character {
         return this.currentHealth >= this.maxHealth;
     }
 
-    public RestoreToFullHealth(trx:any) {
+    public async RestoreToFullHealth(trx:any) {
         this.currentHealth = this.GetMaxHealth();
-        this.UPDATE({health: this.currentHealth}, trx);
+        await this.UPDATE({health: this.currentHealth}, trx);
     }
 
     public GetArmor() {
