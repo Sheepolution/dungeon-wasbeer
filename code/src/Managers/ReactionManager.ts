@@ -8,7 +8,7 @@ export default class ReactionManager {
 
     private static messages:any = {};
 
-    public static AddMessage(message:Message, messageInfo:IMessageInfo, reactionMessageType:ReactionMessageType, value:any) {
+    public static AddMessage(message:Message, messageInfo:IMessageInfo, reactionMessageType:ReactionMessageType, values:any) {
         if (messageInfo.message == null) {
             return;
         }
@@ -19,7 +19,7 @@ export default class ReactionManager {
             delete ReactionManager.messages[id];
         }, Utils.GetMinutesInMiliSeconds(2));
 
-        ReactionManager.messages[id] = {message:message, messageInfo: messageInfo, reactionMessageType: reactionMessageType, timeout: timeout, value: value};
+        ReactionManager.messages[id] = {message:message, messageInfo: messageInfo, reactionMessageType: reactionMessageType, timeout: timeout, values: values};
     }
 
     public static OnReaction(reaction:MessageReaction, user:User) {

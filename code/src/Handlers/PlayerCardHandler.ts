@@ -8,6 +8,7 @@ import PlayerManager from '../Managers/PlayerManager';
 import ReactionManager from '../Managers/ReactionManager';
 import { ReactionMessageType } from '../Enums/ReactionMessageType';
 import SettingsConstants from '../Constants/SettingsConstants';
+import { SortingType } from '../Enums/SortingType';
 
 export default class PlayerCardHandler {
 
@@ -20,6 +21,26 @@ export default class PlayerCardHandler {
             case 'kaarten':
                 this.SendPlayerCardList(messageInfo, player);
                 break;
+            case 'lijst-level':
+            case 'kaarten-level':
+            case 'lijstl':
+            case 'kaartenl':
+                this.SendPlayerCardList(messageInfo, player, SortingType.Rank);
+                break;
+            case 'lijst-cat':
+            case 'kaarten-cat':
+            case 'lijst-categorie':
+            case 'kaarten-categorie':
+            case 'lijstc':
+            case 'kaartenc':
+                this.SendPlayerCardList(messageInfo, player, SortingType.Category);
+                break;
+            case 'lijst-naam':
+            case 'kaarten-naam':
+            case 'lijstn':
+            case 'kaartenn':
+                this.SendPlayerCardList(messageInfo, player, SortingType.Name);
+                break;
             default:
                 return false;
         }
@@ -30,12 +51,12 @@ export default class PlayerCardHandler {
     public static async OnReaction(obj:any, reaction:MessageReaction) {
         const player = await PlayerManager.GetPlayer(obj.messageInfo.member.id);
         if (reaction.emoji.name == '⬅️') {
-            obj.value -= 1;
+            obj.values.page -= 1;
         } else if (reaction.emoji.name == '➡️') {
-            obj.value += 1;
+            obj.values.page += 1;
         }
 
-        await obj.message.edit(null, CardEmbeds.GetPlayerCardListEmbed(player, obj.value));
+        await obj.message.edit(null, CardEmbeds.GetPlayerCardListEmbed(player, obj.values.page, obj.values.sorting));
     }
 
     private static async SendPlayerCard(messageInfo:IMessageInfo, player:Player, cardName:string) {
@@ -53,17 +74,17 @@ export default class PlayerCardHandler {
         MessageService.ReplyEmbed(messageInfo, CardEmbeds.GetCardEmbed(playerCard.GetCard(), playerCard.GetAmount()));
     }
 
-    private static async SendPlayerCardList(messageInfo:IMessageInfo, player:Player) {
+    private static async SendPlayerCardList(messageInfo:IMessageInfo, player:Player, sorting?:SortingType) {
 
         const cards = player.GetCards().length;
         const page = cards > SettingsConstants.CARD_AMOUNT_SPLIT_PAGES ? 1 : undefined;
 
-        const message = await MessageService.ReplyEmbed(messageInfo, CardEmbeds.GetPlayerCardListEmbed(player, page));
+        const message = await MessageService.ReplyEmbed(messageInfo, CardEmbeds.GetPlayerCardListEmbed(player, page, sorting));
         if (page == 1) {
             await message.react('⬅️')
             await Utils.Sleep(.5)
             await message.react('➡️')
-            ReactionManager.AddMessage(message, messageInfo, ReactionMessageType.PlayerCardList, 1);
+            ReactionManager.AddMessage(message, messageInfo, ReactionMessageType.PlayerCardList, {sorting: sorting, page: 1});
         }
     }
 }

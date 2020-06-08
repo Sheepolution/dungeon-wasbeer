@@ -7,6 +7,8 @@ import ITradeInfo from '../Interfaces/ITradeInfo';
 import CardService from '../Services/CardService';
 import CharacterService from '../Services/CharacterService';
 import CardManager from '../Managers/CardManager';
+import PlayerCard from '../Objects/PlayerCard';
+import { SortingType } from '../Enums/SortingType';
 
 export default class CardEmbeds {
 
@@ -58,11 +60,24 @@ export default class CardEmbeds {
         return embed;
     }
 
-    public static GetPlayerCardListEmbed(player:Player, page?:number) {
+    public static GetPlayerCardListEmbed(player:Player, page?:number, sortingType?:SortingType) {
         const playerCards = player.GetCards();
 
-        const cardsAmount = CardManager.GetCardList().length;
+        if (sortingType != null) {
+            switch (sortingType) {
+                case SortingType.Category:
+                    playerCards.sort((a:PlayerCard, b:PlayerCard) => a.GetCard().GetCategory() > b.GetCard().GetCategory() ? 1 : -1);
+                    break;
+                case SortingType.Rank:
+                    playerCards.sort((a:PlayerCard, b:PlayerCard) => a.GetCard().GetRank() - b.GetCard().GetRank());
+                    break;
+                case SortingType.Name:
+                    playerCards.sort((a:PlayerCard, b:PlayerCard) => a.GetCard().GetName() > b.GetCard().GetName() ? 1 : -1);
+                    break;
+            }
+        }
 
+        const cardsAmount = CardManager.GetCardList().length;
         const embed = new MessageEmbed()
             .setColor(SettingsConstants.COLORS.DEFAULT)
             .setTitle('De kaarten van ' + player.GetDiscordName())
