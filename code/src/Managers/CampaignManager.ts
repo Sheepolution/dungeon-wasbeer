@@ -123,7 +123,7 @@ export default class CampaignManager {
 
     private static async GiveXPToBattlers(battle:Battle) {
         const attackData = await Attack.FIND_TOTAL_DAMAGE_GIVEN_IN_BATTLE_FOR_ALL_CHARACTERS(battle);
-        const healData = await Heal.FIND_TOTAL_HEALED_IN_BATTLE_FOR_ALL_CHARACTERS(battle);
+        const healData = await Heal.FIND_TOTAL_HEALED_OTHERS_IN_BATTLE_FOR_ALL_CHARACTERS(battle);
         const data:any = {};
 
         for (const row of attackData) {

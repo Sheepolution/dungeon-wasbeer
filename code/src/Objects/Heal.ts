@@ -24,8 +24,8 @@ export default class Heal {
         return totalHealed[0].sum || 0;
     }
 
-    public static async FIND_TOTAL_HEALED_IN_BATTLE_FOR_ALL_CHARACTERS(battle:Battle) {
-        const totalHealed = await HealModel.query().where({battle_id: battle.GetId()}).groupBy('character_id').select('character_id').sum('final_healing');
+    public static async FIND_TOTAL_HEALED_OTHERS_IN_BATTLE_FOR_ALL_CHARACTERS(battle:Battle) {
+        const totalHealed = await HealModel.query().where({battle_id: battle.GetId()}).whereRaw('??!=??', ['character_id', 'receiver_id']).groupBy('character_id').select('character_id').sum('final_healing');
         return totalHealed;
     }
 
