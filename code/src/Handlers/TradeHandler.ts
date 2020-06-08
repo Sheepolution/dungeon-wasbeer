@@ -19,6 +19,8 @@ export default class TradeHandler {
     public static async OnCommand(messageInfo:IMessageInfo, player:Player, command:string, content:string) {
         switch (command) {
             case 'ruil':
+            case 'ruilen':
+            case 'trade':
                 this.OnTrade(messageInfo, player, content);
                 break;
             case 'accept':
