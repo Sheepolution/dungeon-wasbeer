@@ -98,7 +98,7 @@ export default class PlayerCardHandler {
             await message.react('⬅️')
             await Utils.Sleep(.5)
             await message.react('➡️')
-            ReactionManager.AddMessage(message, messageInfo, ReactionMessageType.PlayerCardList, {sorting: sorting, page: 1});
+            ReactionManager.AddMessage(message, messageInfo, ReactionMessageType.PlayerCardList, {page: 1});
         }
     }
 }
