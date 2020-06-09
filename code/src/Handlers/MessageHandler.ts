@@ -22,6 +22,33 @@ export default class MessageHandler {
             return;
         }
 
+        const content = messageInfo.message?.content;
+
+        if (content) {
+            if (content.startsWith('<') && content.endsWith('>')) {
+                return;
+            }
+
+            if (content.startsWith('-') || content.startsWith('.')) {
+                return;
+            }
+
+            const contentLower = content.toLowerCase();
+
+            if (contentLower.includes('kaard') || contentLower.includes('picard')) {
+                return;
+            }
+
+            if ((contentLower.startsWith('kaart') || contentLower.includes(' kaart ')) && content.length <= 20) {
+                this.OnBegging(messageInfo, player);
+                return;
+            }
+
+            if (content.length <= 6) {
+                return;
+            }
+        }
+
         const character = player.GetCharacter();
         if (character != null) {
             const characterId = character.GetId();
@@ -31,15 +58,6 @@ export default class MessageHandler {
             }
 
             Redis.set(MessageHandler.characterUpdateTimeoutPrefix + characterId, '1', 'EX', Utils.GetMinutesInSeconds(SettingsConstants.CHARACTER_POINT_TIMEOUT_MINUTES));
-        }
-
-        const content = messageInfo.message?.content;
-        if (content) {
-            const contentLower = content.toLowerCase();
-            if ((contentLower.startsWith('kaart') || contentLower.includes(' kaart ')) && content.length <= 20) {
-                this.OnBegging(messageInfo, player);
-                return;
-            }
         }
 
         const memberId = messageInfo.member.id;
