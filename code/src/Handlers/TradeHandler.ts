@@ -39,7 +39,7 @@ export default class TradeHandler {
     }
 
     private static async OnTrade(messageInfo:IMessageInfo, player:Player, args:string) {
-        var match = args.match(/<@!?(\d+)>\s(.+?)\s>\s(.+)/);
+        var match = args.match(/<@!?(\d+)>\s+(.+?)\s+>\s+(.+)/);
         if (match == null) {
             MessageService.ReplyMessage(messageInfo, 'Ik begrijp je niet helemaal. Zorg dat je het formaat aanhoudt:\n`;ruil @mention jouw kaart > hun kaart`', false);
             return;
