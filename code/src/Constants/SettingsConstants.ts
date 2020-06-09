@@ -46,4 +46,5 @@ export default class SettingsConstants {
     public static readonly STANDARD_DICE = 20;
 
     public static readonly NUMBER_OF_MONSTERS = 60;
+    public static readonly LORE_MAX_LENGTH = 1500;
 }

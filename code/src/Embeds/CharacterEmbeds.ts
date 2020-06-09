@@ -14,14 +14,9 @@ export default class CharacterEmbeds {
             .setColor(SettingsConstants.COLORS.DEFAULT)
             .setAuthor(character.GetClassName(), CharacterService.GetClassIconImage(character.GetClass()))
             .setTitle(`${character.GetName()}${(character.IsInspired() ? ' ✨' : '')}`)
-            .setImage(character.GetAvatarUrl())
+            .setThumbnail(character.GetAvatarUrl())
             .addField('XP', `${character.GetXP()}/${character.GetXPForNextLevel()}`, true)
             .addField('Level', character.GetLevel(), true);
-
-        const lore = character.GetLore();
-        if (lore != null) {
-            embed.setDescription(lore);
-        }
 
         const modifiers = character.GetFullModifierStats();
         const modifiersClass = character.GetClassModifierStats();
@@ -72,6 +67,23 @@ export default class CharacterEmbeds {
             } else {
                 embed.addField('Inspireren', 'Klaar om een mooi lied te spelen!', true);
             }
+        }
+
+        return embed;
+    }
+
+    public static async GetCharacterDescriptionEmbed(character:Character) {
+        const embed = new MessageEmbed()
+            .setColor(SettingsConstants.COLORS.DEFAULT)
+            .setAuthor(character.GetClassName(), CharacterService.GetClassIconImage(character.GetClass()))
+            .setTitle(`${character.GetName()}${(character.IsInspired() ? ' ✨' : '')}`)
+            .setImage(character.GetAvatarUrl())
+            .addField('XP', `${character.GetXP()}/${character.GetXPForNextLevel()}`, true)
+            .addField('Level', character.GetLevel(), true);
+
+        const lore = character.GetLore();
+        if (lore != null) {
+            embed.setDescription(lore);
         }
 
         return embed;

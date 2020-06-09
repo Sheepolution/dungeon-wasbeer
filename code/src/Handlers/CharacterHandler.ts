@@ -16,6 +16,7 @@ import CharacterConstants from '../Constants/CharacterConstants';
 import CardEmbeds from '../Embeds/CardEmbeds';
 import { LogType } from '../Enums/LogType';
 import LogService from '../Services/LogService';
+import SettingsConstants from '../Constants/SettingsConstants';
 
 export default class CharacterHandler {
 
@@ -30,10 +31,12 @@ export default class CharacterHandler {
 
         switch (command) {
             case 'info':
+                this.SendCharacterInfo(messageInfo, player);
+                break;
             case 'character':
             case 'ik':
             case 'me':
-                this.SendCharacterInfo(messageInfo, player);
+                this.SendCharacterDescription(messageInfo, player);
                 break;
             case 'cooldowns':
             case 'cooldown':
