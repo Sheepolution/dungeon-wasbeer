@@ -30,7 +30,7 @@ export default class CardEmbeds {
         }
 
         if (modifierClass) {
-            embed.addField('Class', `${CharacterService.GetClassEmoji(modifierClass)} ${modifierClass.toString()}`, true);
+            embed.addField('Class', `${CharacterService.GetClassIconEmoji(modifierClass)} ${modifierClass.toString()}`, true);
         }
 
         return embed;

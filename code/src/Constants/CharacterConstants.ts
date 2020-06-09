@@ -36,6 +36,14 @@ export default class CharacterConstants {
         FIGHTER: 'https://media.discordapp.net/attachments/694331679204180029/706146775828004884/FighterWasbeer.png',
         RANGER: 'https://media.discordapp.net/attachments/694331679204180029/706131465150267452/RangerWasbeer2.png',
     }
+
+    public static readonly ICON_IMAGE = {
+        BARD: 'https://media.discordapp.net/attachments/694331679204180029/708768518551633930/BardIcon.png',
+        CLERIC: 'https://media.discordapp.net/attachments/694331679204180029/708768545294778388/ClericIcon.png',
+        WIZARD: 'https://media.discordapp.net/attachments/694331679204180029/708768674164768808/WizardIcon.png',
+        PALADIN: 'https://media.discordapp.net/attachments/694331679204180029/708776075877941278/PaladinIcon.png',
+        FIGHTER: 'https://media.discordapp.net/attachments/694331679204180029/708768574516232333/FighterIcon.png',
+        RANGER: 'https://media.discordapp.net/attachments/694331679204180029/708768639108513822/RangerIcon.png',
     }
 
     public static readonly CLASS_BASE_STATS = {

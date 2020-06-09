@@ -65,7 +65,7 @@ export default class CardService {
 
         const modifierClass = card.GetModifierClass();
         if (modifierClass != null) {
-            modifierString += ' | ' + `${CharacterService.GetClassEmoji(modifierClass)} ${modifierClass.toString()}`;
+            modifierString += ' | ' + `${CharacterService.GetClassIconEmoji(modifierClass)} ${modifierClass.toString()}`;
         }
 
         return modifierString

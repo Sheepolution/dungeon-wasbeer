@@ -5,7 +5,7 @@ import CharacterConstants from '../Constants/CharacterConstants';
 
 export default class CharacterService {
 
-    public static GetClassEmoji(classType:ClassType) {
+    public static GetClassIconEmoji(classType:ClassType) {
         switch (classType) {
             case ClassType.Bard:
                 return EmojiConstants.CLASSES.BARD;
@@ -19,6 +19,23 @@ export default class CharacterService {
                 return EmojiConstants.CLASSES.RANGER;
             case ClassType.Wizard:
                 return EmojiConstants.CLASSES.WIZARD
+        }
+    }
+
+    public static GetClassIconImage(classType:ClassType) {
+        switch (classType) {
+            case ClassType.Bard:
+                return CharacterConstants.ICON_IMAGE.BARD;
+            case ClassType.Cleric:
+                return CharacterConstants.ICON_IMAGE.CLERIC;
+            case ClassType.Fighter:
+                return CharacterConstants.ICON_IMAGE.FIGHTER;
+            case ClassType.Paladin:
+                return CharacterConstants.ICON_IMAGE.PALADIN;
+            case ClassType.Ranger:
+                return CharacterConstants.ICON_IMAGE.RANGER;
+            case ClassType.Wizard:
+                return CharacterConstants.ICON_IMAGE.WIZARD;
         }
     }
 

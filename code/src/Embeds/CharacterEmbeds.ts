@@ -12,7 +12,7 @@ export default class CharacterEmbeds {
     public static async GetCharacterInfoEmbed(character:Character) {
         const embed = new MessageEmbed()
             .setColor(SettingsConstants.COLORS.DEFAULT)
-            .setAuthor(character.GetClassName())
+            .setAuthor(character.GetClassName(), CharacterService.GetClassIconImage(character.GetClass()))
             .setTitle(`${character.GetName()}${(character.IsInspired() ? ' ✨' : '')}`)
             .setImage(character.GetAvatarUrl())
             .addField('XP', `${character.GetXP()}/${character.GetXPForNextLevel()}`, true)
@@ -80,6 +80,7 @@ export default class CharacterEmbeds {
     public static async GetCharacterStatsEmbed(character:Character) {
         const embed = new MessageEmbed()
             .setColor(SettingsConstants.COLORS.DEFAULT)
+            .setAuthor(character.GetClassName(), CharacterService.GetClassIconImage(character.GetClass()))
             .setTitle(`${character.GetName()}${(character.IsInspired() ? ' ✨' : '')}`)
             .addField('XP', `${character.GetXP()}/${character.GetXPForNextLevel()}`, true)
             .addField('Level', character.GetLevel(), true);
@@ -111,6 +112,7 @@ export default class CharacterEmbeds {
     public static async GetCharacterCooldownsEmbed(character:Character) {
         const embed = new MessageEmbed()
             .setColor(SettingsConstants.COLORS.DEFAULT)
+            .setAuthor(character.GetClassName(), CharacterService.GetClassIconImage(character.GetClass()))
             .setTitle(`${character.GetName()}${(character.IsInspired() ? ' ✨' : '')}`)
 
         embed.addField('-----------------------------', 'Cooldown(s)');
@@ -146,6 +148,7 @@ export default class CharacterEmbeds {
         const equipment = character.GetEquipment();
         const embed = new MessageEmbed()
             .setColor(SettingsConstants.COLORS.DEFAULT)
+            .setAuthor(character.GetClassName(), CharacterService.GetClassIconImage(character.GetClass()))
             .setTitle(`De equipment van ${character.GetName()}${(character.IsInspired() ? ' ✨' : '')} (${equipment.length}/${character.GetTotalEquipmentSpace()})`);
         this.AddEquipmentToEmbed(embed, equipment);
         return embed;
@@ -154,6 +157,7 @@ export default class CharacterEmbeds {
     public static GetNewCharacterEmbed(character:Character) {
         const embed = new MessageEmbed()
             .setColor(SettingsConstants.COLORS.DEFAULT)
+            .setAuthor(character.GetClassName(), CharacterService.GetClassIconImage(character.GetClass()))
             .setImage(CharacterService.GetClassImage(character.GetClass()))
             .setTitle(character.GetName())
 
@@ -166,7 +170,7 @@ export default class CharacterEmbeds {
 
         const embed = new MessageEmbed()
             .setColor(SettingsConstants.COLORS.DEFAULT)
-            .setAuthor(character.GetClassName())
+            .setAuthor(character.GetClassName(), CharacterService.GetClassIconImage(character.GetClass()))
             .setTitle(`De geschiedenis van ${character.GetName()}${(character.IsInspired() ? ' ✨' : '')}`)
             .setImage(character.GetAvatarUrl())
             .addField('Monsters', await character.GetBattles(), true)
