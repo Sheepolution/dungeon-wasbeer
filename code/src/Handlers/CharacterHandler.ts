@@ -393,8 +393,8 @@ export default class CharacterHandler {
             return;
         }
 
-        if (lore.length > 500) {
-            MessageService.ReplyMessage(messageInfo, 'Je lore mag niet langer dan 500 tekens zijn.', false);
+        if (lore.length > SettingsConstants.LORE_MAX_LENGTH) {
+            MessageService.ReplyMessage(messageInfo, `Je lore mag niet langer dan ${SettingsConstants.LORE_MAX_LENGTH} tekens zijn.`, false);
             return;
         }
 
