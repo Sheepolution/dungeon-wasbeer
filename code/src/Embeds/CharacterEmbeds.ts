@@ -185,17 +185,23 @@ export default class CharacterEmbeds {
             .setAuthor(character.GetClassName(), CharacterService.GetClassIconImage(character.GetClass()))
             .setTitle(`De geschiedenis van ${character.GetName()}${(character.IsInspired() ? ' ✨' : '')}`)
             .setImage(character.GetAvatarUrl())
+            .setDescription(`Aangemaakt op ${character.GetBornDateString()}`)
             .addField('Monsters', await character.GetBattles(), true)
             .addField('Gevechten', parseInt(victories) + parseInt(losses), true)
             .addField('Gewonnen', victories, true)
             .addField('Verloren', losses, true)
-            .addField('Schade gedaan', await character.GetTotalDamageGiven(), true)
-            .addField('Schade gekregen', await character.GetTotalDamageTaken(), true);
+            .addField('Schade gedaan', await character.GetTotalDamageDone(), true)
+            .addField('Schade gekregen', await character.GetTotalDamageTaken(), true)
+            .addField('Crits gedaan', await character.GetTotalCritsDone(), true)
+            .addField('Crits gekregen', await character.GetTotalCritsTaken(), true)
 
         if (character.CanHeal()) {
             embed.addField('Heals gedaan', await character.GetTotalHealsDone(), true);
             embed.addField('Healing gedaan', await character.GetTotalHealingDone(), true);
         }
+
+        embed.addField('Heals gekregen', await character.GetTotalHealsReceived(), true)
+            .addField('Healing gekregen', await character.GetTotalHealingReceived(), true)
 
         if (character.CanInspire()) {
             embed.addField('Geïnspireerd', await character.GetTotalInspiresDone(), true);
@@ -221,13 +227,18 @@ export default class CharacterEmbeds {
             .addField('Gevechten', parseInt(victories) + parseInt(losses), true)
             .addField('Gewonnen', victories, true)
             .addField('Verloren', losses, true)
-            .addField('Schade gedaan', await character.GetTotalDamageGiven(), true)
-            .addField('Schade gekregen', await character.GetTotalDamageTaken(), true);
+            .addField('Schade gedaan', await character.GetTotalDamageDone(), true)
+            .addField('Schade gekregen', await character.GetTotalDamageTaken(), true)
+            .addField('Crits gedaan', await character.GetTotalCritsDone(), true)
+            .addField('Crits gekregen', await character.GetTotalCritsTaken(), true)
 
         if (character.CanHeal()) {
             embed.addField('Heals gedaan', await character.GetTotalHealsDone(), true);
             embed.addField('Healing gedaan', await character.GetTotalHealingDone(), true);
         }
+
+        embed.addField('Heals gekregen', await character.GetTotalHealsReceived(), true)
+            .addField('Healing gekregen', await character.GetTotalHealingReceived(), true)
 
         if (character.CanInspire()) {
             embed.addField('Geïnspireerd', await character.GetTotalInspiresDone(), true);

@@ -447,20 +447,36 @@ export default class Character {
         return await Attack.FIND_LOSSES_BY_CHARACTER(this);
     }
 
-    public async GetTotalDamageGiven() {
-        return await Attack.FIND_TOTAL_DAMAGE_GIVEN(this);
+    public async GetTotalDamageDone() {
+        return await Attack.FIND_TOTAL_DAMAGE_DONE(this);
     }
 
     public async GetTotalDamageTaken() {
         return await Attack.FIND_TOTAL_DAMAGE_TAKEN(this);
     }
 
+    public async GetTotalCritsDone() {
+        return await Attack.FIND_TOTAL_CRITS_DONE(this);
+    }
+
+    public async GetTotalCritsTaken() {
+        return await Attack.FIND_TOTAL_CRITS_TAKEN(this);
+    }
+
     public async GetTotalHealsDone() {
-        return await Heal.FIND_HEALS_BY_CHARACTER(this);
+        return await Heal.FIND_HEALS_DONE_BY_CHARACTER(this);
     }
 
     public async GetTotalHealingDone() {
-        return await Heal.FIND_HEALED_BY_CHARACTER(this);
+        return await Heal.FIND_HEALING_DONE_BY_CHARACTER(this);
+    }
+
+    public async GetTotalHealsReceived() {
+        return await Heal.FIND_HEALS_RECEIVED_BY_CHARACTER(this);
+    }
+
+    public async GetTotalHealingReceived() {
+        return await Heal.FIND_HEALING_RECEIVED_BY_CHARACTER(this);
     }
 
     public async GetTotalInspiresDone() {

@@ -30,14 +30,30 @@ export default class Attack {
         return battles[0].count || 0;
     }
 
-    public static async FIND_TOTAL_DAMAGE_GIVEN(character:Character) {
-        const totalDamageGiven = await AttackModel.query().where({character_id: character.GetId(), victory: 1}).sum('damage');
-        return totalDamageGiven[0].sum || 0;
+    public static async FIND_TOTAL_DAMAGE_DONE(character:Character) {
+        const totalDamageDone = await AttackModel.query().where({character_id: character.GetId(), victory: 1}).sum('damage');
+        return totalDamageDone[0].sum || 0;
     }
 
     public static async FIND_TOTAL_DAMAGE_TAKEN(character:Character) {
         const totalDamageTaken = await AttackModel.query().where({character_id: character.GetId(), victory: 0}).sum('damage');
         return totalDamageTaken[0].sum || 0;
+    }
+
+    public static async FIND_TOTAL_CRITS_DONE(character:Character) {
+        const totalCritsDone = await AttackModel.query()
+            .where({character_id: character.GetId(), roll_character_base: 20})
+            .orWhere({character_id: character.GetId(), roll_monster_base: 1}).count('id');
+
+        return totalCritsDone[0].count || 0;
+    }
+
+    public static async FIND_TOTAL_CRITS_TAKEN(character:Character) {
+        const totalCritsTaken = await AttackModel.query()
+            .where({character_id: character.GetId(), roll_character_base: 1})
+            .orWhere({character_id: character.GetId(), roll_monster_base: 20}).count('id');
+
+        return totalCritsTaken[0].count || 0;
     }
 
     public static async FIND_TOTAL_DAMAGE_GIVEN_IN_BATTLE_FOR_ALL_CHARACTERS(battle:Battle) {
