@@ -120,17 +120,16 @@ export default class CharacterService {
         }
     }
 
-    public static GetSummedUpModifierStats(a:IModifierStats, b:IModifierStats, classType:ClassType) {
-        const max = this.GetMaxModifierStats(classType);
+    public static GetSummedUpModifierStats(a:IModifierStats, b:IModifierStats) {
         return {
-            armor: Math.min(a.armor + b.armor, max.armor),
-            attack: Math.min(a.attack + b.attack, max.attack),
-            dexterity: Math.min(a.dexterity + b.dexterity, max.dexterity),
-            healing: Math.min(a.healing + b.healing, max.healing),
-            health: Math.min(a.health + b.health, max.health),
-            regeneration: Math.min(a.regeneration + b.regeneration, max.regeneration),
-            strength: Math.min(a.strength + b.strength, max.strength),
-            spell: Math.min(a.spell + b.spell, max.spell),
+            armor: a.armor + b.armor,
+            attack:a.attack + b.attack,
+            dexterity: a.dexterity + b.dexterity,
+            healing: a.healing + b.healing,
+            health: a.health + b.health,
+            regeneration: a.regeneration + b.regeneration,
+            strength: a.strength + b.strength,
+            spell: a.spell + b.spell
         }
     }
 }

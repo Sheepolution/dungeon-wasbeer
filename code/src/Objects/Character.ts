@@ -509,14 +509,14 @@ export default class Character {
         var cardModifierStats = CharacterService.GetEmptyModifierStats();
 
         for (const card of this.equipment) {
-            cardModifierStats = CharacterService.GetSummedUpModifierStats(cardModifierStats, card.GetModifierStats(), this.classType);
+            cardModifierStats = CharacterService.GetSummedUpModifierStats(cardModifierStats, card.GetModifierStats());
         }
 
         return cardModifierStats
     }
 
     private CalculateFullModifierStats() {
-        return CharacterService.GetSummedUpModifierStats(this.classModifierStats, this.cardModifierStats, this.classType)
+        return CharacterService.GetSummedUpModifierStats(this.classModifierStats, this.cardModifierStats)
     }
 
     private CalculateLevel(level:number = 1) {
@@ -538,16 +538,17 @@ export default class Character {
         if (this.inspired) {
             const emptyModifierStats = CharacterService.GetEmptyModifierStats(1);
             emptyModifierStats.health = 0;
-            this.fullModifierStats = CharacterService.GetSummedUpModifierStats(this.fullModifierStats, emptyModifierStats, this.classType);
+            this.fullModifierStats = CharacterService.GetSummedUpModifierStats(this.fullModifierStats, emptyModifierStats);
         }
 
-        this.fullModifierStats.armor = Math.max(0, this.fullModifierStats.armor);
-        this.fullModifierStats.attack = Math.max(0, this.fullModifierStats.attack);
-        this.fullModifierStats.healing = Math.max(0, this.fullModifierStats.healing);
-        this.fullModifierStats.health = Math.max(0, this.fullModifierStats.health);
-        this.fullModifierStats.regeneration = Math.max(0, this.fullModifierStats.regeneration);
-        this.fullModifierStats.spell = Math.max(0, this.fullModifierStats.spell);
-        this.fullModifierStats.strength = Math.max(0, this.fullModifierStats.strength);
+        const max = CharacterService.GetMaxModifierStats(this.classType);
+        this.fullModifierStats.armor = Math.min(Math.max(0, this.fullModifierStats.armor), max.armor);
+        this.fullModifierStats.attack = Math.min(Math.max(0, this.fullModifierStats.attack), max.attack);
+        this.fullModifierStats.healing = Math.min(Math.max(0, this.fullModifierStats.healing), max.healing);
+        this.fullModifierStats.health = Math.min(Math.max(0, this.fullModifierStats.health), max.health);
+        this.fullModifierStats.regeneration = Math.min(Math.max(0, this.fullModifierStats.regeneration), max.regeneration);
+        this.fullModifierStats.spell = Math.min(Math.max(0, this.fullModifierStats.spell), max.spell);
+        this.fullModifierStats.strength = Math.min(Math.max(0, this.fullModifierStats.strength), max.strength);
 
         this.maxHealth = this.CalculateMaxHealth();
         this.currentHealth = Math.min(this.maxHealth, this.currentHealth);
