@@ -61,6 +61,16 @@ export default class Character {
             .increment('health', 10000);
     }
 
+    public static async GET_LOW_HEALTH_LIST() {
+        const list = await CharacterModel.query()
+            .join('players', 'characters.id', '=', 'players.character_id')
+            .select('name', 'health', 'discord_name')
+            .orderBy('health')
+            .limit(10);
+
+        return list;
+    }
+
     public async GET(id:string) {
         const model:CharacterModel = await CharacterModel.query().findById(id);
         await this.ApplyModel(model);

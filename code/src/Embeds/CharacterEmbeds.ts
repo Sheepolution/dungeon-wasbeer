@@ -288,8 +288,24 @@ export default class CharacterEmbeds {
         return embed;
     }
 
+    public static async GetLowestHealthEmbed() {
+        const list:any = await Character.GET_LOW_HEALTH_LIST();
+        const embed = new MessageEmbed()
+            .setTitle('Deze characters hebben healing nodig!');
+
+        var listString = '';
+
+        for (const item of list) {
+            listString += `Health: ${item.health} | Character: ${item.name} (${item.discord_name})\n`;
+        }
+
+        embed.setDescription(listString);
+
+        return embed;
+    }
+
     public static GetResetCharacterWarningEmbed() {
-        var embed = new MessageEmbed();
+        const embed = new MessageEmbed();
         embed.setTitle('WAARSCHUWING')
             .setColor(SettingsConstants.COLORS.BAD)
             .setDescription('Weet je zeker dat je wilt stoppen met je huidige character?\n**Je kan dit niet ongedaan maken**\n\

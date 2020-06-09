@@ -66,11 +66,15 @@ export default class CharacterHandler {
                 this.Unequip(messageInfo, player, args[0]);
                 break;
             case 'heal':
-                this.OnHeal(messageInfo, player, args[0])
+                this.OnHeal(messageInfo, player, args[0]);
+                break;
+            case 'sos':
+            case 'health':
+                this.ShowLowestHealth(messageInfo);
                 break;
             case 'inspireer':
             case 'inspire':
-                this.OnInspire(messageInfo, player, args[0])
+                this.OnInspire(messageInfo, player, args[0]);
                 break;
             case 'art':
             case 'avatar':
@@ -276,6 +280,10 @@ export default class CharacterHandler {
         await character.SetHealingCooldown();
         await this.UpdateHealingEmbed(message, character, receiver, roll, healing)
         await this.SaveHeal(character, receiver, healthBefore, character.GetFullModifierStats().healing, roll, healing);
+    }
+
+    private static async ShowLowestHealth(messageInfo:IMessageInfo) {
+        MessageService.ReplyEmbed(messageInfo, await CharacterEmbeds.GetLowestHealthEmbed());
     }
 
     private static async OnInspire(messageInfo:IMessageInfo, player:Player, mention:string) {
