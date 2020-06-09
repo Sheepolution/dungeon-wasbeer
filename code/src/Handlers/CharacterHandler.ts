@@ -462,6 +462,14 @@ export default class CharacterHandler {
         MessageService.ReplyEmbed(messageInfo, await CharacterEmbeds.GetCharacterInfoEmbed(character));
     }
 
+    private static async SendCharacterDescription(messageInfo:IMessageInfo, player:Player) {
+        const character = PlayerManager.GetCharacterFromPlayer(messageInfo, player);
+        if (character == null) {
+            return;
+        }
+        MessageService.ReplyEmbed(messageInfo, await CharacterEmbeds.GetCharacterDescriptionEmbed(character));
+    }
+
     private static async SendCooldownsInfo(messageInfo:IMessageInfo, player:Player) {
         const character = PlayerManager.GetCharacterFromPlayer(messageInfo, player);
         if (character == null) {
