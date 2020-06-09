@@ -41,6 +41,20 @@ export default class PlayerCardHandler {
             case 'kaartenn':
                 this.SendPlayerCardList(messageInfo, player, SortingType.Name);
                 break;
+            case 'lijst-class':
+            case 'kaarten-class':
+            case 'lijstcl':
+            case 'kaartencl':
+                this.SendPlayerCardList(messageInfo, player, SortingType.Class);
+                break;
+            case 'lijst-buffs':
+            case 'kaarten-buffs':
+            case 'lijst-buff':
+            case 'kaarten-buff':
+            case 'lijstb':
+            case 'kaartenb':
+                this.SendPlayerCardList(messageInfo, player, SortingType.Buff);
+                break;
             default:
                 return false;
         }

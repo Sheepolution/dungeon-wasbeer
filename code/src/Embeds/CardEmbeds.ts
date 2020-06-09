@@ -74,6 +74,18 @@ export default class CardEmbeds {
                 case SortingType.Name:
                     playerCards.sort((a:PlayerCard, b:PlayerCard) => a.GetCard().GetName() > b.GetCard().GetName() ? 1 : -1);
                     break;
+                case SortingType.Class:
+                    playerCards.sort((a:PlayerCard, b:PlayerCard) => (a.GetCard().GetModifierClass() || '') > (b.GetCard().GetModifierClass() || '') ? -1 : 1);
+                    break;
+                case SortingType.Buff:
+                    playerCards.sort((a:PlayerCard, b:PlayerCard) => {
+                        const am = a.GetCard().GetModifiers();
+                        const bm = b.GetCard().GetModifiers();
+                        if (am == null || am.length == 0) { return 1; }
+                        if (bm == null || bm.length == 0) { return -1; }
+                        return am[0].modifier > bm[0].modifier ? 1 : -1;
+                    });
+                    break;
             }
         }
 
