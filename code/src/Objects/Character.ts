@@ -317,7 +317,7 @@ export default class Character {
     }
 
     public CalculateDamageWithArmor(damage:number) {
-        return Math.floor(damage * (1 - Math.min(50, this.fullModifierStats.armor)/100));
+        return Math.ceil(damage * (1 - Math.min(50, this.fullModifierStats.armor)/100));
     }
 
     public GetMaxBattleCooldown() {
