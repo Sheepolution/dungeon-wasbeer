@@ -26,15 +26,16 @@ export default class CharacterConstants {
         57000,    68000,     82000,      100000
     ]
 
-    public static readonly CHARACTER_DIED = 'https://cdn.discordapp.com/attachments/694331679204180029/703293328552362014/unknown.png';
+    public static readonly CHARACTER_DIED = 'https://media.discordapp.net/attachments/694331679204180029/703293328552362014/unknown.png';
 
     public static readonly CHARACTER_IMAGE = {
-        BARD: 'https://cdn.discordapp.com/attachments/694331679204180029/706117088141639751/BardWasbeer.png',
-        CLERIC: 'https://cdn.discordapp.com/attachments/694331679204180029/706139923786498079/ClericWasbeer.png',
-        WIZARD: 'https://cdn.discordapp.com/attachments/694331679204180029/704816613853233184/wizard.png',
-        PALADIN: 'https://cdn.discordapp.com/attachments/694331679204180029/706120168862121994/PaladinWasbeer.png',
-        FIGHTER: 'https://cdn.discordapp.com/attachments/694331679204180029/706146775828004884/FighterWasbeer.png',
-        RANGER: 'https://cdn.discordapp.com/attachments/694331679204180029/706131465150267452/RangerWasbeer2.png',
+        BARD: 'https://media.discordapp.net/attachments/694331679204180029/706117088141639751/BardWasbeer.png',
+        CLERIC: 'https://media.discordapp.net/attachments/694331679204180029/706139923786498079/ClericWasbeer.png',
+        WIZARD: 'https://media.discordapp.net/attachments/694331679204180029/704816613853233184/wizard.png',
+        PALADIN: 'https://media.discordapp.net/attachments/694331679204180029/706120168862121994/PaladinWasbeer.png',
+        FIGHTER: 'https://media.discordapp.net/attachments/694331679204180029/706146775828004884/FighterWasbeer.png',
+        RANGER: 'https://media.discordapp.net/attachments/694331679204180029/706131465150267452/RangerWasbeer2.png',
+    }
     }
 
     public static readonly CLASS_BASE_STATS = {
