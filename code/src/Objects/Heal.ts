@@ -52,7 +52,7 @@ export default class Heal {
             .select('name', 'discord_name')
             .groupBy('characters.name', 'players.discord_name')
             .count('characters.id as cnt')
-            .orderBy('cnt')
+            .orderBy('cnt', 'desc')
             .limit(10);
 
         return list;
@@ -71,7 +71,7 @@ export default class Heal {
             .groupBy('characters.name', 'players.discord_name')
             .select('name', 'discord_name')
             .sum('final_healing as sumh')
-            .orderBy('sumh')
+            .orderBy('sumh', 'desc')
             .limit(10);
 
         return list;
@@ -90,7 +90,7 @@ export default class Heal {
             .groupBy('characters.name', 'players.discord_name')
             .select('name', 'discord_name')
             .count('characters.id as cnt')
-            .orderBy('cnt')
+            .orderBy('cnt', 'desc')
             .limit(10);
 
         return list;
@@ -109,7 +109,7 @@ export default class Heal {
             .groupBy('characters.name', 'players.discord_name')
             .select('name', 'discord_name')
             .sum('final_healing as sumh')
-            .orderBy('sumh')
+            .orderBy('sumh', 'desc')
             .limit(10);
 
         return list;

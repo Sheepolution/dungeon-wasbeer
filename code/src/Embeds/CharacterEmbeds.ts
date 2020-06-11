@@ -541,7 +541,7 @@ export default class CharacterEmbeds {
             item.duration = Math.ceil((item.solving_date.getTime() - item.creation_date.getTime())/1000);
         }
 
-        list.sort((a:any, b:any) => {a.duration - b.duration});
+        list.sort((a:any, b:any) => {b.duration - a.duration});
 
         for (let i = 0; i < list.length; i++) {
             const item = list[i];
