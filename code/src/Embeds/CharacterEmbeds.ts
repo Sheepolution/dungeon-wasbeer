@@ -6,6 +6,10 @@ import Card from '../Objects/Card';
 import CharacterConstants from '../Constants/CharacterConstants';
 import CharacterService from '../Services/CharacterService';
 import { Utils } from '../Utils/Utils';
+import { TopListType } from '../Enums/TopListType';
+import Attack from '../Objects/Attack';
+import Heal from '../Objects/Heal';
+import Puzzle from '../Objects/Puzzle';
 
 export default class CharacterEmbeds {
 
@@ -297,6 +301,251 @@ export default class CharacterEmbeds {
 
         for (const item of list) {
             listString += `Health: ${item.health} | Character: ${item.name} (${item.discord_name})\n`;
+        }
+
+        embed.setDescription(listString);
+
+        return embed;
+    }
+
+    public static async GetTopXPEmbed() {
+        const list:any = await Character.GET_TOP_XP_LIST();
+        const embed = new MessageEmbed()
+            .setTitle(`Top ${list.length} meeste xp`);
+
+        var listString = '';
+
+        for (let i = 0; i < list.length; i++) {
+            const item = list[i];
+            listString += `${i+1}. ${item.xp} - ${item.name} (${item.discord_name})\n`;
+        }
+
+        embed.setDescription(listString);
+
+        return embed;
+    }
+
+    public static async GetTopFightsEmbed(topListType:TopListType, battleId?:string) {
+        const list:any = await Attack.GET_TOP_BATTLES_LIST(undefined, battleId);
+        const embed = new MessageEmbed()
+            .setTitle(`Top ${list.length} aanvallen${topListType == TopListType.Current ? ' van dit gevecht' : topListType == TopListType.Previous ? ' van het vorige gevecht.' : ''}`);
+
+        var listString = '';
+
+        for (let i = 0; i < list.length; i++) {
+            const item = list[i];
+            listString += `${i+1}. ${item.cnt} - ${item.name} (${item.discord_name})\n`;
+        }
+
+        embed.setDescription(listString);
+
+        return embed;
+    }
+
+    public static async GetTopFightsWonEmbed(topListType:TopListType, battleId?:string) {
+        const list:any = await Attack.GET_TOP_BATTLES_LIST(true, battleId);
+        const embed = new MessageEmbed()
+            .setTitle(`Top ${list.length} meeste gewonnen aanvallen${topListType == TopListType.Current ? ' in dit gevecht' : topListType == TopListType.Previous ? ' in het vorige gevecht.' : ''}`);
+
+        var listString = '';
+
+        for (let i = 0; i < list.length; i++) {
+            const item = list[i];
+            listString += `${i+1}. ${item.cnt} - ${item.name} (${item.discord_name})\n`;
+        }
+
+        embed.setDescription(listString);
+
+        return embed;
+    }
+
+    public static async GetTopFightsLostEmbed(topListType:TopListType, battleId?:string) {
+        const list:any = await Attack.GET_TOP_BATTLES_LIST(false, battleId);
+        const embed = new MessageEmbed()
+            .setTitle(`Top ${list.length} meeste verloren aanvallen${topListType == TopListType.Current ? ' in dit gevecht' : topListType == TopListType.Previous ? ' in het vorige gevecht.' : ''}`);
+
+        var listString = '';
+
+        for (let i = 0; i < list.length; i++) {
+            const item = list[i];
+            listString += `${i+1}. ${item.cnt} - ${item.name} (${item.discord_name})\n`;
+        }
+
+        embed.setDescription(listString);
+
+        return embed;
+    }
+
+    public static async GetTopDamageDoneEmbed(topListType:TopListType, battleId?:string) {
+        const list:any = await Attack.GET_TOP_DAMAGE_LIST(true, battleId);
+        const embed = new MessageEmbed()
+            .setTitle(`Top ${list.length} meeste schade gedaan${topListType == TopListType.Current ? ' in dit gevecht' : topListType == TopListType.Previous ? ' in het vorige gevecht.' : ''}`);
+
+        var listString = '';
+
+        for (let i = 0; i < list.length; i++) {
+            const item = list[i];
+            listString += `${i+1}. ${item.sumd} - ${item.name} (${item.discord_name})\n`;
+        }
+
+        embed.setDescription(listString);
+
+        return embed;
+    }
+
+    public static async GetTopDamageReceivedEmbed(topListType:TopListType, battleId?:string) {
+        const list:any = await Attack.GET_TOP_DAMAGE_LIST(false, battleId);
+        const embed = new MessageEmbed()
+            .setTitle(`Top ${list.length} meeste schade gekregen${topListType == TopListType.Current ? ' in dit gevecht' : topListType == TopListType.Previous ? ' in het vorige gevecht.' : ''}`);
+
+        var listString = '';
+
+        for (let i = 0; i < list.length; i++) {
+            const item = list[i];
+            listString += `${i+1}. ${item.sumd} - ${item.name} (${item.discord_name})\n`;
+        }
+
+        embed.setDescription(listString);
+
+        return embed;
+    }
+
+    public static async GetTopCritsDoneEmbed(topListType:TopListType, battleId?:string) {
+        const list:any = await Attack.GET_TOP_CRIT_LIST(true, battleId);
+        const embed = new MessageEmbed()
+            .setTitle(`Top ${list.length} meeste crits gedaan${topListType == TopListType.Current ? ' in dit gevecht' : topListType == TopListType.Previous ? ' in het vorige gevecht.' : ''}`);
+
+        var listString = '';
+
+        for (let i = 0; i < list.length; i++) {
+            const item = list[i];
+            listString += `${i+1}. ${item.cnt} - ${item.name} (${item.discord_name})\n`;
+        }
+
+        embed.setDescription(listString);
+
+        return embed;
+    }
+
+    public static async GetTopCritsReceivedEmbed(topListType:TopListType, battleId?:string) {
+        const list:any = await Attack.GET_TOP_CRIT_LIST(false, battleId);
+        const embed = new MessageEmbed()
+            .setTitle(`Top ${list.length} meeste crits gekregen${topListType == TopListType.Current ? ' in dit gevecht' : topListType == TopListType.Previous ? ' in het vorige gevecht.' : ''}`);
+
+        var listString = '';
+
+        for (let i = 0; i < list.length; i++) {
+            const item = list[i];
+            listString += `${i+1}. ${item.cnt} - ${item.name} (${item.discord_name})\n`;
+        }
+
+        embed.setDescription(listString);
+
+        return embed;
+    }
+
+    public static async GetTopHealsDoneEmbed(topListType:TopListType, battleId?:string) {
+        const list:any = await Heal.GET_TOP_HEALS_DONE_LIST(battleId);
+        const embed = new MessageEmbed()
+            .setTitle(`Top ${list.length} meeste heals gedaan${topListType == TopListType.Current ? ' in dit gevecht' : topListType == TopListType.Previous ? ' in het vorige gevecht.' : ''}`);
+
+        var listString = '';
+
+        for (let i = 0; i < list.length; i++) {
+            const item = list[i];
+            listString += `${i+1}. ${item.cnt} - ${item.name} (${item.discord_name})\n`;
+        }
+
+        embed.setDescription(listString);
+
+        return embed;
+    }
+
+    public static async GetTopHealingDoneEmbed(topListType:TopListType, battleId?:string) {
+        const list:any = await Heal.GET_TOP_HEALING_DONE_LIST(battleId);
+        const embed = new MessageEmbed()
+            .setTitle(`Top ${list.length} meeste healing gedaan${topListType == TopListType.Current ? ' in dit gevecht' : topListType == TopListType.Previous ? ' in het vorige gevecht.' : ''}`);
+
+        var listString = '';
+
+        for (let i = 0; i < list.length; i++) {
+            const item = list[i];
+            listString += `${i+1}. ${item.sumh} - ${item.name} (${item.discord_name})\n`;
+        }
+
+        embed.setDescription(listString);
+
+        return embed;
+    }
+
+    public static async GetTopHealsReceivedEmbed(topListType:TopListType, battleId?:string) {
+        const list:any = await Heal.GET_TOP_HEALS_RECEIVED_LIST(battleId);
+        const embed = new MessageEmbed()
+            .setTitle(`Top ${list.length} meeste heals gekregen${topListType == TopListType.Current ? ' in dit gevecht' : topListType == TopListType.Previous ? ' in het vorige gevecht.' : ''}`);
+
+        var listString = '';
+
+        for (let i = 0; i < list.length; i++) {
+            const item = list[i];
+            listString += `${i+1}. ${item.cnt} - ${item.name} (${item.discord_name})\n`;
+        }
+
+        embed.setDescription(listString);
+
+        return embed;
+    }
+
+    public static async GetTopHealingReceivedEmbed(topListType:TopListType, battleId?:string) {
+        const list:any = await Heal.GET_TOP_HEALING_RECEIVED_LIST(battleId);
+        const embed = new MessageEmbed()
+            .setTitle(`Top ${list.length} meeste healing gekregen${topListType == TopListType.Current ? ' in dit gevecht' : topListType == TopListType.Previous ? ' in het vorige gevecht.' : ''}`);
+
+        var listString = '';
+
+        for (let i = 0; i < list.length; i++) {
+            const item = list[i];
+            listString += `${i+1}. ${item.sumh} - ${item.name} (${item.discord_name})\n`;
+        }
+
+        embed.setDescription(listString);
+
+        return embed;
+    }
+
+    public static async GetTopPuzzlesSolvedEmbed() {
+        const list:any = await Puzzle.GET_TOP_SOLVED_LIST();
+        const embed = new MessageEmbed()
+            .setTitle(`Top ${list.length} meeste puzzels opgelost`);
+
+        var listString = '';
+
+        for (let i = 0; i < list.length; i++) {
+            const item = list[i];
+            listString += `${i+1}. ${item.cnt} - ${item.name} (${item.discord_name})\n`;
+        }
+
+        embed.setDescription(listString);
+
+        return embed;
+    }
+
+    public static async GetTopFastestPuzzlesSolvedEmbed() {
+        const list:any = await Puzzle.GET_TOP_FASTEST_SOLVED_LIST();
+        const embed = new MessageEmbed()
+            .setTitle(`Top ${list.length} puzzels het snelst opgelost`);
+
+        var listString = '';
+
+        for (let i = 0; i < list.length; i++) {
+            const item = list[i];
+            item.duration = Math.ceil((item.solving_date.getTime() - item.creation_date.getTime())/1000);
+        }
+
+        list.sort((a:any, b:any) => {a.duration - b.duration});
+
+        for (let i = 0; i < list.length; i++) {
+            const item = list[i];
+            listString += `${i+1}. ${Utils.GetSecondsInMinutesAndSeconds(item.duration)} - ${item.name} (${item.discord_name})\n`;
         }
 
         embed.setDescription(listString);

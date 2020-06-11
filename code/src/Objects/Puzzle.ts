@@ -19,6 +19,29 @@ export default class Puzzle {
         return puzzles[0].count || 0;
     }
 
+    public static async GET_TOP_SOLVED_LIST() {
+        var list = await PuzzleModel.query()
+            .join('characters', 'characters.id', '=', 'puzzles.solver_id')
+            .join('players', 'characters.id', '=', 'players.character_id')
+            .select('name', 'discord_name')
+            .groupBy('characters.name', 'players.discord_name')
+            .count('characters.id as cnt')
+            .orderBy('cnt', 'desc')
+            .limit(10);
+
+        return list;
+    }
+
+    public static async GET_TOP_FASTEST_SOLVED_LIST() {
+        var list = await PuzzleModel.query()
+            .join('characters', 'characters.id', '=', 'puzzles.solver_id')
+            .join('players', 'characters.id', '=', 'players.character_id')
+            .select('creation_date', 'solving_date', 'name', 'discord_name')
+            .limit(10);
+
+        return list;
+    }
+
     public async GET(id:string) {
         const model:PuzzleModel = await PuzzleModel.query().findById(id);
         await this.ApplyModel(model);

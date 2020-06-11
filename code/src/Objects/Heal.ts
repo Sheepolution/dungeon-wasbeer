@@ -39,6 +39,82 @@ export default class Heal {
         return totalHealed;
     }
 
+    public static async GET_TOP_HEALS_DONE_LIST(battleId?:string) {
+        var whereObj:any = {};
+        if (battleId != null) {
+            whereObj.battle_id = battleId;
+        }
+
+        var list = await HealModel.query()
+            .join('characters', 'characters.id', '=', 'heals.character_id')
+            .join('players', 'characters.id', '=', 'players.character_id')
+            .where(whereObj)
+            .select('name', 'discord_name')
+            .groupBy('characters.name', 'players.discord_name')
+            .count('characters.id as cnt')
+            .orderBy('cnt')
+            .limit(10);
+
+        return list;
+    }
+
+    public static async GET_TOP_HEALING_DONE_LIST(battleId?:string) {
+        var whereObj:any = {};
+        if (battleId != null) {
+            whereObj.battle_id = battleId;
+        }
+
+        var list = await HealModel.query()
+            .join('characters', 'characters.id', '=', 'heals.character_id')
+            .join('players', 'characters.id', '=', 'players.character_id')
+            .where(whereObj)
+            .groupBy('characters.name', 'players.discord_name')
+            .select('name', 'discord_name')
+            .sum('final_healing as sumh')
+            .orderBy('sumh')
+            .limit(10);
+
+        return list;
+    }
+
+    public static async GET_TOP_HEALS_RECEIVED_LIST(battleId?:string) {
+        var whereObj:any = {};
+        if (battleId != null) {
+            whereObj.battle_id = battleId;
+        }
+
+        var list = await HealModel.query()
+            .join('characters', 'characters.id', '=', 'heals.receiver_id')
+            .join('players', 'characters.id', '=', 'players.character_id')
+            .where(whereObj)
+            .groupBy('characters.name', 'players.discord_name')
+            .select('name', 'discord_name')
+            .count('characters.id as cnt')
+            .orderBy('cnt')
+            .limit(10);
+
+        return list;
+    }
+
+    public static async GET_TOP_HEALING_RECEIVED_LIST(battleId?:string) {
+        var whereObj:any = {};
+        if (battleId != null) {
+            whereObj.battle_id = battleId;
+        }
+
+        var list = await HealModel.query()
+            .join('characters', 'characters.id', '=', 'heals.receiver_id')
+            .join('players', 'characters.id', '=', 'players.character_id')
+            .where(whereObj)
+            .groupBy('characters.name', 'players.discord_name')
+            .select('name', 'discord_name')
+            .sum('final_healing as sumh')
+            .orderBy('sumh')
+            .limit(10);
+
+        return list;
+    }
+
     public static async STATIC_POST(battle:Battle, character:Character, receiver:Character, receiverHealth:number, characterHealing:number, roll:number, finalHealing:number) {
         return await HealModel.New(battle, character, receiver, receiverHealth, characterHealing, roll, finalHealing);
     }

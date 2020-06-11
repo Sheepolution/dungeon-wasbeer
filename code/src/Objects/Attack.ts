@@ -61,6 +61,78 @@ export default class Attack {
         return totalDamageGivenCollection;
     }
 
+    public static async GET_TOP_BATTLES_LIST(victory?:boolean, battleId?:string) {
+        var whereObj:any = {};
+        if (victory != null) {
+            whereObj.victory = victory;
+        }
+
+        if (battleId != null) {
+            whereObj.battle_id = battleId;
+        }
+
+        const list = await AttackModel.query()
+            .join('characters', 'characters.id', '=', 'attacks.character_id')
+            .join('players', 'characters.id', '=', 'players.character_id')
+            .where(whereObj)
+            .select('name', 'discord_name')
+            .groupBy('characters.name', 'players.discord_name')
+            .count('characters.id as cnt')
+            .orderBy('cnt', 'desc')
+            .limit(10);
+
+        return list;
+    }
+
+    public static async GET_TOP_DAMAGE_LIST(victory:boolean, battleId?:string) {
+        var whereObj:any = {victory: victory};
+        if (battleId != null) {
+            whereObj.battle_id = battleId;
+        }
+
+        const list = await AttackModel.query()
+            .join('characters', 'characters.id', '=', 'attacks.character_id')
+            .join('players', 'characters.id', '=', 'players.character_id')
+            .where(whereObj)
+            .select('name', 'discord_name')
+            .groupBy('characters.name', 'players.discord_name')
+            .sum('damage as sumd')
+            .orderBy('sumd', 'desc')
+            .limit(10);
+
+        return list;
+    }
+
+    public static async GET_TOP_CRIT_LIST(victory:boolean, battleId?:string) {
+        var whereObj:any = {victory: victory};
+        var whereObj2:any = {victory: victory};
+        if (victory) {
+            whereObj.roll_character_base = 20;
+            whereObj2.roll_monster_base = 1;
+        } else {
+            whereObj.roll_character_base = 1;
+            whereObj2.roll_monster_base = 20;
+        }
+
+        if (battleId != null) {
+            whereObj.battle_id = battleId;
+            whereObj2.battle_id = battleId;
+        }
+
+        const list = await AttackModel.query()
+            .join('characters', 'characters.id', '=', 'attacks.character_id')
+            .join('players', 'characters.id', '=', 'players.character_id')
+            .where(whereObj)
+            .orWhere(whereObj2)
+            .groupBy('characters.name', 'players.discord_name')
+            .select('name', 'discord_name')
+            .count('characters.id as cnt')
+            .orderBy('cnt', 'desc')
+            .limit(10);
+
+        return list;
+    }
+
     public static async STATIC_POST(battle:Battle, character:Character, messageId:string, rollCharacterBase:number, rollCharacterModifier:number, rollCharacterModifierMax:number, rollMonsterBase:number, rollMonsterModifier:number, rollMonsterModifierMax:number, victory:boolean, damage:number, healthAfter:number) {
         return await AttackModel.New(battle, character, messageId, rollCharacterBase, rollCharacterModifier, rollCharacterModifierMax, rollMonsterBase, rollMonsterModifier, rollMonsterModifierMax, victory, damage, healthAfter);
     }
@@ -80,8 +152,8 @@ export default class Attack {
         this.id = model.id;
         this.battle = await model.GetBattle();
         this.character = await model.GetCharacter();
-        this.rollCharacterBase = model.roll_player_base;
-        this.rollCharacterModifier = model.roll_player_mod;
+        this.rollCharacterBase = model.roll_character_base;
+        this.rollCharacterModifier = model.roll_character_mod;
         this.rollMonsterBase = model.roll_monster_base;
         this.rollMonsterModifier = model.roll_monster_mod;
         this.victory = model.victory;

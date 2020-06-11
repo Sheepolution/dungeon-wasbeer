@@ -22,6 +22,7 @@ const { transaction } = require('objection');
 export default class CampaignManager {
 
     private static campaignObject:Campaign;
+    private static previousBattle:Campaign;
 
     public static async ContinueSession() {
         var campaign = new Campaign();
@@ -39,6 +40,7 @@ export default class CampaignManager {
         if (lastSessionType == SessionType.Battle) {
             const puzzle = await PuzzleManager.GetRandomPuzzle();
             await campaign.POST(SessionType.Puzzle, puzzle.GetId());
+            this.previousBattle = this.campaignObject;
             this.campaignObject = campaign;
             CampaignManager.SendNewPuzzleMessage(puzzle);
             return;
@@ -102,6 +104,13 @@ export default class CampaignManager {
             return;
         }
         return this.campaignObject.GetBattle();
+    }
+
+    public static GetPreviousBattle() {
+        if (this.previousBattle == null) {
+            return;
+        }
+        return this.previousBattle;
     }
 
     public static GetPuzzle() {

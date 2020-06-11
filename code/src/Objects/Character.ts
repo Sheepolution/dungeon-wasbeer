@@ -71,6 +71,28 @@ export default class Character {
         return list;
     }
 
+    public static async GET_TOP_XP_LIST() {
+        const list = await CharacterModel.query()
+            .join('players', 'characters.id', '=', 'players.character_id')
+            .select('name', 'xp', 'discord_name')
+            .orderBy('xp', 'desc')
+            .limit(10);
+
+        return list;
+    }
+
+    public static async GET_TOP_CARD_LIST() {
+        const list = await CharacterModel.query()
+            .join('players', 'characters.id', '=', 'players.character_id')
+            .join('player_cards', 'players.id', '=', 'player_cards.player_id')
+            .select('name', 'discord_name')
+            .count('player_cards.id as cnt')
+            .orderBy('cnt', 'desc')
+            .limit(10);
+
+        return list;
+    }
+
     public async GET(id:string) {
         const model:CharacterModel = await CharacterModel.query().findById(id);
         await this.ApplyModel(model);

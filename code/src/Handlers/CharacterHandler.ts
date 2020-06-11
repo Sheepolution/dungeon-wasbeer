@@ -17,6 +17,7 @@ import CardEmbeds from '../Embeds/CardEmbeds';
 import { LogType } from '../Enums/LogType';
 import LogService from '../Services/LogService';
 import SettingsConstants from '../Constants/SettingsConstants';
+import { TopListType } from '../Enums/TopListType';
 
 export default class CharacterHandler {
 
@@ -51,6 +52,17 @@ export default class CharacterHandler {
             case 'geschiedenis':
             case 'verleden':
                 this.SendHistoryInfo(messageInfo, player);
+                break;
+            case 'top':
+                this.SendTopList(messageInfo, content, TopListType.Current);
+                break;
+            case 'top-all':
+            case 'topall':
+                this.SendTopList(messageInfo, content, TopListType.All);
+                break;
+            case 'top-pre':
+            case 'toppre':
+                this.SendTopList(messageInfo, content, TopListType.Previous);
                 break;
             case 'lijst':
             case 'kaarten':
@@ -492,6 +504,134 @@ export default class CharacterHandler {
             return;
         }
         MessageService.ReplyEmbed(messageInfo, await CharacterEmbeds.GetCharacterHistoryEmbed(character));
+    }
+
+    private static async SendTopList(messageInfo:IMessageInfo, category:string, topListType:TopListType) {
+        category = category.toLowerCase();
+        var battleId;
+        var ignoreTopListType = false;
+        switch (category) {
+            case 'xp':
+            case 'level':
+            case 'puzzel':
+            case 'puzzels':
+            case 'puzzels opgelost':
+            case 'puzzle':
+            case 'puzzles':
+            case 'puzzles solved':
+            case 'snelste puzzel':
+            case 'snelste puzzels':
+            case 'snelste puzzels opgelost':
+            case 'snelste puzzle':
+            case 'snelste puzzles':
+            case 'snelste puzzles solved':
+                ignoreTopListType = true;
+                break;
+        }
+
+        if (!ignoreTopListType) {
+            if (topListType == TopListType.Current) {
+                const battle = CampaignManager.GetBattle();
+                if (battle == null) {
+                    MessageService.ReplyMessage(messageInfo, 'Er is momenteel geen gevecht bezig. Gebruik `;top-pre` om de lijst van het vorige gevecht op te halen. Gebruik `;top-all` om de lijst van alle gevechten bij elkaar op te halen.', false);
+                    return;
+                }
+                battleId = battle.GetId();
+            } else if (topListType == TopListType.Previous) {
+                const battle = CampaignManager.GetPreviousBattle();
+                if (battle == null) {
+                    MessageService.ReplyMessage(messageInfo, 'Dat vorige gevecht? Ja sorry maar dat ben ik allemaal weer vergeten. Sorry!', false)
+                    return;
+                }
+                battleId = battle.GetId();
+            }
+        }
+
+        switch (category) {
+            case 'xp':
+            case 'level':
+                MessageService.ReplyEmbed(messageInfo, await CharacterEmbeds.GetTopXPEmbed());
+                break;
+            case 'gevechten':
+            case 'aanvallen':
+            case 'fights':
+            case 'attacks':
+                MessageService.ReplyEmbed(messageInfo, await CharacterEmbeds.GetTopFightsEmbed(topListType, battleId));
+                break;
+            case 'won':
+            case 'gewonnen':
+            case 'gevechten gewonnen':
+                MessageService.ReplyEmbed(messageInfo, await CharacterEmbeds.GetTopFightsWonEmbed(topListType, battleId));
+                break;
+            case 'lost':
+            case 'veloren':
+            case 'gevechten verloren':
+                MessageService.ReplyEmbed(messageInfo, await CharacterEmbeds.GetTopFightsLostEmbed(topListType, battleId));
+                break;
+            case 'schade gedaan':
+            case 'schade gegeven':
+            case 'damage done':
+                MessageService.ReplyEmbed(messageInfo, await CharacterEmbeds.GetTopDamageDoneEmbed(topListType, battleId));
+                break;
+            case 'schade gekregen':
+            case 'schade ontvangen':
+            case 'damage received':
+            case 'damage get':
+                MessageService.ReplyEmbed(messageInfo, await CharacterEmbeds.GetTopDamageReceivedEmbed(topListType, battleId));
+                break;
+            case 'crits gedaan':
+            case 'crits gegeven':
+            case 'crits done':
+                MessageService.ReplyEmbed(messageInfo, await CharacterEmbeds.GetTopCritsDoneEmbed(topListType, battleId));
+                break;
+            case 'crits gekregen':
+            case 'crits ontvangen':
+            case 'crits received':
+            case 'crits get':
+                MessageService.ReplyEmbed(messageInfo, await CharacterEmbeds.GetTopCritsReceivedEmbed(topListType, battleId));
+                break;
+            case 'heals gekregen':
+            case 'heals ontvangen':
+            case 'heals received':
+            case 'heals get':
+                MessageService.ReplyEmbed(messageInfo, await CharacterEmbeds.GetTopHealsReceivedEmbed(topListType, battleId));
+                break;
+            case 'healing gekregen':
+            case 'healing ontvangen':
+            case 'healing received':
+            case 'healing get':
+                MessageService.ReplyEmbed(messageInfo, await CharacterEmbeds.GetTopHealingReceivedEmbed(topListType, battleId));
+                break;
+            case 'heals gedaan':
+            case 'heals gegeven':
+            case 'heals done':
+                MessageService.ReplyEmbed(messageInfo, await CharacterEmbeds.GetTopHealsDoneEmbed(topListType, battleId));
+                break;
+            case 'healing gedaan':
+            case 'healing gegeven':
+            case 'healing done':
+                MessageService.ReplyEmbed(messageInfo, await CharacterEmbeds.GetTopHealingDoneEmbed(topListType, battleId));
+                break;
+            case 'puzzel':
+            case 'puzzels':
+            case 'puzzels opgelost':
+            case 'puzzle':
+            case 'puzzles':
+            case 'puzzles solved':
+                MessageService.ReplyEmbed(messageInfo, await CharacterEmbeds.GetTopPuzzlesSolvedEmbed());
+                break;
+            case 'snelste puzzel':
+            case 'snelste puzzels':
+            case 'snelste puzzels opgelost':
+            case 'snelste puzzle':
+            case 'snelste puzzles':
+            case 'snelste puzzles solved':
+                MessageService.ReplyEmbed(messageInfo, await CharacterEmbeds.GetTopFastestPuzzlesSolvedEmbed());
+                break;
+            default:
+                MessageService.ReplyMessage(messageInfo, `Ik heb geen lijst van top 10 ${category}. Kijk ff in die pins voor de lijst van mogelijke lijsten.`, false);
+                return;
+        }
     }
 
     private static async SendCardList(messageInfo:IMessageInfo, player:Player) {
