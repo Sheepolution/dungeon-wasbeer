@@ -564,7 +564,7 @@ export default class CharacterHandler {
                 MessageService.ReplyEmbed(messageInfo, await CharacterEmbeds.GetTopFightsWonEmbed(topListType, battleId));
                 break;
             case 'lost':
-            case 'veloren':
+            case 'verloren':
             case 'gevechten verloren':
                 MessageService.ReplyEmbed(messageInfo, await CharacterEmbeds.GetTopFightsLostEmbed(topListType, battleId));
                 break;
