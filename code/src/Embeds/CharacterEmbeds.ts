@@ -553,6 +553,23 @@ export default class CharacterEmbeds {
         return embed;
     }
 
+    public static async GetTopUniqueCards() {
+        const list:any = await Character.GET_TOP_CARD_LIST();
+        const embed = new MessageEmbed()
+            .setTitle(`Top ${list.length} meeste unieke kaarten in bezit`);
+
+        var listString = '';
+
+        for (let i = 0; i < list.length; i++) {
+            const item = list[i];
+            listString += `${i+1}. ${item.cnt} - ${item.name} (${item.discord_name})\n`;
+        }
+
+        embed.setDescription(listString);
+
+        return embed;
+    }
+
     public static GetResetCharacterWarningEmbed() {
         const embed = new MessageEmbed();
         embed.setTitle('WAARSCHUWING')

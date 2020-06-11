@@ -86,6 +86,7 @@ export default class Character {
             .join('players', 'characters.id', '=', 'players.character_id')
             .join('player_cards', 'players.id', '=', 'player_cards.player_id')
             .select('name', 'discord_name')
+            .groupBy('characters.name', 'players.discord_name')
             .count('player_cards.id as cnt')
             .orderBy('cnt', 'desc')
             .limit(10);

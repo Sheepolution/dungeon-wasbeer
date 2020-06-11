@@ -628,6 +628,12 @@ export default class CharacterHandler {
             case 'snelste puzzles solved':
                 MessageService.ReplyEmbed(messageInfo, await CharacterEmbeds.GetTopFastestPuzzlesSolvedEmbed());
                 break;
+            case 'cards':
+            case 'kaart':
+            case 'kaarten':
+            case 'kaartjes':
+                MessageService.ReplyEmbed(messageInfo, await CharacterEmbeds.GetTopUniqueCards());
+                break;
             default:
                 MessageService.ReplyMessage(messageInfo, `Ik heb geen lijst van top 10 ${category}. Kijk ff in die pins voor de lijst van mogelijke lijsten.`, false);
                 return;
