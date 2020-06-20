@@ -12,10 +12,10 @@ export default class CharacterConstants {
     ]
 
     public static readonly HEALTH_ADDITION_PER_LEVEL = [
-        0,        5,        10,       15,       20,
-        25,       30,       35,       40,       45,
-        50,       55,       60,       65,       70,
-        75,       80,       85,       90,       100,
+        0,        25,       50,       75,       100,
+        125,      150,      175,      200,      225,
+        250,      275,      300,      325,      350,
+        350,      375,      400,      425,      500,
     ]
 
     public static readonly XP_PER_LEVEL = [
@@ -47,14 +47,14 @@ export default class CharacterConstants {
     }
 
     public static readonly CLASS_BASE_STATS = {
-        BASE: { armor: 5, dexterity: 5, healing: 10, health: 100,  regeneration: 2, strength: 10, spell: 13, attack: 5 },
-        MAX: { armor: 50, dexterity: 20, healing: 50, health: 500,  regeneration: 10, strength: 50, spell: 50, attack: 50 },
-        BARD: { armor: 2, dexterity: 2, healing: 0, health: 100,  regeneration: 3, strength: 0, spell: 13, attack: 2 },
-        CLERIC: { armor: 5, dexterity: 7, healing: 10, health: 100, regeneration: 2, strength: 0, spell: 5, attack: 3 },
-        WIZARD: { armor: 0, dexterity: 0, healing: 0, health: 120, regeneration: 2, strength: 0, spell: 18, attack: 2 },
-        PALADIN: { armor: 10, dexterity: 5, healing: 5, health: 100, regeneration: 2, strength: 10, spell: 0, attack: 5 },
-        FIGHTER: { armor: 5, dexterity: 0, healing: 0, health: 90, regeneration: 1, strength: 13, spell: 0, attack: 7 },
-        RANGER: { armor: 5, dexterity: 8, healing: 0, health: 100, regeneration: 2, strength: 8, spell: 0, attack: 8 },
+        BASE: { armor: 5, dexterity: 5, healing: 10, health: 200,  regeneration: 3, strength: 10, spell: 13, attack: 5 },
+        MAX: { armor: 50, dexterity: 20, healing: 50, health: 1000,  regeneration: 15, strength: 50, spell: 50, attack: 50 },
+        BARD: { armor: 2, dexterity: 2, healing: 0, health: 200,  regeneration: 4, strength: 0, spell: 13, attack: 2 },
+        CLERIC: { armor: 5, dexterity: 7, healing: 10, health: 200, regeneration: 3, strength: 0, spell: 5, attack: 3 },
+        WIZARD: { armor: 0, dexterity: 0, healing: 0, health: 220, regeneration: 3, strength: 0, spell: 18, attack: 2 },
+        PALADIN: { armor: 10, dexterity: 5, healing: 5, health: 200, regeneration: 3, strength: 10, spell: 0, attack: 5 },
+        FIGHTER: { armor: 5, dexterity: 0, healing: 0, health: 180, regeneration: 1, strength: 13, spell: 0, attack: 7 },
+        RANGER: { armor: 5, dexterity: 8, healing: 0, health: 200, regeneration: 3, strength: 8, spell: 0, attack: 8 },
     };
 
     public static readonly CLASS_ATTACK_MESSAGES = {
