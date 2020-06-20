@@ -22,7 +22,7 @@ export default class Puzzle {
     public static async GET_TOP_SOLVED_LIST() {
         var list = await PuzzleModel.query()
             .join('characters', 'characters.id', '=', 'puzzles.solver_id')
-            .join('players', 'characters.id', '=', 'players.character_id')
+            .join('players', 'characters.player_id', '=', 'players.id')
             .select('name', 'discord_name')
             .groupBy('characters.name', 'players.discord_name')
             .count('characters.id as cnt')
@@ -35,7 +35,7 @@ export default class Puzzle {
     public static async GET_TOP_FASTEST_SOLVED_LIST() {
         var list = await PuzzleModel.query()
             .join('characters', 'characters.id', '=', 'puzzles.solver_id')
-            .join('players', 'characters.id', '=', 'players.character_id')
+            .join('players', 'characters.player_id', '=', 'players.id')
             .select('creation_date', 'solving_date', 'name', 'discord_name');
 
         return list;

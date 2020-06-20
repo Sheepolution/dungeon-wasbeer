@@ -73,7 +73,7 @@ export default class Character {
 
     public static async GET_TOP_XP_LIST() {
         const list = await CharacterModel.query()
-            .join('players', 'characters.id', '=', 'players.character_id')
+            .join('players', 'characters.player_id', '=', 'players.id')
             .select('name', 'xp', 'discord_name')
             .orderBy('xp', 'desc')
             .limit(10);

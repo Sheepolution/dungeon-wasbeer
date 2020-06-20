@@ -47,7 +47,7 @@ export default class Heal {
 
         var list = await HealModel.query()
             .join('characters', 'characters.id', '=', 'heals.character_id')
-            .join('players', 'characters.id', '=', 'players.character_id')
+            .join('players', 'characters.player_id', '=', 'players.id')
             .where(whereObj)
             .select('name', 'discord_name')
             .groupBy('characters.name', 'players.discord_name')
@@ -66,7 +66,7 @@ export default class Heal {
 
         var list = await HealModel.query()
             .join('characters', 'characters.id', '=', 'heals.character_id')
-            .join('players', 'characters.id', '=', 'players.character_id')
+            .join('players', 'characters.player_id', '=', 'players.id')
             .where(whereObj)
             .groupBy('characters.name', 'players.discord_name')
             .select('name', 'discord_name')
@@ -85,7 +85,7 @@ export default class Heal {
 
         var list = await HealModel.query()
             .join('characters', 'characters.id', '=', 'heals.receiver_id')
-            .join('players', 'characters.id', '=', 'players.character_id')
+            .join('players', 'characters.player_id', '=', 'players.id')
             .where(whereObj)
             .groupBy('characters.name', 'players.discord_name')
             .select('name', 'discord_name')
@@ -104,7 +104,7 @@ export default class Heal {
 
         var list = await HealModel.query()
             .join('characters', 'characters.id', '=', 'heals.receiver_id')
-            .join('players', 'characters.id', '=', 'players.character_id')
+            .join('players', 'characters.player_id', '=', 'players.id')
             .where(whereObj)
             .groupBy('characters.name', 'players.discord_name')
             .select('name', 'discord_name')

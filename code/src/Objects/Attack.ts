@@ -73,7 +73,7 @@ export default class Attack {
 
         const list = await AttackModel.query()
             .join('characters', 'characters.id', '=', 'attacks.character_id')
-            .join('players', 'characters.id', '=', 'players.character_id')
+            .join('players', 'characters.player_id', '=', 'players.id')
             .where(whereObj)
             .select('name', 'discord_name')
             .groupBy('characters.name', 'players.discord_name')
@@ -92,7 +92,7 @@ export default class Attack {
 
         const list = await AttackModel.query()
             .join('characters', 'characters.id', '=', 'attacks.character_id')
-            .join('players', 'characters.id', '=', 'players.character_id')
+            .join('players', 'characters.player_id', '=', 'players.id')
             .where(whereObj)
             .select('name', 'discord_name')
             .groupBy('characters.name', 'players.discord_name')
@@ -121,7 +121,7 @@ export default class Attack {
 
         const list = await AttackModel.query()
             .join('characters', 'characters.id', '=', 'attacks.character_id')
-            .join('players', 'characters.id', '=', 'players.character_id')
+            .join('players', 'characters.player_id', '=', 'players.id')
             .where(whereObj)
             .orWhere(whereObj2)
             .groupBy('characters.name', 'players.discord_name')
