@@ -344,7 +344,11 @@ export default class Character {
     }
 
     public GetMaxBattleCooldown() {
-        return CharacterConstants.BASE_COOLDOWN_DURATION - this.fullModifierStats.dexterity;
+        return CharacterConstants.BASE_COOLDOWN_DURATION - this.fullModifierStats.dexterity + this.GetHealthDexterityPenalty();
+    }
+
+    public GetHealthDexterityPenalty() {
+        return Math.floor(CharacterConstants.HEALTH_DEXTERITY_PENALTY_MAX * (1 - (this.currentHealth / this.maxHealth)));
     }
 
     public async GetBattleCooldown() {
