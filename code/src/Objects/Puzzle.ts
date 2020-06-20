@@ -36,8 +36,7 @@ export default class Puzzle {
         var list = await PuzzleModel.query()
             .join('characters', 'characters.id', '=', 'puzzles.solver_id')
             .join('players', 'characters.id', '=', 'players.character_id')
-            .select('creation_date', 'solving_date', 'name', 'discord_name')
-            .limit(10);
+            .select('creation_date', 'solving_date', 'name', 'discord_name');
 
         return list;
     }
