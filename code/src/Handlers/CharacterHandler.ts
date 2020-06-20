@@ -570,11 +570,15 @@ export default class CharacterHandler {
                 break;
             case 'schade gedaan':
             case 'schade gegeven':
+            case 'damage gedaan':
+            case 'damage gegeven':
             case 'damage done':
                 MessageService.ReplyEmbed(messageInfo, await CharacterEmbeds.GetTopDamageDoneEmbed(topListType, battleId));
                 break;
             case 'schade gekregen':
             case 'schade ontvangen':
+            case 'damage gekregen':
+            case 'damage ontvangen':
             case 'damage received':
             case 'damage get':
                 MessageService.ReplyEmbed(messageInfo, await CharacterEmbeds.GetTopDamageReceivedEmbed(topListType, battleId));
