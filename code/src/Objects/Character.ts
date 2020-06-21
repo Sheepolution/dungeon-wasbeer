@@ -45,6 +45,7 @@ export default class Character {
     private avatarUrl:string;
     private lore:string;
     private regenerated:number;
+    private slept:number;
 
     constructor(player?:Player) {
         if (player) {
@@ -128,6 +129,7 @@ export default class Character {
         this.avatarUrl = model.avatar_url;
         this.lore = model.lore;
         this.regenerated = model.regenerated;
+        this.slept = model.slept;
         this.bornDate = new Date(model.born_date);
         this.deathDate = model.death_date ? new Date(model.death_date) : undefined;
         this.isSorcerer = this.classType == ClassType.Bard || this.classType == ClassType.Cleric || this.classType == ClassType.Wizard;
@@ -302,6 +304,15 @@ export default class Character {
         return this.beingHealed;
     }
 
+    public async Sleep() {
+        const healing = Math.min(Math.ceil(this.maxHealth/10), this.maxHealth - this.currentHealth);
+        this.currentHealth += healing;
+        this.slept += 1;
+        await this.SetSleepCooldown();
+        await this.UPDATE({health: this.currentHealth, slept: this.slept});
+        return healing;
+    }
+
     public GetAttackRoll() {
         return this.fullModifierStats.attack;
     }
@@ -377,6 +388,10 @@ export default class Character {
 
     public async SetBattleCooldown() {
         await Redis.set(Character.battleCooldownPrefix + this.GetId(), '1', 'EX', Utils.GetMinutesInSeconds(this.GetMaxBattleCooldown()));
+    }
+
+    public async SetSleepCooldown() {
+        await Redis.set(Character.battleCooldownPrefix + this.GetId(), '1', 'EX', Utils.GetMinutesInSeconds(this.GetMaxBattleCooldown() * 2));
     }
 
     public async GetHealingCooldown() {

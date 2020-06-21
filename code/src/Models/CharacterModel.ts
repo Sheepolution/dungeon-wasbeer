@@ -34,6 +34,7 @@ export default class CharacterModel extends Model {
                 avatar_url: null,
                 lore: null,
                 regenerated: 0,
+                slept: 0,
             })
 
         return character;

@@ -80,6 +80,13 @@ export default class CharacterHandler {
             case 'heal':
                 this.OnHeal(messageInfo, player, args[0]);
                 break;
+            case 'sleep':
+            case 'slaap':
+            case 'rust':
+            case 'rest':
+            case 'dutje':
+                this.Sleep(messageInfo, player);
+                break;
             case 'sos':
             case 'health':
                 this.ShowLowestHealth(messageInfo);
@@ -311,6 +318,43 @@ export default class CharacterHandler {
         character.SetIsHealing(false);
         receiver.SetBeingHealed(false);
         await this.SaveHeal(character, receiver, healthBefore, character.GetFullModifierStats().healing, roll, healing);
+    }
+
+    private static async Sleep(messageInfo:IMessageInfo, player:Player) {
+        const character = PlayerManager.GetCharacterFromPlayer(messageInfo, player);
+        if (character == null) {
+            return;
+        }
+
+        if (character.IsInBattle()) {
+            MessageService.ReplyMessage(messageInfo, 'Je kan niet slapen want je zit midden in een gevecht.', false);
+            return;
+        }
+
+        if (character.IsHealing()) {
+            MessageService.ReplyMessage(messageInfo, 'Je kan niet slapen want je bent momenteel aan het healen.', false);
+            return;
+        }
+
+        if (character.IsBeingHealed()) {
+            MessageService.ReplyMessage(messageInfo, 'Je kan niet slapen want je wordt momenteel geheald.', false);
+            return;
+        }
+
+        if (character.IsFullHealth()) {
+            MessageService.ReplyMessage(messageInfo, 'Het heeft weinig zin om te gaan slapen want je bent al full health.');
+            return;
+        }
+
+        const cooldown = await character.GetBattleCooldown();
+
+        if (cooldown > 0) {
+            MessageService.ReplyMessage(messageInfo, `Je hebt nog ${Utils.GetSecondsInMinutesAndSeconds(cooldown)} cooldown voordat je weer mag slapen.`);
+            return;
+        }
+
+        var healing = await character.Sleep();
+        MessageService.ReplyMessage(messageInfo, `Je verstopt jezelf voor het monster om een dutje te kunnen doen en krijgt ${healing} health terug.`, true);
     }
 
     private static async ShowLowestHealth(messageInfo:IMessageInfo) {
