@@ -247,6 +247,16 @@ export default class CharacterHandler {
             return;
         }
 
+        if (character.IsHealing()) {
+            MessageService.ReplyMessage(messageInfo, 'Je bent al iemand aan het healen.', false);
+            return;
+        }
+
+        if (character.IsBeingHealed()) {
+            MessageService.ReplyMessage(messageInfo, 'Je kan niet healen want je wordt momenteel zelf geheald.', false);
+            return;
+        }
+
         const cooldown = await character.GetHealingCooldown();
         if (cooldown > 0) {
             const minutes = Utils.GetSecondsInMinutes(cooldown);
@@ -258,7 +268,7 @@ export default class CharacterHandler {
         if (mention != null) {
             const receiverId = DiscordUtils.GetMemberId(mention);
             if (receiverId == null) {
-                MessageService.ReplyMessage(messageInfo, 'Als je iemand anders dan jezelf wilt healen moet je die persoon taggen.\n`;heal @persoon`', false);
+                MessageService.ReplyMessage(messageInfo, 'Als je iemand anders dan jezelf wilt healen moet je die persoon taggen.\n`;heal @persoon`.', false);
                 return;
             }
 
@@ -278,11 +288,18 @@ export default class CharacterHandler {
             return;
         }
 
+        if (character.IsBeingHealed()) {
+            MessageService.ReplyMessage(messageInfo, 'Je kan niet healen want die wordt momenteel al geheald.', false);
+            return;
+        }
+
         if (receiver.IsFullHealth()) {
             MessageService.ReplyMessage(messageInfo, `${selfHeal ? 'Je bent' : receiver.GetName() + ' is'} al full health.`, false);
             return;
         }
 
+        character.SetIsHealing(true);
+        receiver.SetBeingHealed(true);
         const message = await this.SendHealingEmbed(messageInfo, character, receiver);
         await Utils.Sleep(3);
         const roll = Utils.Dice(20);
@@ -290,7 +307,9 @@ export default class CharacterHandler {
 
         await receiver.GetHealthFromHealing(healing);
         await character.SetHealingCooldown();
-        await this.UpdateHealingEmbed(message, character, receiver, roll, healing)
+        await this.UpdateHealingEmbed(message, character, receiver, roll, healing);
+        character.SetIsHealing(false);
+        receiver.SetBeingHealed(false);
         await this.SaveHeal(character, receiver, healthBefore, character.GetFullModifierStats().healing, roll, healing);
     }
 

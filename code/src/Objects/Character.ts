@@ -39,6 +39,8 @@ export default class Character {
     private deathDate?:Date;
     private isSorcerer:boolean;
     private inBattle:boolean;
+    private isHealing:boolean;
+    private beingHealed:boolean;
     private inspired:boolean;
     private avatarUrl:string;
     private lore:string;
@@ -280,6 +282,22 @@ export default class Character {
 
     public IsInBattle() {
         return this.inBattle;
+    }
+
+    public SetIsHealing(isHealing:boolean) {
+        this.isHealing = isHealing;
+    }
+
+    public IsHealing() {
+        return this.isHealing;
+    }
+
+    public SetBeingHealed(beingHealed:boolean) {
+        this.beingHealed = beingHealed;
+    }
+
+    public IsBeingHealed() {
+        return this.beingHealed;
     }
 
     public GetAttackRoll() {

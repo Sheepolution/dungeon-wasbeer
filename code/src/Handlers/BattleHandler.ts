@@ -58,6 +58,16 @@ export default class BattleHandler {
             return;
         }
 
+        if (character.IsHealing()) {
+            MessageService.ReplyMessage(messageInfo, 'Je kan niet vechten want je bent momenteel aan het healen.', false);
+            return;
+        }
+
+        if (character.IsBeingHealed()) {
+            MessageService.ReplyMessage(messageInfo, 'Je kan niet vechten want je wordt momenteel geheald.', false);
+            return;
+        }
+
         const cooldown = await character.GetBattleCooldown();
 
         if (cooldown > 0) {
