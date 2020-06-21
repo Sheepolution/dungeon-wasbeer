@@ -458,7 +458,7 @@ export default class Character {
     public async GetHealthFromMessage() {
         if (this.IsFullHealth()) { return false; }
         var healing = Math.min(this.fullModifierStats.regeneration, this.maxHealth - this.currentHealth);
-        this.currentHealth += this.currentHealth;
+        this.currentHealth += healing;
         this.regenerated += healing;
         this.UPDATE({ health: this.currentHealth, regenerated: this.regenerated })
         return true;
