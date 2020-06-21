@@ -33,6 +33,7 @@ export default class CharacterModel extends Model {
                 inspired: false,
                 avatar_url: null,
                 lore: null,
+                regenerated: 0,
             })
 
         return character;

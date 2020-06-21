@@ -44,6 +44,7 @@ export default class Character {
     private inspired:boolean;
     private avatarUrl:string;
     private lore:string;
+    private regenerated:number;
 
     constructor(player?:Player) {
         if (player) {
@@ -126,6 +127,7 @@ export default class Character {
         this.inspired = model.inspired;
         this.avatarUrl = model.avatar_url;
         this.lore = model.lore;
+        this.regenerated = model.regenerated;
         this.bornDate = new Date(model.born_date);
         this.deathDate = model.death_date ? new Date(model.death_date) : undefined;
         this.isSorcerer = this.classType == ClassType.Bard || this.classType == ClassType.Cleric || this.classType == ClassType.Wizard;
@@ -440,8 +442,10 @@ export default class Character {
 
     public async GetHealthFromMessage() {
         if (this.IsFullHealth()) { return false; }
-        this.currentHealth = Math.min(this.maxHealth, this.currentHealth + this.fullModifierStats.regeneration);
-        this.UPDATE({ health: this.currentHealth })
+        var healing = Math.min(this.fullModifierStats.regeneration, this.maxHealth - this.currentHealth);
+        this.currentHealth += this.currentHealth;
+        this.regenerated += healing;
+        this.UPDATE({ health: this.currentHealth, regenerated: this.regenerated })
         return true;
     }
 
