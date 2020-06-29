@@ -13,6 +13,7 @@ import Attack from '../Objects/Attack';
 import { LogType } from '../Enums/LogType';
 import EmojiConstants from '../Constants/EmojiConstants';
 import LogService from '../Services/LogService';
+import { ClassType } from '../Enums/ClassType';
 
 export default class BattleHandler {
 
@@ -168,6 +169,17 @@ export default class BattleHandler {
 
     private static async ResolveAttackResult(messageInfo:IMessageInfo, message:Message, battle:Battle, character:Character, playerWon:boolean, damage:number, roll1:number, roll2:number, roll3:number, roll4:number) {
         if (playerWon) {
+            var monsterId = battle.GetMonster().GetId();
+            if (monsterId == 'e7c363a8-4bd7-42f2-b9aa-a70252c2c55a') {
+                if (character.IsSorcerer()) {
+                    damage = Math.ceil(damage / 2);
+                }
+            } else if (monsterId == '1f0b7281-afdf-4982-bc2b-dab4ae7f87b4') {
+                if (!character.IsSorcerer()) {
+                    damage = Math.ceil(damage / 2);
+                }
+            }
+
             const receivedDamage = await battle.DealDamageToMonster(damage);
             await this.SaveAttack(battle, character, message.id, roll1, roll2, character.GetAttackRoll(), roll3, roll4, battle.GetMonsterAttackRoll(), true, receivedDamage, battle.GetCurrentMonsterHealth());
             character.SetInBattle(false);
