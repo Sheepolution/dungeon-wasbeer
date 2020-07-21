@@ -22,7 +22,7 @@ import PlayerCard from '../Objects/PlayerCard';
 import PlayerManager from '../Managers/PlayerManager';
 import DiscordUtils from '../Utils/DiscordUtils';
 import DiscordService from '../Services/DiscordService';
-import { Guild } from 'discord.js';
+import { Guild, Constants } from 'discord.js';
 
 export default class AdminHandler {
 
@@ -121,7 +121,12 @@ export default class AdminHandler {
             return;
         }
 
-        const member = await DiscordService.FindMember(receiverId, <Guild>messageInfo.message.guild);
+        const guild = await DiscordService.FindGuild(SettingsConstants.MAIN_GUILD_ID);
+        if (guild == null) {
+            return;
+        }
+
+        const member = await DiscordService.FindMember(receiverId, guild);
         if (member == null) {
             MessageService.ReplyMessage(messageInfo, `Ik kan niemand vinden met het id of naam ${receiverId}`, false, true);
             return;
