@@ -23,7 +23,7 @@ export default class PlayerManager {
             player = await this.CreateNewPlayer(messageInfo);
 
             // New player, give them their first card.
-            const cardModifyResult = await CardManager.GivePlayerCard(messageInfo, player);
+            const cardModifyResult = await CardManager.GivePlayerCard(player);
             const playerCard = <PlayerCard>cardModifyResult.object;
             messageInfo.channel = BotManager.GetCardChannel();
             if (cardModifyResult.result) {

@@ -28,7 +28,7 @@ export default class CardManager {
         return this.cardList;
     }
 
-    public static async GivePlayerCard(messageInfo:IMessageInfo, player:Player) {
+    public static async GivePlayerCard(player:Player) {
         const card = await this.GetRandomCard();
         const playerCards = player.GetCards();
         const cardModifyResult:IObjectModifyResult = { object: card, result: false };

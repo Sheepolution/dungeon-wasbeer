@@ -84,7 +84,7 @@ export default class MessageHandler {
         const rewardPoints = SettingsConstants.MESSAGE_POINT_AMOUNT_REWARDS.CARD[pointRewardIndex];
 
         if (player.GetMessagePoints() % rewardPoints == 0) {
-            const cardModifyResult = await CardManager.GivePlayerCard(messageInfo, player);
+            const cardModifyResult = await CardManager.GivePlayerCard(player);
             const playerCard = <PlayerCard>cardModifyResult.object;
             messageInfo.channel = BotManager.GetCardChannel();
             if (cardModifyResult.result) {
