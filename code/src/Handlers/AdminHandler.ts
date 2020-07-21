@@ -18,6 +18,11 @@ import { ClassType } from '../Enums/ClassType';
 import CampaignManager from '../Managers/CampaignManager';
 import { LogType } from '../Enums/LogType';
 import LogService from '../Services/LogService';
+import PlayerCard from '../Objects/PlayerCard';
+import PlayerManager from '../Managers/PlayerManager';
+import DiscordUtils from '../Utils/DiscordUtils';
+import DiscordService from '../Services/DiscordService';
+import { Guild } from 'discord.js';
 
 export default class AdminHandler {
 
@@ -78,6 +83,9 @@ export default class AdminHandler {
             case 'saychat':
                 this.SayMessageChat(messageInfo, content, player);
                 break;
+            case 'give-card':
+            case 'givecard':
+                this.GiveCard(messageInfo, args[0], args, player)
             default:
                 return false;
         }
@@ -106,6 +114,46 @@ export default class AdminHandler {
         await MessageService.SendMessageToChatChannel(message);
         MessageService.ReplyMessage(messageInfo, 'Ik heb het gezegd.', true, true);
         LogService.Log(player, player.GetId(), LogType.SayMessage, `${player.GetDiscordName()} zegt het bericht '${message}' in het chat-kanaal.`);
+    }
+
+    private static async GiveCard(messageInfo:IMessageInfo, receiverId:string, args:Array<string>, player:Player) {
+        if (messageInfo.message == null) {
+            return;
+        }
+
+        const member = await DiscordService.FindMember(receiverId, <Guild>messageInfo.message.guild);
+        if (member == null) {
+            MessageService.ReplyMessage(messageInfo, `Ik kan niemand vinden met het id of naam ${receiverId}`, false, true);
+            return;
+        }
+
+        const receiver = await PlayerManager.GetPlayer(member.id, member.displayName);
+        if (receiver == null) {
+            return;
+        }
+
+        args.shift();
+        const message = args.join(' ');
+
+        const cardModifyResult = await CardManager.GivePlayerCard(receiver);
+        const playerCard = <PlayerCard>cardModifyResult.object;
+        const oldChannel = messageInfo.channel;
+        const oldMember = messageInfo.member;
+        messageInfo.channel = BotManager.GetCardChannel();
+        messageInfo.member = member;
+        MessageService.ReplyMessage(messageInfo, message, undefined, true, CardEmbeds.GetCardEmbed(playerCard.GetCard(), playerCard.GetAmount()));
+
+        if (cardModifyResult.result) {
+            LogService.Log(receiver, playerCard.GetCardId(), LogType.CardReceived, `${receiver.GetDiscordName()} heeft de kaart '${playerCard.GetCard().GetName()}' gekregen.`);
+        } else {
+            LogService.Log(receiver, playerCard.GetCardId(), LogType.CardReceived, `${receiver.GetDiscordName()} heeft de kaart '${playerCard.GetCard().GetName()}' gekregen, en heeft daar nu ${playerCard.GetAmount()} van.`);
+        }
+    
+        messageInfo.channel = oldChannel;
+        messageInfo.member = oldMember;
+
+        MessageService.ReplyMessage(messageInfo, 'Ik heb de kaart gegeven.', true, true);
+        LogService.Log(player, receiver.GetId(), LogType.GiveCard, `${player.GetDiscordName()} geeft aan kaart aan ${receiver.GetDiscordName()} met het bericht '${message}'.`);
     }
 
     private static async StartCampaign() {
