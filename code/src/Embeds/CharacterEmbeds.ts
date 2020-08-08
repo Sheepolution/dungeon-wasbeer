@@ -531,8 +531,9 @@ export default class CharacterEmbeds {
 
     public static async GetTopFastestPuzzlesSolvedEmbed() {
         const list:any = await Puzzle.GET_TOP_FASTEST_SOLVED_LIST();
+        const amount = Math.min(25, list.length);
         const embed = new MessageEmbed()
-            .setTitle(`Top ${list.length} puzzels het snelst opgelost`);
+            .setTitle(`Top ${amount} puzzels het snelst opgelost`);
 
         var listString = '';
 
@@ -543,7 +544,7 @@ export default class CharacterEmbeds {
 
         list.sort((a:any, b:any) => a.duration - b.duration);
 
-        for (let i = 0; i < list.length; i++) {
+        for (let i = 0; i < amount; i++) {
             const item = list[i];
             listString += `${i+1}. ${Utils.GetSecondsInMinutesAndSeconds(item.duration)} - ${item.name} (${item.discord_name})\n`;
         }
