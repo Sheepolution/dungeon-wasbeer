@@ -190,6 +190,14 @@ export default class Character {
         return this.currentHealth >= this.maxHealth;
     }
 
+    public GetRegenerated() {
+        return this.regenerated;
+    }
+
+    public GetSleepAmount() {
+        return this.slept;
+    }
+
     public async RestoreToFullHealth(trx:any) {
         this.currentHealth = this.GetMaxHealth();
         await this.UPDATE({health: this.currentHealth}, trx);

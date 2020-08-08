@@ -181,45 +181,19 @@ export default class CharacterEmbeds {
     }
 
     public static async GetCharacterHistoryEmbed(character:Character) {
-        const victories = await character.GetVictories();
-        const losses = await character.GetLosses();
-
         const embed = new MessageEmbed()
             .setColor(SettingsConstants.COLORS.DEFAULT)
             .setAuthor(character.GetClassName(), CharacterService.GetClassIconImage(character.GetClass()))
             .setTitle(`De geschiedenis van ${character.GetName()}${(character.IsInspired() ? ' ✨' : '')}`)
             .setImage(character.GetAvatarUrl())
             .setDescription(`Aangemaakt op ${character.GetBornDateString()}`)
-            .addField('Monsters', await character.GetBattles(), true)
-            .addField('Aanvallen', parseInt(victories) + parseInt(losses), true)
-            .addField('Gewonnen', victories, true)
-            .addField('Verloren', losses, true)
-            .addField('Schade gedaan', await character.GetTotalDamageDone(), true)
-            .addField('Schade gekregen', await character.GetTotalDamageTaken(), true)
-            .addField('Crits gedaan', await character.GetTotalCritsDone(), true)
-            .addField('Crits gekregen', await character.GetTotalCritsTaken(), true)
 
-        if (character.CanHeal()) {
-            embed.addField('Heals gedaan', await character.GetTotalHealsDone(), true);
-            embed.addField('Healing gedaan', await character.GetTotalHealingDone(), true);
-        }
-
-        embed.addField('Heals gekregen', await character.GetTotalHealsReceived(), true)
-            .addField('Healing gekregen', await character.GetTotalHealingReceived(), true)
-
-        if (character.CanInspire()) {
-            embed.addField('Geïnspireerd', await character.GetTotalInspiresDone(), true);
-        }
-
-        embed.addField('Puzzels opgelost', await character.GetTotalPuzzlesSolved(), true);
+        this.AddCharacterHistoryToEmbed(embed, character)
 
         return embed;
     }
 
     public static async GetDeadCharacterEmbed(character:Character) {
-        const victories = await character.GetVictories();
-        const losses = await character.GetLosses();
-
         const embed = new MessageEmbed()
             .setColor(SettingsConstants.COLORS.BAD)
             .setImage(CharacterConstants.CHARACTER_DIED)
@@ -227,28 +201,8 @@ export default class CharacterEmbeds {
             .setDescription('--------------------')
             .addField('Level', character.GetLevel(), true)
             .addField('XP', character.GetXP(), true)
-            .addField('Monsters', await character.GetBattles(), true)
-            .addField('Aanvallen', parseInt(victories) + parseInt(losses), true)
-            .addField('Gewonnen', victories, true)
-            .addField('Verloren', losses, true)
-            .addField('Schade gedaan', await character.GetTotalDamageDone(), true)
-            .addField('Schade gekregen', await character.GetTotalDamageTaken(), true)
-            .addField('Crits gedaan', await character.GetTotalCritsDone(), true)
-            .addField('Crits gekregen', await character.GetTotalCritsTaken(), true)
 
-        if (character.CanHeal()) {
-            embed.addField('Heals gedaan', await character.GetTotalHealsDone(), true);
-            embed.addField('Healing gedaan', await character.GetTotalHealingDone(), true);
-        }
-
-        embed.addField('Heals gekregen', await character.GetTotalHealsReceived(), true)
-            .addField('Healing gekregen', await character.GetTotalHealingReceived(), true)
-
-        if (character.CanInspire()) {
-            embed.addField('Geïnspireerd', await character.GetTotalInspiresDone(), true);
-        }
-
-        embed.addField('Puzzels opgelost', await character.GetTotalPuzzlesSolved(), true);
+        this.AddCharacterHistoryToEmbed(embed, character);
 
         const equipment = character.GetEquipment();
         if (equipment.length > 0) {
@@ -616,7 +570,7 @@ Als je zeker weet dat je wilt stoppen met dit character, gebruik dan het command
         return embed;
     }
 
-    public static AddEquipmentToEmbed(embed:MessageEmbed, equipment:Array<Card>) {
+    private static AddEquipmentToEmbed(embed:MessageEmbed, equipment:Array<Card>) {
         if (equipment.length == 0) {
             embed.addField('Leeg', 'Voeg equipment toe met `;equip [kaart]`.');
         }
@@ -624,5 +578,35 @@ Als je zeker weet dat je wilt stoppen met dit character, gebruik dan het command
         for (const card of equipment) {
             embed.addField(card.GetName(), CardService.ParseModifierArrayToEmbedString(card.GetModifiers()), true);
         }
+    }
+
+    private static async AddCharacterHistoryToEmbed(embed:MessageEmbed, character:Character) {
+        const victories = await character.GetVictories();
+        const losses = await character.GetLosses();
+
+        embed.addField('Monsters', await character.GetBattles(), true)
+            .addField('Aanvallen', parseInt(victories) + parseInt(losses), true)
+            .addField('Gewonnen', victories, true)
+            .addField('Verloren', losses, true)
+            .addField('Schade gedaan', await character.GetTotalDamageDone(), true)
+            .addField('Schade gekregen', await character.GetTotalDamageTaken(), true)
+            .addField('Crits gedaan', await character.GetTotalCritsDone(), true)
+            .addField('Crits gekregen', await character.GetTotalCritsTaken(), true)
+            .addField('Regenerated', character.GetRegenerated(), true)
+            .addField('Geslapen', character.GetSleepAmount(), true)
+
+        if (character.CanHeal()) {
+            embed.addField('Heals gedaan', await character.GetTotalHealsDone(), true);
+            embed.addField('Healing gedaan', await character.GetTotalHealingDone(), true);
+        }
+
+        embed.addField('Heals gekregen', await character.GetTotalHealsReceived(), true)
+            .addField('Healing gekregen', await character.GetTotalHealingReceived(), true)
+
+        if (character.CanInspire()) {
+            embed.addField('Geïnspireerd', await character.GetTotalInspiresDone(), true);
+        }
+
+        embed.addField('Puzzels opgelost', await character.GetTotalPuzzlesSolved(), true);
     }
 }
