@@ -20,9 +20,7 @@ import { LogType } from '../Enums/LogType';
 import LogService from '../Services/LogService';
 import PlayerCard from '../Objects/PlayerCard';
 import PlayerManager from '../Managers/PlayerManager';
-import DiscordUtils from '../Utils/DiscordUtils';
 import DiscordService from '../Services/DiscordService';
-import { Guild, Constants } from 'discord.js';
 
 export default class AdminHandler {
 
@@ -86,6 +84,7 @@ export default class AdminHandler {
             case 'give-card':
             case 'givecard':
                 this.GiveCard(messageInfo, args[0], args, player)
+                break;
             default:
                 return false;
         }
@@ -153,7 +152,7 @@ export default class AdminHandler {
         } else {
             LogService.Log(receiver, playerCard.GetCardId(), LogType.CardReceived, `${receiver.GetDiscordName()} heeft de kaart '${playerCard.GetCard().GetName()}' gekregen, en heeft daar nu ${playerCard.GetAmount()} van.`);
         }
-    
+
         messageInfo.channel = oldChannel;
         messageInfo.member = oldMember;
 

@@ -1,5 +1,4 @@
 import Card from '../Objects/Card';
-import IMessageInfo from '../Interfaces/IMessageInfo';
 import Player from '../Objects/Player';
 import PlayerCard from '../Objects/PlayerCard';
 import SettingsConstants from '../Constants/SettingsConstants';

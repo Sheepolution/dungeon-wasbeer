@@ -13,7 +13,6 @@ import Attack from '../Objects/Attack';
 import { LogType } from '../Enums/LogType';
 import EmojiConstants from '../Constants/EmojiConstants';
 import LogService from '../Services/LogService';
-import { ClassType } from '../Enums/ClassType';
 
 export default class BattleHandler {
 
