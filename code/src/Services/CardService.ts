@@ -118,6 +118,8 @@ export default class CardService {
                 return ImageConstants.ICONS.DRUNK;
             case 'Voertuigen':
                 return ImageConstants.ICONS.DRIVE;
+            case 'Legendarisch':
+                return ImageConstants.ICONS.LEGENDARY;
         }
     }
 
@@ -151,6 +153,8 @@ export default class CardService {
                 return EmojiConstants.CARD_CATEGORIES.DRUNK;
             case 'Voertuigen':
                 return EmojiConstants.CARD_CATEGORIES.DRIVE;
+            case 'Legendarisch':
+                return EmojiConstants.CARD_CATEGORIES.LEGENDARY;
         }
     }
 }

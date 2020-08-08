@@ -89,7 +89,7 @@ export default class CardEmbeds {
             }
         }
 
-        const cardsAmount = CardManager.GetCardList().length;
+        const cardsAmount = CardManager.GetAmountOfNormalCards();
         const embed = new MessageEmbed()
             .setColor(SettingsConstants.COLORS.DEFAULT)
             .setTitle('De kaarten van ' + player.GetDiscordName())

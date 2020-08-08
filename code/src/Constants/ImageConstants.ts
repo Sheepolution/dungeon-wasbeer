@@ -15,6 +15,7 @@ export default class ImageConstants {
         VINTAGE: 'https://cdn.discordapp.com/attachments/694331679204180029/713823231580176414/VintageSmoll.png',
         DRUNK: 'https://cdn.discordapp.com/attachments/694331679204180029/713829545081438259/DrunkSmoll.png',
         DRIVE: 'https://cdn.discordapp.com/attachments/694331679204180029/713832518641516634/Voertuigsmoll.png',
+        LEGENDARY: 'https://cdn.discordapp.com/attachments/694331679204180029/741667976079605901/legendary.png',
     }
 
     public static readonly SOLVED = 'https://cdn.discordapp.com/attachments/694331679204180029/708732190485118986/solved.gif';

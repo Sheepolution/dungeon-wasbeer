@@ -61,7 +61,7 @@ export default class Card {
         this.category = model.category;
         this.imageUrl = model.image_url;
         this.creatorId = model.creator_id;
-        this.creationDate = model.creationDate;
+        this.creationDate = model.creation_date;
         this.modifiers = model.GetModifiers();
         this.modifierClass = model.GetModifierClass();
         this.modifierStats = this.CalculateModifierStats();

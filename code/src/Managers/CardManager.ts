@@ -10,6 +10,8 @@ export default class CardManager {
 
     private static cardList:Array<Card>;
 
+    private static legendaryCardsAmount:number;
+
     public static async BuildCardList() {
         const cardList = new Array<Card>();
 
@@ -21,10 +23,16 @@ export default class CardManager {
         }
 
         this.cardList = cardList;
+
+        this.legendaryCardsAmount = this.cardList.filter(c => c.GetRank() == 6).length;
     }
 
     public static GetCardList() {
         return this.cardList;
+    }
+
+    public static GetAmountOfNormalCards() {
+        return this.cardList.length - this.legendaryCardsAmount;
     }
 
     public static async GivePlayerCard(player:Player) {
@@ -79,7 +87,7 @@ export default class CardManager {
     }
 
     private static async GetRandomCard() {
-        const roll = Math.random() * 100;
+        const roll = 0.05; //Math.random() * 100;
         var rank = 1;
 
         for (const value of SettingsConstants.CARD_RANK_ROLL_VALUE) {

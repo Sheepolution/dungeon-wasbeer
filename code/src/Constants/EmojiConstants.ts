@@ -7,6 +7,7 @@ export default class EmojiConstants {
         '<:star3n:708621357692223488>',
         '<:star4n:708621357537034300>',
         '<:star5n:708621357260210217>',
+        '<:star6n:741660630951395349>',
     ];
 
     public static readonly CARD_CATEGORIES = {
@@ -24,6 +25,7 @@ export default class EmojiConstants {
         VINTAGE: '<:vintage:713837300223705210>',
         DRUNK: '<:drunk:713837296952016898>',
         DRIVE: '<:voertuigen:713837297677631548>',
+        LEGENDARY: '<:legendary:741666848805748776>',
     }
 
     public static readonly STATUS = {
