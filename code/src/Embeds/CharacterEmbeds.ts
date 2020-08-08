@@ -282,7 +282,7 @@ export default class CharacterEmbeds {
     public static async GetTopRegeneratedEmbed() {
         const list:any = await Character.GET_TOP_REGENERATED_LIST();
         const embed = new MessageEmbed()
-            .setTitle(`Top ${list.length} meeste health regenerated.`);
+            .setTitle(`Top ${list.length} meeste health regenerated`);
 
         var listString = '';
 
@@ -299,7 +299,7 @@ export default class CharacterEmbeds {
     public static async GetTopSleptEmbed() {
         const list:any = await Character.GET_TOP_SLEPT_LIST();
         const embed = new MessageEmbed()
-            .setTitle(`Top ${list.length} meeste keren geslapen.`);
+            .setTitle(`Top ${list.length} meeste keren geslapen`);
 
         var listString = '';
 
@@ -316,7 +316,7 @@ export default class CharacterEmbeds {
     public static async GetTopFightsEmbed(topListType:TopListType, battleId?:string) {
         const list:any = await Attack.GET_TOP_BATTLES_LIST(undefined, battleId);
         const embed = new MessageEmbed()
-            .setTitle(`Top ${list.length} aanvallen${topListType == TopListType.Current ? ' van dit gevecht' : topListType == TopListType.Previous ? ' van het vorige gevecht.' : ''}`);
+            .setTitle(`Top ${list.length} aanvallen${topListType == TopListType.Current ? ' van dit gevecht' : topListType == TopListType.Previous ? ' van het vorige gevecht' : ''}`);
 
         var listString = '';
 
@@ -333,7 +333,7 @@ export default class CharacterEmbeds {
     public static async GetTopFightsWonEmbed(topListType:TopListType, battleId?:string) {
         const list:any = await Attack.GET_TOP_BATTLES_LIST(true, battleId);
         const embed = new MessageEmbed()
-            .setTitle(`Top ${list.length} meeste gewonnen aanvallen${topListType == TopListType.Current ? ' in dit gevecht' : topListType == TopListType.Previous ? ' in het vorige gevecht.' : ''}`);
+            .setTitle(`Top ${list.length} meeste gewonnen aanvallen${topListType == TopListType.Current ? ' in dit gevecht' : topListType == TopListType.Previous ? ' in het vorige gevecht' : ''}`);
 
         var listString = '';
 
@@ -350,7 +350,7 @@ export default class CharacterEmbeds {
     public static async GetTopFightsLostEmbed(topListType:TopListType, battleId?:string) {
         const list:any = await Attack.GET_TOP_BATTLES_LIST(false, battleId);
         const embed = new MessageEmbed()
-            .setTitle(`Top ${list.length} meeste verloren aanvallen${topListType == TopListType.Current ? ' in dit gevecht' : topListType == TopListType.Previous ? ' in het vorige gevecht.' : ''}`);
+            .setTitle(`Top ${list.length} meeste verloren aanvallen${topListType == TopListType.Current ? ' in dit gevecht' : topListType == TopListType.Previous ? ' in het vorige gevecht' : ''}`);
 
         var listString = '';
 
@@ -367,7 +367,7 @@ export default class CharacterEmbeds {
     public static async GetTopDamageDoneEmbed(topListType:TopListType, battleId?:string) {
         const list:any = await Attack.GET_TOP_DAMAGE_LIST(true, battleId);
         const embed = new MessageEmbed()
-            .setTitle(`Top ${list.length} meeste schade gedaan${topListType == TopListType.Current ? ' in dit gevecht' : topListType == TopListType.Previous ? ' in het vorige gevecht.' : ''}`);
+            .setTitle(`Top ${list.length} meeste schade gedaan${topListType == TopListType.Current ? ' in dit gevecht' : topListType == TopListType.Previous ? ' in het vorige gevecht' : ''}`);
 
         var listString = '';
 
@@ -384,7 +384,7 @@ export default class CharacterEmbeds {
     public static async GetTopDamageReceivedEmbed(topListType:TopListType, battleId?:string) {
         const list:any = await Attack.GET_TOP_DAMAGE_LIST(false, battleId);
         const embed = new MessageEmbed()
-            .setTitle(`Top ${list.length} meeste schade gekregen${topListType == TopListType.Current ? ' in dit gevecht' : topListType == TopListType.Previous ? ' in het vorige gevecht.' : ''}`);
+            .setTitle(`Top ${list.length} meeste schade gekregen${topListType == TopListType.Current ? ' in dit gevecht' : topListType == TopListType.Previous ? ' in het vorige gevecht' : ''}`);
 
         var listString = '';
 
@@ -401,7 +401,7 @@ export default class CharacterEmbeds {
     public static async GetTopCritsDoneEmbed(topListType:TopListType, battleId?:string) {
         const list:any = await Attack.GET_TOP_CRIT_LIST(true, battleId);
         const embed = new MessageEmbed()
-            .setTitle(`Top ${list.length} meeste crits gedaan${topListType == TopListType.Current ? ' in dit gevecht' : topListType == TopListType.Previous ? ' in het vorige gevecht.' : ''}`);
+            .setTitle(`Top ${list.length} meeste crits gedaan${topListType == TopListType.Current ? ' in dit gevecht' : topListType == TopListType.Previous ? ' in het vorige gevecht' : ''}`);
 
         var listString = '';
 
@@ -418,7 +418,7 @@ export default class CharacterEmbeds {
     public static async GetTopCritsReceivedEmbed(topListType:TopListType, battleId?:string) {
         const list:any = await Attack.GET_TOP_CRIT_LIST(false, battleId);
         const embed = new MessageEmbed()
-            .setTitle(`Top ${list.length} meeste crits gekregen${topListType == TopListType.Current ? ' in dit gevecht' : topListType == TopListType.Previous ? ' in het vorige gevecht.' : ''}`);
+            .setTitle(`Top ${list.length} meeste crits gekregen${topListType == TopListType.Current ? ' in dit gevecht' : topListType == TopListType.Previous ? ' in het vorige gevecht' : ''}`);
 
         var listString = '';
 
@@ -435,7 +435,7 @@ export default class CharacterEmbeds {
     public static async GetTopHealsDoneEmbed(topListType:TopListType, battleId?:string) {
         const list:any = await Heal.GET_TOP_HEALS_DONE_LIST(battleId);
         const embed = new MessageEmbed()
-            .setTitle(`Top ${list.length} meeste heals gedaan${topListType == TopListType.Current ? ' in dit gevecht' : topListType == TopListType.Previous ? ' in het vorige gevecht.' : ''}`);
+            .setTitle(`Top ${list.length} meeste heals gedaan${topListType == TopListType.Current ? ' in dit gevecht' : topListType == TopListType.Previous ? ' in het vorige gevecht' : ''}`);
 
         var listString = '';
 
@@ -452,7 +452,7 @@ export default class CharacterEmbeds {
     public static async GetTopHealingDoneEmbed(topListType:TopListType, battleId?:string) {
         const list:any = await Heal.GET_TOP_HEALING_DONE_LIST(battleId);
         const embed = new MessageEmbed()
-            .setTitle(`Top ${list.length} meeste healing gedaan${topListType == TopListType.Current ? ' in dit gevecht' : topListType == TopListType.Previous ? ' in het vorige gevecht.' : ''}`);
+            .setTitle(`Top ${list.length} meeste healing gedaan${topListType == TopListType.Current ? ' in dit gevecht' : topListType == TopListType.Previous ? ' in het vorige gevecht' : ''}`);
 
         var listString = '';
 
@@ -469,7 +469,7 @@ export default class CharacterEmbeds {
     public static async GetTopHealsReceivedEmbed(topListType:TopListType, battleId?:string) {
         const list:any = await Heal.GET_TOP_HEALS_RECEIVED_LIST(battleId);
         const embed = new MessageEmbed()
-            .setTitle(`Top ${list.length} meeste heals gekregen${topListType == TopListType.Current ? ' in dit gevecht' : topListType == TopListType.Previous ? ' in het vorige gevecht.' : ''}`);
+            .setTitle(`Top ${list.length} meeste heals gekregen${topListType == TopListType.Current ? ' in dit gevecht' : topListType == TopListType.Previous ? ' in het vorige gevecht' : ''}`);
 
         var listString = '';
 
@@ -486,7 +486,7 @@ export default class CharacterEmbeds {
     public static async GetTopHealingReceivedEmbed(topListType:TopListType, battleId?:string) {
         const list:any = await Heal.GET_TOP_HEALING_RECEIVED_LIST(battleId);
         const embed = new MessageEmbed()
-            .setTitle(`Top ${list.length} meeste healing gekregen${topListType == TopListType.Current ? ' in dit gevecht' : topListType == TopListType.Previous ? ' in het vorige gevecht.' : ''}`);
+            .setTitle(`Top ${list.length} meeste healing gekregen${topListType == TopListType.Current ? ' in dit gevecht' : topListType == TopListType.Previous ? ' in het vorige gevecht' : ''}`);
 
         var listString = '';
 
