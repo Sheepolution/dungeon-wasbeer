@@ -85,6 +85,16 @@ export default class Character {
         return list;
     }
 
+    public static async GET_TOP_REGENERATED_LIST() {
+        const list = await CharacterModel.query()
+            .join('players', 'characters.player_id', '=', 'players.id')
+            .select('name', 'regenerated', 'discord_name')
+            .orderBy('regenerated', 'desc')
+            .limit(10);
+
+        return list;
+    }
+
     public static async GET_TOP_CARD_LIST() {
         const list = await CharacterModel.query()
             .join('players', 'characters.id', '=', 'players.character_id')

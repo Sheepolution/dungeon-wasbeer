@@ -575,6 +575,8 @@ export default class CharacterHandler {
         var ignoreTopListType = false;
         switch (category) {
             case 'xp':
+            case 'regen':
+            case 'regenerated':
             case 'level':
             case 'puzzel':
             case 'puzzels':
@@ -614,6 +616,10 @@ export default class CharacterHandler {
             case 'xp':
             case 'level':
                 MessageService.ReplyEmbed(messageInfo, await CharacterEmbeds.GetTopXPEmbed());
+                break;
+            case 'regen':
+            case 'regenerated':
+                MessageService.ReplyEmbed(messageInfo, await CharacterEmbeds.GetTopRegeneratedEmbed());
                 break;
             case 'gevechten':
             case 'aanvallen':
