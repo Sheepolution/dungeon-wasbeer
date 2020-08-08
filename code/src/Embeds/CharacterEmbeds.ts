@@ -188,7 +188,7 @@ export default class CharacterEmbeds {
             .setImage(character.GetAvatarUrl())
             .setDescription(`Aangemaakt op ${character.GetBornDateString()}`)
 
-        this.AddCharacterHistoryToEmbed(embed, character)
+        await this.AddCharacterHistoryToEmbed(embed, character)
 
         return embed;
     }
@@ -202,7 +202,7 @@ export default class CharacterEmbeds {
             .addField('Level', character.GetLevel(), true)
             .addField('XP', character.GetXP(), true)
 
-        this.AddCharacterHistoryToEmbed(embed, character);
+        await this.AddCharacterHistoryToEmbed(embed, character);
 
         const equipment = character.GetEquipment();
         if (equipment.length > 0) {
