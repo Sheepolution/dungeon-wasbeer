@@ -85,6 +85,8 @@ export default class CharacterHandler {
             case 'rust':
             case 'rest':
             case 'dutje':
+            case 'tukken':
+            case 'tukkie':
                 this.Sleep(messageInfo, player);
                 break;
             case 'sos':
