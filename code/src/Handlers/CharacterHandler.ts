@@ -581,6 +581,8 @@ export default class CharacterHandler {
             case 'regenerated':
             case 'sleep':
             case 'slept':
+            case 'slaap':
+            case 'geslapen':
             case 'level':
             case 'puzzel':
             case 'puzzels':
@@ -627,6 +629,8 @@ export default class CharacterHandler {
                 break;
             case 'sleep':
             case 'slept':
+            case 'slaap':
+            case 'geslapen':
                 MessageService.ReplyEmbed(messageInfo, await CharacterEmbeds.GetTopSleptEmbed());
                 break;
             case 'gevechten':
