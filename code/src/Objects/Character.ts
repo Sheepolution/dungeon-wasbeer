@@ -95,6 +95,16 @@ export default class Character {
         return list;
     }
 
+    public static async GET_TOP_SLEPT_LIST() {
+        const list = await CharacterModel.query()
+            .join('players', 'characters.player_id', '=', 'players.id')
+            .select('name', 'slept', 'discord_name')
+            .orderBy('slept', 'desc')
+            .limit(10);
+
+        return list;
+    }
+
     public static async GET_TOP_CARD_LIST() {
         const list = await CharacterModel.query()
             .join('players', 'characters.id', '=', 'players.character_id')

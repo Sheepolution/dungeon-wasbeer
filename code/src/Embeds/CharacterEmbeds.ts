@@ -342,6 +342,23 @@ export default class CharacterEmbeds {
         return embed;
     }
 
+    public static async GetTopSleptEmbed() {
+        const list:any = await Character.GET_TOP_SLEPT_LIST();
+        const embed = new MessageEmbed()
+            .setTitle(`Top ${list.length} meeste keren geslapen.`);
+
+        var listString = '';
+
+        for (let i = 0; i < list.length; i++) {
+            const item = list[i];
+            listString += `${i+1}. ${item.slept} - ${item.name} (${item.discord_name})\n`;
+        }
+
+        embed.setDescription(listString);
+
+        return embed;
+    }
+
     public static async GetTopFightsEmbed(topListType:TopListType, battleId?:string) {
         const list:any = await Attack.GET_TOP_BATTLES_LIST(undefined, battleId);
         const embed = new MessageEmbed()
