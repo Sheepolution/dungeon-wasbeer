@@ -103,6 +103,7 @@ export default class CampaignManager {
         if (this.campaignObject == null) {
             return;
         }
+
         return this.campaignObject.GetBattle();
     }
 
@@ -110,13 +111,15 @@ export default class CampaignManager {
         if (this.previousBattle == null) {
             return;
         }
-        return this.previousBattle;
+
+        return this.previousBattle.GetBattle();
     }
 
     public static GetPuzzle() {
         if (this.campaignObject == null) {
             return;
         }
+
         return this.campaignObject.GetPuzzle();
     }
 
@@ -166,6 +169,7 @@ export default class CampaignManager {
                     await LogService.LogXP(battleId, character.GetId(), xp, nowString, trx);
                     delete data[charId];
                 }
+
                 await character.RestoreToFullHealth(trx);
             }
 
