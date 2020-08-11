@@ -87,7 +87,7 @@ export default class CardManager {
     }
 
     private static async GetRandomCard() {
-        const roll = 0.05; //Math.random() * 100;
+        const roll = Math.random() * 100;
         var rank = 1;
 
         for (const value of SettingsConstants.CARD_RANK_ROLL_VALUE) {
