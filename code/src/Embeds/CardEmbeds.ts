@@ -101,7 +101,13 @@ export default class CardEmbeds {
             if (page == 0) {
                 page = pages;
             } else {
-                page = ((page - 1) % (pages)) + 1;
+                while (page <= 0) {
+                    page += pages;
+                }
+
+                while (page > pages) {
+                    page -= pages;
+                }
             }
         }
 
