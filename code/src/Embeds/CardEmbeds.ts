@@ -86,6 +86,10 @@ export default class CardEmbeds {
                         return am[0].modifier > bm[0].modifier ? 1 : -1;
                     });
                     break;
+                case SortingType.Amount:
+                    playerCards.sort((a:PlayerCard, b:PlayerCard) => b.GetAmount() - a.GetAmount());
+                    break;
+
             }
         }
 

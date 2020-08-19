@@ -4,4 +4,5 @@ export enum SortingType {
     Name,
     Class,
     Buff,
+    Amount,
 }

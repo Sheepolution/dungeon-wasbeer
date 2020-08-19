@@ -55,6 +55,12 @@ export default class PlayerCardHandler {
             case 'kaartenb':
                 this.SendPlayerCardList(messageInfo, player, SortingType.Buff);
                 break;
+            case 'lijst-dubbel':
+            case 'kaarten-dubbel':
+            case 'lijstd':
+            case 'kaartend':
+                this.SendPlayerCardList(messageInfo, player, SortingType.Amount);
+                break;
             default:
                 return false;
         }
