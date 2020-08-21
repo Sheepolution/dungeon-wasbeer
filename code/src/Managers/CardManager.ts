@@ -5,6 +5,11 @@ import SettingsConstants from '../Constants/SettingsConstants';
 import IObjectModifyResult from '../Interfaces/IObjectModifyResult';
 import { ICardModifier } from '../Interfaces/ICardModifier';
 import { ClassType } from '../Enums/ClassType';
+import { Message, MessageReaction, User } from 'discord.js';
+import EmojiConstants from '../Constants/EmojiConstants';
+import ReactionManager from './ReactionManager';
+import { ReactionMessageType } from '../Enums/ReactionMessageType';
+import PlayerManager from './PlayerManager';
 
 export default class CardManager {
 
@@ -56,6 +61,23 @@ export default class CardManager {
         cardModifyResult.object = newPlayerCard;
         cardModifyResult.result = true;
         return cardModifyResult;
+    }
+
+    public static async OnCardMessage(cardMessage:Message, playerCard:PlayerCard) {
+        cardMessage.react(EmojiConstants.STATUS.GOOD);
+        ReactionManager.AddMessage(cardMessage, ReactionMessageType.PlayerCardGet, undefined, {cardId: playerCard.GetCard().GetId()});
+    }
+
+    public static async OnReaction(obj:any, reaction:MessageReaction, user:User) {
+        if (reaction.emoji.toString() == EmojiConstants.STATUS.GOOD) {
+            var player:Player = await PlayerManager.GetPlayer(user.id);
+            if (player != null) {
+                var playerCards:Array<PlayerCard> = player.GetCards();
+                if (!playerCards.find((c => c.GetCard().GetId() == obj.values.cardId))) {
+                    reaction.users.remove(user.id);
+                }
+            }
+        }
     }
 
     public static async AddNewCard(name:string, description:string, rank:number, category:string, url:string, creatorId:string, modifiers?:Array<ICardModifier>, modifierClass?:ClassType) {

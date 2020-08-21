@@ -145,7 +145,8 @@ export default class AdminHandler {
         const oldMember = messageInfo.member;
         messageInfo.channel = BotManager.GetCardChannel();
         messageInfo.member = member;
-        MessageService.ReplyMessage(messageInfo, message, undefined, true, CardEmbeds.GetCardEmbed(playerCard.GetCard(), playerCard.GetAmount()));
+        var cardMessage = await MessageService.ReplyMessage(messageInfo, message, undefined, true, CardEmbeds.GetCardEmbed(playerCard.GetCard(), playerCard.GetAmount()));
+        CardManager.OnCardMessage(cardMessage, playerCard);
 
         if (cardModifyResult.result) {
             LogService.Log(receiver, playerCard.GetCardId(), LogType.CardReceived, `${receiver.GetDiscordName()} heeft de kaart '${playerCard.GetCard().GetName()}' gekregen.`);

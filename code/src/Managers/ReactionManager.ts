@@ -3,21 +3,18 @@ import { ReactionMessageType } from '../Enums/ReactionMessageType';
 import { MessageReaction, Message, User } from 'discord.js';
 import { Utils } from '../Utils/Utils';
 import PlayerCardHandler from '../Handlers/PlayerCardHandler';
+import CardManager from './CardManager';
 
 export default class ReactionManager {
 
     private static messages:any = {};
 
-    public static AddMessage(message:Message, messageInfo:IMessageInfo, reactionMessageType:ReactionMessageType, values:any) {
-        if (messageInfo.message == null) {
-            return;
-        }
-
+    public static AddMessage(message:Message, reactionMessageType:ReactionMessageType, messageInfo?:IMessageInfo, values?:any) {
         const id = message.id;
         const timeout = setTimeout(() => {
             message.reactions.removeAll();
             delete ReactionManager.messages[id];
-        }, Utils.GetMinutesInMiliSeconds(2));
+        }, Utils.GetMinutesInMiliSeconds(5));
 
         ReactionManager.messages[id] = {message:message, messageInfo: messageInfo, reactionMessageType: reactionMessageType, timeout: timeout, values: values};
     }
@@ -28,7 +25,7 @@ export default class ReactionManager {
             return;
         }
 
-        if (user.id != obj.messageInfo.member.id) {
+        if (obj.messageInfo && user.id != obj.messageInfo.member.id) {
             return;
         }
 
@@ -37,10 +34,15 @@ export default class ReactionManager {
         obj.timeout = setTimeout(() => {
             obj.message.reactions.removeAll();
             delete ReactionManager.messages[obj.message.id];
-        }, Utils.GetMinutesInMiliSeconds(2));
+        }, Utils.GetMinutesInMiliSeconds(5));
 
-        if (obj.reactionMessageType == ReactionMessageType.PlayerCardList) {
-            PlayerCardHandler.OnReaction(obj, reaction);
+        switch (obj.reactionMessageType) {
+            case ReactionMessageType.PlayerCardList:
+                PlayerCardHandler.OnReaction(obj, reaction);
+                break;
+            case ReactionMessageType.PlayerCardGet:
+                CardManager.OnReaction(obj, reaction, user);
+                break;
         }
     }
 }

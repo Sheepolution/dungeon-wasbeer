@@ -88,10 +88,12 @@ export default class MessageHandler {
             const playerCard = <PlayerCard>cardModifyResult.object;
             messageInfo.channel = BotManager.GetCardChannel();
             if (cardModifyResult.result) {
-                MessageService.ReplyMessage(messageInfo, 'Je hebt een nieuwe kaart!', undefined, true, CardEmbeds.GetCardEmbed(playerCard.GetCard(), playerCard.GetAmount()));
+                var cardMessage = await MessageService.ReplyMessage(messageInfo, 'Je hebt een nieuwe kaart!', undefined, true, CardEmbeds.GetCardEmbed(playerCard.GetCard(), playerCard.GetAmount()));
+                CardManager.OnCardMessage(cardMessage, playerCard);
                 LogService.Log(player, playerCard.GetCardId(), LogType.CardReceived, `${player.GetDiscordName()} heeft de kaart '${playerCard.GetCard().GetName()}' gekregen.`);
             } else {
-                MessageService.ReplyMessage(messageInfo, 'Je hebt een extra van deze kaart!', undefined, true, CardEmbeds.GetCardEmbed(playerCard.GetCard(), playerCard.GetAmount()));
+                var cardMessage = await MessageService.ReplyMessage(messageInfo, 'Je hebt een extra van deze kaart!', undefined, true, CardEmbeds.GetCardEmbed(playerCard.GetCard(), playerCard.GetAmount()));
+                CardManager.OnCardMessage(cardMessage, playerCard);
                 LogService.Log(player, playerCard.GetCardId(), LogType.CardReceived, `${player.GetDiscordName()} heeft de kaart '${playerCard.GetCard().GetName()}' gekregen, en heeft daar nu ${playerCard.GetAmount()} van.`);
             }
         }
