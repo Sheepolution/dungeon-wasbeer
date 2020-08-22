@@ -22,6 +22,9 @@ export default class CardEmbeds {
             .setImage(card.GetImageUrl())
             .addField('Level', card.GetRankString());
 
+        const season = card.GetSeason();
+        embed.setFooter(`Seizoen ${season > 0 ? season : '???'}`)
+
         const modifiers = card.GetModifiers();
         const modifierClass = card.GetModifierClass();
 
