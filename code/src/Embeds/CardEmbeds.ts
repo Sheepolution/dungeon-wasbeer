@@ -134,7 +134,31 @@ export default class CardEmbeds {
             list += EmojiConstants.STARS[card.GetRank()] + CardService.GetIconEmojiByCategory(card.GetCategory()) + ( playerCard.IsEquipped() ? ' ✅' : '') + ' ' + card.GetName() + (amount == 1 ? '' : ' (x' + amount + ')') + CardService.ParseCardModifersToEmbedString(card) + '\n';
         }
 
-        embed.setDescription(`Unieke kaarten: ${playerCards.length} van de ${cardsAmount}\n\n${list}`);
+        var seasons = [];
+
+        for (const playerCard of playerCards) {
+            var cardSeason = playerCard.GetCard().GetSeason()
+            if (cardSeason <= 0) {
+                continue;
+            }
+
+            if (seasons[cardSeason] == null) {
+                seasons[cardSeason] = 1;
+            } else {
+                seasons[cardSeason]++;
+            }
+        }
+
+        var seasonText = '';
+
+        for (let i = 0; i < seasons.length; i++) {
+            const season = seasons[i];
+            if (season != null) {
+                seasonText += `\nSeizoen ${i}: ${season}/${CardManager.GetCardList().filter(c => c.GetSeason() == i).length}`;
+            }
+        }
+
+        embed.setDescription(`Unieke kaarten: ${playerCards.length} van de ${cardsAmount}${seasonText}\n\n${list}`);
 
         return embed;
     }
