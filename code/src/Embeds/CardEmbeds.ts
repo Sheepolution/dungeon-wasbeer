@@ -134,7 +134,7 @@ export default class CardEmbeds {
             list += EmojiConstants.STARS[card.GetRank()] + CardService.GetIconEmojiByCategory(card.GetCategory()) + ( playerCard.IsEquipped() ? ' ✅' : '') + ' ' + card.GetName() + (amount == 1 ? '' : ' (x' + amount + ')') + CardService.ParseCardModifersToEmbedString(card) + '\n';
         }
 
-        var seasons = [];
+        const seasons = [];
 
         for (const playerCard of playerCards) {
             var cardSeason = playerCard.GetCard().GetSeason()
