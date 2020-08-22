@@ -36,7 +36,7 @@ export default class BattleEmbeds {
         const embed = new MessageEmbed()
             .setColor(SettingsConstants.COLORS.DEFAULT)
             .setAuthor('Aanval')
-            .setThumbnail(monster.GetImageUrl())
+            .setThumbnail(playerWon ? character.GetAvatarUrl() : monster.GetImageUrl())
             .setTitle(`${characterName}${((inspired || character.IsInspired() ) ? ' ✨' : '')} VS ${monsterName}`)
             .setDescription('-- Statistieken --')
             .addField(characterName, `Health: ${character.GetCurrentHealth()}/${character.GetMaxHealth()}\n${character.GetAttackName()}: ${characterStrength}\nAttack: ${characterAttack}\nArmor: ${character.GetArmor()}`, true)
