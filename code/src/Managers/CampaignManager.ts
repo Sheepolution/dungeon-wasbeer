@@ -28,7 +28,7 @@ export default class CampaignManager {
         var campaign = new Campaign();
 
         if (!await campaign.FIND_ACTIVE()) {
-            return;
+            this.StartNewSession();
         }
 
         this.campaignObject = campaign;
