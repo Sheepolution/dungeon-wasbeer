@@ -104,13 +104,13 @@ export default class PlayerCardHandler {
             }
         }
 
-        var cardPiecesNow = player.GetCardPieces();
+        var currentCardPieces = player.GetCardPieces();
 
         var baseText = 'Je graaft in de vuilnisbak';
-        if (cardPiecesNow == 1) {
+        if (currentCardPieces == 1) {
             baseText = 'Je graaft in de vuilnisbak met één kaartstukje op zak';
-        } else if (cardPiecesNow > 1) {
-            baseText = `Je graaft in de vuilnisbak met ${cardPiecesNow} kaartstukjes op zak`;
+        } else if (currentCardPieces > 1) {
+            baseText = `Je graaft in de vuilnisbak met ${currentCardPieces} kaartstukjes op zak`;
         }
 
         const needed = SettingsConstants.CARD_PIECES_NEEDED;
@@ -122,7 +122,7 @@ export default class PlayerCardHandler {
 
         player.SetDigCooldown();
 
-        if (category == 1) {
+        if (category == 1 || currentCardPieces == 0) {
             await player.AddCardPiece();
             await message.edit(`${baseText} en vindt een stukje van een kaart!\nJe hebt er nu ${player.GetCardPieces()} van de ${needed}!`);
             LogService.Log(player, player.GetId(), LogType.PieceFound, `${player.GetDiscordName()} heeft gegraven en een kaartstukjes gevonden.`);
