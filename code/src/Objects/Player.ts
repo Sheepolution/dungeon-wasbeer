@@ -10,6 +10,7 @@ import SettingsConstants from '../Constants/SettingsConstants';
 export default class Player {
 
     private static readonly digCooldownPrefix = RedisConstants.REDIS_KEY + RedisConstants.DIG_COOLDOWN_KEY;
+    private static readonly digCooldownWaitPrefix = RedisConstants.REDIS_KEY + RedisConstants.DIG_COOLDOWN_WAIT_KEY;
 
     protected id:string;
     private discordId:string;
@@ -127,12 +128,20 @@ export default class Player {
     }
 
     public async SetDigCooldown() {
-        return await Redis.set(Player.digCooldownPrefix + this.GetId(),
+        await Redis.set(Player.digCooldownWaitPrefix + this.GetId(),
+            '1', 'EX',
+            Utils.GetMinutesInSeconds(SettingsConstants.CARD_PIECES_DIG_COOLDOWN_MINUTES_MIN));
+
+        await Redis.set(Player.digCooldownPrefix + this.GetId(),
             '1', 'EX',
             Utils.GetMinutesInSeconds(
                 Utils.Random(
                     SettingsConstants.CARD_PIECES_DIG_COOLDOWN_MINUTES_MIN,
                     SettingsConstants.CARD_PIECES_DIG_COOLDOWN_MINUTES_MAX, true)));
+    }
+
+    public async HasDigWaitCooldown() {
+        return await Redis.ttl(Player.digCooldownWaitPrefix + this.GetId()) > 0;
     }
 
     public GetCardPieces() {

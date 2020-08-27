@@ -91,6 +91,11 @@ export default class PlayerCardHandler {
     }
 
     private static async Dig(messageInfo:IMessageInfo, player:Player) {
+        if (await player.HasDigWaitCooldown()) {
+            MessageService.ReplyMessage(messageInfo, 'Je hebt nog geen uur geleden gegraven. Eventjes wachten voordat je weer op zoek gaat naar een kaartstukje.');
+            return;
+        }
+
         var category = 4;
 
         if (! await player.HasDigCooldown()) {
