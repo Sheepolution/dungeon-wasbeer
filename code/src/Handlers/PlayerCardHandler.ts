@@ -127,7 +127,7 @@ export default class PlayerCardHandler {
 
         player.SetDigCooldown();
 
-        if (category == 1 || currentCardPieces == 0) {
+        if (category == 1) {
             await player.AddCardPiece();
             await message.edit(`${baseText} en vindt een stukje van een kaart!\nJe hebt er nu ${player.GetCardPieces()} van de ${needed}!`);
             LogService.Log(player, player.GetId(), LogType.PieceFound, `${player.GetDiscordName()} heeft gegraven en een kaartstukjes gevonden.`);
