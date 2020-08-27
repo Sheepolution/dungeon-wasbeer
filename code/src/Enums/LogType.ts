@@ -3,6 +3,7 @@ export enum LogType {
     SayMessage = 'SayMessage',
     GiveCard = 'GiveCard',
     CardReceived = 'CardReceived',
+    CardReceivedPieces = 'CardReceived',
     CardTaken = 'CardTaken',
     Trade = 'Trade',
     CharacterCreated = 'CharacterCreated',
@@ -16,4 +17,8 @@ export enum LogType {
     Inspire = 'Inspire',
     PuzzleSolved = 'PuzzleSolved',
     PuzzleWrong = 'PuzzleWrong',
+    PieceFound = 'PieceFound',
+    PieceNothing = 'PieceNothing',
+    PieceLost = 'PieceLost',
+    PieceLostAll = 'PieceLostAll',
 }

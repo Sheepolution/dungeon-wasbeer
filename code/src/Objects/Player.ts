@@ -3,13 +3,19 @@ import { Utils } from '../Utils/Utils';
 import PlayerCard from './PlayerCard';
 import Character from './Character';
 import { ClassType } from '../Enums/ClassType';
+import { Redis } from '../Providers/Redis';
+import RedisConstants from '../Constants/RedisConstants';
+import SettingsConstants from '../Constants/SettingsConstants';
 
 export default class Player {
+
+    private static readonly digCooldownPrefix = RedisConstants.REDIS_KEY + RedisConstants.DIG_COOLDOWN_KEY;
 
     protected id:string;
     private discordId:string;
     private messagePoints:number;
     private playerCards:Array<PlayerCard>;
+    private cardPieces:number;
     private lastActiveDate:string;
     private discordName:string;
     private character?:Character;
@@ -53,6 +59,7 @@ export default class Player {
         this.discordName = model.discord_name;
         this.messagePoints = model.message_points;
         this.playerCards = await model.GetPlayerCards(this);
+        this.cardPieces = model.card_pieces;
 
         const character = await model.GetCharacter(this);
         if (character) {
@@ -113,6 +120,42 @@ export default class Player {
 
     public GiveCard(playerCard:PlayerCard) {
         this.playerCards.push(playerCard);
+    }
+
+    public async HasDigCooldown() {
+        return await Redis.ttl(Player.digCooldownPrefix + this.GetId()) > 0;
+    }
+
+    public async SetDigCooldown() {
+        return await Redis.set(Player.digCooldownPrefix + this.GetId(),
+            '1', 'EX',
+            Utils.GetMinutesInSeconds(
+                Utils.Random(
+                    SettingsConstants.CARD_PIECES_DIG_COOLDOWN_MINUTES_MIN,
+                    SettingsConstants.CARD_PIECES_DIG_COOLDOWN_MINUTES_MAX, true)));
+    }
+
+    public GetCardPieces() {
+        return this.cardPieces;
+    }
+
+    public async AddCardPiece() {
+        this.cardPieces += 1;
+        this.UPDATE({card_pieces: this.cardPieces});
+    }
+
+    public async TakeCardPiece() {
+        if (this.cardPieces > 0) {
+            this.cardPieces -= 1;
+            this.UPDATE({card_pieces: this.cardPieces});
+        }
+    }
+
+    public async TakeAllCardPieces() {
+        if (this.cardPieces > 0) {
+            this.cardPieces = 0;
+            this.UPDATE({card_pieces: this.cardPieces});
+        }
     }
 
     public AddMessagePoint() {

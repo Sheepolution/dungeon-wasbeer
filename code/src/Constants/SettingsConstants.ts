@@ -21,6 +21,15 @@ export default class SettingsConstants {
 
     public static readonly CARD_AMOUNT_SPLIT_PAGES = 15;
 
+    public static readonly CARD_PIECES_NEEDED = 7;
+    public static readonly CARD_PIECES_DIG_COOLDOWN_MINUTES_MIN = 60 * 8;
+    public static readonly CARD_PIECES_DIG_COOLDOWN_MINUTES_MAX = 60 * 8;
+
+    public static readonly CARD_PIECE_FIND_CHANCE = [
+        40,
+        10,
+    ];
+
     public static readonly CARD_AMOUNT_REWARD_REACH_INCREASE = [
         10,
         50,

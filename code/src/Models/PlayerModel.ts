@@ -40,7 +40,7 @@ export default class PlayerModel extends Model {
                 id:playerId,
                 discord_id: discordId,
                 active: true,
-                gold: 0,
+                card_pieces: 0,
                 message_points: 0,
                 discord_name: discordDisplayName,
                 character_id: null
