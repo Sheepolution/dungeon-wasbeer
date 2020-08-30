@@ -96,17 +96,19 @@ export default class PlayerCardHandler {
             return;
         }
 
-        var category = 4;
+        var hasDigCooldown = await player.HasDigCooldown();
 
-        if (! await player.HasDigCooldown()) {
-            const roll = Math.random() * 100;
-            category = 1;
-            for (const value of SettingsConstants.CARD_PIECE_FIND_CHANCE) {
-                if (roll > value) {
-                    break;
-                }
-                category += 1;
+        const roll = Math.random() * 100;
+        var category = 1;
+        for (const value of SettingsConstants.CARD_PIECE_FIND_CHANCE) {
+            if (roll > value) {
+                break;
             }
+            category += 1;
+        }
+
+        if (category > 1 && hasDigCooldown) {
+            category += 1;
         }
 
         var currentCardPieces = player.GetCardPieces();
