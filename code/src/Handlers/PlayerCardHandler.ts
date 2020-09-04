@@ -82,16 +82,15 @@ export default class PlayerCardHandler {
     }
 
     public static async OnReaction(obj:any, reaction:MessageReaction) {
-        const player = await PlayerManager.GetPlayer(obj.messageInfo.member.id);
         if (reaction.emoji.name == '⬅️') {
             obj.values.page -= 1;
         } else if (reaction.emoji.name == '➡️') {
             obj.values.page += 1;
         }
 
-        const cardList = PlayerCardService.GetPlayerCardList(player, obj.values.sorting, obj.values.otherPlayer)
+        const cardList = PlayerCardService.GetPlayerCardList(obj.values.player, obj.values.sorting, obj.values.otherPlayer)
 
-        await obj.message.edit(null, CardEmbeds.GetPlayerCardListEmbed(cardList, player, obj.values.page, obj.values.otherPlayer));
+        await obj.message.edit(null, CardEmbeds.GetPlayerCardListEmbed(cardList, obj.values.player, obj.values.page, obj.values.otherPlayer));
     }
 
     private static async Dig(messageInfo:IMessageInfo, player:Player) {
@@ -186,6 +185,7 @@ export default class PlayerCardHandler {
     private static async SendPlayerCardList(messageInfo:IMessageInfo, player:Player, sorting?:SortingType, other?:string, lesserGreater?:string) {
 
         var otherPlayer;
+        var requester = player;
 
         if (other != null) {
             if (lesserGreater != null) {
@@ -197,13 +197,14 @@ export default class PlayerCardHandler {
             var id = DiscordUtils.GetMemberId(other);
             if (id != null) {
                 otherPlayer = await PlayerManager.GetPlayer(id);
-                if (lesserGreater == undefined) {
-                    player = otherPlayer;
-                    otherPlayer = undefined;
-                } else if (lesserGreater == '>') {
-                    var oldPlayer = player;
-                    player = otherPlayer
-                    otherPlayer = oldPlayer;
+                if (otherPlayer != null) {
+                    if (lesserGreater == undefined) {
+                        player = otherPlayer;
+                        otherPlayer = undefined;
+                    } else if (lesserGreater == '>') {
+                        player = otherPlayer
+                        otherPlayer = requester;
+                    }
                 }
             }
         }
@@ -218,7 +219,7 @@ export default class PlayerCardHandler {
             await message.react('⬅️')
             await Utils.Sleep(.5)
             await message.react('➡️')
-            ReactionManager.AddMessage(message, ReactionMessageType.PlayerCardList, messageInfo, {page: 1, otherPlayer: otherPlayer, lesserGreater: lesserGreater});
+            ReactionManager.AddMessage(message, ReactionMessageType.PlayerCardList, messageInfo, {page: 1, requester: requester, player: player, otherPlayer: otherPlayer, lesserGreater: lesserGreater});
         }
     }
 }

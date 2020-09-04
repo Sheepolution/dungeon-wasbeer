@@ -25,7 +25,7 @@ export default class ReactionManager {
             return;
         }
 
-        if (obj.messageInfo && user.id != obj.messageInfo.member.id) {
+        if (obj.messageInfo && user.id != obj.messageInfo.member.id && (!obj.requester || user.id != obj.requester.id)) {
             return;
         }
 
