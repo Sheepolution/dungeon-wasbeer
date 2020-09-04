@@ -14,6 +14,8 @@ import LogService from '../Services/LogService';
 import PlayerCard from '../Objects/PlayerCard';
 import BotManager from '../Managers/BotManager';
 import { LogType } from '../Enums/LogType';
+import DiscordUtils from '../Utils/DiscordUtils';
+import PlayerCardService from '../Services/PlayerCardService';
 
 export default class PlayerCardHandler {
 
@@ -30,13 +32,13 @@ export default class PlayerCardHandler {
                 break;
             case 'lijst':
             case 'kaarten':
-                this.SendPlayerCardList(messageInfo, player);
+                this.SendPlayerCardList(messageInfo, player, undefined, args[0]);
                 break;
             case 'lijst-level':
             case 'kaarten-level':
             case 'lijstl':
             case 'kaartenl':
-                this.SendPlayerCardList(messageInfo, player, SortingType.Rank);
+                this.SendPlayerCardList(messageInfo, player, SortingType.Rank, args[0]);
                 break;
             case 'lijst-cat':
             case 'kaarten-cat':
@@ -44,19 +46,19 @@ export default class PlayerCardHandler {
             case 'kaarten-categorie':
             case 'lijstc':
             case 'kaartenc':
-                this.SendPlayerCardList(messageInfo, player, SortingType.Category);
+                this.SendPlayerCardList(messageInfo, player, SortingType.Category, args[0]);
                 break;
             case 'lijst-naam':
             case 'kaarten-naam':
             case 'lijstn':
             case 'kaartenn':
-                this.SendPlayerCardList(messageInfo, player, SortingType.Name);
+                this.SendPlayerCardList(messageInfo, player, SortingType.Name, args[0]);
                 break;
             case 'lijst-class':
             case 'kaarten-class':
             case 'lijstcl':
             case 'kaartencl':
-                this.SendPlayerCardList(messageInfo, player, SortingType.Class);
+                this.SendPlayerCardList(messageInfo, player, SortingType.Class, args[0]);
                 break;
             case 'lijst-buffs':
             case 'kaarten-buffs':
@@ -64,13 +66,13 @@ export default class PlayerCardHandler {
             case 'kaarten-buff':
             case 'lijstb':
             case 'kaartenb':
-                this.SendPlayerCardList(messageInfo, player, SortingType.Buff);
+                this.SendPlayerCardList(messageInfo, player, SortingType.Buff, args[0]);
                 break;
             case 'lijst-dubbel':
             case 'kaarten-dubbel':
             case 'lijstd':
             case 'kaartend':
-                this.SendPlayerCardList(messageInfo, player, SortingType.Amount);
+                this.SendPlayerCardList(messageInfo, player, SortingType.Amount, args[0]);
                 break;
             default:
                 return false;
@@ -87,7 +89,9 @@ export default class PlayerCardHandler {
             obj.values.page += 1;
         }
 
-        await obj.message.edit(null, CardEmbeds.GetPlayerCardListEmbed(player, obj.values.page, obj.values.sorting));
+        const cardList = PlayerCardService.GetPlayerCardList(player, obj.values.sorting, obj.values.otherPlayer)
+
+        await obj.message.edit(null, CardEmbeds.GetPlayerCardListEmbed(cardList, player, obj.values.page, obj.values.otherPlayer));
     }
 
     private static async Dig(messageInfo:IMessageInfo, player:Player) {
@@ -179,17 +183,28 @@ export default class PlayerCardHandler {
         MessageService.ReplyEmbed(messageInfo, CardEmbeds.GetCardEmbed(playerCard.GetCard(), playerCard.GetAmount()));
     }
 
-    private static async SendPlayerCardList(messageInfo:IMessageInfo, player:Player, sorting?:SortingType) {
+    private static async SendPlayerCardList(messageInfo:IMessageInfo, player:Player, sorting?:SortingType, other?:string) {
 
-        const cards = player.GetCards().length;
+        var otherPlayer;
+
+        if (other != null) {
+            var id = DiscordUtils.GetMemberId(other);
+            if (id != null) {
+                otherPlayer = await PlayerManager.GetPlayer(id);
+            }
+        }
+
+        const cardList = PlayerCardService.GetPlayerCardList(player, sorting, otherPlayer)
+
+        const cards = cardList.length;
         const page = cards > SettingsConstants.CARD_AMOUNT_SPLIT_PAGES ? 1 : undefined;
 
-        const message = await MessageService.ReplyEmbed(messageInfo, CardEmbeds.GetPlayerCardListEmbed(player, page, sorting));
+        const message = await MessageService.ReplyEmbed(messageInfo, CardEmbeds.GetPlayerCardListEmbed(cardList, player, page, otherPlayer));
         if (page == 1) {
             await message.react('⬅️')
             await Utils.Sleep(.5)
             await message.react('➡️')
-            ReactionManager.AddMessage(message, ReactionMessageType.PlayerCardList, messageInfo, {page: 1});
+            ReactionManager.AddMessage(message, ReactionMessageType.PlayerCardList, messageInfo, {page: 1, otherPlayer: otherPlayer});
         }
     }
 }

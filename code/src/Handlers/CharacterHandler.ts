@@ -13,7 +13,6 @@ import { Message } from 'discord.js';
 import Heal from '../Objects/Heal';
 import CampaignManager from '../Managers/CampaignManager';
 import CharacterConstants from '../Constants/CharacterConstants';
-import CardEmbeds from '../Embeds/CardEmbeds';
 import { LogType } from '../Enums/LogType';
 import LogService from '../Services/LogService';
 import SettingsConstants from '../Constants/SettingsConstants';
@@ -63,10 +62,6 @@ export default class CharacterHandler {
             case 'top-pre':
             case 'toppre':
                 this.SendTopList(messageInfo, content, TopListType.Previous);
-                break;
-            case 'lijst':
-            case 'kaarten':
-                this.SendCardList(messageInfo, player);
                 break;
             case 'equipment':
                 this.SendEquipment(messageInfo, player);
@@ -723,10 +718,6 @@ export default class CharacterHandler {
                 MessageService.ReplyMessage(messageInfo, `Ik heb geen lijst van top 10 ${category}. Kijk ff in die pins voor de lijst van mogelijke lijsten.`, false);
                 return;
         }
-    }
-
-    private static async SendCardList(messageInfo:IMessageInfo, player:Player) {
-        MessageService.ReplyEmbed(messageInfo, CardEmbeds.GetPlayerCardListEmbed(player))
     }
 
     private static async SendEquipment(messageInfo:IMessageInfo, player:Player) {

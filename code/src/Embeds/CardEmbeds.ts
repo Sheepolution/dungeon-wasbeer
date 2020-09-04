@@ -8,7 +8,6 @@ import CardService from '../Services/CardService';
 import CharacterService from '../Services/CharacterService';
 import CardManager from '../Managers/CardManager';
 import PlayerCard from '../Objects/PlayerCard';
-import { SortingType } from '../Enums/SortingType';
 
 export default class CardEmbeds {
 
@@ -63,43 +62,16 @@ export default class CardEmbeds {
         return embed;
     }
 
-    public static GetPlayerCardListEmbed(player:Player, page?:number, sortingType?:SortingType) {
-        const playerCards = player.GetCards();
-
-        if (sortingType != null) {
-            switch (sortingType) {
-                case SortingType.Category:
-                    playerCards.sort((a:PlayerCard, b:PlayerCard) => a.GetCard().GetCategory() > b.GetCard().GetCategory() ? 1 : -1);
-                    break;
-                case SortingType.Rank:
-                    playerCards.sort((a:PlayerCard, b:PlayerCard) => a.GetCard().GetRank() - b.GetCard().GetRank());
-                    break;
-                case SortingType.Name:
-                    playerCards.sort((a:PlayerCard, b:PlayerCard) => a.GetCard().GetName() > b.GetCard().GetName() ? 1 : -1);
-                    break;
-                case SortingType.Class:
-                    playerCards.sort((a:PlayerCard, b:PlayerCard) => (a.GetCard().GetModifierClass() || '') > (b.GetCard().GetModifierClass() || '') ? -1 : 1);
-                    break;
-                case SortingType.Buff:
-                    playerCards.sort((a:PlayerCard, b:PlayerCard) => {
-                        const am = a.GetCard().GetModifiers();
-                        const bm = b.GetCard().GetModifiers();
-                        if (am == null || am.length == 0) { return 1; }
-                        if (bm == null || bm.length == 0) { return -1; }
-                        return am[0].modifier > bm[0].modifier ? 1 : -1;
-                    });
-                    break;
-                case SortingType.Amount:
-                    playerCards.sort((a:PlayerCard, b:PlayerCard) => b.GetAmount() - a.GetAmount());
-                    break;
-
-            }
-        }
-
+    public static GetPlayerCardListEmbed(playerCards:Array<PlayerCard>, player:Player, page?:number, otherPlayer?:Player) {
         const cardsAmount = CardManager.GetAmountOfNormalCards();
         const embed = new MessageEmbed()
-            .setColor(SettingsConstants.COLORS.DEFAULT)
-            .setTitle('De kaarten van ' + player.GetDiscordName())
+            .setColor(SettingsConstants.COLORS.DEFAULT);
+
+        if (otherPlayer != null) {
+            embed.setTitle(`De kaarten van ${player.GetDiscordName()} die ${otherPlayer.GetDiscordName()} niet heeft`);
+        } else {
+            embed.setTitle(`De kaarten van ${player.GetDiscordName()}`);
+        }
 
         var split = SettingsConstants.CARD_AMOUNT_SPLIT_PAGES;
         var pages = Math.ceil(playerCards.length/split);
