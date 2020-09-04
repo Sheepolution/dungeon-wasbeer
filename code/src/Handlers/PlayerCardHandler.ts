@@ -38,7 +38,7 @@ export default class PlayerCardHandler {
             case 'kaarten-level':
             case 'lijstl':
             case 'kaartenl':
-                this.SendPlayerCardList(messageInfo, player, SortingType.Rank, args[0]);
+                this.SendPlayerCardList(messageInfo, player, SortingType.Rank, args[0], args[1]);
                 break;
             case 'lijst-cat':
             case 'kaarten-cat':
@@ -46,19 +46,19 @@ export default class PlayerCardHandler {
             case 'kaarten-categorie':
             case 'lijstc':
             case 'kaartenc':
-                this.SendPlayerCardList(messageInfo, player, SortingType.Category, args[0]);
+                this.SendPlayerCardList(messageInfo, player, SortingType.Category, args[0], args[1]);
                 break;
             case 'lijst-naam':
             case 'kaarten-naam':
             case 'lijstn':
             case 'kaartenn':
-                this.SendPlayerCardList(messageInfo, player, SortingType.Name, args[0]);
+                this.SendPlayerCardList(messageInfo, player, SortingType.Name, args[0], args[1]);
                 break;
             case 'lijst-class':
             case 'kaarten-class':
             case 'lijstcl':
             case 'kaartencl':
-                this.SendPlayerCardList(messageInfo, player, SortingType.Class, args[0]);
+                this.SendPlayerCardList(messageInfo, player, SortingType.Class, args[0], args[1]);
                 break;
             case 'lijst-buffs':
             case 'kaarten-buffs':
@@ -66,13 +66,13 @@ export default class PlayerCardHandler {
             case 'kaarten-buff':
             case 'lijstb':
             case 'kaartenb':
-                this.SendPlayerCardList(messageInfo, player, SortingType.Buff, args[0]);
+                this.SendPlayerCardList(messageInfo, player, SortingType.Buff, args[0], args[1]);
                 break;
             case 'lijst-dubbel':
             case 'kaarten-dubbel':
             case 'lijstd':
             case 'kaartend':
-                this.SendPlayerCardList(messageInfo, player, SortingType.Amount, args[0]);
+                this.SendPlayerCardList(messageInfo, player, SortingType.Amount, args[0], args[1]);
                 break;
             default:
                 return false;
