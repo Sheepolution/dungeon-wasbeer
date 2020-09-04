@@ -32,7 +32,7 @@ export default class PlayerCardHandler {
                 break;
             case 'lijst':
             case 'kaarten':
-                this.SendPlayerCardList(messageInfo, player, undefined, args[0]);
+                this.SendPlayerCardList(messageInfo, player, undefined, args[0], args[1]);
                 break;
             case 'lijst-level':
             case 'kaarten-level':
@@ -183,14 +183,28 @@ export default class PlayerCardHandler {
         MessageService.ReplyEmbed(messageInfo, CardEmbeds.GetCardEmbed(playerCard.GetCard(), playerCard.GetAmount()));
     }
 
-    private static async SendPlayerCardList(messageInfo:IMessageInfo, player:Player, sorting?:SortingType, other?:string) {
+    private static async SendPlayerCardList(messageInfo:IMessageInfo, player:Player, sorting?:SortingType, other?:string, lesserGreater?:string) {
 
         var otherPlayer;
 
         if (other != null) {
+            if (lesserGreater != null) {
+                if (! (lesserGreater == '<' || lesserGreater == '>')) {
+                    lesserGreater = undefined;
+                }
+            }
+
             var id = DiscordUtils.GetMemberId(other);
             if (id != null) {
                 otherPlayer = await PlayerManager.GetPlayer(id);
+                if (lesserGreater == undefined) {
+                    player = otherPlayer;
+                    otherPlayer = undefined;
+                } else if (lesserGreater == '>') {
+                    var oldPlayer = player;
+                    player = otherPlayer
+                    otherPlayer = oldPlayer;
+                }
             }
         }
 
@@ -204,7 +218,7 @@ export default class PlayerCardHandler {
             await message.react('⬅️')
             await Utils.Sleep(.5)
             await message.react('➡️')
-            ReactionManager.AddMessage(message, ReactionMessageType.PlayerCardList, messageInfo, {page: 1, otherPlayer: otherPlayer});
+            ReactionManager.AddMessage(message, ReactionMessageType.PlayerCardList, messageInfo, {page: 1, otherPlayer: otherPlayer, lesserGreater: lesserGreater});
         }
     }
 }
