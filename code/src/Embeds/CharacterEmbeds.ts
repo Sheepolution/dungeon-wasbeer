@@ -225,6 +225,7 @@ export default class CharacterEmbeds {
         const receiverName = receiver.GetName();
 
         embed.setTitle('Healing roll')
+            .setThumbnail(character.GetAvatarUrl())
             .setDescription(`${character.GetName()}${(character.IsInspired() ? ' ✨' : '')} rollt om ${receiver == character ? 'zichzelf' : receiver.GetName()}${(character.IsInspired() ? ' ✨' : '')} te healen.\n\n-- Statistieken --`)
             .addField(`Health van ${receiverName}`, `${receiver.GetCurrentHealth()}/${receiver.GetMaxHealth()}`)
             .addField(`Healing van ${characterName}`, character.GetFullModifierStats().healing)
