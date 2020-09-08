@@ -149,9 +149,9 @@ export default class AdminHandler {
         CardManager.OnCardMessage(cardMessage, playerCard);
 
         if (cardModifyResult.result) {
-            LogService.Log(receiver, playerCard.GetCardId(), LogType.CardReceived, `${receiver.GetDiscordName()} heeft de kaart '${playerCard.GetCard().GetName()}' gekregen.`);
+            LogService.Log(receiver, playerCard.GetCardId(), LogType.CardReceivedGiven, `${receiver.GetDiscordName()} heeft de kaart '${playerCard.GetCard().GetName()}' gekregen.`);
         } else {
-            LogService.Log(receiver, playerCard.GetCardId(), LogType.CardReceived, `${receiver.GetDiscordName()} heeft de kaart '${playerCard.GetCard().GetName()}' gekregen, en heeft daar nu ${playerCard.GetAmount()} van.`);
+            LogService.Log(receiver, playerCard.GetCardId(), LogType.CardReceivedGiven, `${receiver.GetDiscordName()} heeft de kaart '${playerCard.GetCard().GetName()}' gekregen, en heeft daar nu ${playerCard.GetAmount()} van.`);
         }
 
         messageInfo.channel = oldChannel;
