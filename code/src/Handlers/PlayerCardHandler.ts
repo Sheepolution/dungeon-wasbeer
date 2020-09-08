@@ -135,7 +135,7 @@ export default class PlayerCardHandler {
         if (category == 1) {
             await player.AddCardPiece();
             await message.edit(`${baseText} en vindt een stukje van een kaart!\nJe hebt er nu ${player.GetCardPieces()} van de ${needed}!`);
-            LogService.Log(player, player.GetId(), LogType.PieceFound, `${player.GetDiscordName()} heeft gegraven en een kaartstukjes gevonden.`);
+            LogService.Log(player, player.GetId(), LogType.PieceFound, `${player.GetDiscordName()} heeft gegraven en een kaartstukje gevonden.`);
             var pieces = player.GetCardPieces();
             if (pieces >= needed) {
                 await Utils.Sleep(3);
