@@ -3,7 +3,7 @@ export enum LogType {
     SayMessage = 'SayMessage',
     GiveCard = 'GiveCard',
     CardReceived = 'CardReceived',
-    CardReceivedPieces = 'CardReceived',
+    CardReceivedPieces = 'CardReceivedPieces',
     CardTaken = 'CardTaken',
     Trade = 'Trade',
     CharacterCreated = 'CharacterCreated',
