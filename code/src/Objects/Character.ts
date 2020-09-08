@@ -589,7 +589,7 @@ export default class Character {
 
                     this.UPDATE({
                         reward_battle_id: this.rewardBattleId,
-                        rewardPoints: this.rewardPoints,
+                        reward_points: this.rewardPoints,
                         reward_points_total: this.rewardPointsTotal,
                     });
 
