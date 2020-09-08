@@ -231,7 +231,7 @@ export default class CharacterEmbeds {
             .addField(`Health van ${receiverName}`, `${receiver.GetCurrentHealth()}/${receiver.GetMaxHealth()}`)
             .addField(`Healing van ${characterName}`, character.GetFullModifierStats().healing)
             .addField('--------------------------------', '-- Roll --')
-            .setFooter(`Reward points: ${character.GetRewardPoints(CampaignManager.GetBattle()?.GetId())}/${character.GetNextRewardPoints()}`);
+            .setFooter(`Participatiepunten: ${character.GetRewardPoints(CampaignManager.GetBattle()?.GetId())}/${character.GetNextRewardPoints()}`);
 
         if (roll == null)  {
             embed.addField(characterName, 'Rollt de D20...')

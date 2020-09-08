@@ -92,7 +92,7 @@ export default class BattleEmbeds {
         }
 
         if (playerWon != null) {
-            embed.setFooter(`Reward points: ${character.GetRewardPoints(battle.GetId())}/${character.GetNextRewardPoints()}`);
+            embed.setFooter(`Participatiepunten: ${character.GetRewardPoints(battle.GetId())}/${character.GetNextRewardPoints()}`);
 
             embed.addField('--------------------------------', '-- Resultaat --');
             if (playerWon) {
