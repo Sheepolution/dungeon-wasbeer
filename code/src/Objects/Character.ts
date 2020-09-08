@@ -562,19 +562,19 @@ export default class Character {
         return this.level * SettingsConstants.REWARD_POINTS_MULTIPLIER;
     }
 
-    public async GiveDamagePoints(damagePoints:number, battleId:string, messageInfo?:IMessageInfo) {
+    public async GiveDamagePoints(damagePoints:number, battleId?:string, messageInfo?:IMessageInfo) {
         this.GiveRewardPoints(damagePoints * SettingsConstants.DAMAGE_REWARD_POINTS_MULTIPLIER, battleId, messageInfo);
     }
 
-    public async GiveHealingPoints(healingPoints:number, battleId:string, messageInfo?:IMessageInfo) {
+    public async GiveHealingPoints(healingPoints:number, battleId?:string, messageInfo?:IMessageInfo) {
         this.GiveRewardPoints(healingPoints * SettingsConstants.HEALING_REWARD_POINTS_MULTIPLIER, battleId, messageInfo);
     }
 
-    public async GiveRewardPoints(rewardPoints:number, battleId:string, messageInfo?:IMessageInfo) {
+    public async GiveRewardPoints(rewardPoints:number, battleId?:string, messageInfo?:IMessageInfo) {
         this.rewardPoints += rewardPoints;
 
         if (messageInfo != null) {
-            if (this.rewardBattleId != battleId) {
+            if (battleId != null && this.rewardBattleId != battleId) {
                 if (this.HasEnoughPointsForReward()) {
                     this.rewardPoints = 0;
                     this.rewardBattleId = battleId;
