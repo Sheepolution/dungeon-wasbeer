@@ -314,7 +314,7 @@ export default class CharacterHandler {
         await this.UpdateHealingEmbed(message, character, receiver, roll, healing);
         character.SetIsHealing(false);
         receiver.SetBeingHealed(false);
-        character.GiveHealingPoints(healing, CampaignManager.GetBattle().GetId(), messageInfo);
+        character.GiveHealingPoints(healing, CampaignManager.GetBattle()?.GetId(), messageInfo);
         await this.SaveHeal(character, receiver, healthBefore, character.GetFullModifierStats().healing, roll, healing);
     }
 
