@@ -572,6 +572,10 @@ export default class Character {
         this.GiveRewardPoints(healingPoints * SettingsConstants.HEALING_REWARD_POINTS_MULTIPLIER, battleId, messageInfo);
     }
 
+    public async GiveInspirePoints(battleId?:string, messageInfo?:IMessageInfo) {
+        this.GiveRewardPoints(SettingsConstants.INSPIRE_REWARD_POINTS, battleId, messageInfo);
+    }
+
     public async GiveRewardPoints(rewardPoints:number, battleId?:string, messageInfo?:IMessageInfo) {
         var rewardPoints = Math.ceil(rewardPoints);
         this.rewardPoints += rewardPoints;

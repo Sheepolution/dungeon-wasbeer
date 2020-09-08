@@ -414,6 +414,10 @@ export default class CharacterHandler {
             return;
         }
 
+        if (!selfInspire) {
+            await character.GiveInspirePoints(CampaignManager.GetBattle()?.GetId(), messageInfo);
+        }
+
         await character.SetInspireCooldown();
         await receiver.BecomeInspired();
         await MessageService.ReplyMessage(messageInfo, `Je speelt prachtige muziek en inspireert ${selfInspire ? 'jezelf' : receiver.GetName()} ✨. Al ${selfInspire ? 'je' : 'hun'} stats krijgen een +1 boost tot ${selfInspire ? 'je' : 'hun'} volgende gevecht.`, true);
