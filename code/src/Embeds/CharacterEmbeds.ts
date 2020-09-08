@@ -231,13 +231,13 @@ export default class CharacterEmbeds {
             .addField(`Health van ${receiverName}`, `${receiver.GetCurrentHealth()}/${receiver.GetMaxHealth()}`)
             .addField(`Healing van ${characterName}`, character.GetFullModifierStats().healing)
             .addField('--------------------------------', '-- Roll --')
-            .setFooter(`Participatiepunten: ${character.GetRewardPoints(CampaignManager.GetBattle()?.GetId())}/${character.GetNextRewardPoints()}`);
 
         if (roll == null)  {
             embed.addField(characterName, 'Rollt de D20...')
         } else {
             embed.addField(characterName, `D20 = ${roll}`)
                 .addField('--------------------------------', '-- Resultaat --')
+                .setFooter(`Participatiepunten: ${character.GetRewardPoints(CampaignManager.GetBattle()?.GetId())}/${character.GetNextRewardPoints()}`);
 
             if (healing == 0) {
                 embed.addField(`${characterName} faalt met healen!`, 'Je healt per ongeluk een steen. Er gebeurt weinig.');
