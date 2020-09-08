@@ -311,7 +311,11 @@ export default class CharacterHandler {
 
         await receiver.GetHealthFromHealing(healing);
         await character.SetHealingCooldown();
-        await character.GiveHealingPoints(healing, CampaignManager.GetBattle()?.GetId(), messageInfo);
+
+        if (!selfHeal) {
+            await character.GiveHealingPoints(healing, CampaignManager.GetBattle()?.GetId(), messageInfo);
+        }
+
         await this.UpdateHealingEmbed(message, character, receiver, roll, healing);
         character.SetIsHealing(false);
         receiver.SetBeingHealed(false);
