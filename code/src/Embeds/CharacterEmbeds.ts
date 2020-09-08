@@ -10,6 +10,7 @@ import { TopListType } from '../Enums/TopListType';
 import Attack from '../Objects/Attack';
 import Heal from '../Objects/Heal';
 import Puzzle from '../Objects/Puzzle';
+import CampaignManager from '../Managers/CampaignManager';
 
 export default class CharacterEmbeds {
 
@@ -229,7 +230,8 @@ export default class CharacterEmbeds {
             .setDescription(`${character.GetName()}${(character.IsInspired() ? ' ✨' : '')} rollt om ${receiver == character ? 'zichzelf' : receiver.GetName()}${(character.IsInspired() ? ' ✨' : '')} te healen.\n\n-- Statistieken --`)
             .addField(`Health van ${receiverName}`, `${receiver.GetCurrentHealth()}/${receiver.GetMaxHealth()}`)
             .addField(`Healing van ${characterName}`, character.GetFullModifierStats().healing)
-            .addField('--------------------------------', '-- Roll --');
+            .addField('--------------------------------', '-- Roll --')
+            .setFooter(`Reward points: ${character.GetRewardPoints(CampaignManager.GetBattle()?.GetId())}/${character.GetNextRewardPoints()}`);
 
         if (roll == null)  {
             embed.addField(characterName, 'Rollt de D20...')

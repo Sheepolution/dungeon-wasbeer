@@ -54,7 +54,7 @@ export default class BattleHandler {
         }
 
         if (battle.IsMonsterDead()) {
-            this.SendMonsterDefeated(messageInfo);
+            this.ReplyMonsterDefeated(messageInfo);
             return;
         }
 
@@ -181,8 +181,11 @@ export default class BattleHandler {
 
             const receivedDamage = await battle.DealDamageToMonster(damage);
             await this.SaveAttack(battle, character, message.id, roll1, roll2, character.GetAttackRoll(), roll3, roll4, battle.GetMonsterAttackRoll(), true, receivedDamage, battle.GetCurrentMonsterHealth());
+
             character.SetInBattle(false);
+            character.GiveDamagePoints(receivedDamage, battle.GetId(), messageInfo);
             character.StopBeingInspired();
+
             if (battle.IsMonsterDead()) {
                 BattleHandler.inBattle = false;
                 this.OnDefeatingMonster(battle);
@@ -254,14 +257,14 @@ export default class BattleHandler {
         }
 
         if (battle.IsMonsterDead()) {
-            this.SendMonsterDefeated(messageInfo);
+            this.ReplyMonsterDefeated(messageInfo);
             return;
         }
 
         return await MessageService.ReplyEmbed(messageInfo, BattleEmbeds.GetBattleInfoEmbed(battle));
     }
 
-    private static async SendMonsterDefeated(messageInfo:IMessageInfo) {
+    private static async ReplyMonsterDefeated(messageInfo:IMessageInfo) {
         MessageService.ReplyMessage(messageInfo, 'Het monster is al verslagen.', false);
     }
 

@@ -53,6 +53,10 @@ export default class SettingsConstants {
         0.1,
     ];
 
+    public static readonly REWARD_POINTS_MULTIPLIER = 100;
+    public static readonly DAMAGE_REWARD_POINTS_MULTIPLIER = 1;
+    public static readonly HEALING_REWARD_POINTS_MULTIPLIER = .5;
+
     public static readonly STANDARD_DICE = 20;
 
     public static readonly LORE_MAX_LENGTH = 1500;

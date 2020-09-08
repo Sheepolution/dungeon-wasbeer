@@ -15,6 +15,14 @@ import { Redis } from '../Providers/Redis';
 import RedisConstants from '../Constants/RedisConstants';
 import Puzzle from './Puzzle';
 import Log from './Log';
+import IMessageInfo from '../Interfaces/IMessageInfo';
+import SettingsConstants from '../Constants/SettingsConstants';
+import CardManager from '../Managers/CardManager';
+import BotManager from '../Managers/BotManager';
+import MessageService from '../Services/MessageService';
+import { LogType } from '../Enums/LogType';
+import CardEmbeds from '../Embeds/CardEmbeds';
+import LogService from '../Services/LogService';
 
 export default class Character {
 
@@ -46,6 +54,8 @@ export default class Character {
     private lore:string;
     private regenerated:number;
     private slept:number;
+    private rewardPoints:number;
+    private rewardBattleId:string;
 
     constructor(player?:Player) {
         if (player) {
@@ -151,6 +161,8 @@ export default class Character {
         this.lore = model.lore;
         this.regenerated = model.regenerated;
         this.slept = model.slept;
+        this.rewardPoints = model.reward_points;
+        this.rewardBattleId = model.reward_battle_id;
         this.bornDate = new Date(model.born_date);
         this.deathDate = model.death_date ? new Date(model.death_date) : undefined;
         this.isSorcerer = this.classType == ClassType.Bard || this.classType == ClassType.Cleric || this.classType == ClassType.Wizard;
@@ -538,6 +550,64 @@ export default class Character {
         })
     }
 
+    public GetRewardPoints(battleId?:string) {
+        if (battleId == null || battleId != this.rewardBattleId) {
+            return this.rewardPoints;
+        } else {
+            return this.GetNextRewardPoints() + this.rewardPoints;
+        }
+    }
+
+    public GetNextRewardPoints() {
+        return this.level * SettingsConstants.REWARD_POINTS_MULTIPLIER;
+    }
+
+    public async GiveDamagePoints(damagePoints:number, battleId:string, messageInfo?:IMessageInfo) {
+        this.GiveRewardPoints(damagePoints * SettingsConstants.DAMAGE_REWARD_POINTS_MULTIPLIER, battleId, messageInfo);
+    }
+
+    public async GiveHealingPoints(healingPoints:number, battleId:string, messageInfo?:IMessageInfo) {
+        this.GiveRewardPoints(healingPoints * SettingsConstants.HEALING_REWARD_POINTS_MULTIPLIER, battleId, messageInfo);
+    }
+
+    public async GiveRewardPoints(rewardPoints:number, battleId:string, messageInfo?:IMessageInfo) {
+        this.rewardPoints += rewardPoints;
+
+        if (messageInfo != null) {
+            if (this.rewardBattleId != battleId) {
+                if (this.HasEnoughPointsForReward()) {
+                    this.rewardPoints = 0;
+                    this.rewardBattleId = battleId;
+
+                    this.UPDATE({
+                        reward_battle_id: this.rewardBattleId,
+                        rewardPoints: this.rewardPoints,
+                    });
+
+                    var player = this.GetPlayer();
+
+                    // TODO: Make this generic
+                    const cardModifyResult = await CardManager.GivePlayerCard(player);
+                    const playerCard = <PlayerCard>cardModifyResult.object;
+                    messageInfo.channel = BotManager.GetCardChannel();
+                    if (cardModifyResult.result) {
+                        var cardMessage = await MessageService.ReplyMessage(messageInfo, 'Je hebt goed meegeholpen in de Dungeons & Wasberen campaign. Voor jou deze nieuwe kaart!', undefined, true, CardEmbeds.GetCardEmbed(playerCard.GetCard(), playerCard.GetAmount()));
+                        CardManager.OnCardMessage(cardMessage, playerCard);
+                        LogService.Log(player, playerCard.GetCardId(), LogType.CardReceived, `${player.GetDiscordName()} heeft de kaart '${playerCard.GetCard().GetName()}' gekregen.`);
+                    } else {
+                        var cardMessage = await MessageService.ReplyMessage(messageInfo, 'Je hebt goed meegeholpen in de Dungeons & Wasberen campaign. Je hebt een extra van deze kaart!', undefined, true, CardEmbeds.GetCardEmbed(playerCard.GetCard(), playerCard.GetAmount()));
+                        CardManager.OnCardMessage(cardMessage, playerCard);
+                        LogService.Log(player, playerCard.GetCardId(), LogType.CardReceived, `${player.GetDiscordName()} heeft de kaart '${playerCard.GetCard().GetName()}' gekregen, en heeft daar nu ${playerCard.GetAmount()} van.`);
+                    }
+
+                    return;
+                }
+            }
+        }
+
+        this.UPDATE({ reward_points: this.rewardPoints });
+    }
+
     public async GetBattles() {
         return await Attack.FIND_BATTLES_BY_CHARACTER(this);
     }
@@ -661,5 +731,9 @@ export default class Character {
             health: this.currentHealth,
             level: this.level,
         }, trx)
+    }
+
+    private HasEnoughPointsForReward() {
+        return this.rewardPoints >= this.level * SettingsConstants.REWARD_POINTS_MULTIPLIER;
     }
 }
