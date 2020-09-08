@@ -580,7 +580,7 @@ export default class Character {
         if (messageInfo != null) {
             if (battleId != null && this.rewardBattleId != battleId) {
                 if (this.HasEnoughPointsForReward()) {
-                    this.rewardPoints = 0;
+                    this.rewardPoints -= this.GetNextRewardPoints();
                     this.rewardBattleId = battleId;
 
                     this.UPDATE({
