@@ -37,6 +37,7 @@ export default class CharacterModel extends Model {
                 slept: 0,
                 max_health: stats.health,
                 reward_points: 0,
+                reward_points_total: 0,
                 reward_battle_id: null,
             })
 

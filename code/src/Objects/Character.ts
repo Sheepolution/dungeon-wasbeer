@@ -55,6 +55,7 @@ export default class Character {
     private regenerated:number;
     private slept:number;
     private rewardPoints:number;
+    private rewardPointsTotal:number;
     private rewardBattleId:string;
 
     constructor(player?:Player) {
@@ -162,6 +163,7 @@ export default class Character {
         this.regenerated = model.regenerated;
         this.slept = model.slept;
         this.rewardPoints = model.reward_points;
+        this.rewardPointsTotal = model.reward_points_total;
         this.rewardBattleId = model.reward_battle_id;
         this.bornDate = new Date(model.born_date);
         this.deathDate = model.death_date ? new Date(model.death_date) : undefined;
@@ -573,6 +575,7 @@ export default class Character {
     public async GiveRewardPoints(rewardPoints:number, battleId?:string, messageInfo?:IMessageInfo) {
         var rewardPoints = Math.ceil(rewardPoints);
         this.rewardPoints += rewardPoints;
+        this.rewardPointsTotal += rewardPoints;
 
         if (messageInfo != null) {
             if (battleId != null && this.rewardBattleId != battleId) {
@@ -583,6 +586,7 @@ export default class Character {
                     this.UPDATE({
                         reward_battle_id: this.rewardBattleId,
                         rewardPoints: this.rewardPoints,
+                        reward_points_total: this.rewardPointsTotal,
                     });
 
                     var player = this.GetPlayer();
@@ -606,7 +610,10 @@ export default class Character {
             }
         }
 
-        this.UPDATE({ reward_points: this.rewardPoints });
+        this.UPDATE({
+            reward_points: this.rewardPoints,
+            reward_points_total: this.rewardPointsTotal,
+        });
     }
 
     public async GetBattles() {
