@@ -53,7 +53,7 @@ export default class SettingsConstants {
         0.1,
     ];
 
-    public static readonly REWARD_POINTS_MULTIPLIER = 100;
+    public static readonly REWARD_POINTS_MULTIPLIER = 50;
     public static readonly DAMAGE_REWARD_POINTS_MULTIPLIER = 1;
     public static readonly HEALING_REWARD_POINTS_MULTIPLIER = .5;
 
