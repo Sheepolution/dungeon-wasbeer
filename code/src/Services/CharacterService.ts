@@ -123,13 +123,26 @@ export default class CharacterService {
     public static GetSummedUpModifierStats(a:IModifierStats, b:IModifierStats) {
         return {
             armor: a.armor + b.armor,
-            attack:a.attack + b.attack,
+            attack: a.attack + b.attack,
             dexterity: a.dexterity + b.dexterity,
             healing: a.healing + b.healing,
             health: a.health + b.health,
             regeneration: a.regeneration + b.regeneration,
             strength: a.strength + b.strength,
             spell: a.spell + b.spell
+        }
+    }
+
+    public static GetMultipliedModifierStats(a:IModifierStats, b:IModifierStats) {
+        return {
+            armor: Math.max(a.armor + 1, Math.ceil(a.armor * b.armor)),
+            attack: Math.max(a.attack + 1, Math.ceil(a.attack * b.attack)),
+            dexterity: Math.max(a.dexterity + 1, Math.ceil(a.dexterity * b.dexterity)),
+            healing: Math.max(a.healing + 1, Math.ceil(a.healing * b.healing)),
+            health: Math.max(a.health + 1, Math.ceil(a.health * b.health)),
+            regeneration: Math.max(a.regeneration + 1, Math.ceil(a.regeneration * b.regeneration)),
+            strength: Math.max(a.strength + 1, Math.ceil(a.strength * b.strength)),
+            spell: Math.max(a.spell + 1, Math.ceil(a.spell * b.spell)),
         }
     }
 }

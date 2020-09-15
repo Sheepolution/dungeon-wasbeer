@@ -28,6 +28,8 @@ export default class CharacterConstants {
 
     public static readonly CHARACTER_DIED = 'https://media.discordapp.net/attachments/694331679204180029/703293328552362014/unknown.png';
 
+    public static readonly INSPIRE_STAT_MULTIPLIER = 1.2;
+
     public static readonly HEALTH_DEXTERITY_PENALTY_MAX = 15;
 
     public static readonly CHARACTER_IMAGE = {

@@ -711,9 +711,9 @@ export default class Character {
         this.cardModifierStats = this.CalculateCardModifierStats();
         this.fullModifierStats = this.CalculateFullModifierStats();
         if (this.inspired) {
-            const emptyModifierStats = CharacterService.GetEmptyModifierStats(1);
-            emptyModifierStats.health = 0;
-            this.fullModifierStats = CharacterService.GetSummedUpModifierStats(this.fullModifierStats, emptyModifierStats);
+            const emptyModifierStats = CharacterService.GetEmptyModifierStats(CharacterConstants.INSPIRE_STAT_MULTIPLIER);
+            emptyModifierStats.health = 1;
+            this.fullModifierStats = CharacterService.GetMultipliedModifierStats(this.fullModifierStats, emptyModifierStats);
         }
 
         const max = CharacterService.GetMaxModifierStats(this.classType);
