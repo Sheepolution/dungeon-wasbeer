@@ -137,6 +137,7 @@ export default class BattleHandler {
         const playerWon = roll1 + (roll2 || 0) >= roll3 + (roll4 || 0);
         const damage = await this.ResolveAttackResult(messageInfo, message, battle, character, playerWon, playerWon ? character.GetAttackStrength(): battle.GetMonsterAttackStrength(), roll1, roll2 || 0, roll3, roll4 || 0);
         await this.UpdateBattleEmbed(message, battle, character, roll1, roll2, roll3, roll4, playerWon, damage, false, inspired);
+        character.StopBeingInspired();
         if (battle.IsMonsterDead()) {
             return;
         }
@@ -159,11 +160,13 @@ export default class BattleHandler {
     private static async OnCharacterCrit(messageInfo:IMessageInfo, message:Message, battle:Battle, character:Character, roll1:number, roll2:number = 0, roll3:number = 0, inspired:boolean = false) {
         const damage = await this.ResolveAttackResult(messageInfo, message, battle, character, true, character.GetAttackStrength(true), roll1, roll2, roll3, 0);
         await this.UpdateBattleEmbed(message, battle, character, roll1, roll2, roll3, 0, true, damage, true, inspired);
+        character.StopBeingInspired();
     }
 
     private static async OnMonsterCrit(messageInfo:IMessageInfo, message:Message, battle:Battle, character:Character, roll1:number, roll2:number = 0, roll3:number = 0, inspired:boolean = false) {
         const damage = await this.ResolveAttackResult(messageInfo, message, battle, character, false, battle.GetMonsterAttackStrength(true), roll1, roll2, roll3, 0);
         await this.UpdateBattleEmbed(message, battle, character, roll1, roll2, roll3, 0, false, damage, true, inspired);
+        character.StopBeingInspired();
     }
 
     private static async ResolveAttackResult(messageInfo:IMessageInfo, message:Message, battle:Battle, character:Character, playerWon:boolean, damage:number, roll1:number, roll2:number, roll3:number, roll4:number) {
@@ -184,7 +187,6 @@ export default class BattleHandler {
 
             character.SetInBattle(false);
             character.GiveDamagePoints(receivedDamage, battle.GetId(), messageInfo);
-            character.StopBeingInspired();
 
             if (battle.IsMonsterDead()) {
                 BattleHandler.inBattle = false;
@@ -203,7 +205,6 @@ export default class BattleHandler {
             if (character.IsDead()) {
                 this.OnDefeatingCharacter(messageInfo, character);
             } else {
-                character.StopBeingInspired();
                 character.SetInBattle(false);
             }
             if (this.waitList.length == 0) {
