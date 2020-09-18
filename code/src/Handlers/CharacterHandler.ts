@@ -414,14 +414,14 @@ export default class CharacterHandler {
             return;
         }
 
-        if (!selfInspire) {
-            await character.GiveInspirePoints(CampaignManager.GetBattle()?.GetId(), messageInfo);
-        }
-
         await character.SetInspireCooldown();
         await receiver.BecomeInspired();
         await MessageService.ReplyMessage(messageInfo, `Je speelt prachtige muziek en inspireert ${selfInspire ? 'jezelf' : receiver.GetName()} ✨. Al ${selfInspire ? 'je' : 'hun'} stats krijgen een +1 boost tot ${selfInspire ? 'je' : 'hun'} volgende gevecht.`, true);
-        LogService.Log(character.GetPlayer(), receiver.GetId(), LogType.Inspire, `${character.GetName()} heeft ${character.GetId() == receiver.GetId() ? 'zichzelf' : `${receiver.GetName()}`} geïnspireerd.`);
+        await LogService.Log(character.GetPlayer(), receiver.GetId(), LogType.Inspire, `${character.GetName()} heeft ${character.GetId() == receiver.GetId() ? 'zichzelf' : `${receiver.GetName()}`} geïnspireerd.`);
+
+        if (!selfInspire) {
+            await character.GiveInspirePoints(CampaignManager.GetBattle()?.GetId(), messageInfo);
+        }
     }
 
     private static async SaveHeal(character:Character, receiver:Character, receiverHealth:number, characterHealing:number, roll:number, finalHealing:number) {
