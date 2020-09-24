@@ -322,9 +322,6 @@ export default class Character {
 
     public SetInBattle(inBattle:boolean) {
         this.inBattle = inBattle;
-        if (!this.inBattle) {
-            this.StopBeingInspired()
-        }
     }
 
     public IsInBattle() {
