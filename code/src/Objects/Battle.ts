@@ -84,6 +84,11 @@ export default class Battle {
         return this.monsterHealth <= 0;
     }
 
+    public async HealMonster(amount:number) {
+        this.monsterHealth = Math.min(this.monster.GetHealth(), this.monsterHealth + amount);
+        await this.UPDATE({monster_health: this.monsterHealth})
+    }
+
     public async Complete() {
         await this.UPDATE({
             active: false,

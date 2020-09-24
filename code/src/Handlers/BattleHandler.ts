@@ -205,7 +205,14 @@ export default class BattleHandler {
             return receivedDamage;
         } else {
             const receivedDamage = await character.ReceiveDamage(damage);
+
             await this.SaveAttack(battle, character, message.id, roll1, roll2, character.GetAttackRoll(), roll3, roll4, battle.GetMonsterAttackRoll(), false, receivedDamage, character.GetCurrentHealth());
+
+            var monsterId = battle.GetMonster().GetId();
+            if (monsterId == '1a788fa2-11f0-45b2-8d70-8dff8f5843c9') {
+                await battle.HealMonster(receivedDamage);
+            }
+
             if (character.IsDead()) {
                 this.OnDefeatingCharacter(messageInfo, character);
             } else {
