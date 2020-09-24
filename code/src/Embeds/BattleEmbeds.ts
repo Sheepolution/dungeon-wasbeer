@@ -100,14 +100,14 @@ export default class BattleEmbeds {
                 if (!attackDescription.includes('[damage]')) {
                     attackDescription += '\nJe doet [damage] damage op de [monster].'
                 }
-                embed.addField(`${characterName} wint${crit ? ' met een crit' : ''}!`, attackDescription.replace('[damage]', damage?.toString() || '').replace('[monster]', monsterName || ''));
+                embed.addField(`${characterName} wint${crit ? ' met een crit' : ''}!`, attackDescription.replaceAll('\\[damage\\]', damage?.toString() || '').replaceAll('\\[monster\\]', monsterName || ''));
                 embed.setColor(SettingsConstants.COLORS.GOOD)
             } else {
                 var attackDescription = crit ? battle.GetMonsterAttackCritDescription() : battle.GetMonsterAttackDescription();
                 if (!attackDescription.includes('[damage]')) {
                     attackDescription += '\nHij doet [damage] damage.'
                 }
-                embed.addField(`De ${monsterName} wint${crit ? ' met een crit' : ''}!`, attackDescription.replace('[damage]', damage?.toString() || '') );
+                embed.addField(`De ${monsterName} wint${crit ? ' met een crit' : ''}!`, attackDescription.replaceAll('\\[damage\\]', damage?.toString() || '') );
                 embed.setColor(SettingsConstants.COLORS.BAD)
             }
             embed.addField('--------------------------------', '-- Cooldown(s) --');
