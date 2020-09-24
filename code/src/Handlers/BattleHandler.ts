@@ -175,10 +175,14 @@ export default class BattleHandler {
             if (monsterId == 'e7c363a8-4bd7-42f2-b9aa-a70252c2c55a') {
                 if (character.IsSorcerer()) {
                     damage = Math.ceil(damage / 2);
+                } else {
+                    damage = damage * 2;
                 }
             } else if (monsterId == '1f0b7281-afdf-4982-bc2b-dab4ae7f87b4') {
                 if (!character.IsSorcerer()) {
                     damage = Math.ceil(damage / 2);
+                } else {
+                    damage = damage * 2;
                 }
             }
 
