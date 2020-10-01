@@ -11,6 +11,7 @@ import PlayerCard from '../Objects/PlayerCard';
 import BotManager from '../Managers/BotManager';
 import { LogType } from '../Enums/LogType';
 import LogService from '../Services/LogService';
+import ArtHandler from './ArtHandler';
 
 export default class MessageHandler {
 
@@ -20,6 +21,10 @@ export default class MessageHandler {
     public static async OnMessage(messageInfo:IMessageInfo, player:Player) {
         if (messageInfo.member == null) {
             return;
+        }
+
+        if (messageInfo.message?.guild?.id != SettingsConstants.ART_CHANNEL_ID) {
+            this.OnPostingArt(messageInfo);
         }
 
         const content = messageInfo.message?.content;
@@ -115,5 +120,14 @@ export default class MessageHandler {
             MessageService.ReplyMessage(messageInfo, 'Zij die bedelen worden gestraft. Deze kaart pak ik gewoon weer van je af. Dat zal je leren!', false, true, CardEmbeds.GetCardEmbed(playerCard.GetCard()));
             LogService.Log(player, playerCard.GetCardId(), LogType.CardTaken, `${player.GetDiscordName()} heeft gebedeld met het bericht '${messageInfo.message?.content}' en waardoor de kaart '${playerCard.GetCard().GetName()}' is afgepakt.`);
         }
+    }
+
+    private static OnPostingArt(messageInfo:IMessageInfo) {
+        const attachment = messageInfo.message?.attachments.first();
+        if (attachment == null || !['.png', 'jpeg', '.jpg'].includes(attachment.name?.toLowerCase().slice(-4) || '')) {
+            return;
+        }
+
+        ArtHandler.AddPinReaction(messageInfo);
     }
 }

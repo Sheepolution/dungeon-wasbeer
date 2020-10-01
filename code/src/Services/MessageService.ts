@@ -29,6 +29,10 @@ export default class MessageService {
         return await this.SendMessage(BotManager.GetDNDChannel(), message, embed);
     }
 
+    public static async SendMessageToArtChannel(message:string, embed?:MessageEmbed) {
+        return await this.SendMessage(BotManager.GetArtChannel(), message, embed);
+    }
+
     public static async SendMessageToChatChannel(message:string, embed?:MessageEmbed) {
         return await this.SendMessage(BotManager.GetChatChannel(), message, embed);
     }
