@@ -23,7 +23,7 @@ export default class MessageHandler {
             return;
         }
 
-        if (messageInfo.message?.guild?.id == SettingsConstants.ART_CHANNEL_ID) {
+        if (messageInfo.message?.channel.id == SettingsConstants.ART_CHANNEL_ID) {
             this.OnPostingArt(messageInfo);
         }
 
