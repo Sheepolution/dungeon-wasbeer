@@ -1,17 +1,17 @@
+import ArtHandler from './ArtHandler';
+import BotManager from '../Managers/BotManager';
+import CardEmbeds from '../Embeds/CardEmbeds';
+import CardManager from '../Managers/CardManager';
 import IMessageInfo from '../Interfaces/IMessageInfo';
+import LogService from '../Services/LogService';
+import MessageService from '../Services/MessageService';
 import Player from '../Objects/Player';
+import PlayerCard from '../Objects/PlayerCard';
+import RedisConstants from '../Constants/RedisConstants';
+import SettingsConstants from '../Constants/SettingsConstants';
+import { LogType } from '../Enums/LogType';
 import { Redis } from '../Providers/Redis';
 import { Utils } from '../Utils/Utils';
-import CardManager from '../Managers/CardManager';
-import SettingsConstants from '../Constants/SettingsConstants';
-import CardEmbeds from '../Embeds/CardEmbeds';
-import RedisConstants from '../Constants/RedisConstants';
-import MessageService from '../Services/MessageService';
-import PlayerCard from '../Objects/PlayerCard';
-import BotManager from '../Managers/BotManager';
-import { LogType } from '../Enums/LogType';
-import LogService from '../Services/LogService';
-import ArtHandler from './ArtHandler';
 
 export default class MessageHandler {
 
@@ -23,7 +23,7 @@ export default class MessageHandler {
             return;
         }
 
-        if (messageInfo.message?.guild?.id != SettingsConstants.ART_CHANNEL_ID) {
+        if (messageInfo.message?.guild?.id == SettingsConstants.ART_CHANNEL_ID) {
             this.OnPostingArt(messageInfo);
         }
 
