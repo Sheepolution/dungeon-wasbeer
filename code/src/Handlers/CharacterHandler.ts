@@ -615,7 +615,7 @@ export default class CharacterHandler {
             return;
         }
 
-        await character.UpdateInspireDescription(`${description}`.replace('"', ''));
+        await character.UpdateInspireDescription(description);
         MessageService.ReplyMessage(messageInfo, 'Je inspire beschrijving is aangepast.');
     }
 
