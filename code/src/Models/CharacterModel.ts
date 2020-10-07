@@ -1,8 +1,8 @@
-import { ClassType } from '../Enums/ClassType';
-import { CharacterStatus } from '../Enums/CharacterStatus';
-import Player from '../Objects/Player';
-import { Utils } from '../Utils/Utils';
 import CharacterService from '../Services/CharacterService';
+import Player from '../Objects/Player';
+import { CharacterStatus } from '../Enums/CharacterStatus';
+import { ClassType } from '../Enums/ClassType';
+import { Utils } from '../Utils/Utils';
 
 const { Model } = require('objection');
 
@@ -39,6 +39,11 @@ export default class CharacterModel extends Model {
                 reward_points: 0,
                 reward_points_total: 0,
                 reward_battle_id: null,
+                attack_description: null,
+                attack_crit_description: null,
+                heal_description: null,
+                heal_fail_description: null,
+                inspire_description: null,
             })
 
         return character;

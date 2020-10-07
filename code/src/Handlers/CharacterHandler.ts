@@ -1,22 +1,22 @@
-import Player from '../Objects/Player';
-import { ClassType } from '../Enums/ClassType';
-import MessageService from '../Services/MessageService';
-import IMessageInfo from '../Interfaces/IMessageInfo';
+import CampaignManager from '../Managers/CampaignManager';
 import Character from '../Objects/Character';
+import CharacterConstants from '../Constants/CharacterConstants';
 import CharacterEmbeds from '../Embeds/CharacterEmbeds';
-import PlayerManager from '../Managers/PlayerManager';
 import DiscordUtils from '../Utils/DiscordUtils';
-import { Redis } from '../Providers/Redis';
+import Heal from '../Objects/Heal';
+import IMessageInfo from '../Interfaces/IMessageInfo';
+import LogService from '../Services/LogService';
+import MessageService from '../Services/MessageService';
+import Player from '../Objects/Player';
+import PlayerManager from '../Managers/PlayerManager';
 import RedisConstants from '../Constants/RedisConstants';
+import SettingsConstants from '../Constants/SettingsConstants';
+import { ClassType } from '../Enums/ClassType';
+import { LogType } from '../Enums/LogType';
+import { Redis } from '../Providers/Redis';
+import { TopListType } from '../Enums/TopListType';
 import { Utils } from '../Utils/Utils';
 import { Message } from 'discord.js';
-import Heal from '../Objects/Heal';
-import CampaignManager from '../Managers/CampaignManager';
-import CharacterConstants from '../Constants/CharacterConstants';
-import { LogType } from '../Enums/LogType';
-import LogService from '../Services/LogService';
-import SettingsConstants from '../Constants/SettingsConstants';
-import { TopListType } from '../Enums/TopListType';
 
 export default class CharacterHandler {
 
@@ -105,6 +105,26 @@ export default class CharacterHandler {
             case 'name':
             case 'naam':
                 this.EditName(messageInfo, player, content);
+                break;
+            case 'aanval-beschrijving':
+            case 'ab':
+                this.EditAttackDescription(messageInfo, player, content);
+                break;
+            case 'aanval-crit-beschrijving':
+            case 'acb':
+                this.EditAttackCritDescription(messageInfo, player, content);
+                break;
+            case 'heal-beschrijving':
+            case 'hb':
+                this.EditHealDescription(messageInfo, player, content);
+                break;
+            case 'heal-faal-beschrijving':
+            case 'hfb':
+                this.EditHealFailDescription(messageInfo, player, content);
+                break;
+            case 'inspire-beschrijving':
+            case 'ib':
+                this.EditInspireDescription(messageInfo, player, content);
                 break;
             case 'reset':
                 this.OnReset(messageInfo, player);
@@ -416,7 +436,7 @@ export default class CharacterHandler {
 
         await character.SetInspireCooldown();
         await receiver.BecomeInspired();
-        await MessageService.ReplyMessage(messageInfo, `Je speelt prachtige muziek en inspireert ${selfInspire ? 'jezelf' : receiver.GetName()} ✨. Al ${selfInspire ? 'je' : 'hun'} stats krijgen een +1 boost tot ${selfInspire ? 'je' : 'hun'} volgende gevecht.`, true);
+        await MessageService.ReplyMessage(messageInfo, `${character.GetInspireDescription().replace('[naam]', selfInspire ? 'jezelf' : receiver.GetName())} ✨. Al ${selfInspire ? 'je' : 'hun'} stats krijgen een +1 boost tot ${selfInspire ? 'je' : 'hun'} volgende gevecht.`, true);
         await LogService.Log(character.GetPlayer(), receiver.GetId(), LogType.Inspire, `${character.GetName()} heeft ${character.GetId() == receiver.GetId() ? 'zichzelf' : `${receiver.GetName()}`} geïnspireerd.`);
 
         if (!selfInspire) {
@@ -497,6 +517,106 @@ export default class CharacterHandler {
 
         await character.UpdateName(name);
         MessageService.ReplyMessage(messageInfo, `Je naam is aangepast naar ${name}.`);
+    }
+
+    private static async EditAttackDescription(messageInfo:IMessageInfo, player:Player, description:string) {
+        const character = PlayerManager.GetCharacterFromPlayer(messageInfo, player);
+        if (character == null) {
+            return;
+        }
+
+        if (description.length > 250) {
+            MessageService.ReplyMessage(messageInfo, 'De beschrijving van je aanval mag niet langer zijn dan 250 tekens.', false);
+            return;
+        }
+
+        await character.UpdateAttackDescription(`"${description}"`.replace('""', '"'));
+        MessageService.ReplyMessage(messageInfo, 'Je aanval beschrijving is aangepast.');
+    }
+
+    private static async EditAttackCritDescription(messageInfo:IMessageInfo, player:Player, description:string) {
+        const character = PlayerManager.GetCharacterFromPlayer(messageInfo, player);
+        if (character == null) {
+            return;
+        }
+
+        if (description.length > 250) {
+            MessageService.ReplyMessage(messageInfo, 'De beschrijving van je aanval mag niet langer zijn dan 250 tekens.', false);
+            return;
+        }
+
+        await character.UpdateAttackDescription(`"${description}"`.replace('""', '"'));
+        MessageService.ReplyMessage(messageInfo, 'Je crit aanval beschrijving is aangepast.');
+    }
+
+    private static async EditHealDescription(messageInfo:IMessageInfo, player:Player, description:string) {
+        const character = PlayerManager.GetCharacterFromPlayer(messageInfo, player);
+        if (character == null) {
+            return;
+        }
+
+        if (!character.CanHeal()) {
+            MessageService.ReplyMessage(messageInfo, 'Je character kan helemaal niet healen!', false);
+            return;
+        }
+
+        if (description.length > 250) {
+            MessageService.ReplyMessage(messageInfo, 'De beschrijving van je heal mag niet langer zijn dan 250 tekens.', false);
+            return;
+        }
+
+        if (!description.includes('[naam]')) {
+            MessageService.ReplyMessage(messageInfo, 'De beschrijving van je heal moet de \'[naam]\' tag bevatten.', false);
+            return;
+        }
+
+        if (!description.includes('[health]')) {
+            MessageService.ReplyMessage(messageInfo, 'De beschrijving van je heal moet de \'[health]\' tag bevatten.', false);
+            return;
+        }
+
+        await character.UpdateAttackCritDescription(`"${description}"`.replace('""', '"'));
+        MessageService.ReplyMessage(messageInfo, 'Je heal beschrijving is aangepast.');
+    }
+
+    private static async EditHealFailDescription(messageInfo:IMessageInfo, player:Player, description:string) {
+        const character = PlayerManager.GetCharacterFromPlayer(messageInfo, player);
+        if (character == null) {
+            return;
+        }
+
+        if (!character.CanHeal()) {
+            MessageService.ReplyMessage(messageInfo, 'Je character kan helemaal niet healen!', false);
+            return;
+        }
+
+        if (description.length > 250) {
+            MessageService.ReplyMessage(messageInfo, 'De beschrijving van je gefaalde heal mag niet langer zijn dan 250 tekens.', false);
+            return;
+        }
+
+        await character.UpdateHealFailDescription(`"${description}"`.replace('""', '"'));
+        MessageService.ReplyMessage(messageInfo, 'Je gefaalde heal beschrijving is aangepast.');
+    }
+
+    private static async EditInspireDescription(messageInfo:IMessageInfo, player:Player, description:string) {
+        const character = PlayerManager.GetCharacterFromPlayer(messageInfo, player);
+        if (character == null) {
+            return;
+        }
+
+        if (!character.CanInspire()) {
+            MessageService.ReplyMessage(messageInfo, 'Je character kan helemaal niet inspireren!', false);
+            return;
+        }
+
+        if (description.length > 250) {
+            MessageService.ReplyMessage(messageInfo, 'De beschrijving van je inspire mag niet langer zijn dan 250 tekens.', false);
+            return;
+        }
+
+        await character.UpdateInspireDescription(`${description}`.replace('"', ''));
+        MessageService.ReplyMessage(messageInfo, 'Je inspire beschrijving is aangepast.');
     }
 
     private static async OnReset(messageInfo:IMessageInfo, player:Player) {

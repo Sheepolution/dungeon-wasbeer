@@ -1,28 +1,28 @@
+import Attack from './Attack';
+import BotManager from '../Managers/BotManager';
+import Card from './Card';
+import CardEmbeds from '../Embeds/CardEmbeds';
+import CardManager from '../Managers/CardManager';
+import CharacterConstants from '../Constants/CharacterConstants';
+import CharacterModel from '../Models/CharacterModel';
+import CharacterService from '../Services/CharacterService';
+import Heal from './Heal';
+import IMessageInfo from '../Interfaces/IMessageInfo';
+import IModifierStats from '../Interfaces/IModifierStats';
+import Log from './Log';
+import LogService from '../Services/LogService';
+import MessageService from '../Services/MessageService';
+import Player from './Player';
+import PlayerCard from './PlayerCard';
+import PlayerManager from '../Managers/PlayerManager';
+import Puzzle from './Puzzle';
+import RedisConstants from '../Constants/RedisConstants';
+import SettingsConstants from '../Constants/SettingsConstants';
 import { CharacterStatus } from '../Enums/CharacterStatus';
 import { ClassType } from '../Enums/ClassType';
-import IModifierStats from '../Interfaces/IModifierStats';
-import Player from './Player';
-import Card from './Card';
-import CharacterModel from '../Models/CharacterModel';
-import PlayerCard from './PlayerCard';
-import Attack from './Attack';
-import PlayerManager from '../Managers/PlayerManager';
-import { Utils } from '../Utils/Utils';
-import CharacterService from '../Services/CharacterService';
-import CharacterConstants from '../Constants/CharacterConstants';
-import Heal from './Heal';
-import { Redis } from '../Providers/Redis';
-import RedisConstants from '../Constants/RedisConstants';
-import Puzzle from './Puzzle';
-import Log from './Log';
-import IMessageInfo from '../Interfaces/IMessageInfo';
-import SettingsConstants from '../Constants/SettingsConstants';
-import CardManager from '../Managers/CardManager';
-import BotManager from '../Managers/BotManager';
-import MessageService from '../Services/MessageService';
 import { LogType } from '../Enums/LogType';
-import CardEmbeds from '../Embeds/CardEmbeds';
-import LogService from '../Services/LogService';
+import { Redis } from '../Providers/Redis';
+import { Utils } from '../Utils/Utils';
 
 export default class Character {
 
@@ -57,6 +57,11 @@ export default class Character {
     private rewardPoints:number;
     private rewardPointsTotal:number;
     private rewardBattleId:string;
+    private attackDescription:string;
+    private attackCritDescription:string;
+    private healDescription:string;
+    private healFailDescription:string;
+    private inspireDescription:string;
 
     constructor(player?:Player) {
         if (player) {
@@ -165,6 +170,11 @@ export default class Character {
         this.rewardPoints = model.reward_points;
         this.rewardPointsTotal = model.reward_points_total;
         this.rewardBattleId = model.reward_battle_id;
+        this.attackDescription = model.attack_description;
+        this.attackCritDescription = model.attack_crit_description;
+        this.healDescription = model.heal_description;
+        this.healFailDescription = model.heal_fail_description;
+        this.inspireDescription = model.inspireDescription;
         this.bornDate = new Date(model.born_date);
         this.deathDate = model.death_date ? new Date(model.death_date) : undefined;
         this.isSorcerer = this.classType == ClassType.Bard || this.classType == ClassType.Cleric || this.classType == ClassType.Wizard;
@@ -559,6 +569,61 @@ export default class Character {
 
     public GetNextRewardPoints() {
         return this.level * SettingsConstants.REWARD_POINTS_MULTIPLIER;
+    }
+
+    public GetAttackDescription(crit:boolean = false) {
+        if (crit) {
+            return this.attackCritDescription || this.GetRandomAttackDescription(true);
+        }
+
+        return this.attackDescription || this.GetRandomAttackDescription();
+    }
+
+    public GetHealDescription() {
+        return this.healDescription || CharacterConstants.HEAL_MESSAGE;
+    }
+
+    public GetHealFailDescription() {
+        return this.healFailDescription || CharacterConstants.HEAL_FAIL_MESSAGE;
+    }
+
+    public GetInspireDescription() {
+        return this.inspireDescription || CharacterConstants.INSPIRE_MESSAGE;
+    }
+
+    public async UpdateAttackDescription(description:string) {
+        this.attackDescription = description;
+        await this.UPDATE({
+            attack_description: this.attackDescription
+        })
+    }
+
+    public async UpdateAttackCritDescription(description:string) {
+        this.attackCritDescription = description;
+        await this.UPDATE({
+            attack_crit_description: this.attackCritDescription
+        })
+    }
+
+    public async UpdateHealDescription(description:string) {
+        this.healDescription = description;
+        await this.UPDATE({
+            heal_description : this.healDescription
+        })
+    }
+
+    public async UpdateHealFailDescription(description:string) {
+        this.healFailDescription = description;
+        await this.UPDATE({
+            heal_fail_description : this.healFailDescription
+        })
+    }
+
+    public async UpdateInspireDescription(description:string) {
+        this.inspireDescription = description;
+        await this.UPDATE({
+            inspire_description : this.inspireDescription
+        })
     }
 
     public async GiveDamagePoints(damagePoints:number, battleId?:string, messageInfo?:IMessageInfo) {

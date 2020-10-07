@@ -1,16 +1,16 @@
-import { MessageEmbed } from 'discord.js';
-import SettingsConstants from '../Constants/SettingsConstants';
+import Attack from '../Objects/Attack';
+import CampaignManager from '../Managers/CampaignManager';
+import Card from '../Objects/Card';
 import CardService from '../Services/CardService';
 import Character from '../Objects/Character';
-import Card from '../Objects/Card';
 import CharacterConstants from '../Constants/CharacterConstants';
 import CharacterService from '../Services/CharacterService';
-import { Utils } from '../Utils/Utils';
-import { TopListType } from '../Enums/TopListType';
-import Attack from '../Objects/Attack';
 import Heal from '../Objects/Heal';
 import Puzzle from '../Objects/Puzzle';
-import CampaignManager from '../Managers/CampaignManager';
+import SettingsConstants from '../Constants/SettingsConstants';
+import { TopListType } from '../Enums/TopListType';
+import { Utils } from '../Utils/Utils';
+import { MessageEmbed } from 'discord.js';
 
 export default class CharacterEmbeds {
 
@@ -214,7 +214,7 @@ export default class CharacterEmbeds {
         return embed;
     }
 
-    public static GetHealingEmbed(character:Character, receiver:Character, roll?:number, healing?:number) {
+    public static GetHealingEmbed(character:Character, receiver:Character, roll?:number, healing:number = 0) {
         const embed = new MessageEmbed();
         if (healing != null) {
             embed.setColor(healing == 0 ? SettingsConstants.COLORS.BAD : SettingsConstants.COLORS.GOOD)
@@ -239,10 +239,10 @@ export default class CharacterEmbeds {
                 .addField('--------------------------------', '-- Resultaat --')
                 .setFooter(`Participatiepunten: ${character.GetRewardPoints(CampaignManager.GetBattle()?.GetId())}/${character.GetNextRewardPoints()}`);
 
-            if (healing == 0) {
-                embed.addField(`${characterName} faalt met healen!`, 'Je healt per ongeluk een steen. Er gebeurt weinig.');
+            if (healing == 0 ) {
+                embed.addField(`${characterName} faalt met healen!`, character.GetHealFailDescription().replaceAll('[naam]', receiverName));
             } else {
-                embed.addField(`${characterName} slaagt er in te healen`, `${receiverName} krijgt ${healing} health terug.`);
+                embed.addField(`${characterName} slaagt er in te healen`, character.GetHealDescription().replaceAll('[naam]', receiverName).replaceAll('[health]',  healing.toString()));
             }
         }
 

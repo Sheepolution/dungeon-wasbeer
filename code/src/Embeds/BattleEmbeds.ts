@@ -1,8 +1,8 @@
-import SettingsConstants from '../Constants/SettingsConstants';
 import Battle from '../Objects/Battle';
-import { MessageEmbed } from 'discord.js';
 import Character from '../Objects/Character';
+import SettingsConstants from '../Constants/SettingsConstants';
 import { Utils } from '../Utils/Utils';
+import { MessageEmbed } from 'discord.js';
 
 export default class BattleEmbeds {
 
@@ -96,7 +96,7 @@ export default class BattleEmbeds {
 
             embed.addField('--------------------------------', '-- Resultaat --');
             if (playerWon) {
-                var attackDescription = character.GetRandomAttackDescription(crit);
+                var attackDescription = character.GetAttackDescription(crit);
                 if (!attackDescription.includes('[damage]')) {
                     attackDescription += '\nJe doet [damage] damage op de [monster].'
                 }

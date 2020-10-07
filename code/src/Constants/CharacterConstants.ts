@@ -102,4 +102,8 @@ export default class CharacterConstants {
             '"Je ziet dat de [monster] op je af wilt komen en terwijl je ziet dat deze aanstalte maakt, gaat voor jou alles in slow motion te werken. In een fractie van een seconde heb je je boog al gespannen staan en op de [monster] gericht. Met een vlotte beweging zoeft de pijl met een flinke snelheid op de [monster] af en doorboort deze voor [damage] damage!"',
         ]
     }
+
+    public static readonly HEAL_MESSAGE = '"[naam] krijgt [health] health terug."';
+    public static readonly HEAL_FAIL_MESSAGE = '"Je healt per ongeluk een steen. Er gebeurt weinig."';
+    public static readonly INSPIRE_MESSAGE ='"Je speelt prachtige muziek en inspireert [naam]"';
 }
