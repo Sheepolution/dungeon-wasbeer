@@ -587,7 +587,7 @@ export default class CharacterHandler {
             description = `"${description}"`.replace('""', '"');
         }
 
-        await character.UpdateAttackCritDescription(description);
+        await character.UpdateHealDescription(description);
         MessageService.ReplyMessage(messageInfo, 'Je heal beschrijving is aangepast.');
     }
 
