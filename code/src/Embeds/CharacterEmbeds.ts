@@ -217,7 +217,7 @@ export default class CharacterEmbeds {
     public static GetHealingEmbed(character:Character, receiver:Character, roll?:number, healing:number = 0) {
         const embed = new MessageEmbed();
         if (healing != null) {
-            embed.setColor(healing == 0 ? SettingsConstants.COLORS.BAD : SettingsConstants.COLORS.GOOD)
+            embed.setColor((roll != null && healing == 0) ? SettingsConstants.COLORS.BAD : SettingsConstants.COLORS.GOOD)
         } else {
             embed.setColor(SettingsConstants.COLORS.DEFAULT)
         }
