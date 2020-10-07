@@ -530,7 +530,11 @@ export default class CharacterHandler {
             return;
         }
 
-        await character.UpdateAttackDescription(`"${description}"`.replace('""', '"'));
+        if (description) {
+            description = `"${description}"`.replace('""', '"');
+        }
+
+        await character.UpdateAttackDescription(description);
         MessageService.ReplyMessage(messageInfo, 'Je aanval beschrijving is aangepast.');
     }
 
@@ -543,6 +547,10 @@ export default class CharacterHandler {
         if (description.length > 250) {
             MessageService.ReplyMessage(messageInfo, 'De beschrijving van je aanval mag niet langer zijn dan 250 tekens.', false);
             return;
+        }
+
+        if (description) {
+            description = `"${description}"`.replace('""', '"');
         }
 
         await character.UpdateAttackDescription(`"${description}"`.replace('""', '"'));
@@ -565,17 +573,21 @@ export default class CharacterHandler {
             return;
         }
 
-        if (!description.includes('[naam]')) {
-            MessageService.ReplyMessage(messageInfo, 'De beschrijving van je heal moet de \'[naam]\' tag bevatten.', false);
-            return;
+        if (description) {
+            if (!description.includes('[naam]')) {
+                MessageService.ReplyMessage(messageInfo, 'De beschrijving van je heal moet de \'[naam]\' tag bevatten.', false);
+                return;
+            }
+
+            if (!description.includes('[health]')) {
+                MessageService.ReplyMessage(messageInfo, 'De beschrijving van je heal moet de \'[health]\' tag bevatten.', false);
+                return;
+            }
+
+            description = `"${description}"`.replace('""', '"');
         }
 
-        if (!description.includes('[health]')) {
-            MessageService.ReplyMessage(messageInfo, 'De beschrijving van je heal moet de \'[health]\' tag bevatten.', false);
-            return;
-        }
-
-        await character.UpdateAttackCritDescription(`"${description}"`.replace('""', '"'));
+        await character.UpdateAttackCritDescription(description);
         MessageService.ReplyMessage(messageInfo, 'Je heal beschrijving is aangepast.');
     }
 
@@ -595,7 +607,11 @@ export default class CharacterHandler {
             return;
         }
 
-        await character.UpdateHealFailDescription(`"${description}"`.replace('""', '"'));
+        if (description) {
+            description = `"${description}"`.replace('""', '"');
+        }
+
+        await character.UpdateHealFailDescription(description);
         MessageService.ReplyMessage(messageInfo, 'Je gefaalde heal beschrijving is aangepast.');
     }
 
