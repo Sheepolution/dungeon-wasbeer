@@ -240,9 +240,9 @@ export default class CharacterEmbeds {
                 .setFooter(`Participatiepunten: ${character.GetRewardPoints(CampaignManager.GetBattle()?.GetId())}/${character.GetNextRewardPoints()}`);
 
             if (healing == 0 ) {
-                embed.addField(`${characterName} faalt met healen!`, character.GetHealFailDescription().replaceAll('[naam]', receiverName));
+                embed.addField(`${characterName} faalt met healen!`, character.GetHealFailDescription().replaceAll('\\[naam\\]', receiverName));
             } else {
-                embed.addField(`${characterName} slaagt er in te healen`, character.GetHealDescription().replaceAll('[naam]', receiverName).replaceAll('[health]',  healing.toString()));
+                embed.addField(`${characterName} slaagt er in te healen`, character.GetHealDescription().replaceAll('\\[naam\\]', receiverName).replaceAll('\\[health\\]',  healing.toString()));
             }
         }
 
