@@ -553,7 +553,7 @@ export default class CharacterHandler {
             description = `"${description}"`.replace('""', '"');
         }
 
-        await character.UpdateAttackDescription(`"${description}"`.replace('""', '"'));
+        await character.UpdateAttackCritDescription(`"${description}"`.replace('""', '"'));
         MessageService.ReplyMessage(messageInfo, 'Je crit aanval beschrijving is aangepast.');
     }
 
