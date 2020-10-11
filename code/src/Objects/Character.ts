@@ -78,7 +78,7 @@ export default class Character {
     public static async RESTORE_HEALTH(id:string, trx:any) {
         await CharacterModel.query(trx)
             .where({id: id, status: '01'})
-            .increment('health', 10000);
+            .patch({health: 10000});
     }
 
     public static async GET_LOW_HEALTH_LIST() {
