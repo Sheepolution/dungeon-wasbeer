@@ -59,11 +59,23 @@ export default class Battle {
     }
 
     public GetMonsterAttackStrength(crit?:boolean) {
-        return this.monster.GetAttackStrength(crit);
+        var strength = this.monster.GetAttackStrength();
+        if (this.monster.GetId() == '7e476ee1-c32a-426b-b278-a03d6f85f164') {
+            var missing = Math.ceil(this.monster.GetHealth() / 1000) - Math.ceil(this.monsterHealth / 1000);
+            strength += missing * 3;
+        }
+
+        return strength * (crit ? 2 : 1);
     }
 
     public GetMonsterAttackRoll() {
-        return this.monster.GetAttackRoll();
+        var attackRoll = this.monster.GetAttackRoll();
+        if (this.monster.GetId() == '7e476ee1-c32a-426b-b278-a03d6f85f164') {
+            var missing = Math.ceil(this.monster.GetHealth() / 1000) - Math.ceil(this.monsterHealth / 1000);
+            attackRoll += missing * 2;
+        }
+
+        return attackRoll;
     }
 
     public GetMonsterAttackDescription() {
