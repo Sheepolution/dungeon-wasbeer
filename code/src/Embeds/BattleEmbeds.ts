@@ -17,8 +17,8 @@ export default class BattleEmbeds {
             .setImage(monster.GetImageUrl())
             .addField('Level', monster.GetLevelString())
             .addField('Health', `${battle.GetCurrentMonsterHealth()}/${monster.GetHealth()}`, true)
-            .addField('Strength', monster.GetAttackStrength(), true)
-            .addField('Attack', monster.GetAttackRoll(), true)
+            .addField('Strength', battle.GetMonsterAttackStrength(), true)
+            .addField('Attack', battle.GetMonsterAttackRoll(), true)
 
         return embed;
     }
@@ -30,8 +30,8 @@ export default class BattleEmbeds {
         const characterAttack = character.GetAttackRoll();
         const characterStrength = character.GetAttackStrength();
         const monsterName = monster.GetName();
-        const monsterAttack = monster.GetAttackRoll();
-        const monsterStrength = monster.GetAttackStrength();
+        const monsterAttack = battle.GetMonsterAttackRoll();
+        const monsterStrength = battle.GetMonsterAttackStrength();
 
         const embed = new MessageEmbed()
             .setColor(SettingsConstants.COLORS.DEFAULT)
