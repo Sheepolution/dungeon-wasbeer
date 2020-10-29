@@ -14,7 +14,7 @@ export default class BattleEmbeds {
             .setAuthor(monster.GetCategory(), 'https://cdn.discordapp.com/attachments/694331679204180029/698606955496734781/unknown.png')
             .setTitle(monster.GetName())
             .setDescription(monster.GetDescription())
-            .setImage(monster.GetImageUrl())
+            .setImage(battle.GetMonsterImageUrl())
             .addField('Level', monster.GetLevelString())
             .addField('Health', `${battle.GetCurrentMonsterHealth()}/${monster.GetHealth()}`, true)
             .addField('Strength', battle.GetMonsterAttackStrength(), true)
@@ -36,7 +36,7 @@ export default class BattleEmbeds {
         const embed = new MessageEmbed()
             .setColor(SettingsConstants.COLORS.DEFAULT)
             .setAuthor('Aanval')
-            .setThumbnail(playerWon ? character.GetAvatarUrl() : monster.GetImageUrl())
+            .setThumbnail(playerWon ? character.GetAvatarUrl() : battle.GetMonsterImageUrl())
             .setTitle(`${characterName}${((inspired || character.IsInspired() ) ? ' ✨' : '')} VS ${monsterName}`)
             .setDescription('-- Statistieken --')
             .addField(characterName, `Health: ${character.GetCurrentHealth()}/${character.GetMaxHealth()}\n${character.GetAttackName()}: ${characterStrength}\nAttack: ${characterAttack}\nArmor: ${character.GetArmor()}`, true)
@@ -107,9 +107,17 @@ export default class BattleEmbeds {
                 if (!attackDescription.includes('[damage]')) {
                     attackDescription += '\nHij doet [damage] damage.'
                 }
+
+                if (monster.GetId() == '7e476ee1-c32a-426b-b278-a03d6f85f164') {
+                    const missing = Math.ceil(monster.GetHealth() / 1000) - Math.ceil(battle.GetCurrentMonsterHealth() / 1000);
+                    const heads = Math.max(2 + missing, 7);
+                    attackDescription = attackDescription.replaceAll('\\[heads\\]', heads.toString());
+                }
+
                 embed.addField(`De ${monsterName} wint${crit ? ' met een crit' : ''}!`, attackDescription.replaceAll('\\[damage\\]', damage?.toString() || '') );
                 embed.setColor(SettingsConstants.COLORS.BAD)
             }
+
             embed.addField('--------------------------------', '-- Cooldown(s) --');
 
             const battleCooldown = await character.GetBattleCooldown();

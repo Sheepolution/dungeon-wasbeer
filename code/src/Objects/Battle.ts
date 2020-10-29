@@ -1,5 +1,5 @@
-import Monster from './Monster';
 import BattleModel from '../Models/BattleModel';
+import Monster from './Monster';
 import { Utils } from '../Utils/Utils';
 
 export default class Battle {
@@ -76,6 +76,25 @@ export default class Battle {
         }
 
         return attackRoll;
+    }
+
+    public GetMonsterImageUrl() {
+        if (this.monster.GetId() == '7e476ee1-c32a-426b-b278-a03d6f85f164') {
+            var missing = Math.ceil(this.monster.GetHealth() / 1000) - Math.ceil(this.monsterHealth / 1000);
+            switch (missing) {
+                case 0: return 'https://cdn.discordapp.com/attachments/698616506862272602/769643201971617804/2_heads.png';
+                case 1: return 'https://cdn.discordapp.com/attachments/698616506862272602/769643221142863904/3_heads.png';
+                case 2: return 'https://cdn.discordapp.com/attachments/698616506862272602/769643229779853332/4_heads.png';
+                case 3: return 'https://cdn.discordapp.com/attachments/698616506862272602/769643237874860113/5_heads.png';
+                case 4: return 'https://cdn.discordapp.com/attachments/698616506862272602/769643237874860113/6_heads.png';
+                case 5:
+                case 6:
+                case 7:
+                case 8:
+                case 9: return 'https://cdn.discordapp.com/attachments/698616506862272602/769643255964893224/7_heads.png';
+            }
+        }
+        return this.monster.GetImageUrl();
     }
 
     public GetMonsterAttackDescription() {
