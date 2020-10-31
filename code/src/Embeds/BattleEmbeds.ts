@@ -110,7 +110,7 @@ export default class BattleEmbeds {
 
                 if (monster.GetId() == '7e476ee1-c32a-426b-b278-a03d6f85f164') {
                     const missing = Math.ceil(monster.GetHealth() / 1000) - Math.ceil(battle.GetCurrentMonsterHealth() / 1000);
-                    const heads = Math.max(2 + missing, 7);
+                    const heads = Math.min(2 + missing, 7);
                     attackDescription = attackDescription.replaceAll('\\[heads\\]', heads.toString());
                 }
 
