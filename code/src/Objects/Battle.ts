@@ -86,7 +86,7 @@ export default class Battle {
                 case 1: return 'https://cdn.discordapp.com/attachments/698616506862272602/769643221142863904/3_heads.png';
                 case 2: return 'https://cdn.discordapp.com/attachments/698616506862272602/769643229779853332/4_heads.png';
                 case 3: return 'https://cdn.discordapp.com/attachments/698616506862272602/769643237874860113/5_heads.png';
-                case 4: return 'https://cdn.discordapp.com/attachments/698616506862272602/769643237874860113/6_heads.png';
+                case 4: return 'https://cdn.discordapp.com/attachments/698616506862272602/769643247000748072/6_heads.png';
                 case 5:
                 case 6:
                 case 7:
