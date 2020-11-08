@@ -84,9 +84,9 @@ export default class Character {
     public static async GET_LOW_HEALTH_LIST() {
         const list = await CharacterModel.query()
             .join('players', 'characters.id', '=', 'players.character_id')
-            .select('name', 'health', 'max_health', 'discord_name')
+            .select(CharacterModel.raw('name, health, max_health, discord_name, (health::decimal/max_health::decimal)*100 as percentage'))
             .whereRaw('??<??', ['health', 'max_health'])
-            .orderBy('health')
+            .orderBy('percentage')
             .limit(10);
 
         return list;

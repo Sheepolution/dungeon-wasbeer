@@ -257,7 +257,7 @@ export default class CharacterEmbeds {
         var listString = '';
 
         for (const item of list) {
-            listString += `Health: ${item.health}/${item.max_health} - ${item.name} (${item.discord_name})\n`;
+            listString += `Health: ${Math.ceil(item.percentage)}% (${item.health}/${item.max_health}) - ${item.name} (${item.discord_name})\n`;
         }
 
         embed.setDescription(listString);
