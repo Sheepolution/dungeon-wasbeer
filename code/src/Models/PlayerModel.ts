@@ -4,6 +4,7 @@ import PlayerCardModel from './PlayerCardModel';
 import { Utils } from '../Utils/Utils';
 import CharacterModel from './CharacterModel';
 import Character from '../Objects/Character';
+import { ShoeState } from '../Enums/ShoeState';
 
 const { Model } = require('objection');
 
@@ -43,7 +44,8 @@ export default class PlayerModel extends Model {
                 card_pieces: 0,
                 message_points: 0,
                 discord_name: discordDisplayName,
-                character_id: null
+                character_id: null,
+                shoe_state: ShoeState.Emptied,
             })
 
         return player;
@@ -70,5 +72,15 @@ export default class PlayerModel extends Model {
         const character = new Character(player);
         character.ApplyModel(await this.$relatedQuery('characters'));
         return character;
+    }
+
+    public GetShoeState() {
+        switch (this.shoe_state) {
+            case '00': return ShoeState.Empty;
+            case '01': return ShoeState.Set;
+            case '10': return ShoeState.Filled;
+            case '11': return ShoeState.Emptied;
+            default: return ShoeState.Empty;
+        }
     }
 }

@@ -23,4 +23,6 @@ export enum LogType {
     PieceNothing = 'PieceNothing',
     PieceLost = 'PieceLost',
     PieceLostAll = 'PieceLostAll',
+    ShoeSet = 'ShoeSet',
+    ShoeEmptied = 'ShoeEmptied',
 }

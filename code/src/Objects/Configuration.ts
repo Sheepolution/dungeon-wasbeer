@@ -53,6 +53,10 @@ export default class Configuration {
         return this.value
     }
 
+    public Is(value:string) {
+        return this.value == value;
+    }
+
     public GetValueAsBoolean() {
         return !(this.value == null || this.value == 'false' || this.value == '0');
     }
@@ -61,9 +65,9 @@ export default class Configuration {
         return parseInt(this.value);
     }
 
-    public SetValue(value:any) {
+    public async SetValue(value:any) {
         this.value = value;
-        this.UPDATE({
+        await this.UPDATE({
             value: this.value
         })
     }

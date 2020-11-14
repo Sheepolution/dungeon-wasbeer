@@ -8,6 +8,7 @@ import SettingsConstants from '../Constants/SettingsConstants';
 import BattleHandler from './BattleHandler';
 import CharacterHandler from './CharacterHandler';
 import PuzzleHandler from './PuzzleHandler';
+import ShoeHandler from './ShoeHandler';
 
 export default class CommandHandler {
 
@@ -34,6 +35,8 @@ export default class CommandHandler {
             if (await TradeHandler.OnCommand(messageInfo, player, command, content)) {
                 return;
             } else if (await PlayerCardHandler.OnCommand(messageInfo, player, command, args)) {
+                return;
+            } else if (await ShoeHandler.OnCommand(messageInfo, player, command)) {
                 return;
             }
         } else if (messageInfo.channel.id == SettingsConstants.DND_CHANNEL_ID) {

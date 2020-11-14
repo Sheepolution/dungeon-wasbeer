@@ -6,6 +6,7 @@ import { ClassType } from '../Enums/ClassType';
 import { Redis } from '../Providers/Redis';
 import RedisConstants from '../Constants/RedisConstants';
 import SettingsConstants from '../Constants/SettingsConstants';
+import { ShoeState } from '../Enums/ShoeState';
 
 export default class Player {
 
@@ -20,6 +21,17 @@ export default class Player {
     private lastActiveDate:string;
     private discordName:string;
     private character?:Character;
+    private shoeState:ShoeState;
+
+    public static async UPDATE_SHOES() {
+        await PlayerModel.query()
+            .whereNot('shoe_state', ShoeState.Set)
+            .patch({shoe_state: ShoeState.Empty});
+
+        await PlayerModel.query()
+            .where('shoe_state', ShoeState.Set)
+            .patch({shoe_state: ShoeState.Filled});
+    }
 
     public async GET(id:string, isUuid?:boolean) {
         var models:PlayerModel;
@@ -61,6 +73,7 @@ export default class Player {
         this.messagePoints = model.message_points;
         this.playerCards = await model.GetPlayerCards(this);
         this.cardPieces = model.card_pieces;
+        this.shoeState = model.GetShoeState();
 
         const character = await model.GetCharacter(this);
         if (character) {
@@ -97,6 +110,15 @@ export default class Player {
 
     public GetCards() {
         return this.playerCards;
+    }
+
+    public GetShoeState() {
+        return this.shoeState;
+    }
+
+    public async SetShoeState(shoeState:ShoeState) {
+        this.shoeState = shoeState;
+        await this.UPDATE({ shoe_state: this.shoeState });
     }
 
     public FindCard(name:string) {
