@@ -77,7 +77,7 @@ export default class ShoeHandler {
 
         const now = new Date();
         const hour = now.getHours();
-        const shoeState = player.GetShoeState();
+        var shoeState = player.GetShoeState();
 
         if (hour >= 8 || hour < 1) {
             if (hour < 18) {
@@ -86,6 +86,7 @@ export default class ShoeHandler {
                     await Player.UPDATE_SHOES();
                     PlayerManager.ResetPlayerCache();
                     player = <Player> await PlayerManager.GetPlayerById(player.GetId());
+                    shoeState = player.GetShoeState();
                 }
             }
 
