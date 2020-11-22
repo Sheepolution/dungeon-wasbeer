@@ -80,7 +80,7 @@ export default class ShoeHandler {
         var shoeState = player.GetShoeState();
 
         if (hour >= 8 || hour < 1) {
-            if (hour < 18) {
+            if (hour >= 8 && hour < 18) {
                 if (config?.Is(ShoeConfigState.Night)) {
                     await config?.SetValue(ShoeConfigShate.Day);
                     await Player.UPDATE_SHOES();
