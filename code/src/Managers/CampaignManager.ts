@@ -17,6 +17,7 @@ import { Utils } from '../Utils/Utils';
 import ConfigurationManager from './ConfigurationManager';
 import PuzzleService from '../Services/PuzzleService';
 import LogService from '../Services/LogService';
+import CharacterEmbeds from '../Embeds/CharacterEmbeds';
 const { transaction } = require('objection');
 
 export default class CampaignManager {
@@ -130,6 +131,23 @@ export default class CampaignManager {
         }
         await this.campaignObject.CompleteSession();
         await Utils.Sleep(3);
+        if (battle != null) {
+            if (battle.GetMonster().GetId() == 'e754c6e4-7760-4691-b9a5-85168fa6ccc2') {
+                await Utils.Sleep(5);
+                MessageService.SendMessageToDNDChannel('', CharacterEmbeds.GetStoryEmbed(`Na een heftig gevecht met de Kraken kwam Wout tot de ontdekking dat ze een kameraad hebben verloren.
+
+"Steens...? STEEEEEENS!!!"`, 'https://cdn.discordapp.com/attachments/694331679204180029/780229519767765022/unknown.png', 'https://cdn.discordapp.com/attachments/694331679204180029/780229547735252992/unknown.png'));
+                await Utils.Sleep(10);
+                MessageService.SendMessageToDNDChannel('', CharacterEmbeds.GetStoryEmbed(`"Heer Wout! Kalmeer jezelf!" zei Juul de god wizard king, die erg sterk is dankzij zijn kaart Queen en Chiel.
+"Er is straks alle tijd om de doden te rouwen. Voor nu moeten we focussen op het pad dat voor ons ligt."
+
+Guérard d'Aube knikt. "*Snif* Het eiland is een korte bootreis hier vandaan. We hebben onze reis bijna voltooid."
+
+Ruby Ratcoon probeert Steens nog te healen, maar tevergeefs.
+ `, 'https://cdn.discordapp.com/attachments/694331679204180029/780229666727788554/unknown.png'));
+                await Utils.Sleep(10);
+            }
+        }
         await this.StartNewSession(battle != null ? SessionType.Battle : SessionType.Puzzle);
     }
 

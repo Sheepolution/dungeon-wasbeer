@@ -573,6 +573,20 @@ Als je zeker weet dat je wilt stoppen met dit character, gebruik dan het command
         return embed;
     }
 
+    public static GetStoryEmbed(text:string, imageUrl:string, thumbnail?:string) {
+        const embed = new MessageEmbed()
+            .setColor(SettingsConstants.COLORS.DEFAULT)
+            .setTitle('Verhaal')
+            .setDescription(text)
+            .setImage(imageUrl);
+
+        if (thumbnail != null) {
+            embed.setThumbnail(thumbnail);
+        }
+
+        return embed;
+    }
+
     private static AddEquipmentToEmbed(embed:MessageEmbed, equipment:Array<Card>) {
         if (equipment.length == 0) {
             embed.addField('Leeg', 'Voeg equipment toe met `;equip [kaart]`.');
@@ -612,4 +626,5 @@ Als je zeker weet dat je wilt stoppen met dit character, gebruik dan het command
 
         embed.addField('Puzzels opgelost', await character.GetTotalPuzzlesSolved(), true);
     }
+
 }
