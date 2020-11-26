@@ -75,7 +75,7 @@ export default class CampaignManager {
             await battle.POST(monster);
             await campaign.POST(SessionType.Battle, battle.GetId());
             this.campaignObject = campaign;
-            CampaignManager.SendNewBattleMessage(monster);
+            CampaignManager.SendNewBattleMessage(monster, battle);
             return this.campaignObject;
         }
     }
@@ -84,20 +84,25 @@ export default class CampaignManager {
         MessageService.SendMessageToDNDChannel(PuzzleService.GetPuzzleIntro(puzzle), PuzzleEmbeds.GetSudokuEmbed(puzzle));
     }
 
-    public static async SendNewBattleMessage(monster:Monster) {
-        MessageService.SendMessageToDNDChannel(`Jullie vervolgen jullie reis ${[
-            'in het bos',
-            'door de bergen',
-            'langs de rivier',
-            'in een grot',
-            'langs de zee',
-            'over een brug',
-            'onder een brug',
-            'door een open veld',
-            'door een uitgestrekte vlakte',
-            'door een woestijnlandschap'
-        ].randomChoice()}. Plots komen jullie een ${monster.GetName()} tegen! Vecht tegen het monster met \`;vecht\`.`,
-        MonsterEmbeds.GetMonsterEmbed(monster));
+    public static async SendNewBattleMessage(monster:Monster, battle:Battle) {
+        if (battle.GetMonster().GetId() == 'dd27c551-3f2f-4c82-9c60-17bcc45a0879') {
+            MessageService.SendMessageToDNDChannel(`Jullie vervolgen jullie reis richting de berg. Plots komen jullie een ${monster.GetName()} tegen! Vecht tegen het monster met \`;vecht\`.`,
+                MonsterEmbeds.GetMonsterEmbed(monster));
+        } else {
+            MessageService.SendMessageToDNDChannel(`Jullie vervolgen jullie reis ${[
+                'in het bos',
+                'door de bergen',
+                'langs de rivier',
+                'in een grot',
+                'langs de zee',
+                'over een brug',
+                'onder een brug',
+                'door een open veld',
+                'door een uitgestrekte vlakte',
+                'door een woestijnlandschap'
+            ].randomChoice()}. Plots komen jullie een ${monster.GetName()} tegen! Vecht tegen het monster met \`;vecht\`.`,
+            MonsterEmbeds.GetMonsterEmbed(monster));
+        }
     }
 
     public static GetBattle() {
@@ -131,21 +136,21 @@ export default class CampaignManager {
         }
         await this.campaignObject.CompleteSession();
         await Utils.Sleep(3);
-        if (battle != null) {
-            if (battle.GetMonster().GetId() == 'e754c6e4-7760-4691-b9a5-85168fa6ccc2') {
-                await Utils.Sleep(5);
-                MessageService.SendMessageToDNDChannel('', CharacterEmbeds.GetStoryEmbed(`Na een heftig gevecht met de Kraken kwam Wout tot de ontdekking dat ze een kameraad hebben verloren.
-
-"Steens...? STEEEEEENS!!!"`, 'https://cdn.discordapp.com/attachments/694331679204180029/780229519767765022/unknown.png', 'https://cdn.discordapp.com/attachments/694331679204180029/780229547735252992/unknown.png'));
-                await Utils.Sleep(10);
-                MessageService.SendMessageToDNDChannel('', CharacterEmbeds.GetStoryEmbed(`"Heer Wout! Kalmeer jezelf!" zei Juul de god wizard king, die erg sterk is dankzij zijn kaart Queen en Chiel.
-"Er is straks alle tijd om de doden te rouwen. Voor nu moeten we focussen op het pad dat voor ons ligt."
-
-Guérard d'Aube knikt. "*Snif* Het eiland is een korte bootreis hier vandaan. We hebben onze reis bijna voltooid."
-
-Ruby Ratcoon probeert Steens nog te healen, maar tevergeefs.
- `, 'https://cdn.discordapp.com/attachments/694331679204180029/780229666727788554/unknown.png'));
-                await Utils.Sleep(10);
+        if (battle == null) {
+            if (this.previousBattle.GetBattle().GetMonster().GetId() == 'b23400a5-e9aa-4228-bcc4-1e1a83dede10') {
+                await Utils.Sleep(15);
+                MessageService.SendMessageToDNDChannel('', CharacterEmbeds.GetStoryEmbed(`Met de Dragon Turtle verslagen vervolgt de party hun reis naar Draak Eiland.
+"Land in zicht!" roept Wes de Bard.`, 'https://cdn.discordapp.com/attachments/694331679204180029/780832167437533224/turtle_1.png'));
+                await Utils.Sleep(15);
+                MessageService.SendMessageToDNDChannel('', CharacterEmbeds.GetStoryEmbed(`"Eindelijk zijn we er. Nu hoeven we alleen nog maar te klimmen," zegt Dolfenix, die vol bewondering naar de berg staart.
+"Maar wat is dat?" vraagt Zuster Wasbeer, die naar de top van de berg wijst. "Is het een vogel? Is het een pixie?"`, 'https://cdn.discordapp.com/attachments/694331679204180029/781264013471645696/draak_eiland_aankomst.png'));
+                await Utils.Sleep(15);
+                MessageService.SendMessageToDNDChannel('', CharacterEmbeds.GetStoryEmbed(`Ineens maakt het wezen een snelle duik naar beneden.
+"Nee... dat is het niet! Het is een draak!" schreeuwt Juul de God Wizard King.
+"Ten aanval!" roept Heer Wout.
+"Ten aanval!" piept Noob the First hem na.
+Schapolo de Vlammende Wol houdt zijn vlammende zwaard stevig vast. "Houd vol iedereen. Na dit monster is onze quest voltooid!"`, 'https://cdn.discordapp.com/attachments/694331679204180029/781202857852534784/ancient_red_dragon_1_blur.png'));
+                await Utils.Sleep(15);
             }
         }
         await this.StartNewSession(battle != null ? SessionType.Battle : SessionType.Puzzle);
