@@ -85,7 +85,7 @@ export default class CampaignManager {
     }
 
     public static async SendNewBattleMessage(monster:Monster, battle:Battle) {
-        if (battle.GetMonster().GetId() == 'dd27c551-3f2f-4c82-9c60-17bcc45a0879') {
+        if (battle.GetMonster().GetId() == '16afcb5c-7ff7-480c-ad9d-005fe50856d3') {
             MessageService.SendMessageToDNDChannel(`Jullie vervolgen jullie reis richting de berg. Plots komen jullie een ${monster.GetName()} tegen! Vecht tegen het monster met \`;vecht\`.`,
                 MonsterEmbeds.GetMonsterEmbed(monster));
         } else {
@@ -137,7 +137,7 @@ export default class CampaignManager {
         await this.campaignObject.CompleteSession();
         await Utils.Sleep(3);
         if (battle == null) {
-            if (this.previousBattle.GetBattle().GetMonster().GetId() == 'b23400a5-e9aa-4228-bcc4-1e1a83dede10') {
+            if (this.previousBattle.GetBattle().GetMonster().GetId() == '6fa41432-5f42-4bb7-a9d5-c74e7b4333b3') {
                 await Utils.Sleep(15);
                 MessageService.SendMessageToDNDChannel('', CharacterEmbeds.GetStoryEmbed(`Met de Dragon Turtle verslagen vervolgt de party hun reis naar Draak Eiland.
 "Land in zicht!" roept Wes de Bard.`, 'https://cdn.discordapp.com/attachments/694331679204180029/780832167437533224/turtle_1.png'));
