@@ -110,11 +110,11 @@ export default class ShoeHandler {
                 if (cardModifyResult.result) {
                     var cardMessage = await MessageService.ReplyMessage(messageInfo, 'Je kijkt in je schoentje... je hebt van Sinterklaas een nieuwe kaart gekregen!', undefined, true, CardEmbeds.GetCardEmbed(playerCard.GetCard(), playerCard.GetAmount()));
                     CardManager.OnCardMessage(cardMessage, playerCard);
-                    LogService.Log(player, playerCard.GetCardId(), LogType.CardReceivedPieces, `${player.GetDiscordName()} heeft de kaart '${playerCard.GetCard().GetName()}' door kaartstukjes.`);
+                    LogService.Log(player, playerCard.GetCardId(), LogType.CardReceivedShoe, `${player.GetDiscordName()} heeft de kaart '${playerCard.GetCard().GetName()}' door zijn schoen te legen.`);
                 } else {
                     var cardMessage = await MessageService.ReplyMessage(messageInfo, 'Je kijkt in je schoentje... je hebt van Sinterklaas een extra van deze kaart gekregen!', undefined, true, CardEmbeds.GetCardEmbed(playerCard.GetCard(), playerCard.GetAmount()));
                     CardManager.OnCardMessage(cardMessage, playerCard);
-                    LogService.Log(player, playerCard.GetCardId(), LogType.CardReceivedPieces, `${player.GetDiscordName()} heeft de kaart '${playerCard.GetCard().GetName()}' door kaartstukjes, en heeft daar nu ${playerCard.GetAmount()} van.`);
+                    LogService.Log(player, playerCard.GetCardId(), LogType.CardReceivedShoe, `${player.GetDiscordName()} heeft de kaart '${playerCard.GetCard().GetName()}' door zijn schoen te legen, en heeft daar nu ${playerCard.GetAmount()} van.`);
                 }
             }
         } else if (hour < 8) {
