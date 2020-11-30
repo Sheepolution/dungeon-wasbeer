@@ -440,6 +440,10 @@ export default class Character {
         await Redis.set(Character.battleCooldownPrefix + this.GetId(), '1', 'EX', Utils.GetMinutesInSeconds(this.GetMaxBattleCooldown()));
     }
 
+    public async RemoveBattleCooldown() {
+        await Redis.del(Character.battleCooldownPrefix + this.GetId());
+    }
+
     public async SetSleepCooldown() {
         await Redis.set(Character.battleCooldownPrefix + this.GetId(), '1', 'EX', Utils.GetMinutesInSeconds(this.GetMaxBattleCooldown() * 2));
     }

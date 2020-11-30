@@ -18,6 +18,7 @@ export default class BattleHandler {
 
     private static waitList:Array<IMessageInfo> = new Array<IMessageInfo>();
     private static inBattle:boolean = false;
+    private static inBattleTimeout:any;
 
     public static async OnCommand(messageInfo:IMessageInfo, player:Player, command:string) {
         switch (command) {
@@ -93,6 +94,18 @@ export default class BattleHandler {
         character.SetInBattle(true);
         BattleHandler.inBattle = true;
 
+        if (this.inBattleTimeout != null) {
+            clearTimeout(this.inBattleTimeout);
+        }
+
+        this.inBattleTimeout = setTimeout(() => {
+            BattleHandler.inBattle = false
+            this.waitList = [];
+            this.inBattleTimeout = null;
+            character.SetInBattle(false);
+            character.RemoveBattleCooldown();
+        }, Utils.GetMinutesInMiliSeconds(.5));
+
         // Start attack
         const message = await this.SendBattleEmbed(messageInfo, battle, character);
         await Utils.Sleep(3);
@@ -138,6 +151,12 @@ export default class BattleHandler {
         const damage = await this.ResolveAttackResult(messageInfo, message, battle, character, playerWon, playerWon ? character.GetAttackStrength(): battle.GetMonsterAttackStrength(), roll1, roll2 || 0, roll3, roll4 || 0);
         await this.UpdateBattleEmbed(message, battle, character, roll1, roll2, roll3, roll4, playerWon, damage, false, inspired);
         await character.StopBeingInspired();
+
+        if (this.inBattleTimeout != null) {
+            clearTimeout(this.inBattleTimeout);
+            this.inBattleTimeout = null;
+        }
+
         if (battle.IsMonsterDead()) {
             return;
         }
@@ -161,12 +180,22 @@ export default class BattleHandler {
         const damage = await this.ResolveAttackResult(messageInfo, message, battle, character, true, character.GetAttackStrength(true), roll1, roll2, roll3, 0);
         await this.UpdateBattleEmbed(message, battle, character, roll1, roll2, roll3, 0, true, damage, true, inspired);
         await character.StopBeingInspired();
+
+        if (this.inBattleTimeout != null) {
+            clearTimeout(this.inBattleTimeout);
+            this.inBattleTimeout = null;
+        }
     }
 
     private static async OnMonsterCrit(messageInfo:IMessageInfo, message:Message, battle:Battle, character:Character, roll1:number, roll2:number = 0, roll3:number = 0, inspired:boolean = false) {
         const damage = await this.ResolveAttackResult(messageInfo, message, battle, character, false, battle.GetMonsterAttackStrength(true), roll1, roll2, roll3, 0);
         await this.UpdateBattleEmbed(message, battle, character, roll1, roll2, roll3, 0, false, damage, true, inspired);
         await character.StopBeingInspired();
+
+        if (this.inBattleTimeout != null) {
+            clearTimeout(this.inBattleTimeout);
+            this.inBattleTimeout = null;
+        }
     }
 
     private static async ResolveAttackResult(messageInfo:IMessageInfo, message:Message, battle:Battle, character:Character, playerWon:boolean, damage:number, roll1:number, roll2:number, roll3:number, roll4:number) {
