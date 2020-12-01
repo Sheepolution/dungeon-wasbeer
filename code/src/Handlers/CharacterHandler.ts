@@ -436,7 +436,7 @@ export default class CharacterHandler {
 
         await character.SetInspireCooldown();
         await receiver.BecomeInspired();
-        await MessageService.ReplyMessage(messageInfo, `${character.GetInspireDescription().replaceAll('\\[naam\\]', selfInspire ? 'jezelf' : receiver.GetName())} ✨. Al ${selfInspire ? 'je' : 'hun'} stats krijgen een +1 boost tot ${selfInspire ? 'je' : 'hun'} volgende gevecht.`, true);
+        await MessageService.ReplyMessage(messageInfo, `${character.GetInspireDescription().replaceAll('\\[naam\\]', selfInspire ? 'jezelf' : receiver.GetName())} ✨. Al ${selfInspire ? 'je' : 'hun'} stats krijgen een 10% boost tot ${selfInspire ? 'je' : 'hun'} volgende gevecht.`, true);
         await LogService.Log(character.GetPlayer(), receiver.GetId(), LogType.Inspire, `${character.GetName()} heeft ${character.GetId() == receiver.GetId() ? 'zichzelf' : `${receiver.GetName()}`} geïnspireerd.`);
 
         if (!selfInspire) {
