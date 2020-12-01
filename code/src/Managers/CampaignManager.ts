@@ -85,8 +85,8 @@ export default class CampaignManager {
     }
 
     public static async SendNewBattleMessage(monster:Monster, battle:Battle) {
-        if (battle.GetMonster().GetId() == '16afcb5c-7ff7-480c-ad9d-005fe50856d3') {
-            MessageService.SendMessageToDNDChannel(`Jullie vervolgen jullie reis richting de berg. Plots komen jullie een ${monster.GetName()} tegen! Vecht tegen het monster met \`;vecht\`.`,
+        if (battle.GetMonster().GetId() == '20110b21-0a15-48f8-83a9-b4f804235355') {
+            MessageService.SendMessageToDNDChannel(`Jullie vervolgen jullie reis richting de schatkist. Plots komen jullie een ${monster.GetName()} tegen! Vecht tegen het monster met \`;vecht\`. Dit is het laatste gevecht!`,
                 MonsterEmbeds.GetMonsterEmbed(monster));
         } else {
             MessageService.SendMessageToDNDChannel(`Jullie vervolgen jullie reis ${[
@@ -137,20 +137,40 @@ export default class CampaignManager {
         await this.campaignObject.CompleteSession();
         await Utils.Sleep(3);
         if (battle == null) {
-            if (this.previousBattle.GetBattle().GetMonster().GetId() == '6fa41432-5f42-4bb7-a9d5-c74e7b4333b3') {
-                await Utils.Sleep(15);
-                MessageService.SendMessageToDNDChannel('', CharacterEmbeds.GetStoryEmbed(`Met de Dragon Turtle verslagen vervolgt de party hun reis naar Draak Eiland.
-"Land in zicht!" roept Wes de Bard.`, 'https://cdn.discordapp.com/attachments/694331679204180029/780832167437533224/turtle_1.png'));
-                await Utils.Sleep(15);
-                MessageService.SendMessageToDNDChannel('', CharacterEmbeds.GetStoryEmbed(`"Eindelijk zijn we er. Nu hoeven we alleen nog maar te klimmen," zegt Dolfenix, die vol bewondering naar de berg staart.
-"Maar wat is dat?" vraagt Zuster Wasbeer, die naar de top van de berg wijst. "Is het een vogel? Is het een pixie?"`, 'https://cdn.discordapp.com/attachments/694331679204180029/781264013471645696/draak_eiland_aankomst.png'));
-                await Utils.Sleep(15);
-                MessageService.SendMessageToDNDChannel('', CharacterEmbeds.GetStoryEmbed(`Ineens maakt het wezen een snelle duik naar beneden.
-"Nee... dat is het niet! Het is een draak!" schreeuwt Juul de God Wizard King.
-"Ten aanval!" roept Heer Wout.
-"Ten aanval!" piept Noob the First hem na.
-Schapolo de Vlammende Wol houdt zijn vlammende zwaard stevig vast. "Houd vol iedereen. Na dit monster is onze quest voltooid!"`, 'https://cdn.discordapp.com/attachments/694331679204180029/781202857852534784/ancient_red_dragon_1_blur.png'));
-                await Utils.Sleep(15);
+            if (this.previousBattle.GetBattle().GetMonster().GetId() == '16afcb5c-7ff7-480c-ad9d-005fe50856d3') {
+                await Utils.Sleep(40);
+                MessageService.SendMessageToDNDChannel('', CharacterEmbeds.GetStoryEmbed('Het was een lang en zwaar gevecht. De party waren al vele monsters tegengekomen, maar de Ancient Red Dragon was de sterkste van allemaal. Maar niet sterk genoeg! De party wist de draak te verslaan, en begint met hun klim naar de top.', 'https://cdn.discordapp.com/attachments/694331679204180029/783402540632506398/ancient_dragon_defeated.png'));
+                await Utils.Sleep(40);
+                MessageService.SendMessageToDNDChannel('', CharacterEmbeds.GetStoryEmbed(`"Zijn we er al bijna?" vraagt Dixie.
+"Bijna," zegt de rest van de party in koor.
+"Ja maar hoelang moeten we dan nog?" vraagt Dixie.
+"Nog even," zegt de rest van de party, nogmaals in koor.
+
+De klim lijkt een oneindigheid te duren. Dit is waar ze maanden voor hebben gereisd en gevochten. Waar ze breinbrekers voor hebben opgelost, en hun beste vrienden voor hebben verloren. De party kan niet wachten om hun quest te voltooien.`, 'https://cdn.discordapp.com/attachments/694331679204180029/783402575646425108/the_climb.png'));
+                await Utils.Sleep(40);
+                MessageService.SendMessageToDNDChannel('', CharacterEmbeds.GetStoryEmbed(`Maar uiteindelijk bereiken ze dan toch echt de top.
+"Moet ik mijn bril schoonpoetsen, of zien jullie dit ook?" vraagt Healing Hector.
+Skaldsen the Virtuoso knikt enthousiast. "Het heeft 600 inspires gekost, maar we hebben 'm eindelijk!"
+"De legende was dus waar! Ik wist het!" zegt Wes de Bard.
+Mora de cleric staart vol bewondering. "Wat is ie mooi!"`, 'https://cdn.discordapp.com/attachments/694331679204180029/783402614464970822/reaching_the_top.png'));
+                await Utils.Sleep(40);
+                MessageService.SendMessageToDNDChannel('', CharacterEmbeds.GetStoryEmbed(`De party staat recht tegenover de Schatkist van Draakeiland.
+"Na al die tijd! We hebben 'm!" zegt Juul de Wizard.
+"Wat een gigantisch ding!" zegt Heer Wout.
+"..." zwijgt Gerrit, zoals hij al heel de campaign heeft gedaan.
+"En goud! Niemand zei iets over het goud! We zijn rijk!" zegt Ruby Ratcoon.
+"Iedereen... onze quest is voorbij!", roept Schapolo de Vlammende Wol naar de party.`, 'https://cdn.discordapp.com/attachments/694331679204180029/783402639786246206/omg_a_chest.png'));
+                await Utils.Sleep(40);
+                MessageService.SendMessageToDNDChannel('', CharacterEmbeds.GetStoryEmbed(`Maar ineens komt er een gouden staart te voorschijn, en vervolgens een gouden kop.
+De party maakt een gezamenlijk "oof" geluid.
+De gouden hoop staat op. Het blijkt een Ancient Gold Dragon te zijn!
+
+"Sorry, wat zei je, Schapolo?" vraagt Juul de Wizard.
+"Ja, kan je dat misschien herhalen?" vraagt Heer Wout.
+"..." zwijgt Gerrit.
+"Maar... mijn goud..." snikt Ruby Ratcoon.
+"Ah-um. Correctie! Na dit monster is onze quest echt voltooid! TEN AANVAL!" roept Schapolo de Vlammende Wol.`, 'https://cdn.discordapp.com/attachments/694331679204180029/783402663340671036/omg_a_dragon.png'));
+                await Utils.Sleep(40);
             }
         }
         await this.StartNewSession(battle != null ? SessionType.Battle : SessionType.Puzzle);
