@@ -520,11 +520,10 @@ export default class CharacterEmbeds {
         return embed;
     }
 
-    public static async GetTopFastestPuzzlesSolvedEmbed() {
+    public static async GetTopFastestPuzzlesSolvedEmbed(all:boolean) {
         const list:any = await Puzzle.GET_TOP_FASTEST_SOLVED_LIST();
         const amount = Math.min(25, list.length);
         const embed = new MessageEmbed()
-            .setTitle(`Top ${amount} puzzels het snelst opgelost`);
 
         var listString = '';
 
@@ -535,10 +534,23 @@ export default class CharacterEmbeds {
 
         list.sort((a:any, b:any) => a.duration - b.duration);
 
+        const seenNames:any = {};
+
+        var count = 0;
         for (let i = 0; i < amount; i++) {
             const item = list[i];
+            if (!all && seenNames[item.name + item.discord_name]) {
+                continue;
+            }
+
+            count += 1;
+
+            seenNames[item.name + item.discord_name] = true;
+
             listString += `${i+1}. ${Utils.GetSecondsInMinutesAndSeconds(item.duration)} - ${item.name} (${item.discord_name})\n`;
         }
+
+        embed.setTitle(`Top ${count} puzzels het snelst opgelost`);
 
         embed.setDescription(listString);
 

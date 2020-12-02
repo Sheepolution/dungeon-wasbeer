@@ -736,6 +736,7 @@ export default class CharacterHandler {
             case 'snelste puzzle':
             case 'snelste puzzles':
             case 'snelste puzzles solved':
+            case 'alle snelste puzzles':
                 ignoreTopListType = true;
                 break;
         }
@@ -851,7 +852,10 @@ export default class CharacterHandler {
             case 'snelste puzzle':
             case 'snelste puzzles':
             case 'snelste puzzles solved':
-                MessageService.ReplyEmbed(messageInfo, await CharacterEmbeds.GetTopFastestPuzzlesSolvedEmbed());
+                MessageService.ReplyEmbed(messageInfo, await CharacterEmbeds.GetTopFastestPuzzlesSolvedEmbed(false));
+                break;
+            case 'alle snelste puzzles':
+                MessageService.ReplyEmbed(messageInfo, await CharacterEmbeds.GetTopFastestPuzzlesSolvedEmbed(true));
                 break;
             case 'cards':
             case 'kaart':
