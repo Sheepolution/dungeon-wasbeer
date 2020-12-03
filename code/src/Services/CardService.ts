@@ -120,6 +120,18 @@ export default class CardService {
                 return ImageConstants.ICONS.DRIVE;
             case 'Legendarisch':
                 return ImageConstants.ICONS.LEGENDARY;
+            case 'Sport':
+                return ImageConstants.ICONS.SPORT;
+            case 'Opgezet':
+                return ImageConstants.ICONS.TAXIDERMIZED;
+            case 'Nachtmerrie':
+                return ImageConstants.ICONS.NIGHTMARE;
+            case 'Albino':
+                return ImageConstants.ICONS.ALBINO;
+            case 'Dungeons en Wasberen':
+                return ImageConstants.ICONS.DNW;
+            case 'Kunst':
+                return ImageConstants.ICONS.ART;
         }
     }
 
@@ -155,6 +167,18 @@ export default class CardService {
                 return EmojiConstants.CARD_CATEGORIES.DRIVE;
             case 'Legendarisch':
                 return EmojiConstants.CARD_CATEGORIES.LEGENDARY;
+            case 'Sport':
+                return EmojiConstants.CARD_CATEGORIES.SPORT;
+            case 'Opgezet':
+                return EmojiConstants.CARD_CATEGORIES.TAXIDERMIZED;
+            case 'Nachtmerrie':
+                return EmojiConstants.CARD_CATEGORIES.NIGHTMARE;
+            case 'Albino':
+                return EmojiConstants.CARD_CATEGORIES.ALBINO;
+            case 'Dungeons en Wasberen':
+                return EmojiConstants.CARD_CATEGORIES.DNW;
+            case 'Kunst':
+                return EmojiConstants.CARD_CATEGORIES.ART;
         }
     }
 }

@@ -16,6 +16,12 @@ export default class ImageConstants {
         DRUNK: 'https://cdn.discordapp.com/attachments/694331679204180029/713829545081438259/DrunkSmoll.png',
         DRIVE: 'https://cdn.discordapp.com/attachments/694331679204180029/713832518641516634/Voertuigsmoll.png',
         LEGENDARY: 'https://cdn.discordapp.com/attachments/694331679204180029/741667976079605901/legendary.png',
+        SPORT: 'https://cdn.discordapp.com/attachments/694331679204180029/783763378619023360/SportSmall.png',
+        TAXIDERMIZED: 'https://cdn.discordapp.com/attachments/694331679204180029/783760861248225330/Opgezetsmall.png',
+        NIGHTMARE: 'https://cdn.discordapp.com/attachments/694331679204180029/783758122644799498/NachtmerrieSmall.png',
+        ALBINO: 'https://cdn.discordapp.com/attachments/694331679204180029/783754648539365376/AlbinoSmall.png',
+        DNW: 'https://cdn.discordapp.com/attachments/694331679204180029/783754515928317992/DnW.png',
+        ART: 'https://cdn.discordapp.com/attachments/694331679204180029/783751086715830362/Kunstsmall.png',
     }
 
     public static readonly SOLVED = 'https://cdn.discordapp.com/attachments/694331679204180029/708732190485118986/solved.gif';

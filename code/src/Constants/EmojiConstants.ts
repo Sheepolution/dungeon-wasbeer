@@ -26,6 +26,12 @@ export default class EmojiConstants {
         DRUNK: '<:drunk:713837296952016898>',
         DRIVE: '<:voertuigen:713837297677631548>',
         LEGENDARY: '<:legendary:741666848805748776>',
+        SPORT: '<:sport:784174386630492211>',
+        TAXIDERMIZED: '<:opgezet:784174386601001010>',
+        NIGHTMARE: '<:nachtmerrie:784174386318934047>',
+        ALBINO: '<:albino:784174386486968320>',
+        DNW: '<:dnw:784174386293768263>',
+        ART: '<:kunst:784174386571509763>',
     }
 
     public static readonly STATUS = {
