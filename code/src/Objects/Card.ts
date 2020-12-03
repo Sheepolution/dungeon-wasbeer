@@ -31,7 +31,7 @@ export default class Card {
     }
 
     public async FIND_BY_NAME(name:string) {
-        const models:CardModel = await CardModel.query().where('name', name);
+        const models:CardModel = await CardModel.query().like('name', 'like', `%${name}%`);
 
         if (models.length == 0) {
             return false;
