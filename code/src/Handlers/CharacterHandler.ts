@@ -270,7 +270,7 @@ export default class CharacterHandler {
         if (battle != null) {
             const health = battle.GetCurrentMonsterHealth();
             if (health < 250) {
-                MessageService.ReplyMessage(messageInfo, 'Sorry jongens ik ga ff Chinees halen met Tante Wasbeer. Kom maandagavond om 21:00 maar weer terug.', false);
+                MessageService.ReplyMessage(messageInfo, 'Sorry jongens ik ben ff Chinees halen met Tante Wasbeer. Kom maandagavond om 21:00 maar weer terug.', false);
                 return;
             }
         }
@@ -377,6 +377,15 @@ export default class CharacterHandler {
             return;
         }
 
+        const battle = CampaignManager.GetBattle();
+        if (battle != null) {
+            const health = battle.GetCurrentMonsterHealth();
+            if (health < 250) {
+                MessageService.ReplyMessage(messageInfo, 'Sorry jongens ik ben ff Chinees halen met Tante Wasbeer. Kom maandagavond om 21:00 maar weer terug.', false);
+                return;
+            }
+        }
+
         const cooldown = await character.GetBattleCooldown();
 
         if (cooldown > 0) {
@@ -412,7 +421,7 @@ export default class CharacterHandler {
         if (battle != null) {
             const health = battle.GetCurrentMonsterHealth();
             if (health < 250) {
-                MessageService.ReplyMessage(messageInfo, 'Sorry jongens ik ga ff Chinees halen met Tante Wasbeer. Kom maandagavond om 21:00 maar weer terug.', false);
+                MessageService.ReplyMessage(messageInfo, 'Sorry jongens ik ben ff Chinees halen met Tante Wasbeer. Kom maandagavond om 21:00 maar weer terug.', false);
                 return;
             }
         }
