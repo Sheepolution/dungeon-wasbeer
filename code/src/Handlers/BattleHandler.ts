@@ -61,7 +61,7 @@ export default class BattleHandler {
 
         const health = battle.GetCurrentMonsterHealth();
         if (health < 250) {
-            MessageService.ReplyMessage(messageInfo, 'Sorry jongens ik ga ff Chinees halen met Tante Wasbeer. Kom maandagavond om 20:00 maar weer terug.', false);
+            MessageService.ReplyMessage(messageInfo, 'Sorry jongens ik ga ff Chinees halen met Tante Wasbeer. Kom maandagavond om 21:00 maar weer terug.', false);
             return;
         }
 
