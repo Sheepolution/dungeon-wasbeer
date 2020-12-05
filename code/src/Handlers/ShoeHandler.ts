@@ -39,15 +39,17 @@ export default class ShoeHandler {
     }
 
     private static async OnSettingShoe(messageInfo:IMessageInfo, player:Player) {
-        const config = ConfigurationManager.GetConfigurationByName('shoe_state');
-        if (config?.Is('Off')) {
+        const sintConfig = ConfigurationManager.GetConfigurationByName('sinterklaas_state');
+        if (sintConfig?.Is('Off')) {
             return;
         }
 
-        if (config?.Is('Left')) {
+        if (sintConfig?.Is('Left')) {
             MessageService.ReplyMessage(messageInfo, 'Sinterwasbeer is terug richting Spanje. Tot volgend jaar!', undefined, true);
             return;
         }
+
+        const shoeConfig = ConfigurationManager.GetConfigurationByName('shoe_state');
 
         const now = new Date();
         const hour = now.getHours();
@@ -62,8 +64,8 @@ export default class ShoeHandler {
         }
 
         if (hour >= 18 || hour < 1) {
-            if (!config?.Is(ShoeConfigState.Night)) {
-                config?.SetValue(ShoeConfigShate.Night);
+            if (!shoeConfig?.Is(ShoeConfigState.Night)) {
+                shoeConfig?.SetValue(ShoeConfigShate.Night);
             }
             await player.SetShoeState(ShoeState.Set);
             await LogService.Log(player, player.GetId(), LogType.ShoeEmptied, `${player.GetDiscordName()} heeft hun schoentje geleegd.`);
@@ -76,10 +78,12 @@ export default class ShoeHandler {
     }
 
     private static async OnEmptyingShoe(messageInfo:IMessageInfo, player:Player) {
-        const config = ConfigurationManager.GetConfigurationByName('shoe_state');
-        if (config?.Is('Off')) {
+        const sintConfig = ConfigurationManager.GetConfigurationByName('sinterklaas_state');
+        if (sintConfig?.Is('Off')) {
             return;
         }
+
+        const shoeConfig = ConfigurationManager.GetConfigurationByName('shoe_state');
 
         const now = new Date();
         const hour = now.getHours();
@@ -87,8 +91,8 @@ export default class ShoeHandler {
 
         if (hour >= 8 || hour < 1) {
             if (hour >= 8 && hour < 18) {
-                if (config?.Is(ShoeConfigState.Night)) {
-                    await config?.SetValue(ShoeConfigShate.Day);
+                if (shoeConfig?.Is(ShoeConfigState.Night)) {
+                    await shoeConfig?.SetValue(ShoeConfigShate.Day);
                     await Player.UPDATE_SHOES();
                     PlayerManager.ResetPlayerCache();
                     player = <Player> await PlayerManager.GetPlayerById(player.GetId());
@@ -109,7 +113,7 @@ export default class ShoeHandler {
 
                 await player.SetShoeState(ShoeState.Emptied);
 
-                const left = config?.Is('Left')
+                const left = sintConfig?.Is('Left')
                 LogService.Log(player, player.GetId(), LogType.ShoeEmptied, `${player.GetDiscordName()} heeft hun schoentje geleegd.`);
 
                 for (let i = 0; i < (left ? 3 : 1); i++) {
@@ -119,15 +123,15 @@ export default class ShoeHandler {
 
                     if (cardModifyResult.result) {
                         var cardMessage = await MessageService.ReplyMessage(messageInfo, 'Je kijkt in je schoentje... je hebt van Sinterklaas een nieuwe kaart gekregen!', undefined, true, CardEmbeds.GetCardEmbed(playerCard.GetCard(), playerCard.GetAmount()));
-                        CardManager.OnCardMessage(cardMessage, playerCard);
-                        LogService.Log(player, playerCard.GetCardId(), LogType.CardReceivedShoe, `${player.GetDiscordName()} heeft de kaart '${playerCard.GetCard().GetName()}' door hun schoen te legen.`);
+                        await LogService.Log(player, playerCard.GetCardId(), LogType.CardReceivedShoe, `${player.GetDiscordName()} heeft de kaart '${playerCard.GetCard().GetName()}' door hun schoen te legen.`);
+                        await CardManager.OnCardMessage(cardMessage, playerCard);
                     } else {
                         var cardMessage = await MessageService.ReplyMessage(messageInfo, 'Je kijkt in je schoentje... je hebt van Sinterklaas een extra van deze kaart gekregen!', undefined, true, CardEmbeds.GetCardEmbed(playerCard.GetCard(), playerCard.GetAmount()));
-                        CardManager.OnCardMessage(cardMessage, playerCard);
-                        LogService.Log(player, playerCard.GetCardId(), LogType.CardReceivedShoe, `${player.GetDiscordName()} heeft de kaart '${playerCard.GetCard().GetName()}' door hun schoen te legen, en heeft daar nu ${playerCard.GetAmount()} van.`);
+                        await LogService.Log(player, playerCard.GetCardId(), LogType.CardReceivedShoe, `${player.GetDiscordName()} heeft de kaart '${playerCard.GetCard().GetName()}' door hun schoen te legen, en heeft daar nu ${playerCard.GetAmount()} van.`);
+                        await CardManager.OnCardMessage(cardMessage, playerCard);
                     }
 
-                    await Utils.Sleep(5)
+                    await Utils.Sleep(10)
                 }
             }
         } else if (hour < 8) {
