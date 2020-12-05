@@ -79,6 +79,7 @@ export default class BotManager {
         PlayerManager.ResetPlayerCache();
         CardManager.BuildCardList();
         MonsterManager.BuildMonsterList();
+        ConfigurationManager.BuildConfigurationList();
     }
 
     public static GetCardChannel() {
