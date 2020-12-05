@@ -11,6 +11,7 @@ import Player from '../Objects/Player';
 import PlayerCard from '../Objects/PlayerCard';
 import LogService from '../Services/LogService';
 import MessageService from '../Services/MessageService';
+import { Utils } from '../Utils/Utils';
 
 export default class ShoeHandler {
 
@@ -40,6 +41,11 @@ export default class ShoeHandler {
     private static async OnSettingShoe(messageInfo:IMessageInfo, player:Player) {
         const config = ConfigurationManager.GetConfigurationByName('shoe_state');
         if (config?.Is('Off')) {
+            return;
+        }
+
+        if (config?.Is('Left')) {
+            MessageService.ReplyMessage(messageInfo, 'Sinterwasbeer is terug richting Spanje. Tot volgend jaar!', undefined, true);
             return;
         }
 
@@ -100,21 +106,28 @@ export default class ShoeHandler {
                 MessageService.ReplyMessage(messageInfo, 'Sinterklaas moet nog langskomen joh! Nog even geduld.', false, true);
                 return;
             } else if (shoeState == ShoeState.Filled) {
+
                 await player.SetShoeState(ShoeState.Emptied);
+
+                const left = config?.Is('Left')
                 LogService.Log(player, player.GetId(), LogType.ShoeEmptied, `${player.GetDiscordName()} heeft hun schoentje geleegd.`);
 
-                const cardModifyResult = await CardManager.GivePlayerCard(player);
-                const playerCard = <PlayerCard>cardModifyResult.object;
-                messageInfo.channel = BotManager.GetCardChannel();
+                for (let i = 0; i < (left ? 3 : 1); i++) {
+                    const cardModifyResult = await CardManager.GivePlayerCard(player);
+                    const playerCard = <PlayerCard>cardModifyResult.object;
+                    messageInfo.channel = BotManager.GetCardChannel();
 
-                if (cardModifyResult.result) {
-                    var cardMessage = await MessageService.ReplyMessage(messageInfo, 'Je kijkt in je schoentje... je hebt van Sinterklaas een nieuwe kaart gekregen!', undefined, true, CardEmbeds.GetCardEmbed(playerCard.GetCard(), playerCard.GetAmount()));
-                    CardManager.OnCardMessage(cardMessage, playerCard);
-                    LogService.Log(player, playerCard.GetCardId(), LogType.CardReceivedShoe, `${player.GetDiscordName()} heeft de kaart '${playerCard.GetCard().GetName()}' door hun schoen te legen.`);
-                } else {
-                    var cardMessage = await MessageService.ReplyMessage(messageInfo, 'Je kijkt in je schoentje... je hebt van Sinterklaas een extra van deze kaart gekregen!', undefined, true, CardEmbeds.GetCardEmbed(playerCard.GetCard(), playerCard.GetAmount()));
-                    CardManager.OnCardMessage(cardMessage, playerCard);
-                    LogService.Log(player, playerCard.GetCardId(), LogType.CardReceivedShoe, `${player.GetDiscordName()} heeft de kaart '${playerCard.GetCard().GetName()}' door hun schoen te legen, en heeft daar nu ${playerCard.GetAmount()} van.`);
+                    if (cardModifyResult.result) {
+                        var cardMessage = await MessageService.ReplyMessage(messageInfo, 'Je kijkt in je schoentje... je hebt van Sinterklaas een nieuwe kaart gekregen!', undefined, true, CardEmbeds.GetCardEmbed(playerCard.GetCard(), playerCard.GetAmount()));
+                        CardManager.OnCardMessage(cardMessage, playerCard);
+                        LogService.Log(player, playerCard.GetCardId(), LogType.CardReceivedShoe, `${player.GetDiscordName()} heeft de kaart '${playerCard.GetCard().GetName()}' door hun schoen te legen.`);
+                    } else {
+                        var cardMessage = await MessageService.ReplyMessage(messageInfo, 'Je kijkt in je schoentje... je hebt van Sinterklaas een extra van deze kaart gekregen!', undefined, true, CardEmbeds.GetCardEmbed(playerCard.GetCard(), playerCard.GetAmount()));
+                        CardManager.OnCardMessage(cardMessage, playerCard);
+                        LogService.Log(player, playerCard.GetCardId(), LogType.CardReceivedShoe, `${player.GetDiscordName()} heeft de kaart '${playerCard.GetCard().GetName()}' door hun schoen te legen, en heeft daar nu ${playerCard.GetAmount()} van.`);
+                    }
+
+                    await Utils.Sleep(5)
                 }
             }
         } else if (hour < 8) {
