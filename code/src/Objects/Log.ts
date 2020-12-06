@@ -15,4 +15,31 @@ export default class Log {
         const inspires = await LogModel.query().where({player_id: character.GetPlayer().GetId(), type:LogType.Inspire}).count('id');
         return inspires[0].count || 0;
     }
+
+    public static async GET_TOP_INSPIRES_DONE() {
+        const list = await LogModel.query()
+            .where('type', 'Inspire')
+            .join('players', 'players.id', '=', 'logs.player_id')
+            .select('discord_name')
+            .groupBy('players.discord_name')
+            .count('logs.id as cnt')
+            .orderBy('cnt', 'desc')
+            .limit(10);
+
+        return list;
+    }
+
+    public static async GET_TOP_INSPIRES_GET() {
+        const list = await LogModel.query()
+            .where('type', 'Inspire')
+            .join('characters', 'characters.id', '=', 'logs.subject_id')
+            .join('players', 'players.id', '=', 'characters.player_id')
+            .select('name', 'discord_name')
+            .groupBy( 'characters.name', 'players.discord_name')
+            .count('logs.id as cnt')
+            .orderBy('cnt', 'desc')
+            .limit(10);
+
+        return list;
+    }
 }

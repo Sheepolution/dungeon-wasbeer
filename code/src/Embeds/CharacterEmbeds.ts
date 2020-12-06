@@ -11,6 +11,7 @@ import SettingsConstants from '../Constants/SettingsConstants';
 import { TopListType } from '../Enums/TopListType';
 import { Utils } from '../Utils/Utils';
 import { MessageEmbed } from 'discord.js';
+import Log from '../Objects/Log';
 
 export default class CharacterEmbeds {
 
@@ -561,6 +562,40 @@ export default class CharacterEmbeds {
         const list:any = await Character.GET_TOP_CARD_LIST();
         const embed = new MessageEmbed()
             .setTitle(`Top ${list.length} meeste unieke kaarten in bezit`);
+
+        var listString = '';
+
+        for (let i = 0; i < list.length; i++) {
+            const item = list[i];
+            listString += `${i+1}. ${item.cnt} - ${item.name} (${item.discord_name})\n`;
+        }
+
+        embed.setDescription(listString);
+
+        return embed;
+    }
+
+    public static async GetTopInspiresDone() {
+        const list:any = await Log.GET_TOP_INSPIRES_DONE();
+        const embed = new MessageEmbed()
+            .setTitle(`Top ${list.length} meeste inspires gedaan`);
+
+        var listString = '';
+
+        for (let i = 0; i < list.length; i++) {
+            const item = list[i];
+            listString += `${i+1}. ${item.cnt} - ${item.discord_name}\n`;
+        }
+
+        embed.setDescription(listString);
+
+        return embed;
+    }
+
+    public static async GetTopInspiresGet() {
+        const list:any = await Log.GET_TOP_INSPIRES_GET();
+        const embed = new MessageEmbed()
+            .setTitle(`Top ${list.length} meeste inspires gekregen`);
 
         var listString = '';
 
