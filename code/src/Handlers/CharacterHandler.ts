@@ -283,8 +283,7 @@ export default class CharacterHandler {
 
         const cooldown = await character.GetHealingCooldown();
         if (cooldown > 0) {
-            const minutes = Utils.GetSecondsInMinutes(cooldown);
-            MessageService.ReplyMessage(messageInfo, `Je hebt nog ${minutes + (minutes == 1 ? ' minuut' : ' minuten')} cooldown voordat je weer mag healen.`);
+            MessageService.ReplyMessage(messageInfo, `Je hebt nog ${Utils.GetSecondsInMinutesAndSeconds(cooldown)} cooldown voordat je weer mag healen.`);
             return;
         }
 
