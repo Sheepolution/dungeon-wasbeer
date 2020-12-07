@@ -46,6 +46,46 @@ export default class PuzzleService {
         return puzzleAndSolution;
     }
 
+    public static GetChestPuzzleAndSolution() {
+        const puzzleAndSolution:any = {};
+
+        var puzzleString = `1. Hoe heet het 5e monster waar jullie tegen hebben gevochten?
+
+2. Hoe heet het monster dat als eerste een character heeft gedood?
+
+3. Hoe heet het monster dat health absorbeert?
+
+4. Hoe heet het monster dat sterker wordt hoe minder health het heeft?
+
+5. Hoe heet het monster met de aanval beschrijving "Het monster valt je meerdere keren aan, eerst met zijn staart en dan zijn klauwen."?
+
+6. Hoe heet het monster met 16 strength en 6 attack?
+
+7. Hoe heet het monster met 8000 health?
+
+8. Hoe heet het monster dat er uit ziet als een zwart paard met vlammen?
+
+9. Hoe heet het eerste monster met 3 sterren? 
+
+10. Hoe heet het monster dat twee characters heeft gedood?`;
+
+        var solutionString = `Goblin
+Ettercap
+Shambling Mound
+Hydra
+Manticore
+Owlbear
+Beholder
+Nightmare
+Cyclops
+Cloud Giant`
+
+        puzzleAndSolution.puzzle = puzzleString;
+        puzzleAndSolution.solution = solutionString;
+
+        return puzzleAndSolution;
+    }
+
     public static GetRandomPuzzleType() {
         return [PuzzleType.Gate, PuzzleType.Merchant, PuzzleType.Tavern, PuzzleType.Village].randomChoice();
     }
@@ -76,6 +116,8 @@ export default class PuzzleService {
                 return PuzzleConstants.DESCRIPTIONS.TAVERN;
             case PuzzleType.Village:
                 return PuzzleConstants.DESCRIPTIONS.VILLAGE;
+            case PuzzleType.Chest:
+                return PuzzleConstants.DESCRIPTIONS.CHEST;
         }
     }
 }

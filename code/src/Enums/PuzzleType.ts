@@ -3,4 +3,5 @@ export enum PuzzleType {
     Merchant = 'Merchant',
     Village = 'Village',
     Tavern = 'Tavern',
+    Chest = 'Chest',
 }

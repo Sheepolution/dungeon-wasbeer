@@ -18,6 +18,26 @@ export default class PuzzleEmbeds {
         return embed;
     }
 
+    public static GetChestEmbed(puzzle:Puzzle) {
+        const embed = new MessageEmbed()
+            .setColor(SettingsConstants.COLORS.DEFAULT)
+            .setImage(PuzzleService.GetPuzzleImage(puzzle))
+            .setAuthor('Puzzel', ImageConstants.ICONS.PUZZLE)
+            .setTitle('Monsters')
+            .setDescription(`Tijdens jullie reis zijn jullie vele monsters tegengekomen. Wat weten jullie daar nog over? Geef als antwoord de namen van de monsters in de volgorde van de vragen, onder elkaar.
+
+Voorbeeld:
+;antwoord Dragon Turtle
+Ancient Red Dragon
+Ancient Gold Dragon
+etc...
+
+Beantwoord de volgende vragen:
+${puzzle.GetContent()}`)
+
+        return embed;
+    }
+
     public static GetPuzzleSolvedEmbed(puzzle:Puzzle) {
         const embed = new MessageEmbed()
             .setColor(SettingsConstants.COLORS.GOOD)

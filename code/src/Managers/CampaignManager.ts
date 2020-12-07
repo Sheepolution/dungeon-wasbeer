@@ -39,7 +39,7 @@ export default class CampaignManager {
         var campaign = new Campaign();
 
         if (lastSessionType == SessionType.Battle) {
-            const puzzle = await PuzzleManager.GetRandomPuzzle();
+            const puzzle = await PuzzleManager.GetChestPuzzle();
             await campaign.POST(SessionType.Puzzle, puzzle.GetId());
             this.previousBattle = this.campaignObject;
             this.campaignObject = campaign;
@@ -81,28 +81,28 @@ export default class CampaignManager {
     }
 
     public static async SendNewPuzzleMessage(puzzle:Puzzle) {
-        MessageService.SendMessageToDNDChannel(PuzzleService.GetPuzzleIntro(puzzle), PuzzleEmbeds.GetSudokuEmbed(puzzle));
+        MessageService.SendMessageToDNDChannel(PuzzleService.GetPuzzleIntro(puzzle), PuzzleEmbeds.GetChestEmbed(puzzle));
     }
 
     public static async SendNewBattleMessage(monster:Monster, battle:Battle) {
-        if (battle.GetMonster().GetId() == '20110b21-0a15-48f8-83a9-b4f804235355') {
-            MessageService.SendMessageToDNDChannel(`Jullie vervolgen jullie reis richting de schatkist. Plots komen jullie een ${monster.GetName()} tegen! Vecht tegen het monster met \`;vecht\`. Dit is het laatste gevecht!`,
-                MonsterEmbeds.GetMonsterEmbed(monster));
-        } else {
-            MessageService.SendMessageToDNDChannel(`Jullie vervolgen jullie reis ${[
-                'in het bos',
-                'door de bergen',
-                'langs de rivier',
-                'in een grot',
-                'langs de zee',
-                'over een brug',
-                'onder een brug',
-                'door een open veld',
-                'door een uitgestrekte vlakte',
-                'door een woestijnlandschap'
-            ].randomChoice()}. Plots komen jullie een ${monster.GetName()} tegen! Vecht tegen het monster met \`;vecht\`.`,
+        // if (battle.GetMonster().GetId() == '20110b21-0a15-48f8-83a9-b4f804235355') {
+        MessageService.SendMessageToDNDChannel(`Jullie vervolgen jullie reis richting de schatkist. Plots komen jullie een ${monster.GetName()} tegen! Vecht tegen het monster met \`;vecht\`. Dit is het laatste gevecht!`,
             MonsterEmbeds.GetMonsterEmbed(monster));
-        }
+        // } else {
+        // MessageService.SendMessageToDNDChannel(`Jullie vervolgen jullie reis ${[
+        //     'in het bos',
+        //     'door de bergen',
+        //     'langs de rivier',
+        //     'in een grot',
+        //     'langs de zee',
+        //     'over een brug',
+        //     'onder een brug',
+        //     'door een open veld',
+        //     'door een uitgestrekte vlakte',
+        //     'door een woestijnlandschap'
+        // ].randomChoice()}. Plots komen jullie een ${monster.GetName()} tegen! Vecht tegen het monster met \`;vecht\`.`,
+        // MonsterEmbeds.GetMonsterEmbed(monster));
+        // }
     }
 
     public static GetBattle() {
@@ -136,44 +136,22 @@ export default class CampaignManager {
         }
         await this.campaignObject.CompleteSession();
         await Utils.Sleep(3);
-        if (battle == null) {
-            if (this.previousBattle.GetBattle().GetMonster().GetId() == '16afcb5c-7ff7-480c-ad9d-005fe50856d3') {
-                await Utils.Sleep(40);
-                MessageService.SendMessageToDNDChannel('', CharacterEmbeds.GetStoryEmbed('Het was een lang en zwaar gevecht. De party waren al vele monsters tegengekomen, maar de Ancient Red Dragon was de sterkste van allemaal. Maar niet sterk genoeg! De party wist de draak te verslaan, en begint met hun klim naar de top.', 'https://cdn.discordapp.com/attachments/694331679204180029/783402540632506398/ancient_dragon_defeated.png'));
-                await Utils.Sleep(40);
-                MessageService.SendMessageToDNDChannel('', CharacterEmbeds.GetStoryEmbed(`"Zijn we er al bijna?" vraagt Dixie.
-"Bijna," zegt de rest van de party in koor.
-"Ja maar hoelang moeten we dan nog?" vraagt Dixie.
-"Nog even," zegt de rest van de party, nogmaals in koor.
-
-De klim lijkt een oneindigheid te duren. Dit is waar ze maanden voor hebben gereisd en gevochten. Waar ze breinbrekers voor hebben opgelost, en hun beste vrienden voor hebben verloren. De party kan niet wachten om hun quest te voltooien.`, 'https://cdn.discordapp.com/attachments/694331679204180029/783402575646425108/the_climb.png'));
-                await Utils.Sleep(40);
-                MessageService.SendMessageToDNDChannel('', CharacterEmbeds.GetStoryEmbed(`Maar uiteindelijk bereiken ze dan toch echt de top.
-"Moet ik mijn bril schoonpoetsen, of zien jullie dit ook?" vraagt Healing Hector.
-Skaldsen the Virtuoso knikt enthousiast. "Het heeft 600 inspires gekost, maar we hebben 'm eindelijk!"
-"De legende was dus waar! Ik wist het!" zegt Wes de Bard.
-Mora de cleric staart vol bewondering. "Wat is ie mooi!"`, 'https://cdn.discordapp.com/attachments/694331679204180029/783402614464970822/reaching_the_top.png'));
-                await Utils.Sleep(40);
-                MessageService.SendMessageToDNDChannel('', CharacterEmbeds.GetStoryEmbed(`De party staat recht tegenover de Schatkist van Draakeiland.
-"Na al die tijd! We hebben 'm!" zegt Juul de Wizard.
-"Wat een gigantisch ding!" zegt Heer Wout.
-"..." zwijgt Gerrit, zoals hij al heel de campaign heeft gedaan.
-"En goud! Niemand zei iets over het goud! We zijn rijk!" zegt Ruby Ratcoon.
-"Iedereen... onze quest is voorbij!", roept Schapolo de Vlammende Wol naar de party.`, 'https://cdn.discordapp.com/attachments/694331679204180029/783402639786246206/omg_a_chest.png'));
-                await Utils.Sleep(40);
-                MessageService.SendMessageToDNDChannel('', CharacterEmbeds.GetStoryEmbed(`Maar ineens komt er een gouden staart te voorschijn, en vervolgens een gouden kop.
-De party maakt een gezamenlijk "oof" geluid.
-De gouden hoop staat op. Het blijkt een Ancient Gold Dragon te zijn!
-
-"Sorry, wat zei je, Schapolo?" vraagt Juul de Wizard.
-"Ja, kan je dat misschien herhalen?" vraagt Heer Wout.
-"..." zwijgt Gerrit.
-"Maar... mijn goud..." snikt Ruby Ratcoon.
-"Ah-um. Correctie! Na dit monster is onze quest echt voltooid! TEN AANVAL!" roept Schapolo de Vlammende Wol.`, 'https://cdn.discordapp.com/attachments/694331679204180029/783402663340671036/omg_a_dragon.png'));
-                await Utils.Sleep(40);
-            }
+        if (battle != null) {
+            await Utils.Sleep(30);
+            MessageService.SendMessageToDNDChannel('', CharacterEmbeds.GetStoryEmbed('Het sterkste monster van allemaal, de Ancient Gold Dragon, is eindelijk verslagen! Het was een gevecht dat de party nog lang zal bijblijven, maar momenteel is er maar één ding waar ze aan kunnen denken: De schatkist! Het was tijd om te kijken wat er in zit.', 'https://cdn.discordapp.com/attachments/694331679204180029/785311882051190784/unknown.png'));
+            await Utils.Sleep(20);
+            MessageService.SendMessageToDNDChannel('', CharacterEmbeds.GetStoryEmbed(`De party probeerde de schatkist te openen. Maar zo makkelijk ging dat niet.
+"De schatkist zit op slot!" zegt Prinses Sýnnefo, die tranen in haar ogen krijgt. "We waren zo dicht bij!"
+"Heeft iemand een sleutel?" vraagt Lompoz.
+Dolfeniks keek nog eens goed naar het slot. "Wacht eens jongens, volgens mij is dit een puzzel."
+Juul de Wizard stapt naar voren. "Ah, een sudoku? Laat mij maar."
+"Nee, geen Sudoku," zegt Aart Aardbei. "Een puzzel als deze zijn we nog niet eerder tegengekomen..."`, 'https://cdn.discordapp.com/attachments/694331679204180029/785308607087640586/unknown.png'));
+            await Utils.Sleep(40);
+            await this.StartNewSession(battle != null ? SessionType.Battle : SessionType.Puzzle);
+        } else {
+            await Utils.Sleep(10);
+            await MessageService.SendMessageToDNDChannel('https://cdn.discordapp.com/attachments/694331679204180029/785240387350560808/Bericht_Ome_Wasbeer.mp4');
         }
-        await this.StartNewSession(battle != null ? SessionType.Battle : SessionType.Puzzle);
     }
 
     private static async GiveXPToBattlers(battle:Battle) {

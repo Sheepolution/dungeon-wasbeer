@@ -59,12 +59,6 @@ export default class BattleHandler {
             return;
         }
 
-        const health = battle.GetCurrentMonsterHealth();
-        if (health < 250) {
-            MessageService.ReplyMessage(messageInfo, 'Sorry jongens ik ben ff Chinees halen met Tante Wasbeer. Kom maandagavond om 21:00 maar weer terug.', false);
-            return;
-        }
-
         if (character.IsHealing()) {
             MessageService.ReplyMessage(messageInfo, 'Je kan niet vechten want je bent momenteel aan het healen.', false);
             return;

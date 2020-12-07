@@ -24,5 +24,11 @@ export default class PuzzleConstants {
             OUTRO: 'De oude vrouw kijkt naar je antwoord. “Alle drakenschubben nog aan toe zeg! Je hebt het goed! Kom snel binnen.” zegt ze enthousiast. Eenmaal binnen krijg je een warm kopje chocolademelk aangeboden. Deze nacht heb je warm bij een haardvuur gezeten onder een lekker dekentje. De volgende dag bedank je het oude wasbeertje voor de gastvrijheid en je zet je avontuur voort.',
             WRONG: 'Het oude wasbeertje kijkt je glimlachend aan. “Incorrect,” zegt ze. “Misschien moet je maar een andere schuilplaats gaan zoeken.”',
         },
+        CHEST: {
+            IMAGE: 'https://cdn.discordapp.com/attachments/694331679204180029/785220092027338773/wtfvak_puzzel.png',
+            INTRO: 'Jullie proberen de schatkist te openen, maar zien dat er een slot op zit met een puzzel. Los de puzzel op om de schatkist te openen.',
+            OUTRO: 'Je draait de schijven naar jouw oplossing. Het klopt! Het slot gaat open!',
+            WRONG: 'Je draait de schijven naar jouw oplossing, maar wanneer je aan het slot trekt gebeurt er weinig. Blijkbaar was dat klopt er iets niet...',
+        },
     }
 }
