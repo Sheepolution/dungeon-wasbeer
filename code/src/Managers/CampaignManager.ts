@@ -39,7 +39,7 @@ export default class CampaignManager {
         var campaign = new Campaign();
 
         if (lastSessionType == SessionType.Battle) {
-            const puzzle = await PuzzleManager.GetChestPuzzle();
+            const puzzle = await PuzzleManager.GetRandomPuzzle();
             await campaign.POST(SessionType.Puzzle, puzzle.GetId());
             this.previousBattle = this.campaignObject;
             this.campaignObject = campaign;
@@ -75,34 +75,29 @@ export default class CampaignManager {
             await battle.POST(monster);
             await campaign.POST(SessionType.Battle, battle.GetId());
             this.campaignObject = campaign;
-            CampaignManager.SendNewBattleMessage(monster, battle);
+            CampaignManager.SendNewBattleMessage(monster);
             return this.campaignObject;
         }
     }
 
     public static async SendNewPuzzleMessage(puzzle:Puzzle) {
-        MessageService.SendMessageToDNDChannel(PuzzleService.GetPuzzleIntro(puzzle), PuzzleEmbeds.GetChestEmbed(puzzle));
+        MessageService.SendMessageToDNDChannel(PuzzleService.GetPuzzleIntro(puzzle), PuzzleEmbeds.GetSudokuEmbed(puzzle));
     }
 
-    public static async SendNewBattleMessage(monster:Monster, battle:Battle) {
-        // if (battle.GetMonster().GetId() == '20110b21-0a15-48f8-83a9-b4f804235355') {
-        MessageService.SendMessageToDNDChannel(`Jullie vervolgen jullie reis richting de schatkist. Plots komen jullie een ${monster.GetName()} tegen! Vecht tegen het monster met \`;vecht\`. Dit is het laatste gevecht!`,
-            MonsterEmbeds.GetMonsterEmbed(monster));
-        // } else {
-        // MessageService.SendMessageToDNDChannel(`Jullie vervolgen jullie reis ${[
-        //     'in het bos',
-        //     'door de bergen',
-        //     'langs de rivier',
-        //     'in een grot',
-        //     'langs de zee',
-        //     'over een brug',
-        //     'onder een brug',
-        //     'door een open veld',
-        //     'door een uitgestrekte vlakte',
-        //     'door een woestijnlandschap'
-        // ].randomChoice()}. Plots komen jullie een ${monster.GetName()} tegen! Vecht tegen het monster met \`;vecht\`.`,
-        // MonsterEmbeds.GetMonsterEmbed(monster));
-        // }
+    public static async SendNewBattleMessage(monster:Monster) {
+        MessageService.SendMessageToDNDChannel(`Jullie vervolgen jullie reis ${[
+            'in het bos',
+            'door de bergen',
+            'langs de rivier',
+            'in een grot',
+            'langs de zee',
+            'over een brug',
+            'onder een brug',
+            'door een open veld',
+            'door een uitgestrekte vlakte',
+            'door een woestijnlandschap'
+        ].randomChoice()}. Plots komen jullie een ${monster.GetName()} tegen! Vecht tegen het monster met \`;vecht\`.`,
+        MonsterEmbeds.GetMonsterEmbed(monster));
     }
 
     public static GetBattle() {
