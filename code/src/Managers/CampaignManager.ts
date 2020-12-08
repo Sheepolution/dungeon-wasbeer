@@ -141,12 +141,12 @@ export default class CampaignManager {
         const data:any = {};
 
         for (const row of attackData) {
-            const xp = row.sum;
+            const xp = parseInt(row.sum);
             data[row.character_id] = xp;
         }
 
         for (const row of healData) {
-            const xp = Math.floor(row.sum/2);
+            const xp = Math.floor(parseInt(row.sum)/2);
             if (data[row.character_id]) {
                 data[row.character_id] += xp;
             } else {
