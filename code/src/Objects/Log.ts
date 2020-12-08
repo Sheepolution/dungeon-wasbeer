@@ -2,6 +2,7 @@ import Player from './Player';
 import { LogType } from '../Enums/LogType';
 import LogModel from '../Models/LogModel';
 import Character from './Character';
+import Battle from './Battle';
 
 export default class Log {
 
@@ -41,5 +42,19 @@ export default class Log {
             .limit(10);
 
         return list;
+    }
+
+    public static async FIND_TOTAL_INSPIRED_OTHERS_IN_BATTLE_FOR_ALL_CHARACTERS(battle:Battle) {
+        var totalInspired = await LogModel.query()
+            .join('players as p', 'p.id', '=', 'logs.player_id')
+            .join('characters as mc', 'mc.id', '=', 'p.character_id')
+            .join('characters as yc', 'yc.id', '=', 'logs.subject_id')
+            .where('logs.log_date', '>', battle.GetStartDate())
+            .where('logs.log_date', '<', battle.GetEndDate())
+            .select('mc.id')
+            .groupBy('mc.id')
+            .count('mc.id as cnt');
+
+        return totalInspired;
     }
 }
