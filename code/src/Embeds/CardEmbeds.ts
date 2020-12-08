@@ -138,11 +138,11 @@ export default class CardEmbeds {
         return embed;
     }
 
-    public static GetPlayerCardOwnerListEmbed(cardName:string, ownerList:Array<any>, page?:number) {
+    public static GetPlayerCardOwnerListEmbed(card:Card, ownerList:Array<any>, page?:number) {
         const embed = new MessageEmbed()
             .setColor(SettingsConstants.COLORS.DEFAULT);
 
-        embed.setTitle(`Iedereen die de kaart ${cardName} heeft`);
+        embed.setTitle(`Iedereen die de kaart ${card.GetName()} heeft`);
 
         var split = SettingsConstants.CARD_AMOUNT_SPLIT_PAGES;
         var pages = Math.ceil(ownerList.length/split);
@@ -180,7 +180,11 @@ export default class CardEmbeds {
             list += `${(owner.equipped ? '✅ ' : ' ')}${owner.discord_name}${owner.amount > 1 ? ` (x${owner.amount})` : ''}\n`;
         }
 
-        embed.setDescription(list);
+        const classType = card.GetModifierClass();
+        const modifiers = card.GetModifiers();
+        const season = card.GetSeason();
+        embed.setDescription(`${EmojiConstants.STARS[card.GetRank()]} Seizoen ${season > 0 ? season : '???' }\n${classType == null ? '' : `${CharacterService.GetClassIconEmoji(classType)} `}${modifiers.length > 0 ? `${CardService.ParseModifierArrayToEmbedString(modifiers)}\n` : ''}\n**Eigenaren**\n${list}`);
+        embed.setThumbnail(card.GetImageUrl());
 
         return embed;
     }

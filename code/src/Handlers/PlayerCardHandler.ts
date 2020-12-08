@@ -101,7 +101,7 @@ export default class PlayerCardHandler {
         }
 
         if (obj.values.ownerList) {
-            await obj.message.edit(null, CardEmbeds.GetPlayerCardOwnerListEmbed(obj.values.cardName, obj.values.ownerList, obj.values.page));
+            await obj.message.edit(null, CardEmbeds.GetPlayerCardOwnerListEmbed(obj.values.card, obj.values.ownerList, obj.values.page));
         } else {
             const cardList = PlayerCardService.GetPlayerCardList(obj.values.player, obj.values.sorting, obj.values.otherPlayer)
             await obj.message.edit(null, CardEmbeds.GetPlayerCardListEmbed(cardList, obj.values.player, obj.values.page, obj.values.otherPlayer));
@@ -241,6 +241,7 @@ export default class PlayerCardHandler {
     private static async SendPlayerCardOwnersList(messageInfo:IMessageInfo, player:Player, cardName:string) {
         if (cardName == null || cardName.length == 0) {
             MessageService.ReplyMessage(messageInfo, 'Geef de naam van de kaart mee waarvan je de eigenaren wilt zien', false, true);
+            return;
         }
 
         const card = PlayerCardService.FindCard(cardName);
@@ -262,13 +263,13 @@ export default class PlayerCardHandler {
 
         ownerList.sort((a:any, b:any) => b.amount - a.amount);
 
-        const message = await MessageService.ReplyEmbed(messageInfo, CardEmbeds.GetPlayerCardOwnerListEmbed(cardName, ownerList, page));
+        const message = await MessageService.ReplyEmbed(messageInfo, CardEmbeds.GetPlayerCardOwnerListEmbed(card, ownerList, page));
 
         if (page == 1) {
             await message.react('⬅️')
             await Utils.Sleep(.5)
             await message.react('➡️')
-            ReactionManager.AddMessage(message, ReactionMessageType.PlayerCardList, messageInfo, {page: 1, cardName: cardName, ownerList: ownerList});
+            ReactionManager.AddMessage(message, ReactionMessageType.PlayerCardList, messageInfo, {page: 1, card: card, ownerList: ownerList});
         }
 
     }
