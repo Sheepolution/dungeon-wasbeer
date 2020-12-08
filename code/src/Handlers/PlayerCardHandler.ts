@@ -101,7 +101,7 @@ export default class PlayerCardHandler {
         }
 
         if (obj.values.ownerList) {
-            await obj.message.edit(null, CardEmbeds.GetPlayerCardOwnerListEmbed(obj.values.cardName, obj.values.cardList, obj.values.page));
+            await obj.message.edit(null, CardEmbeds.GetPlayerCardOwnerListEmbed(obj.values.cardName, obj.values.ownerList, obj.values.page));
         } else {
             const cardList = PlayerCardService.GetPlayerCardList(obj.values.player, obj.values.sorting, obj.values.otherPlayer)
             await obj.message.edit(null, CardEmbeds.GetPlayerCardListEmbed(cardList, obj.values.player, obj.values.page, obj.values.otherPlayer));
