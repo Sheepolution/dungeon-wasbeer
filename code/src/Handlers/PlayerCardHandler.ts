@@ -255,6 +255,7 @@ export default class PlayerCardHandler {
 
         if (ownerList.length == 0) {
             this.SendCardNotFound(messageInfo, cardName);
+            return;
         }
 
         const page = ownerList.length > SettingsConstants.CARD_AMOUNT_SPLIT_PAGES ? 1 : undefined;
