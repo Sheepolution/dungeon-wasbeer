@@ -126,27 +126,13 @@ export default class CampaignManager {
 
     public static async OnCompletingSession() {
         const battle = this.campaignObject.GetBattle();
+
         if (battle != null) {
             await this.GiveXPToBattlers(battle);
         }
+
         await this.campaignObject.CompleteSession();
-        await Utils.Sleep(3);
-        if (battle != null) {
-            await Utils.Sleep(30);
-            MessageService.SendMessageToDNDChannel('', CharacterEmbeds.GetStoryEmbed('Het sterkste monster van allemaal, de Ancient Gold Dragon, is eindelijk verslagen! Het was een gevecht dat de party nog lang zal bijblijven, maar momenteel is er maar één ding waar ze aan kunnen denken: De schatkist! Het was tijd om te kijken wat er in zit.', 'https://cdn.discordapp.com/attachments/694331679204180029/785311882051190784/unknown.png'));
-            await Utils.Sleep(20);
-            MessageService.SendMessageToDNDChannel('', CharacterEmbeds.GetStoryEmbed(`De party probeerde de schatkist te openen. Maar zo makkelijk ging dat niet.
-"De schatkist zit op slot!" zegt Prinses Sýnnefo, die tranen in haar ogen krijgt. "We waren zo dicht bij!"
-"Heeft iemand een sleutel?" vraagt Lompoz.
-Dolfeniks keek nog eens goed naar het slot. "Wacht eens jongens, volgens mij is dit een puzzel."
-Juul de Wizard stapt naar voren. "Ah, een sudoku? Laat mij maar."
-"Nee, geen Sudoku," zegt Aart Aardbei. "Een puzzel als deze zijn we nog niet eerder tegengekomen..."`, 'https://cdn.discordapp.com/attachments/694331679204180029/785308607087640586/unknown.png'));
-            await Utils.Sleep(40);
-            await this.StartNewSession(battle != null ? SessionType.Battle : SessionType.Puzzle);
-        } else {
-            await Utils.Sleep(10);
-            await MessageService.SendMessageToDNDChannel('https://cdn.discordapp.com/attachments/694331679204180029/785240387350560808/Bericht_Ome_Wasbeer.mp4');
-        }
+        await this.StartNewSession(battle != null ? SessionType.Battle : SessionType.Puzzle)
     }
 
     private static async GiveXPToBattlers(battle:Battle) {
