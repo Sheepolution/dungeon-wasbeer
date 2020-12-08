@@ -34,7 +34,7 @@ export default class CommandHandler {
         if (messageInfo.channel.id == SettingsConstants.CARD_CHANNEL_ID) {
             if (await TradeHandler.OnCommand(messageInfo, player, command, content)) {
                 return;
-            } else if (await PlayerCardHandler.OnCommand(messageInfo, player, command, args)) {
+            } else if (await PlayerCardHandler.OnCommand(messageInfo, player, command, args, content)) {
                 return;
             } else if (await ShoeHandler.OnCommand(messageInfo, player, command)) {
                 return;
@@ -42,7 +42,7 @@ export default class CommandHandler {
         } else if (messageInfo.channel.id == SettingsConstants.DND_CHANNEL_ID) {
             if (await TradeHandler.OnCommand(messageInfo, player, command, content)) {
                 return;
-            } else if (await PlayerCardHandler.OnCommand(messageInfo, player, command, args)) {
+            } else if (await PlayerCardHandler.OnCommand(messageInfo, player, command, args, content)) {
                 return;
             } else if (await CharacterHandler.OnCommand(messageInfo, player, command, args, content)) {
                 return;

@@ -14,6 +14,17 @@ export default class PlayerCard {
         this.player = player;
     }
 
+    public static async GET_OWNERS_OF_CARD(name:string) {
+        const list = await PlayerCardModel.query()
+            .join('players', 'players.id', '=', 'player_cards.player_id')
+            .join('cards', 'cards.id', '=', 'player_cards.card_id')
+            .select('players.discord_name', 'player_cards.amount', 'player_cards.equipped')
+            .where('cards.name', '=', name)
+            .orderBy('player_cards.amount');
+
+        return list;
+    }
+
     public async GET(id:string) {
         const model:PlayerCardModel = await PlayerCardModel.query().findById(id);
         await this.ApplyModel(model);

@@ -1,6 +1,7 @@
 import Player from '../Objects/Player';
 import { SortingType } from '../Enums/SortingType';
 import PlayerCard from '../Objects/PlayerCard';
+import CardManager from '../Managers/CardManager';
 
 export default class PlayerCardService {
 
@@ -44,5 +45,15 @@ export default class PlayerCardService {
         }
 
         return playerCards;
+    }
+
+    public static FindCard(name:string) {
+        name = name.toLowerCase();
+        const cards = CardManager.GetCardList();
+        for (const card of cards) {
+            if (card.GetName().toLowerCase().includes(name)) {
+                return card;
+            }
+        }
     }
 }

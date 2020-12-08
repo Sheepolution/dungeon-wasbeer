@@ -19,7 +19,7 @@ import PlayerCardService from '../Services/PlayerCardService';
 
 export default class PlayerCardHandler {
 
-    public static async OnCommand(messageInfo:IMessageInfo, player:Player, command:string, args:Array<string>) {
+    public static async OnCommand(messageInfo:IMessageInfo, player:Player, command:string, args:Array<string>, content:string) {
         switch (command) {
             case 'graaf':
             case 'graven':
@@ -74,6 +74,18 @@ export default class PlayerCardHandler {
             case 'kaartend':
                 this.SendPlayerCardList(messageInfo, player, SortingType.Amount, args[0], args[1]);
                 break;
+            case 'lijst-eigenaar':
+            case 'lijst-eigenaren':
+            case 'lijst-owners':
+            case 'lijst-owner':
+            case 'lijste':
+            case 'kaarten-eigenaar':
+            case 'kaarten-eigenaren':
+            case 'kaarten-owner':
+            case 'kaarten-owners':
+            case 'kaartene':
+                this.SendPlayerCardOwnersList(messageInfo, player, content);
+                break;
             default:
                 return false;
         }
@@ -88,9 +100,12 @@ export default class PlayerCardHandler {
             obj.values.page += 1;
         }
 
-        const cardList = PlayerCardService.GetPlayerCardList(obj.values.player, obj.values.sorting, obj.values.otherPlayer)
-
-        await obj.message.edit(null, CardEmbeds.GetPlayerCardListEmbed(cardList, obj.values.player, obj.values.page, obj.values.otherPlayer));
+        if (obj.values.ownerList) {
+            await obj.message.edit(null, CardEmbeds.GetPlayerCardOwnerListEmbed(obj.values.cardName, obj.values.cardList, obj.values.page));
+        } else {
+            const cardList = PlayerCardService.GetPlayerCardList(obj.values.player, obj.values.sorting, obj.values.otherPlayer)
+            await obj.message.edit(null, CardEmbeds.GetPlayerCardListEmbed(cardList, obj.values.player, obj.values.page, obj.values.otherPlayer));
+        }
     }
 
     private static async Dig(messageInfo:IMessageInfo, player:Player) {
@@ -221,5 +236,43 @@ export default class PlayerCardHandler {
             await message.react('➡️')
             ReactionManager.AddMessage(message, ReactionMessageType.PlayerCardList, messageInfo, {page: 1, requester: requester, player: player, otherPlayer: otherPlayer, lesserGreater: lesserGreater});
         }
+    }
+
+    private static async SendPlayerCardOwnersList(messageInfo:IMessageInfo, player:Player, cardName:string) {
+        if (cardName == null || cardName.length == 0) {
+            MessageService.ReplyMessage(messageInfo, 'Geef de naam van de kaart mee waarvan je de eigenaren wilt zien', false, true);
+        }
+
+        const card = PlayerCardService.FindCard(cardName);
+        if (card == null) {
+            this.SendCardNotFound(messageInfo, cardName);
+            return;
+        }
+
+        cardName = card.GetName();
+
+        const ownerList = await PlayerCard.GET_OWNERS_OF_CARD(cardName);
+
+        if (ownerList.length == 0) {
+            this.SendCardNotFound(messageInfo, cardName);
+        }
+
+        const page = ownerList.length > SettingsConstants.CARD_AMOUNT_SPLIT_PAGES ? 1 : undefined;
+
+        ownerList.sort((a:any, b:any) => b.amount - a.amount);
+
+        const message = await MessageService.ReplyEmbed(messageInfo, CardEmbeds.GetPlayerCardOwnerListEmbed(cardName, ownerList, page));
+
+        if (page == 1) {
+            await message.react('⬅️')
+            await Utils.Sleep(.5)
+            await message.react('➡️')
+            ReactionManager.AddMessage(message, ReactionMessageType.PlayerCardList, messageInfo, {page: 1, cardName: cardName, ownerList: ownerList});
+        }
+
+    }
+
+    private static async SendCardNotFound(messageInfo:IMessageInfo, name:string) {
+        MessageService.ReplyMessage(messageInfo, `Ik heb geen kaart kunnen vinden met de naam ${name}`, false, true);
     }
 }

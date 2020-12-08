@@ -138,6 +138,53 @@ export default class CardEmbeds {
         return embed;
     }
 
+    public static GetPlayerCardOwnerListEmbed(cardName:string, ownerList:Array<any>, page?:number) {
+        const embed = new MessageEmbed()
+            .setColor(SettingsConstants.COLORS.DEFAULT);
+
+        embed.setTitle(`Iedereen die de kaart ${cardName} heeft`);
+
+        var split = SettingsConstants.CARD_AMOUNT_SPLIT_PAGES;
+        var pages = Math.ceil(ownerList.length/split);
+
+        if (page != null) {
+            if (page == 0) {
+                page = pages;
+            } else {
+                while (page <= 0) {
+                    page += pages;
+                }
+
+                while (page > pages) {
+                    page -= pages;
+                }
+            }
+        }
+
+        var start = page == null ? 0 : (page-1) * split;
+        var end = page == null ? ownerList.length : Math.min(ownerList.length, page * split);
+
+        if (page != null) {
+            embed.setFooter(`${start + 1}-${end} van de ${ownerList.length} eigenaren`);
+        }
+
+        var list = '';
+
+        for (let i = start; i < end; i++) {
+            const owner = ownerList[i];
+
+            if (owner == null) {
+                continue;
+            }
+
+            list += `${(owner.equipped ? '✅ ' : ' ')}${owner.discord_name}${owner.amount > 1 ? ` (x${owner.amount})` : ''}\n`;
+        }
+
+        embed.setDescription(list);
+
+        return embed;
+    }
+
     public static GetTradeEmbed(tradeInfo:ITradeInfo) {
         const embed = new MessageEmbed()
             .setColor(SettingsConstants.COLORS.DEFAULT)
