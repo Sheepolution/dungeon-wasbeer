@@ -17,7 +17,7 @@ export default class Log {
         return inspires[0].count || 0;
     }
 
-    public static async GET_TOP_INSPIRES_DONE() {
+    public static async GET_TOP_ALL_INSPIRES_DONE() {
         const list = await LogModel.query()
             .where('type', 'Inspire')
             .join('players', 'players.id', '=', 'logs.player_id')
@@ -30,12 +30,45 @@ export default class Log {
         return list;
     }
 
-    public static async GET_TOP_INSPIRES_GET() {
+    public static async GET_TOP_ALL_INSPIRES_GET() {
         const list = await LogModel.query()
             .where('type', 'Inspire')
             .join('characters', 'characters.id', '=', 'logs.subject_id')
             .join('players', 'players.id', '=', 'characters.player_id')
             .select('name', 'discord_name')
+            .groupBy( 'characters.name', 'players.discord_name')
+            .count('logs.id as cnt')
+            .orderBy('cnt', 'desc')
+            .limit(10);
+
+        return list;
+    }
+
+    public static async GET_TOP_INSPIRES_DONE(battleId?:string) {
+        const list = await LogModel.query()
+            .where('type', 'Inspire')
+            .join('players', 'players.id', '=', 'logs.player_id')
+            .join('battles', 'battles.id', '=', LogModel.raw('?', [battleId]))
+            .select('discord_name')
+            .whereRaw('??>??', ['logs.log_date', 'battles.start_date'])
+            .whereRaw('??<??', ['logs.log_date', LogModel.raw('coalesce(battles.end_date, now())')])
+            .groupBy('players.discord_name')
+            .count('logs.id as cnt')
+            .orderBy('cnt', 'desc')
+            .limit(10);
+
+        return list;
+    }
+
+    public static async GET_TOP_INSPIRES_GET(battleId?:string) {
+        const list = await LogModel.query()
+            .where('type', 'Inspire')
+            .join('characters', 'characters.id', '=', 'logs.subject_id')
+            .join('players', 'players.id', '=', 'characters.player_id')
+            .join('battles', 'battles.id', '=', LogModel.raw('?', [battleId]))
+            .select('name', 'discord_name')
+            .whereRaw('??>??', ['logs.log_date', 'battles.start_date'])
+            .whereRaw('??<??', ['logs.log_date', LogModel.raw('coalesce(battles.end_date, now())')])
             .groupBy( 'characters.name', 'players.discord_name')
             .count('logs.id as cnt')
             .orderBy('cnt', 'desc')
