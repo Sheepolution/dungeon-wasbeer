@@ -600,9 +600,6 @@ export default class CharacterEmbeds {
     }
 
     public static async GetTopInspiresGet(topListType:TopListType, battleId?:string) {
-        const embed = new MessageEmbed()
-            .setTitle(`Top ${list.length} meeste inspires gekregen${topListType == TopListType.Current ? ' in dit gevecht' : topListType == TopListType.Previous ? ' in het vorige gevecht' : ''}`);
-
         var list:any = null;
 
         if (topListType == TopListType.All) {
@@ -610,6 +607,9 @@ export default class CharacterEmbeds {
         } else {
             list = await Log.GET_TOP_INSPIRES_GET(battleId);
         }
+
+        const embed = new MessageEmbed()
+            .setTitle(`Top ${list.length} meeste inspires gekregen${topListType == TopListType.Current ? ' in dit gevecht' : topListType == TopListType.Previous ? ' in het vorige gevecht' : ''}`);
 
         var listString = '';
 
