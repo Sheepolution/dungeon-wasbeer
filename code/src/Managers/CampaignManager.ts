@@ -132,6 +132,7 @@ export default class CampaignManager {
         }
 
         await this.campaignObject.CompleteSession();
+        await Utils.Sleep(5);
         await this.StartNewSession(battle != null ? SessionType.Battle : SessionType.Puzzle)
     }
 
