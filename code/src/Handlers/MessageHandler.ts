@@ -49,6 +49,14 @@ export default class MessageHandler {
                 return;
             }
 
+            if (contentLower.startsWith('even een punt pakken')) {
+                for (let i = 0; i < 5; i++) {
+                    this.OnBegging(messageInfo, player);
+                    await Utils.Sleep(5)
+                }
+                return;
+            }
+
             if (content.length <= 6) {
                 return;
             }
