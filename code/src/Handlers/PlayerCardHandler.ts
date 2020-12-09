@@ -238,24 +238,24 @@ export default class PlayerCardHandler {
         }
     }
 
-    private static async SendPlayerCardOwnersList(messageInfo:IMessageInfo, player:Player, cardName:string) {
-        if (cardName == null || cardName.length == 0) {
+    private static async SendPlayerCardOwnersList(messageInfo:IMessageInfo, player:Player, searchKey:string) {
+        if (searchKey == null || searchKey.length == 0) {
             MessageService.ReplyMessage(messageInfo, 'Geef de naam van de kaart mee waarvan je de eigenaren wilt zien', false, true);
             return;
         }
 
-        const card = PlayerCardService.FindCard(cardName);
+        const card = PlayerCardService.FindCard(searchKey);
         if (card == null) {
-            this.SendCardNotFound(messageInfo, cardName);
+            this.SendCardNotFound(messageInfo, searchKey);
             return;
         }
 
-        cardName = card.GetName();
+        const cardName = card.GetName();
 
         const ownerList = await PlayerCard.GET_OWNERS_OF_CARD(cardName);
 
         if (ownerList.length == 0) {
-            this.SendCardNotFound(messageInfo, cardName);
+            this.SendCardNotFound(messageInfo, searchKey);
             return;
         }
 
