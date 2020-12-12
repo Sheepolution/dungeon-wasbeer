@@ -454,11 +454,11 @@ export default class CharacterHandler {
     }
 
     private static async SendHealingEmbed(messageInfo:IMessageInfo, character:Character, receiver:Character) {
-        return await MessageService.ReplyEmbed(messageInfo, CharacterEmbeds.GetHealingEmbed(character, receiver))
+        return await MessageService.ReplyEmbed(messageInfo, await CharacterEmbeds.GetHealingEmbed(character, receiver))
     }
 
     private static async UpdateHealingEmbed(message:Message, character:Character, receiver:Character, roll:number, healing:number) {
-        message.edit('', CharacterEmbeds.GetHealingEmbed(character, receiver, roll, healing));
+        message.edit('', await CharacterEmbeds.GetHealingEmbed(character, receiver, roll, healing));
     }
 
     private static async EditAvatar(messageInfo:IMessageInfo, player:Player, url?:string) {
