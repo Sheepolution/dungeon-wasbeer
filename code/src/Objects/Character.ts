@@ -405,6 +405,9 @@ export default class Character {
     }
 
     public async StopBeingInspired() {
+        if (!this.inspired) {
+            return;
+        }
         this.inspired = false;
         this.UpdateFullModifierStats();
         await this.UPDATE({
