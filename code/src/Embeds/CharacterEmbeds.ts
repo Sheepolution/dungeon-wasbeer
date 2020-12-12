@@ -245,6 +245,34 @@ export default class CharacterEmbeds {
             } else {
                 embed.addField(`${characterName} slaagt er in te healen`, character.GetHealDescription().replaceAll('\\[naam\\]', receiverName).replaceAll('\\[health\\]',  healing.toString()));
             }
+
+            embed.addField('--------------------------------', '-- Cooldown(s) --');
+
+            const battleCooldown = await character.GetBattleCooldown();
+            if (battleCooldown > 0) {
+                embed.addField('Vechten', `🕒 ${Utils.GetSecondsInMinutesAndSeconds(battleCooldown)}`, true)
+            } else {
+                embed.addField('Vechten', 'Klaar om te vechten!', true);
+            }
+
+            if (character.CanHeal()) {
+                const healingCooldown = await character.GetHealingCooldown();
+                if (healingCooldown > 0) {
+                    embed.addField('Healen', `🕒 ${Utils.GetSecondsInMinutesAndSeconds(healingCooldown)}`, true)
+                } else {
+                    embed.addField('Healen', 'Klaar om te healen!', true);
+                }
+            }
+
+            if (character.CanInspire()) {
+                const inspiringCooldown = await character.GetInspireCooldown();
+                if (inspiringCooldown > 0) {
+                    embed.addField('Inspireren', `🕒 ${Utils.GetSecondsInMinutesAndSeconds(inspiringCooldown)}`, true)
+                } else {
+                    embed.addField('Inspireren', 'Klaar om een mooi lied te spelen!', true);
+                }
+            }
+
         }
 
         return embed;
