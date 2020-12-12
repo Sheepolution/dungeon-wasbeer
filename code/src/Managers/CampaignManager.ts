@@ -68,7 +68,7 @@ export default class CampaignManager {
                 monster = MonsterManager.GetMonsterByNumber(number + 1);
             }
         } else {
-            monster = MonsterManager.GetRandomMonster();
+            monster = MonsterManager.GetRandomMonster(this.previousBattle?.GetBattle().GetMonster());
         }
 
         if (monster) {

@@ -53,8 +53,13 @@ export default class MonsterManager {
         return this.monsterList.find(m => m.GetNumber() == n);
     }
 
-    public static GetRandomMonster() {
-        return this.monsterList.randomChoice();
+    public static GetRandomMonster(previousMonster?:Monster) {
+        var monster:Monster = new Monster();
+        do {
+            monster = this.monsterList.randomChoice();
+        } while (previousMonster != null && monster.GetId() == previousMonster.GetId());
+
+        return monster;
     }
 
     public static GetNumberOfMonsters() {
