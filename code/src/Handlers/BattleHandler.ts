@@ -94,6 +94,17 @@ export default class BattleHandler {
         character.SetInBattle(true);
         BattleHandler.inBattle = true;
 
+        const monster = battle.GetMonster();
+        const monsterId = monster.GetId();
+
+        if (monsterId == 'fedbc712-557b-414e-ac05-0f283682cb1a') {
+            monster.SetAttackStrength(character.GetAttackStrength());
+            monster.SetAttackRoll(character.GetAttackRoll());
+        } else if (monsterId == '50a3d80c-80b9-49a9-9411-0953d12422b1') {
+            monster.SetAttackStrength(Utils.Random(5, 30, true));
+            monster.SetAttackRoll(Utils.Random(5, 30, true));
+        }
+
         if (this.inBattleTimeout != null) {
             clearTimeout(this.inBattleTimeout);
         }
@@ -107,49 +118,75 @@ export default class BattleHandler {
         }, Utils.GetMinutesInMiliSeconds(.5));
 
         // Start attack
+        var secondAttack = false;
+
         const message = await this.SendBattleEmbed(messageInfo, battle, character);
-        await Utils.Sleep(3);
-        const roll1 = Utils.Dice(20);
-        if (roll1 == 1) {
-            this.OnMonsterCrit(messageInfo, message, battle, character, roll1, undefined, undefined, inspired)
-            return
-        } else if (roll1 == 20) {
-            this.OnCharacterCrit(messageInfo, message, battle, character, roll1, undefined, undefined, inspired)
-            return
-        }
+        do {
+            if (secondAttack) {
+                await Utils.Sleep(1);
+                this.UpdateBattleEmbed(message, battle, character);
+            }
 
-        const playerAttackRoll = character.GetAttackRoll();
-        var roll2 = playerAttackRoll;
-        if (playerAttackRoll > 1) {
-            await this.UpdateBattleEmbed(message, battle, character, roll1);
             await Utils.Sleep(3);
-            roll2 = Utils.Dice(playerAttackRoll);
-        }
+            const roll1 = Utils.Dice(20);
+            if (roll1 == 1) {
+                this.OnMonsterCrit(messageInfo, message, battle, character, roll1, undefined, undefined, inspired)
+                return
+            } else if (roll1 == 20) {
+                this.OnCharacterCrit(messageInfo, message, battle, character, roll1, undefined, undefined, inspired)
+                return
+            }
 
-        await this.UpdateBattleEmbed(message, battle, character, roll1, roll2);
-        await Utils.Sleep(3);
+            const playerAttackRoll = character.GetAttackRoll();
+            var roll2 = playerAttackRoll;
+            if (playerAttackRoll > 1) {
+                await this.UpdateBattleEmbed(message, battle, character, roll1);
+                await Utils.Sleep(3);
+                roll2 = Utils.Dice(playerAttackRoll);
+            }
 
-        const roll3 = Utils.Dice(20);
-
-        if (roll3 == 20) {
-            this.OnMonsterCrit(messageInfo, message, battle, character, roll1, roll2, roll3, inspired)
-            return
-        } else if (roll3 == 1) {
-            this.OnCharacterCrit(messageInfo, message, battle, character, roll1, roll2, roll3, inspired)
-            return
-        }
-
-        const monsterAttackRoll = battle.GetMonsterAttackRoll();
-        var roll4 = monsterAttackRoll;
-        if (monsterAttackRoll > 1) {
-            await this.UpdateBattleEmbed(message, battle, character, roll1, roll2, roll3);
+            await this.UpdateBattleEmbed(message, battle, character, roll1, roll2);
             await Utils.Sleep(3);
-            roll4 = Utils.Dice(monsterAttackRoll);
-        }
 
-        const playerWon = roll1 + (roll2 || 0) >= roll3 + (roll4 || 0);
-        const damage = await this.ResolveAttackResult(messageInfo, message, battle, character, playerWon, playerWon ? character.GetAttackStrength(): battle.GetMonsterAttackStrength(), roll1, roll2 || 0, roll3, roll4 || 0);
-        await this.UpdateBattleEmbed(message, battle, character, roll1, roll2, roll3, roll4, playerWon, damage, false, inspired);
+            const roll3 = Utils.Dice(20);
+
+            if (roll3 == 20) {
+                this.OnMonsterCrit(messageInfo, message, battle, character, roll1, roll2, roll3, inspired)
+                return
+            } else if (roll3 == 1) {
+                this.OnCharacterCrit(messageInfo, message, battle, character, roll1, roll2, roll3, inspired)
+                return
+            }
+
+            const monsterAttackRoll = battle.GetMonsterAttackRoll();
+            var roll4 = monsterAttackRoll;
+            if (monsterAttackRoll > 1) {
+                await this.UpdateBattleEmbed(message, battle, character, roll1, roll2, roll3);
+                await Utils.Sleep(3);
+                roll4 = Utils.Dice(monsterAttackRoll);
+            }
+
+            var playerWon = roll1 + (roll2 || 0) >= roll3 + (roll4 || 0);
+            if (monsterId == '57ea9222-d3d5-4f26-96a7-07c7415d3873') {
+                playerWon = !playerWon;
+            }
+
+            if (playerWon && !secondAttack && monsterId == 'fb835c7f-0eea-402f-97a2-e4f9cdd7fc35') {
+                secondAttack = true;
+            } else {
+
+                var monsterAttackStrength = battle.GetMonsterAttackStrength();
+                if (!playerWon && monsterId == 'e6e3aa15-b39b-40aa-a113-6b5add2994c4') {
+                    monsterAttackStrength = (roll3 + (roll4 || 0)) - (roll1 + (roll2 || 0));
+                }
+
+                const damage = await this.ResolveAttackResult(messageInfo, message, battle, character, playerWon, playerWon ? character.GetAttackStrength() : monsterAttackStrength, roll1, roll2 || 0, roll3, roll4 || 0);
+                await this.UpdateBattleEmbed(message, battle, character, roll1, roll2, roll3, roll4, playerWon, damage, false, inspired);
+                secondAttack = false;
+            }
+
+        } while (secondAttack);
+
         await character.StopBeingInspired();
 
         if (this.inBattleTimeout != null) {
@@ -177,8 +214,13 @@ export default class BattleHandler {
     }
 
     private static async OnCharacterCrit(messageInfo:IMessageInfo, message:Message, battle:Battle, character:Character, roll1:number, roll2:number = 0, roll3:number = 0, inspired:boolean = false) {
-        const damage = await this.ResolveAttackResult(messageInfo, message, battle, character, true, character.GetAttackStrength(true), roll1, roll2, roll3, 0);
-        await this.UpdateBattleEmbed(message, battle, character, roll1, roll2, roll3, 0, true, damage, true, inspired);
+        var playerWon = true;
+        if (battle.GetMonster().GetId() == '57ea9222-d3d5-4f26-96a7-07c7415d3873') {
+            playerWon = false;
+        }
+
+        const damage = await this.ResolveAttackResult(messageInfo, message, battle, character, playerWon, playerWon ? character.GetAttackStrength(true) : battle.GetMonsterAttackStrength(true), roll1, roll2, roll3, 0);
+        await this.UpdateBattleEmbed(message, battle, character, roll1, roll2, roll3, 0, playerWon, damage, true, inspired);
         await character.StopBeingInspired();
 
         if (this.inBattleTimeout != null) {
@@ -188,8 +230,19 @@ export default class BattleHandler {
     }
 
     private static async OnMonsterCrit(messageInfo:IMessageInfo, message:Message, battle:Battle, character:Character, roll1:number, roll2:number = 0, roll3:number = 0, inspired:boolean = false) {
-        const damage = await this.ResolveAttackResult(messageInfo, message, battle, character, false, battle.GetMonsterAttackStrength(true), roll1, roll2, roll3, 0);
-        await this.UpdateBattleEmbed(message, battle, character, roll1, roll2, roll3, 0, false, damage, true, inspired);
+        var playerWon = false;
+        const monsterId = battle.GetMonster().GetId();
+        if (monsterId == '57ea9222-d3d5-4f26-96a7-07c7415d3873') {
+            playerWon = true;
+        }
+
+        var monsterAttackStrength = battle.GetMonsterAttackStrength();
+        if (!playerWon && monsterId == 'e6e3aa15-b39b-40aa-a113-6b5add2994c4') {
+            monsterAttackStrength = 20 + battle.GetMonsterAttackRoll();
+        }
+
+        const damage = await this.ResolveAttackResult(messageInfo, message, battle, character, playerWon, playerWon ? character.GetAttackStrength(true) : monsterAttackStrength, roll1, roll2, roll3, 0);
+        await this.UpdateBattleEmbed(message, battle, character, roll1, roll2, roll3, 0, playerWon, damage, true, inspired);
         await character.StopBeingInspired();
 
         if (this.inBattleTimeout != null) {

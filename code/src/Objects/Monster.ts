@@ -133,6 +133,10 @@ export default class Monster {
         return this.attack;
     }
 
+    public SetAttackRoll(attack:number) {
+        this.attack = attack;
+    }
+
     public GetAttackDescription() {
         return this.attackDescription;
     }
@@ -143,6 +147,10 @@ export default class Monster {
 
     public GetAttackStrength(crit?:boolean) {
         return this.strength * (crit ? 2 : 1);
+    }
+
+    public SetAttackStrength(strength:number) {
+        this.strength = strength;
     }
 
     public GetImageUrl() {

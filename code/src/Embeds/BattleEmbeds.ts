@@ -9,6 +9,18 @@ export default class BattleEmbeds {
     public static GetBattleInfoEmbed(battle:Battle) {
         const monster = battle.GetMonster();
 
+        var attackStrength:string|number = monster.GetAttackStrength();
+        var attackRoll:string|number = monster.GetAttackRoll();
+
+        const monsterId = monster.GetId();
+
+        if (monsterId == 'fedbc712-557b-414e-ac05-0f283682cb1a' || monsterId == '50a3d80c-80b9-49a9-9411-0953d12422b1' || monsterId == 'e6e3aa15-b39b-40aa-a113-6b5add2994c4') {
+            attackStrength = '???';
+            if (monsterId != 'e6e3aa15-b39b-40aa-a113-6b5add2994c4') {
+                attackRoll = '???';
+            }
+        }
+
         const embed = new MessageEmbed()
             .setColor(SettingsConstants.COLORS.MONSTER)
             .setAuthor(monster.GetCategory(), 'https://cdn.discordapp.com/attachments/694331679204180029/698606955496734781/unknown.png')
@@ -17,8 +29,8 @@ export default class BattleEmbeds {
             .setImage(battle.GetMonsterImageUrl())
             .addField('Level', monster.GetLevelString())
             .addField('Health', `${battle.GetCurrentMonsterHealth()}/${monster.GetHealth()}`, true)
-            .addField('Strength', battle.GetMonsterAttackStrength(), true)
-            .addField('Attack', battle.GetMonsterAttackRoll(), true)
+            .addField('Strength', attackStrength, true)
+            .addField('Attack', attackRoll, true)
 
         return embed;
     }
@@ -31,7 +43,11 @@ export default class BattleEmbeds {
         const characterStrength = character.GetAttackStrength();
         const monsterName = monster.GetName();
         const monsterAttack = battle.GetMonsterAttackRoll();
-        const monsterStrength = battle.GetMonsterAttackStrength();
+        var monsterStrength:string|number = battle.GetMonsterAttackStrength();
+
+        if (monster.GetId() == 'e6e3aa15-b39b-40aa-a113-6b5add2994c4') {
+            monsterStrength = '???';
+        }
 
         const embed = new MessageEmbed()
             .setColor(SettingsConstants.COLORS.DEFAULT)
