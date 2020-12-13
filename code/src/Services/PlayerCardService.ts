@@ -35,6 +35,9 @@ export default class PlayerCardService {
                 case SortingType.Amount:
                     playerCards.sort((a:PlayerCard, b:PlayerCard) => b.GetAmount() - a.GetAmount());
                     break;
+                case SortingType.Season:
+                    playerCards.sort((a:PlayerCard, b:PlayerCard) => b.GetCard().GetSeason() - a.GetCard().GetSeason());
+                    break;
 
             }
         }

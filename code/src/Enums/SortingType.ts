@@ -5,4 +5,5 @@ export enum SortingType {
     Class,
     Buff,
     Amount,
+    Season,
 }

@@ -74,6 +74,12 @@ export default class PlayerCardHandler {
             case 'kaartend':
                 this.SendPlayerCardList(messageInfo, player, SortingType.Amount, args[0], args[1]);
                 break;
+            case 'lijst-seizoen':
+            case 'kaarten-seizoen':
+            case 'lijsts':
+            case 'kaartens':
+                this.SendPlayerCardList(messageInfo, player, SortingType.Season, args[0], args[1]);
+                break;
             case 'lijst-eigenaar':
             case 'lijst-eigenaren':
             case 'lijst-owners':
