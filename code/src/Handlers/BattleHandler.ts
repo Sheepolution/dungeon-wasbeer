@@ -236,7 +236,7 @@ export default class BattleHandler {
             playerWon = true;
         }
 
-        var monsterAttackStrength = battle.GetMonsterAttackStrength();
+        var monsterAttackStrength = battle.GetMonsterAttackStrength(true);
         if (!playerWon && monsterId == 'e6e3aa15-b39b-40aa-a113-6b5add2994c4') {
             monsterAttackStrength = 20 + battle.GetMonsterAttackRoll();
         }
