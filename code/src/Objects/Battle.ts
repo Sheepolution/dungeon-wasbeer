@@ -129,6 +129,8 @@ export default class Battle {
     }
 
     public async Complete() {
+        this.endDate = Utils.GetNow();
+
         await this.UPDATE({
             active: false,
             end_date: Utils.GetNowString(),
