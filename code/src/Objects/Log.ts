@@ -82,6 +82,8 @@ export default class Log {
             .join('players as p', 'p.id', '=', 'logs.player_id')
             .join('characters as mc', 'mc.id', '=', 'p.character_id')
             .join('characters as yc', 'yc.id', '=', 'logs.subject_id')
+            .where('type', 'Inspire')
+            .where('mc.id', '!=', 'yc.id')
             .where('logs.log_date', '>', battle.GetStartDate())
             .where('logs.log_date', '<', battle.GetEndDate())
             .select('mc.id')
