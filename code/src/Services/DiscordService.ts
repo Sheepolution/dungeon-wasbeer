@@ -89,7 +89,7 @@ export default class DiscordService {
         const textChannel:TextChannel = <TextChannel>channel;
         try {
             return await (content ? textChannel.send(content, embed) : textChannel.send(embed));
-        } catch (error:any) {
+        } catch (error) {
             // Error
         }
     }
@@ -102,7 +102,7 @@ export default class DiscordService {
 
         try {
             return await textChannel.send(message);
-        } catch (error:any) {
+        } catch (error) {
             // Error
         }
     }

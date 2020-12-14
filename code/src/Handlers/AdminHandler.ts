@@ -102,7 +102,7 @@ export default class AdminHandler {
             try {
                 await LogService.Log(player, player.GetId(), LogType.BotRestarted, `${player.GetDiscordName()} heeft de bot opnieuw laten opstarten.`);
                 await MessageService.ReplyMessage(messageInfo, 'Oké ik ben even weg en zou over 5 seconden weer terug moeten zijn.', true, true);
-            } catch (error:any) {
+            } catch (error) {
                 // Error
             }
 
