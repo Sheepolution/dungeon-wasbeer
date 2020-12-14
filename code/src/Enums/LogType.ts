@@ -1,4 +1,5 @@
 export enum LogType {
+    BotRestarted = 'BotRestarted',
     NewPlayer = 'NewPlayer',
     SayMessage = 'SayMessage',
     GiveCard = 'GiveCard',

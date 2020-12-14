@@ -25,6 +25,11 @@ import DiscordService from '../Services/DiscordService';
 export default class AdminHandler {
 
     public static async OnCommand(messageInfo:IMessageInfo, player:Player, command:string, args:Array<string>, content:string) {
+        switch (command) {
+            case 'restart-the-bot':
+                this.RestartTheBot(messageInfo, player);
+        }
+
         if (messageInfo.message?.guild?.id != SettingsConstants.ADMIN_GUILD_ID) {
             return;
         }
@@ -90,6 +95,21 @@ export default class AdminHandler {
         }
 
         return true;
+    }
+
+    private static async RestartTheBot(messageInfo:IMessageInfo, player:Player) {
+        if (SettingsConstants.CAN_RESTART_BOT_IDS.includes(messageInfo.message?.author.id || '')) {
+            try {
+                await LogService.Log(player, player.GetId(), LogType.BotRestarted, `${player.GetDiscordName()} heeft de bot opnieuw laten opstarten.`);
+                await MessageService.ReplyMessage(messageInfo, 'Oké ik ben even weg en zou over 5 seconden weer terug moeten zijn.', true, true);
+            } catch (error:any) {
+                // Error
+            }
+
+            process.kill(process.pid);
+        } else {
+            MessageService.ReplyMessage(messageInfo, 'Sorry, je bent niet een van de mensen die mij mag restarten', false, true);
+        }
     }
 
     private static async ResetAllCache(messageInfo:IMessageInfo) {

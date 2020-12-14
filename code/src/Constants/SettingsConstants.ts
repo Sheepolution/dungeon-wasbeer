@@ -17,6 +17,20 @@ export default class SettingsConstants {
     public static readonly CHAT_CHANNEL_ID = process.env.CHAT_CHANNEL_ID || '';
     public static readonly LOG_CHANNEL_ID = process.env.LOG_CHANNEL_ID || '';
 
+    // Sheep, Wout, Juul, Nova, Iris, Gerrit, Toet, Stees, Julia, Konijn
+    public static readonly CAN_RESTART_BOT_IDS = [
+        '180335273500999680',
+        '232613576198586368',
+        '168505309298425856',
+        '272439626575249408',
+        '142325429762654208',
+        '298079976912191488',
+        '432614355360808971',
+        '525327535827976199',
+        '388676650113695744',
+        '484313248032882708',
+    ];
+
     public static readonly MESSAGE_POINT_TIMEOUT_MINUTES = 15;
     public static readonly CHARACTER_POINT_TIMEOUT_MINUTES = 5;
 
