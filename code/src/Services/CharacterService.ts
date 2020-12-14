@@ -139,7 +139,7 @@ export default class CharacterService {
             attack: Math.max(a.attack + 1, Math.ceil(a.attack * b.attack)),
             dexterity: Math.max(a.dexterity + 1, Math.ceil(a.dexterity * b.dexterity)),
             healing: Math.max(a.healing + 1, Math.ceil(a.healing * b.healing)),
-            health: Math.max(a.health + 1, Math.ceil(a.health * b.health)),
+            health: Math.max(a.health, Math.ceil(a.health * b.health)),
             regeneration: Math.max(a.regeneration + 1, Math.ceil(a.regeneration * b.regeneration)),
             strength: Math.max(a.strength + 1, Math.ceil(a.strength * b.strength)),
             spell: Math.max(a.spell + 1, Math.ceil(a.spell * b.spell)),
