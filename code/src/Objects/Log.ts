@@ -78,18 +78,16 @@ export default class Log {
     }
 
     public static async FIND_TOTAL_INSPIRED_OTHERS_IN_BATTLE_FOR_ALL_CHARACTERS(battle:Battle) {
-        var totalInspired = await LogModel.query()
-            .join('players as p', 'p.id', '=', 'logs.player_id')
-            .join('characters as mc', 'mc.id', '=', 'p.character_id')
-            .join('characters as yc', 'yc.id', '=', 'logs.subject_id')
-            .where('type', 'Inspire')
-            .where('mc.id', '!=', 'yc.id')
-            .where('logs.log_date', '>', battle.GetStartDate())
-            .where('logs.log_date', '<', battle.GetEndDate())
-            .select('mc.id')
-            .groupBy('mc.id')
-            .count('mc.id as cnt');
+        const knex = LogModel.knex();
+        var totalInspired = await knex.raw(`select mc.id as id, count(mc.id) as cnt from logs l
+            join players p on p.id = l.player_id
+            join characters mc on mc.id = p.character_id
+            join characters yc on yc.id = l.subject_id
+            where l.type = 'Inspire'
+            and l.log_date > ? and l.log_date < ?
+            and mc.id != yc.id
+            group by mc.id`, [battle.GetStartDate(), battle.GetEndDate()]);
 
-        return totalInspired;
+        return totalInspired.rows;
     }
 }
