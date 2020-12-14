@@ -648,6 +648,7 @@ export default class Character {
     public async GiveRewardPoints(rewardPoints:number, battleId?:string, messageInfo?:IMessageInfo) {
         var rewardPoints = Math.ceil(rewardPoints);
         this.rewardPoints += rewardPoints;
+        this.rewardPoints = Math.min(this.rewardPoints, 5000);
         this.rewardPointsTotal += rewardPoints;
 
         if (messageInfo != null) {
