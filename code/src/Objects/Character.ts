@@ -62,6 +62,7 @@ export default class Character {
     private healDescription:string;
     private healFailDescription:string;
     private inspireDescription:string;
+    private rewardDate?:Date;
 
     constructor(player?:Player) {
         if (player) {
@@ -175,6 +176,7 @@ export default class Character {
         this.healDescription = model.heal_description;
         this.healFailDescription = model.heal_fail_description;
         this.inspireDescription = model.inspireDescription;
+        this.rewardDate = model.reward_date ? new Date(model.reward_date) : undefined;
         this.bornDate = new Date(model.born_date);
         this.deathDate = model.death_date ? new Date(model.death_date) : undefined;
         this.isSorcerer = this.classType == ClassType.Bard || this.classType == ClassType.Cleric || this.classType == ClassType.Wizard;
@@ -653,37 +655,42 @@ export default class Character {
 
         if (messageInfo != null) {
             if (battleId != null && this.rewardBattleId != battleId) {
-                if (this.HasEnoughPointsForReward()) {
-                    this.rewardPoints -= this.GetNextRewardPoints();
-                    this.rewardBattleId = battleId;
+                const now = Utils.GetNow();
+                if (this.rewardDate == null || this.rewardDate.getDate() != now.getDate()) {
+                    if (this.HasEnoughPointsForReward()) {
+                        this.rewardPoints -= this.GetNextRewardPoints();
+                        this.rewardBattleId = battleId;
+                        this.rewardDate = now;
 
-                    this.UPDATE({
-                        reward_battle_id: this.rewardBattleId,
-                        reward_points: this.rewardPoints,
-                        reward_points_total: this.rewardPointsTotal,
-                    });
+                        this.UPDATE({
+                            reward_battle_id: this.rewardBattleId,
+                            reward_points: this.rewardPoints,
+                            reward_points_total: this.rewardPointsTotal,
+                            reward_date: this.rewardDate.toISOString(),
+                        });
 
-                    var player = this.GetPlayer();
+                        var player = this.GetPlayer();
 
-                    // TODO: Make this generic
-                    const cardModifyResult = await CardManager.GivePlayerCard(player);
-                    const playerCard = <PlayerCard>cardModifyResult.object;
-                    messageInfo.channel = BotManager.GetCardChannel();
-                    if (cardModifyResult.result) {
-                        var cardMessage = await MessageService.ReplyMessage(messageInfo, 'Je hebt goed meegeholpen in de Dungeons & Wasberen campaign. Voor jou deze nieuwe kaart!', undefined, true, CardEmbeds.GetCardEmbed(playerCard.GetCard(), playerCard.GetAmount()));
-                        if (cardMessage != null) {
-                            CardManager.OnCardMessage(cardMessage, playerCard);
-                            LogService.Log(player, playerCard.GetCardId(), LogType.CardReceivedReward, `${player.GetDiscordName()} heeft de kaart '${playerCard.GetCard().GetName()}' gekregen als beloning in gevecht ${battleId}.`);
+                        // TODO: Make this generic
+                        const cardModifyResult = await CardManager.GivePlayerCard(player);
+                        const playerCard = <PlayerCard>cardModifyResult.object;
+                        messageInfo.channel = BotManager.GetCardChannel();
+                        if (cardModifyResult.result) {
+                            var cardMessage = await MessageService.ReplyMessage(messageInfo, 'Je hebt goed meegeholpen in de Dungeons & Wasberen campaign. Voor jou deze nieuwe kaart!', undefined, true, CardEmbeds.GetCardEmbed(playerCard.GetCard(), playerCard.GetAmount()));
+                            if (cardMessage != null) {
+                                CardManager.OnCardMessage(cardMessage, playerCard);
+                                LogService.Log(player, playerCard.GetCardId(), LogType.CardReceivedReward, `${player.GetDiscordName()} heeft de kaart '${playerCard.GetCard().GetName()}' gekregen als beloning in gevecht ${battleId}.`);
+                            }
+                        } else {
+                            var cardMessage = await MessageService.ReplyMessage(messageInfo, 'Je hebt goed meegeholpen in de Dungeons & Wasberen campaign. Voor jou deze extra kaart!', undefined, true, CardEmbeds.GetCardEmbed(playerCard.GetCard(), playerCard.GetAmount()));
+                            if (cardMessage != null) {
+                                CardManager.OnCardMessage(cardMessage, playerCard);
+                                LogService.Log(player, playerCard.GetCardId(), LogType.CardReceivedReward, `${player.GetDiscordName()} heeft de kaart '${playerCard.GetCard().GetName()}' gekregen als beloning in gevecht ${battleId}, en heeft daar nu ${playerCard.GetAmount()} van.`);
+                            }
                         }
-                    } else {
-                        var cardMessage = await MessageService.ReplyMessage(messageInfo, 'Je hebt goed meegeholpen in de Dungeons & Wasberen campaign. Voor jou deze extra kaart!', undefined, true, CardEmbeds.GetCardEmbed(playerCard.GetCard(), playerCard.GetAmount()));
-                        if (cardMessage != null) {
-                            CardManager.OnCardMessage(cardMessage, playerCard);
-                            LogService.Log(player, playerCard.GetCardId(), LogType.CardReceivedReward, `${player.GetDiscordName()} heeft de kaart '${playerCard.GetCard().GetName()}' gekregen als beloning in gevecht ${battleId}, en heeft daar nu ${playerCard.GetAmount()} van.`);
-                        }
+
+                        return;
                     }
-
-                    return;
                 }
             }
         }
