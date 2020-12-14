@@ -671,12 +671,16 @@ export default class Character {
                     messageInfo.channel = BotManager.GetCardChannel();
                     if (cardModifyResult.result) {
                         var cardMessage = await MessageService.ReplyMessage(messageInfo, 'Je hebt goed meegeholpen in de Dungeons & Wasberen campaign. Voor jou deze nieuwe kaart!', undefined, true, CardEmbeds.GetCardEmbed(playerCard.GetCard(), playerCard.GetAmount()));
-                        CardManager.OnCardMessage(cardMessage, playerCard);
-                        LogService.Log(player, playerCard.GetCardId(), LogType.CardReceivedReward, `${player.GetDiscordName()} heeft de kaart '${playerCard.GetCard().GetName()}' gekregen als beloning in gevecht ${battleId}.`);
+                        if (cardMessage != null) {
+                            CardManager.OnCardMessage(cardMessage, playerCard);
+                            LogService.Log(player, playerCard.GetCardId(), LogType.CardReceivedReward, `${player.GetDiscordName()} heeft de kaart '${playerCard.GetCard().GetName()}' gekregen als beloning in gevecht ${battleId}.`);
+                        }
                     } else {
                         var cardMessage = await MessageService.ReplyMessage(messageInfo, 'Je hebt goed meegeholpen in de Dungeons & Wasberen campaign. Voor jou deze extra kaart!', undefined, true, CardEmbeds.GetCardEmbed(playerCard.GetCard(), playerCard.GetAmount()));
-                        CardManager.OnCardMessage(cardMessage, playerCard);
-                        LogService.Log(player, playerCard.GetCardId(), LogType.CardReceivedReward, `${player.GetDiscordName()} heeft de kaart '${playerCard.GetCard().GetName()}' gekregen als beloning in gevecht ${battleId}, en heeft daar nu ${playerCard.GetAmount()} van.`);
+                        if (cardMessage != null) {
+                            CardManager.OnCardMessage(cardMessage, playerCard);
+                            LogService.Log(player, playerCard.GetCardId(), LogType.CardReceivedReward, `${player.GetDiscordName()} heeft de kaart '${playerCard.GetCard().GetName()}' gekregen als beloning in gevecht ${battleId}, en heeft daar nu ${playerCard.GetAmount()} van.`);
+                        }
                     }
 
                     return;

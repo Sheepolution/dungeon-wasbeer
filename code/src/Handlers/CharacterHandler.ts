@@ -324,6 +324,9 @@ export default class CharacterHandler {
         character.SetIsHealing(true);
         receiver.SetBeingHealed(true);
         const message = await this.SendHealingEmbed(messageInfo, character, receiver);
+        if (message == null) {
+            return;
+        }
         await Utils.Sleep(3);
         const roll = Utils.Dice(20);
         const healing = character.GetHealingBasedOnRoll(roll);

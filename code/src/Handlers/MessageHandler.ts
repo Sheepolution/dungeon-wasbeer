@@ -102,12 +102,16 @@ export default class MessageHandler {
             messageInfo.channel = BotManager.GetCardChannel();
             if (cardModifyResult.result) {
                 var cardMessage = await MessageService.ReplyMessage(messageInfo, 'Je hebt een nieuwe kaart!', undefined, true, CardEmbeds.GetCardEmbed(playerCard.GetCard(), playerCard.GetAmount()));
-                CardManager.OnCardMessage(cardMessage, playerCard);
-                LogService.Log(player, playerCard.GetCardId(), LogType.CardReceived, `${player.GetDiscordName()} heeft de kaart '${playerCard.GetCard().GetName()}' gekregen.`);
+                if (cardMessage != null) {
+                    CardManager.OnCardMessage(cardMessage, playerCard);
+                    LogService.Log(player, playerCard.GetCardId(), LogType.CardReceived, `${player.GetDiscordName()} heeft de kaart '${playerCard.GetCard().GetName()}' gekregen.`);
+                }
             } else {
                 var cardMessage = await MessageService.ReplyMessage(messageInfo, 'Je hebt een extra van deze kaart!', undefined, true, CardEmbeds.GetCardEmbed(playerCard.GetCard(), playerCard.GetAmount()));
-                CardManager.OnCardMessage(cardMessage, playerCard);
-                LogService.Log(player, playerCard.GetCardId(), LogType.CardReceived, `${player.GetDiscordName()} heeft de kaart '${playerCard.GetCard().GetName()}' gekregen, en heeft daar nu ${playerCard.GetAmount()} van.`);
+                if (cardMessage != null) {
+                    CardManager.OnCardMessage(cardMessage, playerCard);
+                    LogService.Log(player, playerCard.GetCardId(), LogType.CardReceived, `${player.GetDiscordName()} heeft de kaart '${playerCard.GetCard().GetName()}' gekregen, en heeft daar nu ${playerCard.GetAmount()} van.`);
+                }
             }
         }
 

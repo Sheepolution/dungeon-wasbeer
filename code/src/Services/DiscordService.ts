@@ -87,7 +87,11 @@ export default class DiscordService {
 
     public static async SendEmbed(channel:Channel, embed:MessageEmbed, content?:string) {
         const textChannel:TextChannel = <TextChannel>channel;
-        return await (content ? textChannel.send(content, embed) : textChannel.send(embed))
+        try {
+            return await (content ? textChannel.send(content, embed) : textChannel.send(embed));
+        } catch (error:any) {
+            // Error
+        }
     }
 
     public static async SendMessage(channel:TextChannel, message:string, embed?:MessageEmbed) {
@@ -96,7 +100,11 @@ export default class DiscordService {
             return await this.SendEmbed(textChannel, embed, message)
         }
 
-        return await textChannel.send(message);
+        try {
+            return await textChannel.send(message);
+        } catch (error:any) {
+            // Error
+        }
     }
 
     public static async ReplyMessage(textChannel:TextChannel, member:GuildMember, message:string, embed?:MessageEmbed) {

@@ -147,6 +147,11 @@ export default class PlayerCardHandler {
         const needed = SettingsConstants.CARD_PIECES_NEEDED;
 
         var message = await MessageService.ReplyMessage(messageInfo, `${baseText}...`);
+
+        if (message == null) {
+            return;
+        }
+
         baseText = `<@${player.GetDiscordId()}> ${baseText}`
 
         await Utils.Sleep(Utils.Random(2, 6));
@@ -165,12 +170,16 @@ export default class PlayerCardHandler {
                 messageInfo.channel = BotManager.GetCardChannel();
                 if (cardModifyResult.result) {
                     var cardMessage = await MessageService.ReplyMessage(messageInfo, 'Je plakt de stukjes aan elkaar, je hebt een nieuwe kaart!', undefined, true, CardEmbeds.GetCardEmbed(playerCard.GetCard(), playerCard.GetAmount()));
-                    CardManager.OnCardMessage(cardMessage, playerCard);
-                    LogService.Log(player, playerCard.GetCardId(), LogType.CardReceivedPieces, `${player.GetDiscordName()} heeft de kaart '${playerCard.GetCard().GetName()}' door kaartstukjes.`);
+                    if (cardMessage != null) {
+                        CardManager.OnCardMessage(cardMessage, playerCard);
+                        LogService.Log(player, playerCard.GetCardId(), LogType.CardReceivedPieces, `${player.GetDiscordName()} heeft de kaart '${playerCard.GetCard().GetName()}' door kaartstukjes.`);
+                    }
                 } else {
                     var cardMessage = await MessageService.ReplyMessage(messageInfo, 'Je plakt de stukjes aan elkaar, je hebt een extra van deze kaart!', undefined, true, CardEmbeds.GetCardEmbed(playerCard.GetCard(), playerCard.GetAmount()));
-                    CardManager.OnCardMessage(cardMessage, playerCard);
-                    LogService.Log(player, playerCard.GetCardId(), LogType.CardReceivedPieces, `${player.GetDiscordName()} heeft de kaart '${playerCard.GetCard().GetName()}' door kaartstukjes, en heeft daar nu ${playerCard.GetAmount()} van.`);
+                    if (cardMessage != null) {
+                        CardManager.OnCardMessage(cardMessage, playerCard);
+                        LogService.Log(player, playerCard.GetCardId(), LogType.CardReceivedPieces, `${player.GetDiscordName()} heeft de kaart '${playerCard.GetCard().GetName()}' door kaartstukjes, en heeft daar nu ${playerCard.GetAmount()} van.`);
+                    }
                 }
                 await player.TakeAllCardPieces();
             }
@@ -236,6 +245,11 @@ export default class PlayerCardHandler {
         const page = cards > SettingsConstants.CARD_AMOUNT_SPLIT_PAGES ? 1 : undefined;
 
         const message = await MessageService.ReplyEmbed(messageInfo, CardEmbeds.GetPlayerCardListEmbed(cardList, player, page, otherPlayer));
+
+        if (message == null) {
+            return;
+        }
+
         if (page == 1) {
             await message.react('⬅️')
             await Utils.Sleep(.5)
@@ -270,6 +284,10 @@ export default class PlayerCardHandler {
         ownerList.sort((a:any, b:any) => b.amount - a.amount);
 
         const message = await MessageService.ReplyEmbed(messageInfo, CardEmbeds.GetPlayerCardOwnerListEmbed(card, ownerList, page));
+
+        if (message == null) {
+            return;
+        }
 
         if (page == 1) {
             await message.react('⬅️')

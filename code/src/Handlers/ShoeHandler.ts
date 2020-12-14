@@ -123,12 +123,16 @@ export default class ShoeHandler {
 
                     if (cardModifyResult.result) {
                         var cardMessage = await MessageService.ReplyMessage(messageInfo, 'Je kijkt in je schoentje... je hebt van Sinterklaas een nieuwe kaart gekregen!', undefined, true, CardEmbeds.GetCardEmbed(playerCard.GetCard(), playerCard.GetAmount()));
-                        await LogService.Log(player, playerCard.GetCardId(), LogType.CardReceivedShoe, `${player.GetDiscordName()} heeft de kaart '${playerCard.GetCard().GetName()}' door hun schoen te legen.`);
-                        await CardManager.OnCardMessage(cardMessage, playerCard);
+                        if (cardMessage != null) {
+                            await LogService.Log(player, playerCard.GetCardId(), LogType.CardReceivedShoe, `${player.GetDiscordName()} heeft de kaart '${playerCard.GetCard().GetName()}' door hun schoen te legen.`);
+                            await CardManager.OnCardMessage(cardMessage, playerCard);
+                        }
                     } else {
                         var cardMessage = await MessageService.ReplyMessage(messageInfo, 'Je kijkt in je schoentje... je hebt van Sinterklaas een extra van deze kaart gekregen!', undefined, true, CardEmbeds.GetCardEmbed(playerCard.GetCard(), playerCard.GetAmount()));
-                        await LogService.Log(player, playerCard.GetCardId(), LogType.CardReceivedShoe, `${player.GetDiscordName()} heeft de kaart '${playerCard.GetCard().GetName()}' door hun schoen te legen, en heeft daar nu ${playerCard.GetAmount()} van.`);
-                        await CardManager.OnCardMessage(cardMessage, playerCard);
+                        if (cardMessage != null) {
+                            await LogService.Log(player, playerCard.GetCardId(), LogType.CardReceivedShoe, `${player.GetDiscordName()} heeft de kaart '${playerCard.GetCard().GetName()}' door hun schoen te legen, en heeft daar nu ${playerCard.GetAmount()} van.`);
+                            await CardManager.OnCardMessage(cardMessage, playerCard);
+                        }
                     }
 
                     await Utils.Sleep(10)

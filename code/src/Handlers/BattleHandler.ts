@@ -110,7 +110,7 @@ export default class BattleHandler {
         }
 
         this.inBattleTimeout = setTimeout(() => {
-            BattleHandler.inBattle = false
+            BattleHandler.inBattle = false;
             this.waitList = [];
             this.inBattleTimeout = null;
             character.SetInBattle(false);
@@ -121,6 +121,10 @@ export default class BattleHandler {
         var secondAttack = false;
 
         const message = await this.SendBattleEmbed(messageInfo, battle, character);
+        if (message == null) {
+            return;
+        }
+
         do {
             if (secondAttack) {
                 await Utils.Sleep(1);
