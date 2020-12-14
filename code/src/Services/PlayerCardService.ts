@@ -51,12 +51,13 @@ export default class PlayerCardService {
     }
 
     public static FindCard(name:string) {
-        name = name.toLowerCase();
-        const cards = CardManager.GetCardList();
-        for (const card of cards) {
-            if (card.GetName().toLowerCase().includes(name)) {
-                return card;
-            }
+        const cards = CardManager.GetCardList().filter(c => c.GetName().toLowerCase().includes(name.toLowerCase()));
+        if (cards.length == 0) {
+            return;
         }
+
+        cards.sort((a, b) => a.GetName().length - b.GetName().length);
+
+        return cards[0];
     }
 }
