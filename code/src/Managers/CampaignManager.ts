@@ -63,12 +63,12 @@ export default class CampaignManager {
 
             if (number == MonsterManager.GetNumberOfMonsters()) {
                 await monsterInOrderConfig?.SetValue(false);
-                monster = MonsterManager.GetRandomMonster();
+                monster = await MonsterManager.GetRandomMonster();
             } else {
                 monster = MonsterManager.GetMonsterByNumber(number + 1);
             }
         } else {
-            monster = MonsterManager.GetRandomMonster(this.previousBattle?.GetBattle().GetMonster());
+            monster = await MonsterManager.GetRandomMonster(this.previousBattle?.GetBattle().GetMonster());
         }
 
         if (monster) {
