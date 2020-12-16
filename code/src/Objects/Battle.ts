@@ -11,6 +11,11 @@ export default class Battle {
     private startDate:Date;
     private endDate:Date;
 
+    public static async GET_COUNT() {
+        const battles = await BattleModel.query().count('id');
+        return battles[0].count || 0;
+    }
+
     public async GET(id:string) {
         const model:BattleModel = await BattleModel.query().findById(id);
         await this.ApplyModel(model);
