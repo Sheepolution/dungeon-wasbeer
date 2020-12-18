@@ -144,6 +144,9 @@ export default class CardEmbeds {
 
         embed.setTitle(`Iedereen die de kaart ${card.GetName()} heeft`);
 
+        const category = card.GetCategory();
+        embed.setAuthor(category, CardService.GetIconByCategory(category));
+
         var split = SettingsConstants.CARD_AMOUNT_SPLIT_PAGES;
         var pages = Math.ceil(ownerList.length/split);
 
