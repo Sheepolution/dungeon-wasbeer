@@ -50,7 +50,7 @@ export default class PlayerCardService {
         return playerCards;
     }
 
-    public static FindCard(name:string) {
+    public static FindCards(name:string) {
         const cards = CardManager.GetCardList().filter(c => c.GetName().toLowerCase().includes(name.toLowerCase()));
         if (cards.length == 0) {
             return;
@@ -58,6 +58,6 @@ export default class PlayerCardService {
 
         cards.sort((a, b) => a.GetName().length - b.GetName().length);
 
-        return cards[0];
+        return cards;
     }
 }

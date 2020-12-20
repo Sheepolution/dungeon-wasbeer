@@ -16,6 +16,7 @@ import BotManager from '../Managers/BotManager';
 import { LogType } from '../Enums/LogType';
 import DiscordUtils from '../Utils/DiscordUtils';
 import PlayerCardService from '../Services/PlayerCardService';
+import Card from '../Objects/Card';
 
 export default class PlayerCardHandler {
 
@@ -264,26 +265,37 @@ export default class PlayerCardHandler {
             return;
         }
 
-        const card = PlayerCardService.FindCard(searchKey);
-        if (card == null) {
+        const cards = PlayerCardService.FindCards(searchKey);
+        if (cards == null || cards.length == 0) {
             this.SendCardNotFound(messageInfo, searchKey);
             return;
         }
 
-        const cardName = card.GetName();
+        var finalCard:Card|null = null;
+        var finalOwnerList:any = null;
 
-        const ownerList = await PlayerCard.GET_OWNERS_OF_CARD(cardName);
+        for (const card of cards) {
+            const cardName = card.GetName();
 
-        if (ownerList.length == 0) {
+            const ownerList = await PlayerCard.GET_OWNERS_OF_CARD(cardName);
+
+            if (ownerList.length > 0) {
+                finalCard = card;
+                finalOwnerList = ownerList;
+                break;
+            }
+        }
+
+        if (finalCard == null) {
             this.SendCardNotFound(messageInfo, searchKey);
             return;
         }
 
-        const page = ownerList.length > SettingsConstants.CARD_AMOUNT_SPLIT_PAGES ? 1 : undefined;
+        const page = finalOwnerList.length > SettingsConstants.CARD_AMOUNT_SPLIT_PAGES ? 1 : undefined;
 
-        ownerList.sort((a:any, b:any) => b.amount - a.amount);
+        finalOwnerList.sort((a:any, b:any) => b.amount - a.amount);
 
-        const message = await MessageService.ReplyEmbed(messageInfo, CardEmbeds.GetPlayerCardOwnerListEmbed(card, ownerList, page));
+        const message = await MessageService.ReplyEmbed(messageInfo, CardEmbeds.GetPlayerCardOwnerListEmbed(finalCard, finalOwnerList, page));
 
         if (message == null) {
             return;
@@ -293,7 +305,7 @@ export default class PlayerCardHandler {
             await message.react('⬅️')
             await Utils.Sleep(.5)
             await message.react('➡️')
-            ReactionManager.AddMessage(message, ReactionMessageType.PlayerCardList, messageInfo, {page: 1, card: card, ownerList: ownerList});
+            ReactionManager.AddMessage(message, ReactionMessageType.PlayerCardList, messageInfo, {page: 1, card: finalCard, ownerList: finalOwnerList});
         }
 
     }
