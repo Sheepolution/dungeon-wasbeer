@@ -396,6 +396,49 @@ export default class CharacterEmbeds {
         return embed;
     }
 
+    public static async GetTopWinRatioEmbed(topListType:TopListType, battleId?:string) {
+        const listWon:any = await Attack.GET_TOP_BATTLES_LIST(true, battleId);
+        const listLost:any = await Attack.GET_TOP_BATTLES_LIST(false, battleId);
+
+        const listRatio:any = {};
+        for (const loss of listLost) {
+            listRatio[loss.id] = { name: loss.name, discordName: loss.discord_name, amount: loss.cnt, ratio: 1 };
+        }
+
+        for (const victory of listWon) {
+            if (listRatio[victory.id] == null) {
+                listRatio[victory.id] = { name: victory.name, discordName: victory.discord_name, amount: victory.cnt, ratio: 0 };
+            } else {
+                const item = listRatio[victory.id];
+                item.amount += victory.cnt;
+                item.ratio =  victory.cnt/item.amount;
+            }
+        }
+
+        const list = new Array<any>();
+
+        for (const id in listRatio) {
+            const item = listRatio[id];
+            if (item.amount >= 5) {
+                list.push(item);
+            }
+        }
+
+        const embed = new MessageEmbed()
+            .setTitle(`Top ${listRatio.length} win ratio ${topListType == TopListType.Current ? ' in dit gevecht' : topListType == TopListType.Previous ? ' in het vorige gevecht' : ''}`);
+
+        var listString = '';
+
+        for (let i = 0; i < list.length; i++) {
+            const item = list[i];
+            listString += `${i+1}. ${item.ratio} - ${item.name} (${item.discordName})\n`;
+        }
+
+        embed.setDescription(listString);
+
+        return embed;
+    }
+
     public static async GetTopDamageDoneEmbed(topListType:TopListType, battleId?:string) {
         const list:any = await Attack.GET_TOP_DAMAGE_LIST(true, battleId);
         const embed = new MessageEmbed()

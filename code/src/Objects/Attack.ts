@@ -1,6 +1,6 @@
+import AttackModel from '../Models/AttackModel';
 import Battle from './Battle';
 import Character from './Character';
-import AttackModel from '../Models/AttackModel';
 
 export default class Attack {
 
@@ -75,8 +75,8 @@ export default class Attack {
             .join('characters', 'characters.id', '=', 'attacks.character_id')
             .join('players', 'characters.player_id', '=', 'players.id')
             .where(whereObj)
-            .select('name', 'discord_name')
-            .groupBy('characters.name', 'players.discord_name')
+            .select('characters.id', 'name', 'discord_name')
+            .groupBy('characters.id', 'characters.name', 'players.discord_name')
             .count('characters.id as cnt')
             .orderBy('cnt', 'desc')
             .limit(10);

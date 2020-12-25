@@ -795,6 +795,10 @@ export default class CharacterHandler {
             case 'gevechten verloren':
                 MessageService.ReplyEmbed(messageInfo, await CharacterEmbeds.GetTopFightsLostEmbed(topListType, battleId));
                 break;
+            case 'win ratio':
+            case 'winratio':
+                MessageService.ReplyEmbed(messageInfo, await CharacterEmbeds.GetTopWinRatioEmbed(topListType, battleId));
+                break;
             case 'schade gedaan':
             case 'schade gegeven':
             case 'damage gedaan':
