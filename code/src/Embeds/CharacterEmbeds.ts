@@ -419,16 +419,16 @@ export default class CharacterEmbeds {
 
         const listRatio:any = {};
         for (const loss of listLost) {
-            listRatio[loss.id] = { name: loss.name, discordName: loss.discord_name, amount: loss.cnt, ratio: 1 };
+            listRatio[loss.id] = { name: loss.name, discordName: loss.discord_name, amount: loss.cnt, ratio: 0 };
         }
 
         for (const victory of listWon) {
             if (listRatio[victory.id] == null) {
-                listRatio[victory.id] = { name: victory.name, discordName: victory.discord_name, amount: victory.cnt, ratio: 0 };
+                listRatio[victory.id] = { name: victory.name, discordName: victory.discord_name, amount: victory.cnt, ratio: 1 };
             } else {
                 const item = listRatio[victory.id];
                 item.amount += victory.cnt;
-                item.ratio =  victory.cnt/item.amount;
+                item.ratio = Math.floor((victory.cnt/item.amount) * 1000)/10;
             }
         }
 
