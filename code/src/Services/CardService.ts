@@ -198,12 +198,15 @@ export default class CardService {
     public static GetFilterType(filterType:string) {
         switch (filterType) {
             case 'categorie':
+            case 'category':
                 return CardFilterType.Category;
             case 'season':
+            case 'seizoen':
                 return CardFilterType.Season;
             case 'class':
                 return CardFilterType.Class;
             case 'buff':
+            case 'buffs':
                 return CardFilterType.Buff;
         }
 
