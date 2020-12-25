@@ -441,14 +441,16 @@ export default class CharacterEmbeds {
             }
         }
 
+        list.sort((a:any, b:any) => b.ratio - a.ratio);
+
         const embed = new MessageEmbed()
-            .setTitle(`Top ${listRatio.length} win ratio ${topListType == TopListType.Current ? ' in dit gevecht' : topListType == TopListType.Previous ? ' in het vorige gevecht' : ''}`);
+            .setTitle(`Top ${list.length} win ratio ${topListType == TopListType.Current ? ' in dit gevecht' : topListType == TopListType.Previous ? ' in het vorige gevecht' : ''}`);
 
         var listString = '';
 
         for (let i = 0; i < list.length; i++) {
             const item = list[i];
-            listString += `${i+1}. ${item.ratio} - ${item.name} (${item.discordName})\n`;
+            listString += `${i+1}. ${item.ratio}% - ${item.name} (${item.discordName})\n`;
         }
 
         embed.setDescription(listString);
