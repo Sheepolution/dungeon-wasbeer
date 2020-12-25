@@ -103,7 +103,7 @@ export default class Character {
         return list;
     }
 
-    public static async GET_TOP_PARTICIPATION_LIST() {
+    public static async GET_TOP_REWARD_POINTS_LIST() {
         const list = await CharacterModel.query()
             .join('players', 'characters.player_id', '=', 'players.id')
             .select('name', 'reward_points_total', 'discord_name')
