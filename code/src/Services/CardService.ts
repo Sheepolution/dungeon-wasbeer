@@ -196,7 +196,7 @@ export default class CardService {
     }
 
     public static GetFilterType(filterType:string) {
-        switch (filterType) {
+        switch (filterType.toLowerCase()) {
             case 'categorie':
             case 'category':
                 return CardFilterType.Category;
