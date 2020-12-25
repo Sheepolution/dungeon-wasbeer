@@ -17,6 +17,8 @@ import { LogType } from '../Enums/LogType';
 import DiscordUtils from '../Utils/DiscordUtils';
 import PlayerCardService from '../Services/PlayerCardService';
 import Card from '../Objects/Card';
+import { CardFilterType } from '../Enums/CardFilterType';
+import CardService from '../Services/CardService';
 
 export default class PlayerCardHandler {
 
@@ -39,7 +41,7 @@ export default class PlayerCardHandler {
             case 'kaarten-level':
             case 'lijstl':
             case 'kaartenl':
-                this.SendPlayerCardList(messageInfo, player, SortingType.Rank, args[0], args[1]);
+                this.SendPlayerCardList(messageInfo, player, SortingType.Rank, args[0], args[1], args[2], args[3]);
                 break;
             case 'lijst-cat':
             case 'kaarten-cat':
@@ -47,19 +49,19 @@ export default class PlayerCardHandler {
             case 'kaarten-categorie':
             case 'lijstc':
             case 'kaartenc':
-                this.SendPlayerCardList(messageInfo, player, SortingType.Category, args[0], args[1]);
+                this.SendPlayerCardList(messageInfo, player, SortingType.Category, args[0], args[1], args[2], args[3]);
                 break;
             case 'lijst-naam':
             case 'kaarten-naam':
             case 'lijstn':
             case 'kaartenn':
-                this.SendPlayerCardList(messageInfo, player, SortingType.Name, args[0], args[1]);
+                this.SendPlayerCardList(messageInfo, player, SortingType.Name, args[0], args[1], args[2], args[3]);
                 break;
             case 'lijst-class':
             case 'kaarten-class':
             case 'lijstcl':
             case 'kaartencl':
-                this.SendPlayerCardList(messageInfo, player, SortingType.Class, args[0], args[1]);
+                this.SendPlayerCardList(messageInfo, player, SortingType.Class, args[0], args[1], args[2], args[3]);
                 break;
             case 'lijst-buffs':
             case 'kaarten-buffs':
@@ -67,19 +69,19 @@ export default class PlayerCardHandler {
             case 'kaarten-buff':
             case 'lijstb':
             case 'kaartenb':
-                this.SendPlayerCardList(messageInfo, player, SortingType.Buff, args[0], args[1]);
+                this.SendPlayerCardList(messageInfo, player, SortingType.Buff, args[0], args[1], args[2], args[3]);
                 break;
             case 'lijst-dubbel':
             case 'kaarten-dubbel':
             case 'lijstd':
             case 'kaartend':
-                this.SendPlayerCardList(messageInfo, player, SortingType.Amount, args[0], args[1]);
+                this.SendPlayerCardList(messageInfo, player, SortingType.Amount, args[0], args[1], args[2], args[3]);
                 break;
             case 'lijst-seizoen':
             case 'kaarten-seizoen':
             case 'lijsts':
             case 'kaartens':
-                this.SendPlayerCardList(messageInfo, player, SortingType.Season, args[0], args[1]);
+                this.SendPlayerCardList(messageInfo, player, SortingType.Season, args[0], args[1], args[2], args[3]);
                 break;
             case 'lijst-eigenaar':
             case 'lijst-eigenaren':
@@ -213,34 +215,45 @@ export default class PlayerCardHandler {
         MessageService.ReplyEmbed(messageInfo, CardEmbeds.GetCardEmbed(playerCard.GetCard(), playerCard.GetAmount()));
     }
 
-    private static async SendPlayerCardList(messageInfo:IMessageInfo, player:Player, sorting?:SortingType, other?:string, lesserGreater?:string) {
+    private static async SendPlayerCardList(messageInfo:IMessageInfo, player:Player, sorting?:SortingType, filterType?:string, filterValue?:string, other?:string, lesserGreater?:string) {
 
         var otherPlayer;
         var requester = player;
+        var cardFilter = CardFilterType.None;
 
-        if (other != null) {
-            if (lesserGreater != null) {
-                if (! (lesserGreater == '<' || lesserGreater == '>')) {
-                    lesserGreater = undefined;
-                }
+        if (filterType != null) {
+            var id = DiscordUtils.GetMemberId(filterType);
+            if (id != null) {
+                other = filterType;
+                lesserGreater = filterValue
+            } else {
+                cardFilter = CardService.GetFilterType(filterType);
             }
 
-            var id = DiscordUtils.GetMemberId(other);
-            if (id != null) {
-                otherPlayer = await PlayerManager.GetPlayer(id);
-                if (otherPlayer != null) {
-                    if (lesserGreater == undefined) {
-                        player = otherPlayer;
-                        otherPlayer = undefined;
-                    } else if (lesserGreater == '>') {
-                        player = otherPlayer
-                        otherPlayer = requester;
+            if (other != null) {
+                if (lesserGreater != null) {
+                    if (! (lesserGreater == '<' || lesserGreater == '>')) {
+                        lesserGreater = undefined;
+                    }
+                }
+
+                var id = DiscordUtils.GetMemberId(other);
+                if (id != null) {
+                    otherPlayer = await PlayerManager.GetPlayer(id);
+                    if (otherPlayer != null) {
+                        if (lesserGreater == undefined) {
+                            player = otherPlayer;
+                            otherPlayer = undefined;
+                        } else if (lesserGreater == '>') {
+                            player = otherPlayer
+                            otherPlayer = requester;
+                        }
                     }
                 }
             }
         }
 
-        const cardList = PlayerCardService.GetPlayerCardList(player, sorting, otherPlayer)
+        const cardList = PlayerCardService.GetPlayerCardList(player, sorting, otherPlayer, cardFilter, filterValue);
 
         const cards = cardList.length;
         const page = cards > SettingsConstants.CARD_AMOUNT_SPLIT_PAGES ? 1 : undefined;
@@ -265,7 +278,7 @@ export default class PlayerCardHandler {
             return;
         }
 
-        const cards = PlayerCardService.FindCards(searchKey);
+        const cards = CardService.FindCards(searchKey);
         if (cards == null || cards.length == 0) {
             this.SendCardNotFound(messageInfo, searchKey);
             return;

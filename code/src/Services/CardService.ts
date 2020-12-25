@@ -4,6 +4,8 @@ import ImageConstants from '../Constants/ImageConstants';
 import EmojiConstants from '../Constants/EmojiConstants';
 import Card from '../Objects/Card';
 import CharacterService from './CharacterService';
+import { CardFilterType } from '../Enums/CardFilterType';
+import CardManager from '../Managers/CardManager';
 
 export default class CardService {
 
@@ -180,5 +182,29 @@ export default class CardService {
             case 'Kunst':
                 return EmojiConstants.CARD_CATEGORIES.ART;
         }
+    }
+
+    public static FindCards(name:string) {
+        const cards = CardManager.GetCardList().filter(c => c.GetName().toLowerCase().includes(name.toLowerCase()));
+        if (cards.length == 0) {
+            return;
+        }
+
+        cards.sort((a, b) => a.GetName().length - b.GetName().length);
+
+        return cards;
+    }
+
+    public static GetFilterType(filterType:string) {
+        switch (filterType) {
+            case 'categorie':
+                return CardFilterType.Category;
+            case 'class':
+                return CardFilterType.Class;
+            case 'buff':
+                return CardFilterType.Buff;
+        }
+
+        return CardFilterType.None;
     }
 }

@@ -1,11 +1,12 @@
 import Player from '../Objects/Player';
 import { SortingType } from '../Enums/SortingType';
 import PlayerCard from '../Objects/PlayerCard';
-import CardManager from '../Managers/CardManager';
+import { CardFilterType } from '../Enums/CardFilterType';
+import CardService from './CardService';
 
 export default class PlayerCardService {
 
-    public static GetPlayerCardList(player:Player, sortingType?:SortingType, otherPlayer?:Player):Array<PlayerCard> {
+    public static GetPlayerCardList(player:Player, sortingType?:SortingType, otherPlayer?:Player, filterType?:CardFilterType, filterValue?:string):Array<PlayerCard> {
 
         var playerCards = player.GetCards();
 
@@ -47,17 +48,26 @@ export default class PlayerCardService {
             playerCards = playerCards.filter(c => !otherCards.find(o => o.GetCardId() == c.GetCardId()));
         }
 
-        return playerCards;
-    }
-
-    public static FindCards(name:string) {
-        const cards = CardManager.GetCardList().filter(c => c.GetName().toLowerCase().includes(name.toLowerCase()));
-        if (cards.length == 0) {
-            return;
+        if (filterType != null && filterValue != null) {
+            switch (filterType) {
+                case CardFilterType.Category:
+                    playerCards = playerCards.filter(c => c.GetCard().GetCategory().toLowerCase().includes(filterValue || ''));
+                    break;
+                case CardFilterType.Season:
+                    if (filterValue == '???') {
+                        filterValue = '0';
+                    }
+                    playerCards = playerCards.filter(c => c.GetCard().GetSeason().toString() == filterValue);
+                    break;
+                case CardFilterType.Class:
+                    playerCards = playerCards.filter(c => c.GetCard().GetModifierClass().toLowerCase().includes(filterValue || ''));
+                    break;
+                case CardFilterType.Buff:
+                    playerCards = playerCards.filter(c => CardService.ParseModifierArrayToEmbedString(c.GetCard().GetModifiers()).toLowerCase().includes(filterValue || ''));
+                    break;
+            }
         }
 
-        cards.sort((a, b) => a.GetName().length - b.GetName().length);
-
-        return cards;
+        return playerCards;
     }
 }
