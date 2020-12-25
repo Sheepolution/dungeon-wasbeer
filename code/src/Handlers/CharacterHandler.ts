@@ -722,6 +722,8 @@ export default class CharacterHandler {
         var ignoreTopListType = false;
         switch (category) {
             case 'xp':
+            case 'participatiepunten':
+            case 'punten':
             case 'regen':
             case 'regenerated':
             case 'sleep':
@@ -768,6 +770,10 @@ export default class CharacterHandler {
             case 'xp':
             case 'level':
                 MessageService.ReplyEmbed(messageInfo, await CharacterEmbeds.GetTopXPEmbed());
+                break;
+            case 'participatiepunten':
+            case 'punten':
+                MessageService.ReplyEmbed(messageInfo, await CharacterEmbeds.GetTopRewardPointsEmbed());
                 break;
             case 'regen':
             case 'regenerated':

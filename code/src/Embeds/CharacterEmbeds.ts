@@ -311,6 +311,23 @@ export default class CharacterEmbeds {
         return embed;
     }
 
+    public static async GetTopRewardPointsEmbed() {
+        const list:any = await Character.GET_TOP_REWARD_POINTS_LIST();
+        const embed = new MessageEmbed()
+            .setTitle(`Top ${list.length} meeste participatiepunten`);
+
+        var listString = '';
+
+        for (let i = 0; i < list.length; i++) {
+            const item = list[i];
+            listString += `${i+1}. ${item.xp} - ${item.name} (${item.discord_name})\n`;
+        }
+
+        embed.setDescription(listString);
+
+        return embed;
+    }
+
     public static async GetTopRegeneratedEmbed() {
         const list:any = await Character.GET_TOP_REGENERATED_LIST();
         const embed = new MessageEmbed()

@@ -103,6 +103,16 @@ export default class Character {
         return list;
     }
 
+    public static async GET_TOP_PARTICIPATION_LIST() {
+        const list = await CharacterModel.query()
+            .join('players', 'characters.player_id', '=', 'players.id')
+            .select('name', 'reward_points_total', 'discord_name')
+            .orderBy('reward_points_total', 'desc')
+            .limit(10);
+
+        return list;
+    }
+
     public static async GET_TOP_REGENERATED_LIST() {
         const list = await CharacterModel.query()
             .join('players', 'characters.player_id', '=', 'players.id')
