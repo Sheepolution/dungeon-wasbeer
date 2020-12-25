@@ -320,7 +320,7 @@ export default class CharacterEmbeds {
 
         for (let i = 0; i < list.length; i++) {
             const item = list[i];
-            listString += `${i+1}. ${item.xp} - ${item.name} (${item.discord_name})\n`;
+            listString += `${i+1}. ${item.reward_points_total} - ${item.name} (${item.discord_name})\n`;
         }
 
         embed.setDescription(listString);
