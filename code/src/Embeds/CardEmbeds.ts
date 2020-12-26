@@ -75,7 +75,7 @@ export default class CardEmbeds {
         }
 
         if (filterType != null && filterValue != null) {
-            title += ` gefilterd op ${filterType.toString().toLowerCase()} '${filterValue}'`;
+            title += ` gefilterd op ${filterType.toString().toLowerCase()} ${filterValue.toTitleCase()}`;
         }
 
         embed.setTitle(title);
