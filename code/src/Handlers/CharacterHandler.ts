@@ -748,7 +748,12 @@ export default class CharacterHandler {
             case 'snelste puzzle':
             case 'snelste puzzles':
             case 'snelste puzzles solved':
-            case 'alle snelste puzzles':
+            case 'alle snelste puzzels':
+            case 'alle snelste opgelost':
+            case 'opgegraven':
+            case 'gegraven':
+            case 'graven':
+            case 'graaf':
             case 'afgepakt':
             case 'gestolen':
                 ignoreTopListType = true;
@@ -860,6 +865,18 @@ export default class CharacterHandler {
             case 'healing done':
                 MessageService.ReplyEmbed(messageInfo, await CharacterEmbeds.GetTopHealingDoneEmbed(topListType, battleId));
                 break;
+            case 'inspires':
+            case 'inspires done':
+            case 'inspires gegeven':
+            case 'inspires gedaan':
+                MessageService.ReplyEmbed(messageInfo, await CharacterEmbeds.GetTopInspiresDone(topListType, battleId));
+                break;
+            case 'inspires gekregen':
+            case 'inspires ontvangen':
+            case 'inspires received':
+            case 'inspires get':
+                MessageService.ReplyEmbed(messageInfo, await CharacterEmbeds.GetTopInspiresGet(topListType, battleId));
+                break;
             case 'puzzel':
             case 'puzzels':
             case 'puzzels opgelost':
@@ -885,11 +902,11 @@ export default class CharacterHandler {
             case 'kaartjes':
                 MessageService.ReplyEmbed(messageInfo, await CharacterEmbeds.GetTopUniqueCards());
                 break;
-            case 'inspires':
-            case 'inspires done':
-            case 'inspires gegeven':
-            case 'inspires gedaan':
-                MessageService.ReplyEmbed(messageInfo, await CharacterEmbeds.GetTopInspiresDone(topListType, battleId));
+            case 'opgegraven':
+            case 'gegraven':
+            case 'graven':
+            case 'graaf':
+                MessageService.ReplyEmbed(messageInfo, await CharacterEmbeds.GetTopCardsReceivedByPieces());
                 break;
             case 'afgepakt':
             case 'gestolen':

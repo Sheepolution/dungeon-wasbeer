@@ -730,6 +730,25 @@ export default class CharacterEmbeds {
 
         return embed;
     }
+
+    public static async GetTopCardsTaken() {
+        var list = await Log.GET_TOP_CARD_TAKEN();
+
+        const embed = new MessageEmbed()
+            .setTitle(`Top ${list.length} meeste kaarten afgepakt`);
+
+        var listString = '';
+
+        for (let i = 0; i < list.length; i++) {
+            const item = list[i];
+            listString += `${i+1}. ${item.cnt} - ${item.discord_name}\n`;
+        }
+
+        embed.setDescription(listString);
+
+        return embed;
+    }
+
     public static GetResetCharacterWarningEmbed() {
         const embed = new MessageEmbed();
         embed.setTitle('WAARSCHUWING')

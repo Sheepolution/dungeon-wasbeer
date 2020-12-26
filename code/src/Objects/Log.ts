@@ -77,6 +77,19 @@ export default class Log {
         return list;
     }
 
+    public static async GET_TOP_CARD_RECEIVED_BY_PIECES() {
+        const list = await LogModel.query()
+            .where('type', 'CardReceivedPieces')
+            .join('players', 'players.id', '=', 'logs.player_id')
+            .select('discord_name')
+            .groupBy('players.discord_name')
+            .count('logs.id as cnt')
+            .orderBy('cnt', 'desc')
+            .limit(10);
+
+        return list;
+    }
+
     public static async GET_TOP_CARD_TAKEN() {
         const list = await LogModel.query()
             .where('type', 'CardTaken')
