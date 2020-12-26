@@ -28,6 +28,8 @@ export default class BattleHandler {
             case 'vechten':
             case 'engage':
             case 'aanvallen':
+            case 'v':
+            case 'f':
                 this.OnAttack(messageInfo, player);
                 break;
             case 'battle':

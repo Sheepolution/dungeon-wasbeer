@@ -73,6 +73,8 @@ export default class CharacterHandler {
                 this.Unequip(messageInfo, player, args[0]);
                 break;
             case 'heal':
+            case 'genees':
+            case 'h':
                 this.OnHeal(messageInfo, player, args[0]);
                 break;
             case 'sleep':
@@ -82,14 +84,17 @@ export default class CharacterHandler {
             case 'dutje':
             case 'tukken':
             case 'tukkie':
+            case 'dommel':
                 this.Sleep(messageInfo, player);
                 break;
             case 'sos':
             case 'health':
+            case 's':
                 this.ShowLowestHealth(messageInfo);
                 break;
             case 'inspireer':
             case 'inspire':
+            case 'i':
                 this.OnInspire(messageInfo, player, args[0]);
                 break;
             case 'art':
