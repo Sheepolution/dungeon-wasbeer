@@ -112,8 +112,8 @@ export default class PlayerCardHandler {
         if (obj.values.ownerList) {
             await obj.message.edit(null, CardEmbeds.GetPlayerCardOwnerListEmbed(obj.values.card, obj.values.ownerList, obj.values.page));
         } else {
-            await obj.message.edit(null, CardEmbeds.GetPlayerCardListEmbed(cardList, obj.values.player, obj.values.page, obj.values.otherPlayer));
             const cardList = PlayerCardService.GetPlayerCardList(obj.values.player, obj.values.sorting, obj.values.otherPlayer, obj.values.filterType, obj.values.filterValue);
+            await obj.message.edit(null, CardEmbeds.GetPlayerCardListEmbed(cardList, obj.values.player, obj.values.page, obj.values.otherPlayer, obj.values.filterType, obj.values.filterValue));
         }
     }
 
@@ -258,7 +258,7 @@ export default class PlayerCardHandler {
         const cards = cardList.length;
         const page = cards > SettingsConstants.CARD_AMOUNT_SPLIT_PAGES ? 1 : undefined;
 
-        const message = await MessageService.ReplyEmbed(messageInfo, CardEmbeds.GetPlayerCardListEmbed(cardList, player, page, otherPlayer));
+        const message = await MessageService.ReplyEmbed(messageInfo, CardEmbeds.GetPlayerCardListEmbed(cardList, player, page, otherPlayer, cardFilter, filterValue));
 
         if (message == null) {
             return;

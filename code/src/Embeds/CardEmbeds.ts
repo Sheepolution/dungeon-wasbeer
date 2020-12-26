@@ -8,6 +8,7 @@ import CardService from '../Services/CardService';
 import CharacterService from '../Services/CharacterService';
 import CardManager from '../Managers/CardManager';
 import PlayerCard from '../Objects/PlayerCard';
+import { CardFilterType } from '../Enums/CardFilterType';
 
 export default class CardEmbeds {
 
@@ -62,16 +63,22 @@ export default class CardEmbeds {
         return embed;
     }
 
-    public static GetPlayerCardListEmbed(playerCards:Array<PlayerCard>, player:Player, page?:number, otherPlayer?:Player) {
+    public static GetPlayerCardListEmbed(playerCards:Array<PlayerCard>, player:Player, page?:number, otherPlayer?:Player, filterType?:CardFilterType, filterValue?:string) {
         const cardsAmount = CardManager.GetAmountOfNormalCards();
         const embed = new MessageEmbed()
             .setColor(SettingsConstants.COLORS.DEFAULT);
 
+        var title = `De kaarten van ${player.GetDiscordName()}`;
+
         if (otherPlayer != null) {
-            embed.setTitle(`De kaarten van ${player.GetDiscordName()} die ${otherPlayer.GetDiscordName()} niet heeft`);
-        } else {
-            embed.setTitle(`De kaarten van ${player.GetDiscordName()}`);
+            title += ` die ${otherPlayer.GetDiscordName()} niet heeft`;
         }
+
+        if (filterType != null && filterValue != null) {
+            title += ` gefilterd op ${filterType.toString().toLowerCase()} '${filterValue}'`;
+        }
+
+        embed.setTitle(title);
 
         var split = SettingsConstants.CARD_AMOUNT_SPLIT_PAGES;
         var pages = Math.ceil(playerCards.length/split);
