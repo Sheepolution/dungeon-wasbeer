@@ -35,7 +35,7 @@ export default class PlayerCardHandler {
                 break;
             case 'lijst':
             case 'kaarten':
-                this.SendPlayerCardList(messageInfo, player, undefined, args[0], args[1]);
+                this.SendPlayerCardList(messageInfo, player, undefined, args[0], args[1], args[2], args[3]);
                 break;
             case 'lijst-level':
             case 'kaarten-level':
