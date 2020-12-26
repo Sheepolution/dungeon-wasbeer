@@ -16,6 +16,7 @@ export default class PlayerCardService {
         }
 
         if (filterType != null && filterValue != null) {
+            filterValue = filterValue.toLowerCase();
             switch (filterType) {
                 case CardFilterType.Category:
                     playerCards = playerCards.filter(c => c.GetCard().GetCategory().toLowerCase().includes(filterValue || ''));
