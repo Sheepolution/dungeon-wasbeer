@@ -10,6 +10,37 @@ export default class PlayerCardService {
 
         var playerCards = player.GetCards();
 
+        if (otherPlayer != null) {
+            var otherCards = otherPlayer.GetCards();
+            playerCards = playerCards.filter(c => !otherCards.find(o => o.GetCardId() == c.GetCardId()));
+        }
+
+        if (filterType != null && filterValue != null) {
+            switch (filterType) {
+                case CardFilterType.Category:
+                    playerCards = playerCards.filter(c => c.GetCard().GetCategory().toLowerCase().includes(filterValue || ''));
+                    break;
+                case CardFilterType.Season:
+                    if (filterValue == '???') {
+                        filterValue = '0';
+                    }
+                    playerCards = playerCards.filter(c => c.GetCard().GetSeason().toString() == filterValue);
+                    break;
+                case CardFilterType.Class:
+                    playerCards = playerCards.filter(c => {
+                        const classType = c.GetCard().GetModifierClass();
+                        if (classType != null) {
+                            return classType.toString().toLowerCase().includes(filterValue || '')
+                        }
+                        return false;
+                    });
+                    break;
+                case CardFilterType.Buff:
+                    playerCards = playerCards.filter(c => CardService.ParseModifierArrayToEmbedString(c.GetCard().GetModifiers()).toLowerCase().includes(filterValue || ''));
+                    break;
+            }
+        }
+
         if (sortingType != null) {
             switch (sortingType) {
                 case SortingType.Category:
@@ -43,30 +74,6 @@ export default class PlayerCardService {
             }
         }
 
-        if (otherPlayer != null) {
-            var otherCards = otherPlayer.GetCards();
-            playerCards = playerCards.filter(c => !otherCards.find(o => o.GetCardId() == c.GetCardId()));
-        }
-
-        if (filterType != null && filterValue != null) {
-            switch (filterType) {
-                case CardFilterType.Category:
-                    playerCards = playerCards.filter(c => c.GetCard().GetCategory().toLowerCase().includes(filterValue || ''));
-                    break;
-                case CardFilterType.Season:
-                    if (filterValue == '???') {
-                        filterValue = '0';
-                    }
-                    playerCards = playerCards.filter(c => c.GetCard().GetSeason().toString() == filterValue);
-                    break;
-                case CardFilterType.Class:
-                    playerCards = playerCards.filter(c => c.GetCard().GetModifierClass().toLowerCase().includes(filterValue || ''));
-                    break;
-                case CardFilterType.Buff:
-                    playerCards = playerCards.filter(c => CardService.ParseModifierArrayToEmbedString(c.GetCard().GetModifiers()).toLowerCase().includes(filterValue || ''));
-                    break;
-            }
-        }
 
         return playerCards;
     }
