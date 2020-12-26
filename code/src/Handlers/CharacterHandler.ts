@@ -749,6 +749,8 @@ export default class CharacterHandler {
             case 'snelste puzzles':
             case 'snelste puzzles solved':
             case 'alle snelste puzzles':
+            case 'afgepakt':
+            case 'gestolen':
                 ignoreTopListType = true;
                 break;
         }
@@ -889,11 +891,9 @@ export default class CharacterHandler {
             case 'inspires gedaan':
                 MessageService.ReplyEmbed(messageInfo, await CharacterEmbeds.GetTopInspiresDone(topListType, battleId));
                 break;
-            case 'inspires gekregen':
-            case 'inspires ontvangen':
-            case 'inspires received':
-            case 'inspires get':
-                MessageService.ReplyEmbed(messageInfo, await CharacterEmbeds.GetTopInspiresGet(topListType, battleId));
+            case 'afgepakt':
+            case 'gestolen':
+                MessageService.ReplyEmbed(messageInfo, await CharacterEmbeds.GetTopCardsTaken());
                 break;
             default:
                 MessageService.ReplyMessage(messageInfo, `Ik heb geen lijst van top 10 ${category}. Kijk ff in die pins voor de lijst van mogelijke lijsten.`, false);
