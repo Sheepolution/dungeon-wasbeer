@@ -21,6 +21,9 @@ export default class PlayerCardService {
                 case CardFilterType.Category:
                     playerCards = playerCards.filter(c => c.GetCard().GetCategory().toLowerCase().includes(filterValue || ''));
                     break;
+                case CardFilterType.Level:
+                    playerCards = playerCards.filter(c => c.GetCard().GetRank().toString() == filterValue);
+                    break;
                 case CardFilterType.Season:
                     if (filterValue == '???') {
                         filterValue = '0';

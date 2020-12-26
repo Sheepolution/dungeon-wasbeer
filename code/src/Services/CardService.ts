@@ -200,6 +200,11 @@ export default class CardService {
             case 'categorie':
             case 'category':
                 return CardFilterType.Category;
+            case 'level':
+            case 'sterren':
+            case 'stars':
+            case 'rank':
+                return CardFilterType.Level;
             case 'season':
             case 'seizoen':
                 return CardFilterType.Season;
