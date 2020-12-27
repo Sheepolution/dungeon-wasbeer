@@ -19,6 +19,7 @@ export default class BotManager {
     private static artChannel:TextChannel;
     private static chatChannel:TextChannel;
     private static logChannel:TextChannel;
+    private static locked:boolean;
 
     public static async OnReady() {
         console.log('Dungeon Wasbeer: Connected');
@@ -80,6 +81,14 @@ export default class BotManager {
         CardManager.BuildCardList();
         MonsterManager.BuildMonsterList();
         ConfigurationManager.BuildConfigurationList();
+    }
+
+    public static GetLocked() {
+        return this.locked;
+    }
+
+    public static SetLocked() {
+        this.locked = true;
     }
 
     public static GetCardChannel() {

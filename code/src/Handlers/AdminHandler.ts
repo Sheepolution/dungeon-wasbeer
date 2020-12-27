@@ -90,6 +90,9 @@ export default class AdminHandler {
             case 'givecard':
                 this.GiveCard(messageInfo, args[0], args, player)
                 break;
+            case 'lock':
+                BotManager.SetLocked();
+                break;
             default:
                 return false;
         }

@@ -9,6 +9,7 @@ import BattleHandler from './BattleHandler';
 import CharacterHandler from './CharacterHandler';
 import PuzzleHandler from './PuzzleHandler';
 import ShoeHandler from './ShoeHandler';
+import BotManager from '../Managers/BotManager';
 
 export default class CommandHandler {
 
@@ -24,6 +25,10 @@ export default class CommandHandler {
         }
 
         if (await AdminHandler.OnCommand(messageInfo, player, command, args, content)) {
+            return;
+        }
+
+        if (BotManager.GetLocked()) {
             return;
         }
 
