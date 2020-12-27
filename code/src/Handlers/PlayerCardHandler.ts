@@ -270,7 +270,7 @@ export default class PlayerCardHandler {
             await message.react('⬅️')
             await Utils.Sleep(.5)
             await message.react('➡️')
-            ReactionManager.AddMessage(message, ReactionMessageType.PlayerCardList, messageInfo, {page: 1, requester: requester, player: player, filterType: cardFilter, filterValue: filterValue, otherPlayer: otherPlayer, lesserGreater: lesserGreater});
+            ReactionManager.AddMessage(message, ReactionMessageType.PlayerCardList, messageInfo, {page: 1, requester: requester, player: player, sorting: sorting, filterType: cardFilter, filterValue: filterValue, otherPlayer: otherPlayer, lesserGreater: lesserGreater});
         }
     }
 
