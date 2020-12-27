@@ -226,6 +226,8 @@ export default class PlayerCardHandler {
             if (id != null) {
                 other = filterType;
                 lesserGreater = filterValue
+                filterType = undefined;
+                filterValue = undefined;
             } else {
                 cardFilter = CardService.GetFilterType(filterType);
             }
