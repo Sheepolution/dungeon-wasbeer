@@ -431,10 +431,6 @@ export default class Character {
         return this.inspired;
     }
 
-    public GetMaxInspiringCooldown() {
-        return CharacterConstants.BASE_COOLDOWN_DURATION - this.fullModifierStats.dexterity;
-    }
-
     public CalculateDamageWithArmor(damage:number) {
         return Math.ceil(damage * (1 - Math.min(50, this.fullModifierStats.armor)/100));
     }
@@ -476,7 +472,7 @@ export default class Character {
     }
 
     public async SetInspireCooldown() {
-        await Redis.set(Character.inspiringCooldownPrefix + this.GetId(), '1', 'EX', Utils.GetMinutesInSeconds(this.GetMaxInspiringCooldown()));
+        await Redis.set(Character.inspiringCooldownPrefix + this.GetId(), '1', 'EX', Utils.GetMinutesInSeconds(CharacterConstants.BASE_COOLDOWN_DURATION));
     }
 
     public async IncreaseXP(amount:number, trx?:any, updateData:boolean = true) {
