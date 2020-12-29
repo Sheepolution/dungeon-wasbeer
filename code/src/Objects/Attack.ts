@@ -42,16 +42,26 @@ export default class Attack {
 
     public static async FIND_TOTAL_CRITS_DONE(character:Character) {
         const totalCritsDone = await AttackModel.query()
-            .where({character_id: character.GetId(), roll_character_base: 20})
-            .orWhere({character_id: character.GetId(), roll_monster_base: 1}).count('id');
+            .where({victory: true, character_id: character.GetId()})
+            .andWhere((model:AttackModel) => {
+                model.where({roll_monster_base: 1})
+                    .orWhere({roll_character_base: 20})
+                    .orWhere({roll_monster_base: 1})
+                    .orWhere({roll_monster_base: 20})
+            }).count('id');
 
         return totalCritsDone[0].count || 0;
     }
 
     public static async FIND_TOTAL_CRITS_TAKEN(character:Character) {
         const totalCritsTaken = await AttackModel.query()
-            .where({character_id: character.GetId(), roll_character_base: 1})
-            .orWhere({character_id: character.GetId(), roll_monster_base: 20}).count('id');
+            .where({victory: false, character_id: character.GetId()})
+            .andWhere((model:AttackModel) => {
+                model.where({roll_monster_base: 1})
+                    .orWhere({roll_character_base: 20})
+                    .orWhere({roll_monster_base: 1})
+                    .orWhere({roll_monster_base: 20})
+            }).count('id');
 
         return totalCritsTaken[0].count || 0;
     }
@@ -105,25 +115,21 @@ export default class Attack {
 
     public static async GET_TOP_CRIT_LIST(victory:boolean, battleId?:string) {
         var whereObj:any = {victory: victory};
-        var whereObj2:any = {victory: victory};
-        if (victory) {
-            whereObj.roll_character_base = 20;
-            whereObj2.roll_monster_base = 1;
-        } else {
-            whereObj.roll_character_base = 1;
-            whereObj2.roll_monster_base = 20;
-        }
 
         if (battleId != null) {
             whereObj.battle_id = battleId;
-            whereObj2.battle_id = battleId;
         }
 
         const list = await AttackModel.query()
             .join('characters', 'characters.id', '=', 'attacks.character_id')
             .join('players', 'characters.player_id', '=', 'players.id')
             .where(whereObj)
-            .orWhere(whereObj2)
+            .andWhere((model:AttackModel) => {
+                model.where({roll_monster_base: 1})
+                    .orWhere({roll_character_base: 20})
+                    .orWhere({roll_monster_base: 1})
+                    .orWhere({roll_monster_base: 20})
+            })
             .groupBy('characters.name', 'players.discord_name')
             .select('name', 'discord_name')
             .count('characters.id as cnt')
