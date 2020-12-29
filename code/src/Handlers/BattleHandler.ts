@@ -127,30 +127,25 @@ export default class BattleHandler {
             return;
         }
 
-        do {
-            if (secondAttack) {
-                await Utils.Sleep(1);
-                this.UpdateBattleEmbed(message, battle, character);
-            }
+        await Utils.Sleep(3);
+        const roll1 = Utils.Dice(20);
+        if (roll1 == 1) {
+            this.OnMonsterCrit(messageInfo, message, battle, character, roll1, undefined, undefined, inspired)
+            return
+        } else if (roll1 == 20) {
+            this.OnCharacterCrit(messageInfo, message, battle, character, roll1, undefined, undefined, inspired)
+            return
+        }
 
+        const playerAttackRoll = character.GetAttackRoll();
+        var roll2 = playerAttackRoll;
+        if (playerAttackRoll > 1) {
+            await this.UpdateBattleEmbed(message, battle, character, roll1);
             await Utils.Sleep(3);
-            const roll1 = Utils.Dice(20);
-            if (roll1 == 1) {
-                this.OnMonsterCrit(messageInfo, message, battle, character, roll1, undefined, undefined, inspired)
-                return
-            } else if (roll1 == 20) {
-                this.OnCharacterCrit(messageInfo, message, battle, character, roll1, undefined, undefined, inspired)
-                return
-            }
+            roll2 = Utils.Dice(playerAttackRoll);
+        }
 
-            const playerAttackRoll = character.GetAttackRoll();
-            var roll2 = playerAttackRoll;
-            if (playerAttackRoll > 1) {
-                await this.UpdateBattleEmbed(message, battle, character, roll1);
-                await Utils.Sleep(3);
-                roll2 = Utils.Dice(playerAttackRoll);
-            }
-
+        do {
             await this.UpdateBattleEmbed(message, battle, character, roll1, roll2);
             await Utils.Sleep(3);
 
