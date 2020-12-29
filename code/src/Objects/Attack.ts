@@ -44,7 +44,7 @@ export default class Attack {
         const totalCritsDone = await AttackModel.query()
             .where({victory: true, character_id: character.GetId()})
             .andWhere((model:AttackModel) => {
-                model.where({roll_monster_base: 1})
+                model.where({roll_character_base: 1})
                     .orWhere({roll_character_base: 20})
                     .orWhere({roll_monster_base: 1})
                     .orWhere({roll_monster_base: 20})
@@ -57,7 +57,7 @@ export default class Attack {
         const totalCritsTaken = await AttackModel.query()
             .where({victory: false, character_id: character.GetId()})
             .andWhere((model:AttackModel) => {
-                model.where({roll_monster_base: 1})
+                model.where({roll_character_base: 1})
                     .orWhere({roll_character_base: 20})
                     .orWhere({roll_monster_base: 1})
                     .orWhere({roll_monster_base: 20})
@@ -125,7 +125,7 @@ export default class Attack {
             .join('players', 'characters.player_id', '=', 'players.id')
             .where(whereObj)
             .andWhere((model:AttackModel) => {
-                model.where({roll_monster_base: 1})
+                model.where({roll_character_base: 1})
                     .orWhere({roll_character_base: 20})
                     .orWhere({roll_monster_base: 1})
                     .orWhere({roll_monster_base: 20})
