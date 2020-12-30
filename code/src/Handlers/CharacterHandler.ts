@@ -17,6 +17,7 @@ import { Redis } from '../Providers/Redis';
 import { TopListType } from '../Enums/TopListType';
 import { Utils } from '../Utils/Utils';
 import { Message } from 'discord.js';
+import Inspire from '../Objects/Inspire';
 
 export default class CharacterHandler {
 
@@ -130,6 +131,10 @@ export default class CharacterHandler {
             case 'inspire-beschrijving':
             case 'ib':
                 this.EditInspireDescription(messageInfo, player, content);
+                break;
+            case 'inspire-faal-beschrijving':
+            case 'ifb':
+                this.EditInspireFailDescription(messageInfo, player, content);
                 break;
             case 'reset':
                 this.OnReset(messageInfo, player);
@@ -444,14 +449,26 @@ export default class CharacterHandler {
             return;
         }
 
+        character.SetIsInspiring(true);
+        receiver.SetBeingInspired(true);
+        const message = await this.SendInspiringEmbed(messageInfo, character, receiver);
+        if (message == null) {
+            return;
+        }
+
+        await Utils.Sleep(3);
+        const roll = Utils.Dice(20);
+        const inspiration = character.GetInspirationBasedOnRoll(roll);
+
+        await this.UpdateInspiringEmbed(message, character, receiver, roll, inspiration);
+        await receiver.BecomeInspired(inspiration);
         await character.SetInspireCooldown();
-        await receiver.BecomeInspired();
-        await MessageService.ReplyMessage(messageInfo, `${character.GetInspireDescription().replaceAll('\\[naam\\]', selfInspire ? 'jezelf' : receiver.GetName())} ✨. Al ${selfInspire ? 'je' : 'hun'} stats krijgen een 20% boost tot ${selfInspire ? 'je' : 'hun'} volgende gevecht.`, true);
-        await LogService.Log(character.GetPlayer(), receiver.GetId(), LogType.Inspire, `${character.GetName()} heeft ${character.GetId() == receiver.GetId() ? 'zichzelf' : `${receiver.GetName()}`} geïnspireerd.`);
 
         if (!selfInspire) {
             await character.GiveInspirePoints(CampaignManager.GetBattle()?.GetId(), messageInfo);
         }
+
+        this.SaveInspire(character, receiver, character.GetFullModifierStats().charisma, roll, inspiration);
     }
 
     private static async SaveHeal(character:Character, receiver:Character, receiverHealth:number, characterHealing:number, roll:number, finalHealing:number) {
@@ -461,12 +478,27 @@ export default class CharacterHandler {
         LogService.Log(character.GetPlayer(), heal.id, LogType.Heal, `${character.GetName()} heeft een heal gedaan op ${character.GetId() == receiver.GetId() ? 'zichzelf.' : `${receiver.GetName()}.`}`);
     }
 
+    private static async SaveInspire(character:Character, receiver:Character, characterCharisma:number, roll:number, finalInspiration:number) {
+        const battle = CampaignManager.GetBattle();
+        if (battle == null) { return; }
+        const inspire = await Inspire.STATIC_POST(battle, character, receiver, characterCharisma, roll, finalInspiration);
+        await LogService.Log(character.GetPlayer(), inspire.id, LogType.Inspire, `${character.GetName()} heeft ${character.GetId() == receiver.GetId() ? 'zichzelf' : `${receiver.GetName()}`} geïnspireerd.`);
+    }
+
     private static async SendHealingEmbed(messageInfo:IMessageInfo, character:Character, receiver:Character) {
         return await MessageService.ReplyEmbed(messageInfo, await CharacterEmbeds.GetHealingEmbed(character, receiver))
     }
 
+    private static async SendInspiringEmbed(messageInfo:IMessageInfo, character:Character, receiver:Character) {
+        return await MessageService.ReplyEmbed(messageInfo, await CharacterEmbeds.GetInspiringEmbed(character, receiver))
+    }
+
     private static async UpdateHealingEmbed(message:Message, character:Character, receiver:Character, roll:number, healing:number) {
         message.edit('', await CharacterEmbeds.GetHealingEmbed(character, receiver, roll, healing));
+    }
+
+    private static async UpdateInspiringEmbed(message:Message, character:Character, receiver:Character, roll:number, inspiration:number) {
+        message.edit('', await CharacterEmbeds.GetInspiringEmbed(character, receiver, roll, inspiration));
     }
 
     private static async EditAvatar(messageInfo:IMessageInfo, player:Player, url?:string) {
@@ -643,6 +675,26 @@ export default class CharacterHandler {
 
         await character.UpdateInspireDescription(description);
         MessageService.ReplyMessage(messageInfo, 'Je inspire beschrijving is aangepast.');
+    }
+
+    private static async EditInspireFailDescription(messageInfo:IMessageInfo, player:Player, description:string) {
+        const character = PlayerManager.GetCharacterFromPlayer(messageInfo, player);
+        if (character == null) {
+            return;
+        }
+
+        if (!character.CanInspire()) {
+            MessageService.ReplyMessage(messageInfo, 'Je character kan helemaal niet inspireren!', false);
+            return;
+        }
+
+        if (description.length > 250) {
+            MessageService.ReplyMessage(messageInfo, 'De beschrijving van je inspire mag niet langer zijn dan 250 tekens.', false);
+            return;
+        }
+
+        await character.UpdateInspireDescription(description);
+        MessageService.ReplyMessage(messageInfo, 'Je inspire faal beschrijving is aangepast.');
     }
 
     private static async OnReset(messageInfo:IMessageInfo, player:Player) {

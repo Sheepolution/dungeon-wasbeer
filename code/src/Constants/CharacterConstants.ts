@@ -51,14 +51,14 @@ export default class CharacterConstants {
     }
 
     public static readonly CLASS_BASE_STATS = {
-        BASE: { armor: 5, dexterity: 5, healing: 10, health: 200,  regeneration: 3, strength: 10, spell: 13, attack: 5 },
-        MAX: { armor: 50, dexterity: 20, healing: 50, health: 1000,  regeneration: 15, strength: 50, spell: 50, attack: 50 },
-        BARD: { armor: 2, dexterity: 2, healing: 0, health: 200,  regeneration: 4, strength: 0, spell: 13, attack: 2 },
-        CLERIC: { armor: 5, dexterity: 7, healing: 10, health: 200, regeneration: 3, strength: 0, spell: 5, attack: 3 },
-        WIZARD: { armor: 0, dexterity: 0, healing: 0, health: 220, regeneration: 3, strength: 0, spell: 18, attack: 2 },
-        PALADIN: { armor: 10, dexterity: 5, healing: 5, health: 200, regeneration: 3, strength: 10, spell: 0, attack: 5 },
-        FIGHTER: { armor: 5, dexterity: 0, healing: 0, health: 180, regeneration: 1, strength: 13, spell: 0, attack: 7 },
-        RANGER: { armor: 5, dexterity: 8, healing: 0, health: 200, regeneration: 3, strength: 8, spell: 0, attack: 8 },
+        BASE: { armor: 5, dexterity: 5, healing: 10, health: 200,  regeneration: 3, strength: 10, spell: 13, attack: 5, charisma: 10 },
+        MAX: { armor: 50, dexterity: 20, healing: 50, health: 1000,  regeneration: 15, strength: 50, spell: 50, attack: 50, charisma: 25 },
+        BARD: { armor: 2, dexterity: 2, healing: 0, health: 200,  regeneration: 4, strength: 0, spell: 13, attack: 2, charisma: 10 },
+        CLERIC: { armor: 5, dexterity: 7, healing: 10, health: 200, regeneration: 3, strength: 0, spell: 5, attack: 3, charisma: 0 },
+        WIZARD: { armor: 0, dexterity: 0, healing: 0, health: 220, regeneration: 3, strength: 0, spell: 18, attack: 2, charisma: 0 },
+        PALADIN: { armor: 10, dexterity: 5, healing: 5, health: 200, regeneration: 3, strength: 10, spell: 0, attack: 5, charisma: 0 },
+        FIGHTER: { armor: 5, dexterity: 0, healing: 0, health: 180, regeneration: 1, strength: 13, spell: 0, attack: 7, charisma: 0 },
+        RANGER: { armor: 5, dexterity: 8, healing: 0, health: 200, regeneration: 3, strength: 8, spell: 0, attack: 8, charisma: 0 },
     };
 
     public static readonly CLASS_ATTACK_MESSAGES = {
@@ -105,5 +105,6 @@ export default class CharacterConstants {
 
     public static readonly HEAL_MESSAGE = '"[naam] krijgt [health] health terug."';
     public static readonly HEAL_FAIL_MESSAGE = '"Je healt per ongeluk een steen. Er gebeurt weinig."';
-    public static readonly INSPIRE_MESSAGE ='"Je speelt prachtige muziek en inspireert [naam]"';
+    public static readonly INSPIRE_MESSAGE ='"Je speelt prachtige muziek en inspireert [naam] voor een [inspiratie]% stat boost."';
+    public static readonly INSPIRE_FAIL_MESSAGE = '"Je speelt een hoop valse noten en wordt gevraagd te stoppen. Dit was alles behalve inspirerend."';
 }

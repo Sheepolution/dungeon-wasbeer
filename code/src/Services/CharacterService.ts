@@ -98,6 +98,7 @@ export default class CharacterService {
         return {
             armor: max.armor + (stats.armor - base.armor),
             attack:max.attack + (stats.attack - base.attack),
+            charisma:max.charisma + (stats.charisma - base.charisma),
             dexterity: max.dexterity + (stats.dexterity - base.dexterity),
             healing: max.healing + (stats.healing - base.healing),
             health: max.health + (stats.health - base.health),
@@ -111,6 +112,7 @@ export default class CharacterService {
         return {
             armor: n,
             attack: n,
+            charisma: n,
             dexterity: n,
             healing: n,
             health: n,
@@ -124,6 +126,7 @@ export default class CharacterService {
         return {
             armor: a.armor + b.armor,
             attack: a.attack + b.attack,
+            charisma: a.charisma + b.charisma,
             dexterity: a.dexterity + b.dexterity,
             healing: a.healing + b.healing,
             health: a.health + b.health,
@@ -137,6 +140,7 @@ export default class CharacterService {
         return {
             armor: Math.max(a.armor + 1, Math.ceil(a.armor * b.armor)),
             attack: Math.max(a.attack + 1, Math.ceil(a.attack * b.attack)),
+            charisma: Math.max(a.charisma + 1, Math.ceil(a.charisma * b.charisma)),
             dexterity: Math.max(a.dexterity + 1, Math.ceil(a.dexterity * b.dexterity)),
             healing: Math.max(a.healing + 1, Math.ceil(a.healing * b.healing)),
             health: Math.max(a.health, Math.ceil(a.health * b.health)),

@@ -1,7 +1,7 @@
 import Battle from './Battle';
 import Character from './Character';
-import AttackModel from '../Models/AttackModel';
 import HealModel from '../Models/HealModel';
+import { Utils } from '../Utils/Utils';
 
 export default class Heal {
 
@@ -13,6 +13,7 @@ export default class Heal {
     private characterHealing:number;
     private roll:number;
     private finalHealing:number;
+    private healDate:Date;
 
     public static async FIND_HEALS_DONE_BY_CHARACTER(character:Character) {
         const totalHeals = await HealModel.query().where({character_id: character.GetId()}).count('id');
@@ -120,17 +121,17 @@ export default class Heal {
     }
 
     public async GET(id:string) {
-        const model:AttackModel = await AttackModel.query().findById(id);
+        const model:HealModel = await HealModel.query().findById(id);
         await this.ApplyModel(model);
     }
 
     public async UPDATE(data:any, trx?:any) {
-        await AttackModel.query(trx)
+        await HealModel.query(trx)
             .findById(this.id)
             .patch(data);
     }
 
-    public async ApplyModel(model:AttackModel) {
+    public async ApplyModel(model:HealModel) {
         this.id = model.id;
         this.battle = await model.GetBattle();
         this.character = await model.GetCharacter();
@@ -139,6 +140,7 @@ export default class Heal {
         this.characterHealing = model.character_healing;
         this.roll = model.roll;
         this.finalHealing = model.final_healing;
+        this.healDate = <Date> Utils.ConvertDateToUtc(model.heal_date);
     }
 
     public GetId() {

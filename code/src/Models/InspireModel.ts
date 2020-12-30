@@ -6,10 +6,10 @@ import Character from '../Objects/Character';
 
 const { Model } = require('objection');
 
-export default class HealModel extends Model {
+export default class InspireModel extends Model {
 
     static get tableName() {
-        return 'heals';
+        return 'inspires';
     }
 
     static relationMappings = {
@@ -17,7 +17,7 @@ export default class HealModel extends Model {
             relation: Model.BelongsToOneRelation,
             modelClass: BattleModel,
             join: {
-                from: 'heals.battle_id',
+                from: 'inspires.battle_id',
                 to: 'battles.id',
             }
         },
@@ -25,7 +25,7 @@ export default class HealModel extends Model {
             relation: Model.BelongsToOneRelation,
             modelClass: CharacterModel,
             join: {
-                from: 'heals.character_id',
+                from: 'inspires.character_id',
                 to: 'characters.id',
             }
         },
@@ -33,29 +33,28 @@ export default class HealModel extends Model {
             relation: Model.BelongsToOneRelation,
             modelClass: CharacterModel,
             join: {
-                from: 'heals.receiver_id',
+                from: 'inspires.receiver_id',
                 to: 'characters.id',
             }
         },
     }
 
-    public static async New(battle:Battle, character:Character, receiver:Character, receiverHealth:number, characterHealing:number, roll:number, finalHealing:number) {
-        const healId = Utils.UUID();
+    public static async New(battle:Battle, character:Character, receiver:Character, characterCharisma:number, roll:number, finalInspiration:number) {
+        const inspireId = Utils.UUID();
 
-        const heal = await HealModel.query()
+        const inspire = await InspireModel.query()
             .insert({
-                id: healId,
+                id: inspireId,
                 battle_id: battle.GetId(),
                 character_id: character.GetId(),
                 receiver_id: receiver.GetId(),
-                receiver_health: receiverHealth,
-                character_healing: characterHealing,
+                character_charisma: characterCharisma,
                 roll: roll,
-                final_healing: finalHealing,
-                heal_date: Utils.GetNowString(),
+                final_inspiration: finalInspiration,
+                inspire_date: Utils.GetNowString(),
             })
 
-        return heal;
+        return inspire;
     }
 
     public async GetBattle() {

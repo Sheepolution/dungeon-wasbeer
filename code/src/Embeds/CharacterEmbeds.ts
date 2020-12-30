@@ -12,6 +12,7 @@ import { TopListType } from '../Enums/TopListType';
 import { Utils } from '../Utils/Utils';
 import { MessageEmbed } from 'discord.js';
 import Log from '../Objects/Log';
+import Inspire from '../Objects/Inspire';
 
 export default class CharacterEmbeds {
 
@@ -43,6 +44,10 @@ export default class CharacterEmbeds {
 
         if (character.CanHeal()) {
             embed.addField('Healing', `${modifiers.healing} ${modifiersCards.healing > 0 ? `(${modifiersClass.healing}+${modifiersCards.healing})` : ''}`, true);
+        }
+
+        if (character.CanInspire()) {
+            embed.addField('Charisma', `${modifiers.charisma} ${modifiersCards.charisma > 0 ? `(${modifiersClass.charisma}+${modifiersCards.charisma})` : ''}`, true);
         }
 
         const equipment = character.GetEquipment();
@@ -122,6 +127,10 @@ export default class CharacterEmbeds {
 
         if (character.CanHeal()) {
             embed.addField('Healing', `${modifiers.healing} ${modifiersCards.healing > 0 ? `(${modifiersClass.healing}+${modifiersCards.healing})` : ''}`, true);
+        }
+
+        if (character.CanInspire()) {
+            embed.addField('Charisma', `${modifiers.charisma} ${modifiersCards.charisma > 0 ? `(${modifiersClass.charisma}+${modifiersCards.charisma})` : ''}`, true);
         }
 
         return embed;
@@ -272,7 +281,66 @@ export default class CharacterEmbeds {
                     embed.addField('Inspireren', 'Klaar om een mooi lied te spelen!', true);
                 }
             }
+        }
 
+        return embed;
+    }
+
+    public static async GetInspiringEmbed(character:Character, receiver:Character, roll?:number, inspiration:number = 0) {
+        const embed = new MessageEmbed();
+        if (inspiration != null) {
+            embed.setColor((roll != null && inspiration == 0) ? SettingsConstants.COLORS.BAD : SettingsConstants.COLORS.GOOD)
+        } else {
+            embed.setColor(SettingsConstants.COLORS.DEFAULT)
+        }
+
+        const characterName = character.GetName();
+        const receiverName = receiver.GetName();
+
+        embed.setTitle('Inspire roll')
+            .setThumbnail(character.GetAvatarUrl())
+            .setDescription(`${character.GetName()}${(character.IsInspired() ? ' ✨' : '')} rollt om ${receiver == character ? 'zichzelf' : receiver.GetName()}${(character.IsInspired() ? ' ✨' : '')} te inspireren.\n\n-- Statistieken --`)
+            .addField('--------------------------------', '-- Roll --')
+
+        if (roll == null)  {
+            embed.addField(characterName, 'Rollt de D20...')
+        } else {
+            embed.addField(characterName, `D20 = ${roll}`)
+                .addField('--------------------------------', '-- Resultaat --')
+                .setFooter(`Participatiepunten: ${character.GetRewardPoints(CampaignManager.GetBattle()?.GetId())}/${character.GetNextRewardPoints()}`);
+
+            if (inspiration == 0 ) {
+                embed.addField(`${characterName} faalt met inspireren!`, character.GetInspireFailDescription().replaceAll('\\[naam\\]', receiverName));
+            } else {
+                embed.addField(`${characterName} slaagt er in te inspireren`, character.GetInspireDescription().replaceAll('\\[naam\\]', receiverName).replaceAll('\\[inspiratie\\]',  inspiration.toString()));
+            }
+
+            embed.addField('--------------------------------', '-- Cooldown(s) --');
+
+            const battleCooldown = await character.GetBattleCooldown();
+            if (battleCooldown > 0) {
+                embed.addField('Vechten', `🕒 ${Utils.GetSecondsInMinutesAndSeconds(battleCooldown)}`, true)
+            } else {
+                embed.addField('Vechten', 'Klaar om te vechten!', true);
+            }
+
+            if (character.CanHeal()) {
+                const healingCooldown = await character.GetHealingCooldown();
+                if (healingCooldown > 0) {
+                    embed.addField('Healen', `🕒 ${Utils.GetSecondsInMinutesAndSeconds(healingCooldown)}`, true)
+                } else {
+                    embed.addField('Healen', 'Klaar om te healen!', true);
+                }
+            }
+
+            if (character.CanInspire()) {
+                const inspiringCooldown = await character.GetInspireCooldown();
+                if (inspiringCooldown > 0) {
+                    embed.addField('Inspireren', `🕒 ${Utils.GetSecondsInMinutesAndSeconds(inspiringCooldown)}`, true)
+                } else {
+                    embed.addField('Inspireren', 'Klaar om een mooi lied te spelen!', true);
+                }
+            }
         }
 
         return embed;
@@ -666,22 +734,32 @@ export default class CharacterEmbeds {
     }
 
     public static async GetTopInspiresDone(topListType:TopListType, battleId?:string) {
-        var list:any = null;
+
+        const listInspires:any = await Inspire.GET_TOP_INSPIRES_DONE_LIST(battleId);
+        var listLogs:any = null;
 
         if (topListType == TopListType.All) {
-            list = await Log.GET_TOP_ALL_INSPIRES_DONE();
+            listLogs = await Log.GET_TOP_ALL_INSPIRES_DONE();
         } else {
-            list = await Log.GET_TOP_INSPIRES_DONE(battleId);
+            listLogs = await Log.GET_TOP_INSPIRES_DONE(battleId);
+        }
+
+        for (const inspire of listInspires) {
+            for (const log of listLogs) {
+                if (inspire.name == log.name && inspire.discord_name == log.discord_name) {
+                    inspire.cnt += log.cnt;
+                }
+            }
         }
 
         const embed = new MessageEmbed()
-            .setTitle(`Top ${list.length} meeste inspires gedaan${topListType == TopListType.Current ? ' in dit gevecht' : topListType == TopListType.Previous ? ' in het vorige gevecht' : ''}`);
+            .setTitle(`Top ${listInspires.length} meeste inspires gedaan${topListType == TopListType.Current ? ' in dit gevecht' : topListType == TopListType.Previous ? ' in het vorige gevecht' : ''}`);
 
         var listString = '';
 
-        for (let i = 0; i < list.length; i++) {
-            const item = list[i];
-            listString += `${i+1}. ${item.cnt} - ${item.discord_name}\n`;
+        for (let i = 0; i < listInspires.length; i++) {
+            const item = listInspires[i];
+            listString += `${i+1}. ${item.cnt} - ${item.name} (${item.discord_name})\n`;
         }
 
         embed.setDescription(listString);
@@ -690,21 +768,31 @@ export default class CharacterEmbeds {
     }
 
     public static async GetTopInspiresGet(topListType:TopListType, battleId?:string) {
-        var list:any = null;
+
+        const listInspires:any = await Inspire.GET_TOP_INSPIRES_RECEIVED_LIST(battleId);
+        var listLogs:any = null;
 
         if (topListType == TopListType.All) {
-            list = await Log.GET_TOP_ALL_INSPIRES_GET();
+            listLogs = await Log.GET_TOP_ALL_INSPIRES_GET();
         } else {
-            list = await Log.GET_TOP_INSPIRES_GET(battleId);
+            listLogs = await Log.GET_TOP_INSPIRES_GET(battleId)
+        }
+
+        for (const inspire of listInspires) {
+            for (const log of listLogs) {
+                if (inspire.name == log.name && inspire.discord_name == log.discord_name) {
+                    inspire.cnt += log.cnt;
+                }
+            }
         }
 
         const embed = new MessageEmbed()
-            .setTitle(`Top ${list.length} meeste inspires gekregen${topListType == TopListType.Current ? ' in dit gevecht' : topListType == TopListType.Previous ? ' in het vorige gevecht' : ''}`);
+            .setTitle(`Top ${listInspires.length} meeste inspires gekregen${topListType == TopListType.Current ? ' in dit gevecht' : topListType == TopListType.Previous ? ' in het vorige gevecht' : ''}`);
 
         var listString = '';
 
-        for (let i = 0; i < list.length; i++) {
-            const item = list[i];
+        for (let i = 0; i < listInspires.length; i++) {
+            const item = listInspires[i];
             listString += `${i+1}. ${item.cnt} - ${item.name} (${item.discord_name})\n`;
         }
 

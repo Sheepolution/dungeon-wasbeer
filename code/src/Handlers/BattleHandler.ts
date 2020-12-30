@@ -71,6 +71,11 @@ export default class BattleHandler {
             return;
         }
 
+        if (character.IsBeingInspired()) {
+            MessageService.ReplyMessage(messageInfo, 'Je kan niet vechten want je wordt momenteel geïnspireerd.', false);
+            return;
+        }
+
         const cooldown = await character.GetBattleCooldown();
 
         if (cooldown > 0) {

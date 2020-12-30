@@ -45,11 +45,14 @@ export default class Character {
     private equipment:Array<Card>;
     private bornDate:Date;
     private deathDate?:Date;
+    private rewardDate?:Date;
     private isSorcerer:boolean;
     private inBattle:boolean;
     private isHealing:boolean;
+    private isInspiring:boolean;
     private beingHealed:boolean;
-    private inspired:boolean;
+    private beingInspired:boolean;
+    private inspiration:number;
     private avatarUrl:string;
     private lore:string;
     private regenerated:number;
@@ -62,7 +65,7 @@ export default class Character {
     private healDescription:string;
     private healFailDescription:string;
     private inspireDescription:string;
-    private rewardDate?:Date;
+    private inspireFailDescription:string;
 
     constructor(player?:Player) {
         if (player) {
@@ -173,7 +176,7 @@ export default class Character {
         this.name = model.name;
         this.currentHealth = model.health;
         this.equipment = this.player.GetCards().filter(pc => pc.IsEquipped()).map(c => c.GetCard());
-        this.inspired = model.inspired;
+        this.inspiration = model.inspiration;
         this.avatarUrl = model.avatar_url;
         this.lore = model.lore;
         this.regenerated = model.regenerated;
@@ -366,6 +369,22 @@ export default class Character {
         return this.beingHealed;
     }
 
+    public SetIsInspiring(isInspiring:boolean) {
+        this.isInspiring = isInspiring;
+    }
+
+    public IsInsprining() {
+        return this.isInspiring;
+    }
+
+    public SetBeingInspired(beingInspired:boolean) {
+        this.beingInspired = beingInspired;
+    }
+
+    public IsBeingInspired() {
+        return this.beingInspired;
+    }
+
     public async Sleep() {
         const healing = Math.min(Math.ceil(this.maxHealth/10), this.maxHealth - this.currentHealth);
         this.currentHealth += healing;
@@ -408,27 +427,32 @@ export default class Character {
         return this.classType == ClassType.Bard;
     }
 
-    public async BecomeInspired() {
-        this.inspired = true;
+    public async BecomeInspired(amount:number) {
+        this.inspiration = amount;
         this.UpdateFullModifierStats();
         await this.UPDATE({
-            inspired: true
+            inspiration: this.inspiration
         })
     }
 
     public async StopBeingInspired() {
-        if (!this.inspired) {
+        if (this.inspiration == 0) {
             return;
         }
-        this.inspired = false;
+
+        this.inspiration = 0;
         this.UpdateFullModifierStats();
         await this.UPDATE({
-            inspired: false
+            inspired: this.inspiration
         })
     }
 
+    public GetInspiration() {
+        return this.inspiration;
+    }
+
     public IsInspired() {
-        return this.inspired;
+        return this.inspiration != 0;
     }
 
     public GetMaxInspiringCooldown() {
@@ -524,6 +548,14 @@ export default class Character {
         return Math.floor((roll/10) * this.fullModifierStats.healing);
     }
 
+    public GetInspirationBasedOnRoll(roll:number) {
+        if (roll == 1) {
+            return 0;
+        }
+
+        return Math.floor((roll/10) * this.fullModifierStats.charisma);
+    }
+
     public async GetHealthFromMessage() {
         if (this.IsFullHealth()) { return false; }
         var healing = Math.min(this.fullModifierStats.regeneration, this.maxHealth - this.currentHealth);
@@ -610,6 +642,10 @@ export default class Character {
         return this.inspireDescription || CharacterConstants.INSPIRE_MESSAGE;
     }
 
+    public GetInspireFailDescription() {
+        return this.inspireFailDescription || CharacterConstants.INSPIRE_FAIL_MESSAGE;
+    }
+
     public async UpdateAttackDescription(description:string) {
         this.attackDescription = description;
         await this.UPDATE({
@@ -642,6 +678,13 @@ export default class Character {
         this.inspireDescription = description;
         await this.UPDATE({
             inspire_description : this.inspireDescription
+        })
+    }
+
+    public async UpdateInspireFailDescription(description:string) {
+        this.inspireFailDescription = description;
+        await this.UPDATE({
+            inspire_fail_description : this.inspireFailDescription
         })
     }
 
@@ -801,15 +844,18 @@ export default class Character {
         this.classModifierStats = CharacterService.GetClassModifierStats(this.classType);
         this.cardModifierStats = this.CalculateCardModifierStats();
         this.fullModifierStats = this.CalculateFullModifierStats();
-        if (this.inspired) {
-            const emptyModifierStats = CharacterService.GetEmptyModifierStats(CharacterConstants.INSPIRE_STAT_MULTIPLIER);
+
+        if (this.inspiration > 0) {
+            const emptyModifierStats = CharacterService.GetEmptyModifierStats(1 + (this.inspiration/100));
             emptyModifierStats.health = 1;
+            emptyModifierStats.charisma = 1;
             this.fullModifierStats = CharacterService.GetMultipliedModifierStats(this.fullModifierStats, emptyModifierStats);
         }
 
         const max = CharacterService.GetMaxModifierStats(this.classType);
         this.fullModifierStats.armor = Math.min(Math.max(0, this.fullModifierStats.armor), max.armor);
         this.fullModifierStats.attack = Math.min(Math.max(0, this.fullModifierStats.attack), max.attack);
+        this.fullModifierStats.charisma = Math.min(Math.max(0, this.fullModifierStats.charisma), max.charisma);
         this.fullModifierStats.healing = Math.min(Math.max(0, this.fullModifierStats.healing), max.healing);
         this.fullModifierStats.health = Math.min(Math.max(0, this.fullModifierStats.health), max.health);
         this.fullModifierStats.regeneration = Math.min(Math.max(0, this.fullModifierStats.regeneration), max.regeneration);

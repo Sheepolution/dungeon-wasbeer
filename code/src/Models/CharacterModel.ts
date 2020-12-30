@@ -30,7 +30,7 @@ export default class CharacterModel extends Model {
                 equipment: '',
                 born_date: Utils.GetNowString(),
                 death_date: null,
-                inspired: false,
+                inspiration: 0,
                 avatar_url: null,
                 lore: null,
                 regenerated: 0,

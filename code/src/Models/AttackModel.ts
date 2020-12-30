@@ -33,6 +33,7 @@ export default class AttackModel extends Model {
 
     public static async New(battle:Battle, character:Character, messageId:string, rollCharacterBase:number, rollCharacterModifier:number, rollCharacterModifierMax:number, rollMonsterBase:number, rollMonsterModifier:number, rollMonsterModifierMax:number, victory:boolean, damage:number, healthAfter:number) {
         const attackId = Utils.UUID();
+        const modifierStats = character.GetFullModifierStats();
 
         const attack = await AttackModel.query()
             .insert({
@@ -50,6 +51,14 @@ export default class AttackModel extends Model {
                 damage: damage,
                 health_after: healthAfter,
                 attack_date: Utils.GetNowString(),
+                character_attack: modifierStats.attack,
+                monster_attack: battle.GetMonsterAttackRoll(),
+                character_strength: modifierStats.strength,
+                monster_strength: battle.GetMonsterAttackStrength(),
+                character_armor: modifierStats.armor,
+                inspiration: character.GetInspiration(),
+                enchanted: false,
+                intimidated: false,
             })
 
         return attack;

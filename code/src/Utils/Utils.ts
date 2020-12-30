@@ -47,6 +47,21 @@ export module Utils {
         return Utils.GetNow().toISOString();
     }
 
+    export function ConvertDateToUtc(date:Date) {
+        if (date == null) {
+            return undefined;
+        }
+
+        if (date.getUTCDate == null) {
+            date = new Date(date);
+        }
+
+        date.setDate(date.getUTCDate());
+        date.setHours(date.getUTCHours());
+
+        return date;
+    }
+
     // Boolean to bit - true = 1, false = 0
     export function Bit(bool:boolean) {
         return bool ? 1 : 0;
