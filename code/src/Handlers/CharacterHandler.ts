@@ -492,9 +492,9 @@ export default class CharacterHandler {
         const roll = Utils.Dice(20);
         const inspiration = character.GetInspirationBasedOnRoll(roll);
 
+        await character.SetInspireCooldown();
         await this.UpdateInspiringEmbed(message, character, receiver, roll, inspiration);
         await receiver.BecomeInspired(inspiration);
-        await character.SetInspireCooldown();
 
         if (!selfInspire) {
             await character.GiveInspirePoints(CampaignManager.GetBattle()?.GetId(), messageInfo);
