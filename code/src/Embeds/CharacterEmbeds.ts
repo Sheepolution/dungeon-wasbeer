@@ -168,6 +168,33 @@ export default class CharacterEmbeds {
             }
         }
 
+        if (character.CanEnchant()) {
+            const enchantingCooldown = await character.GetEnchantmentCooldown();
+            if (enchantingCooldown > 0) {
+                embed.addField('Enchantment', `🕒 ${Utils.GetSecondsInMinutesAndSeconds(enchantingCooldown)}`, true)
+            } else {
+                embed.addField('Enchantment', 'Klaar om te enchantment spelen!', true);
+            }
+        }
+
+        if (character.CanPercept()) {
+            const perceptingCooldown = await character.GetPerceptionCooldown();
+            if (perceptingCooldown > 0) {
+                embed.addField('Perception check', `🕒 ${Utils.GetSecondsInMinutesAndSeconds(perceptingCooldown)}`, true)
+            } else {
+                embed.addField('Perception check', 'Klaar voor een perception check!', true);
+            }
+        }
+
+        if (character.CanIntimidate()) {
+            const intimidatingCooldown = await character.GetIntimidationCooldown();
+            if (intimidatingCooldown > 0) {
+                embed.addField('Intimidation', `🕒 ${Utils.GetSecondsInMinutesAndSeconds(intimidatingCooldown)}`, true)
+            } else {
+                embed.addField('Intimidation', 'Klaar om het monster te intimideren!', true);
+            }
+        }
+
         return embed;
     }
 
