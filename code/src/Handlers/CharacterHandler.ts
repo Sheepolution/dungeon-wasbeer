@@ -496,6 +496,9 @@ export default class CharacterHandler {
         await this.UpdateInspiringEmbed(message, character, receiver, roll, inspiration);
         await receiver.BecomeInspired(inspiration);
 
+        character.SetIsInspiring(false);
+        receiver.SetBeingInspired(false);
+
         if (!selfInspire) {
             await character.GiveInspirePoints(CampaignManager.GetBattle()?.GetId(), messageInfo);
         }
