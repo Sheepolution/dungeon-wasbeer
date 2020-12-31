@@ -1,8 +1,12 @@
+import EmojiConstants from './EmojiConstants';
+
 export default class CharacterConstants {
 
     public static readonly BASE_COOLDOWN_DURATION = 30;
 
     public static readonly RESET_CHARACTER_TIMER_DURATION = 5;
+
+    public static readonly MAX_LEVEL = 20;
 
     public static readonly EQUIPMENT_SPACE_PER_LEVEL = [
         3,        4,        4,        5,        5,
@@ -103,8 +107,11 @@ export default class CharacterConstants {
         ]
     }
 
-    public static readonly HEAL_MESSAGE = '"[naam] krijgt [health] health terug."';
-    public static readonly HEAL_FAIL_MESSAGE = '"Je healt per ongeluk een steen. Er gebeurt weinig."';
-    public static readonly INSPIRE_MESSAGE ='"Je speelt prachtige muziek en inspireert [naam] voor een [inspiratie]% stat boost."';
-    public static readonly INSPIRE_FAIL_MESSAGE = '"Je speelt een hoop valse noten en wordt gevraagd te stoppen. Dit was alles behalve inspirerend."';
+    public static readonly HEAL_MESSAGE = '"[jij] healt [naam] en krijgt daardoor [health] health terug."';
+    public static readonly HEAL_FAIL_MESSAGE = '"[jij] healt per ongeluk een steen. Er gebeurt weinig."';
+    public static readonly INSPIRE_MESSAGE = `"[jij] speelt prachtige muziek en inspireert [naam] voor een [inspiratie]% stat boost tot na het volgende gevecht." ${EmojiConstants.CHARACTER_STATES.INSPIRED}`;
+    public static readonly INSPIRE_FAIL_MESSAGE = '"[jij] speelt een hoop valse noten en wordt gevraagd te stoppen. Dit was alles behalve inspirerend."';
+    public static readonly ENCHANTMENT_MESSAGE = `"[jij] gebruikt een spreuk om de attack roll van [naam] te verdubbelen in het volgende gevecht." ${EmojiConstants.CHARACTER_STATES.ENCHANTED}`;
+    public static readonly PERCEPTION_MESSAGE = '"[jij] doet een perception check om [naam] te informeren over de situatie en de gevechtscooldown te halveren."';
+    public static readonly INTIMIDATION_MESSAGE = '"[jij] kijkt de [monster] boos aan. Het monster wordt er een beetje bang van, en zijn stats verlagen tot na het volgende gevecht."';
 }

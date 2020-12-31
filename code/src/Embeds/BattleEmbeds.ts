@@ -35,7 +35,7 @@ export default class BattleEmbeds {
         return embed;
     }
 
-    public static async GetBattleEmbed(battle:Battle, character:Character, roll1?:number, roll2?:number, roll3?:number, roll4?:number, playerWon?:boolean, damage?:number, crit?:boolean, inspired?:boolean) {
+    public static async GetBattleEmbed(battle:Battle, character:Character, roll1?:number, roll2?:number, roll3?:number, roll4?:number, playerWon?:boolean, damage?:number, crit?:boolean) {
         const monster = battle.GetMonster();
 
         const characterName = character.GetName();
@@ -53,7 +53,7 @@ export default class BattleEmbeds {
             .setColor(SettingsConstants.COLORS.DEFAULT)
             .setAuthor('Aanval')
             .setThumbnail(playerWon ? character.GetAvatarUrl() : battle.GetMonsterImageUrl())
-            .setTitle(`${characterName}${((inspired || character.IsInspired() ) ? ' ✨' : '')} VS ${monsterName}`)
+            .setTitle(`${characterName}${character.GetEnhancementsString()} VS ${monsterName}`)
             .setDescription('-- Statistieken --')
             .addField(characterName, `Health: ${character.GetCurrentHealth()}/${character.GetMaxHealth()}\n${character.GetAttackName()}: ${characterStrength}\nAttack: ${characterAttack}\nArmor: ${character.GetArmor()}`, true)
             .addField(monsterName, `Health: ${battle.GetCurrentMonsterHealth()}/${battle.GetMaxMonsterHealth()}\nStrength: ${monsterStrength}\nAttack: ${monsterAttack}`, true)
@@ -67,7 +67,7 @@ export default class BattleEmbeds {
             }
 
             if (characterAttack > 1 && roll2 > 0) {
-                message += `\nD${Math.max(characterAttack, roll2)} = ${roll2}`;
+                message += `\nD${characterAttack} = ${roll2}`;
             }
 
             embed.addField(characterName, message += `\nTotaal = ${roll1 + roll2}`, true);
@@ -158,6 +158,15 @@ export default class BattleEmbeds {
                     embed.addField('Inspireren', `🕒 ${Utils.GetSecondsInMinutesAndSeconds(inspiringCooldown)}`, true)
                 } else {
                     embed.addField('Inspireren', 'Klaar om een mooi lied te spelen!', true);
+                }
+            }
+
+            if (character.CanEnchant()) {
+                const inspiringCooldown = await character.GetEnchantmentCooldown();
+                if (inspiringCooldown > 0) {
+                    embed.addField('Enchantment', `🕒 ${Utils.GetSecondsInMinutesAndSeconds(inspiringCooldown)}`, true)
+                } else {
+                    embed.addField('Enchantment', 'Klaar om te enchantment spelen!', true);
                 }
             }
         }

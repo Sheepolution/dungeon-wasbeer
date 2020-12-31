@@ -18,6 +18,7 @@ import { TopListType } from '../Enums/TopListType';
 import { Utils } from '../Utils/Utils';
 import { Message } from 'discord.js';
 import Inspire from '../Objects/Inspire';
+import Enchantment from '../Objects/Enchantment';
 
 export default class CharacterHandler {
 
@@ -97,6 +98,11 @@ export default class CharacterHandler {
             case 'inspire':
             case 'i':
                 this.OnInspire(messageInfo, player, args[0]);
+                break;
+            case 'enchant':
+            case 'betover':
+            case 'e':
+                this.OnEnchantment(messageInfo, player, args[0]);
                 break;
             case 'art':
             case 'avatar':
@@ -276,6 +282,12 @@ export default class CharacterHandler {
             return;
         }
 
+        const battle = CampaignManager.GetBattle();
+        if (battle == null) {
+            MessageService.ReplyMessage(messageInfo, 'Je kan alleen inspireren wanneer er een monster is.', false);
+            return;
+        }
+
         if (character.IsInBattle()) {
             MessageService.ReplyMessage(messageInfo, 'Je kan niet healen want je zit momenteel in een gevecht.', false);
             return;
@@ -317,7 +329,7 @@ export default class CharacterHandler {
         const healthBefore = receiver.GetCurrentHealth();
 
         if (receiver.IsInBattle()) {
-            MessageService.ReplyMessage(messageInfo, `Je kan ${receiver.GetName()} niet healen want die is momenteel in een gevecht.`, false);
+            MessageService.ReplyMessage(messageInfo, `Je kan ${receiver.GetName()} niet healen want die zit momenteel in een gevecht.`, false);
             return;
         }
 
@@ -409,6 +421,12 @@ export default class CharacterHandler {
             return;
         }
 
+        const battle = CampaignManager.GetBattle();
+        if (battle == null) {
+            MessageService.ReplyMessage(messageInfo, 'Je kan alleen inspireren wanneer er een monster is.', false);
+            return;
+        }
+
         if (character.IsInBattle()) {
             MessageService.ReplyMessage(messageInfo, 'Je kan niet inspireren want je zit momenteel in een gevecht.', false);
             return;
@@ -440,7 +458,7 @@ export default class CharacterHandler {
         const selfInspire = receiver == character;
 
         if (receiver.IsInBattle()) {
-            MessageService.ReplyMessage(messageInfo, `Je kan ${receiver.GetName()} niet inspireren want die is momenteel in een gevecht.`, false);
+            MessageService.ReplyMessage(messageInfo, `Je kan ${receiver.GetName()} niet inspireren want die zit momenteel in een gevecht.`, false);
             return;
         }
 
@@ -471,6 +489,77 @@ export default class CharacterHandler {
         this.SaveInspire(character, receiver, character.GetFullModifierStats().charisma, roll, inspiration);
     }
 
+    private static async OnEnchantment(messageInfo:IMessageInfo, player:Player, mention:string) {
+        const character = PlayerManager.GetCharacterFromPlayer(messageInfo, player);
+        if (character == null) {
+            return;
+        }
+
+        if (!character.CanEnchant()) {
+            MessageService.ReplyMessage(messageInfo, `Alleen wizards kunnen enchanten, en jij bent een ${character.GetClassName().toLowerCase()}.`, false);
+            return;
+        }
+
+        const battle = CampaignManager.GetBattle();
+        if (battle == null) {
+            MessageService.ReplyMessage(messageInfo, 'Je kan alleen enchanten wanneer er een monster is.', false);
+            return;
+        }
+
+        if (character.IsInBattle()) {
+            MessageService.ReplyMessage(messageInfo, 'Je kan niet enchanten want je zit momenteel in een gevecht.', false);
+            return;
+        }
+
+        const cooldown = await character.GetEnchantmentCooldown();
+        if (cooldown > 0) {
+            const minutes = Utils.GetSecondsInMinutes(cooldown);
+            MessageService.ReplyMessage(messageInfo, `Je hebt nog ${minutes + (minutes == 1 ? ' minuut' : ' minuten')} cooldown voordat je weer mag enchanten.`);
+            return;
+        }
+
+        var receiver = character;
+        if (mention != null) {
+            const receiverId = DiscordUtils.GetMemberId(mention);
+            if (receiverId == null) {
+                MessageService.ReplyMessage(messageInfo, 'Als je iemand anders dan jezelf wilt enchanten moet je die persoon taggen.\n`;enchant @persoon`', false);
+                return;
+            }
+
+            const receiverPlayer = await PlayerManager.GetPlayer(receiverId);
+            receiver = receiverPlayer?.GetCharacter();
+            if (receiverPlayer == null || receiver == null) {
+                MessageService.ReplyMessage(messageInfo, 'Deze persoon heeft geen character.', false);
+                return;
+            }
+        }
+
+        const selfEnchant = receiver == character;
+
+        if (receiver.IsInBattle()) {
+            MessageService.ReplyMessage(messageInfo, `Je kan ${receiver.GetName()} niet enchanten want die zit momenteel in een gevecht.`, false);
+            return;
+        }
+
+        if (receiver.IsEnchanted()) {
+            MessageService.ReplyMessage(messageInfo, `${selfEnchant ? 'Je bent ' : 'Deze persoon is '}al enchanted.`, false);
+            return;
+        }
+
+        await receiver.BecomeEnchanted();
+        await character.SetEnchantmentCooldown();
+
+        if (!selfEnchant) {
+            await character.GiveAbilityPoints(CampaignManager.GetBattle()?.GetId(), messageInfo);
+        }
+
+        this.SaveEnchantment(character, receiver);
+
+        const receiverName = receiver == character ? 'zichzelf' : receiver.GetName();
+
+        MessageService.ReplyMessage(messageInfo, character.GetEnchantmentDescription().replaceAll('\\[jij\\]', character.GetName()).replaceAll('\\[naam\\]', receiverName), true);
+    }
+
     private static async SaveHeal(character:Character, receiver:Character, receiverHealth:number, characterHealing:number, roll:number, finalHealing:number) {
         const battle = CampaignManager.GetBattle();
         if (battle == null) { return; }
@@ -483,6 +572,13 @@ export default class CharacterHandler {
         if (battle == null) { return; }
         const inspire = await Inspire.STATIC_POST(battle, character, receiver, characterCharisma, roll, finalInspiration);
         await LogService.Log(character.GetPlayer(), inspire.id, LogType.Inspire, `${character.GetName()} heeft ${character.GetId() == receiver.GetId() ? 'zichzelf' : `${receiver.GetName()}`} geïnspireerd.`);
+    }
+
+    private static async SaveEnchantment(character:Character, receiver:Character) {
+        const battle = CampaignManager.GetBattle();
+        if (battle == null) { return; }
+        const inspire = await Enchantment.STATIC_POST(battle, character, receiver);
+        await LogService.Log(character.GetPlayer(), inspire.id, LogType.Enchantment, `${character.GetName()} heeft ${character.GetId() == receiver.GetId() ? 'zichzelf' : `${receiver.GetName()}`} enchanted.`);
     }
 
     private static async SendHealingEmbed(messageInfo:IMessageInfo, character:Character, receiver:Character) {

@@ -47,4 +47,9 @@ export default class EmojiConstants {
         RANGER: '<:ranger:708771356329902121> ',
         WIZARD: '<:wizard:708771356216524801>',
     }
+
+    public static readonly CHARACTER_STATES = {
+        INSPIRED: '✨',
+        ENCHANTED: '🎲',
+    }
 }

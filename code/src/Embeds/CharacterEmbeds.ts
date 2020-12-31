@@ -20,7 +20,7 @@ export default class CharacterEmbeds {
         const embed = new MessageEmbed()
             .setColor(SettingsConstants.COLORS.DEFAULT)
             .setAuthor(character.GetClassName(), CharacterService.GetClassIconImage(character.GetClass()))
-            .setTitle(`${character.GetName()}${(character.IsInspired() ? ' ✨' : '')}`)
+            .setTitle(`${character.GetName()}${character.GetEnhancementsString()}`)
             .setThumbnail(character.GetAvatarUrl())
             .addField('XP', `${character.GetXP()}/${character.GetXPForNextLevel()}`, true)
             .addField('Level', character.GetLevel(), true);
@@ -87,7 +87,7 @@ export default class CharacterEmbeds {
         const embed = new MessageEmbed()
             .setColor(SettingsConstants.COLORS.DEFAULT)
             .setAuthor(character.GetClassName(), CharacterService.GetClassIconImage(character.GetClass()))
-            .setTitle(`${character.GetName()}${(character.IsInspired() ? ' ✨' : '')}`)
+            .setTitle(`${character.GetName()}${character.GetEnhancementsString()}`)
             .setImage(character.GetAvatarUrl())
             .addField('XP', `${character.GetXP()}/${character.GetXPForNextLevel()}`, true)
             .addField('Level', character.GetLevel(), true);
@@ -104,7 +104,7 @@ export default class CharacterEmbeds {
         const embed = new MessageEmbed()
             .setColor(SettingsConstants.COLORS.DEFAULT)
             .setAuthor(character.GetClassName(), CharacterService.GetClassIconImage(character.GetClass()))
-            .setTitle(`${character.GetName()}${(character.IsInspired() ? ' ✨' : '')}`)
+            .setTitle(`${character.GetName()}${character.GetEnhancementsString()}`)
             .addField('XP', `${character.GetXP()}/${character.GetXPForNextLevel()}`, true)
             .addField('Level', character.GetLevel(), true);
 
@@ -140,7 +140,7 @@ export default class CharacterEmbeds {
         const embed = new MessageEmbed()
             .setColor(SettingsConstants.COLORS.DEFAULT)
             .setAuthor(character.GetClassName(), CharacterService.GetClassIconImage(character.GetClass()))
-            .setTitle(`${character.GetName()}${(character.IsInspired() ? ' ✨' : '')}`)
+            .setTitle(`${character.GetName()}${character.GetEnhancementsString()}`)
 
         embed.addField('-----------------------------', 'Cooldown(s)');
         const battleCooldown = await character.GetBattleCooldown();
@@ -176,7 +176,7 @@ export default class CharacterEmbeds {
         const embed = new MessageEmbed()
             .setColor(SettingsConstants.COLORS.DEFAULT)
             .setAuthor(character.GetClassName(), CharacterService.GetClassIconImage(character.GetClass()))
-            .setTitle(`De equipment van ${character.GetName()}${(character.IsInspired() ? ' ✨' : '')} (${equipment.length}/${character.GetTotalEquipmentSpace()})`);
+            .setTitle(`De equipment van ${character.GetName()}${character.GetEnhancementsString()} (${equipment.length}/${character.GetTotalEquipmentSpace()})`);
         this.AddEquipmentToEmbed(embed, equipment);
         return embed;
     }
@@ -195,7 +195,7 @@ export default class CharacterEmbeds {
         const embed = new MessageEmbed()
             .setColor(SettingsConstants.COLORS.DEFAULT)
             .setAuthor(character.GetClassName(), CharacterService.GetClassIconImage(character.GetClass()))
-            .setTitle(`De geschiedenis van ${character.GetName()}${(character.IsInspired() ? ' ✨' : '')}`)
+            .setTitle(`De geschiedenis van ${character.GetName()}${character.GetEnhancementsString()}`)
             .setImage(character.GetAvatarUrl())
             .setDescription(`Aangemaakt op ${character.GetBornDateString()}`)
 
@@ -237,7 +237,7 @@ export default class CharacterEmbeds {
 
         embed.setTitle('Healing roll')
             .setThumbnail(character.GetAvatarUrl())
-            .setDescription(`${character.GetName()}${(character.IsInspired() ? ' ✨' : '')} rollt om ${receiver == character ? 'zichzelf' : receiver.GetName()}${(character.IsInspired() ? ' ✨' : '')} te healen.\n\n-- Statistieken --`)
+            .setDescription(`${character.GetName()}${character.GetEnhancementsString()} rollt om ${receiver == character ? 'zichzelf' : receiver.GetName()}${receiver.GetEnhancementsString()} te healen.\n\n-- Statistieken --`)
             .addField(`Health van ${receiverName}`, `${receiver.GetCurrentHealth()}/${receiver.GetMaxHealth()}`)
             .addField(`Healing van ${characterName}`, character.GetFullModifierStats().healing)
             .addField('--------------------------------', '-- Roll --')
@@ -250,9 +250,9 @@ export default class CharacterEmbeds {
                 .setFooter(`Participatiepunten: ${character.GetRewardPoints(CampaignManager.GetBattle()?.GetId())}/${character.GetNextRewardPoints()}`);
 
             if (healing == 0 ) {
-                embed.addField(`${characterName} faalt met healen!`, character.GetHealFailDescription().replaceAll('\\[naam\\]', receiverName));
+                embed.addField(`${characterName} faalt met healen!`, character.GetHealFailDescription().replaceAll('\\[naam\\]', receiverName).replaceAll('\\[jij\\]', characterName));
             } else {
-                embed.addField(`${characterName} slaagt er in te healen`, character.GetHealDescription().replaceAll('\\[naam\\]', receiverName).replaceAll('\\[health\\]',  healing.toString()));
+                embed.addField(`${characterName} slaagt er in te healen`, character.GetHealDescription().replaceAll('\\[naam\\]', receiverName).replaceAll('\\[jij\\]', characterName).replaceAll('\\[health\\]', healing.toString()));
             }
 
             embed.addField('--------------------------------', '-- Cooldown(s) --');
@@ -299,7 +299,7 @@ export default class CharacterEmbeds {
 
         embed.setTitle('Inspire roll')
             .setThumbnail(character.GetAvatarUrl())
-            .setDescription(`${character.GetName()}${(character.IsInspired() ? ' ✨' : '')} rollt om ${receiver == character ? 'zichzelf' : receiver.GetName()}${(character.IsInspired() ? ' ✨' : '')} te inspireren.\n\n-- Statistieken --`)
+            .setDescription(`${character.GetName()}${character.GetEnhancementsString()} rollt om ${receiver == character ? 'zichzelf' : receiver.GetName()}${receiver.GetEnhancementsString()} te inspireren.\n\n-- Statistieken --`)
             .addField('--------------------------------', '-- Roll --')
 
         if (roll == null)  {
@@ -310,9 +310,9 @@ export default class CharacterEmbeds {
                 .setFooter(`Participatiepunten: ${character.GetRewardPoints(CampaignManager.GetBattle()?.GetId())}/${character.GetNextRewardPoints()}`);
 
             if (inspiration == 0 ) {
-                embed.addField(`${characterName} faalt met inspireren!`, character.GetInspireFailDescription().replaceAll('\\[naam\\]', receiverName));
+                embed.addField(`${characterName} faalt met inspireren!`, character.GetInspireFailDescription().replaceAll('\\[naam\\]', receiverName).replaceAll('\\[jij\\]', characterName));
             } else {
-                embed.addField(`${characterName} slaagt er in te inspireren`, character.GetInspireDescription().replaceAll('\\[naam\\]', receiverName).replaceAll('\\[inspiratie\\]',  inspiration.toString()));
+                embed.addField(`${characterName} slaagt er in te inspireren`, character.GetInspireDescription().replaceAll('\\[naam\\]', receiverName).replaceAll('\\[jij\\]', characterName).replaceAll('\\[inspiratie\\]',  inspiration.toString()));
             }
 
             embed.addField('--------------------------------', '-- Cooldown(s) --');

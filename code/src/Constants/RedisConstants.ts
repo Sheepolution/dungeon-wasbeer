@@ -7,5 +7,8 @@ export default class RedisConstants {
     public static readonly BATTLE_COOLDOWN_KEY = 'attackCooldown:';
     public static readonly HEALING_COOLDOWN_KEY = 'healCooldown:';
     public static readonly INSPIRING_COOLDOWN_KEY = 'inspireCooldown:';
+    public static readonly ENCHANTMENT_COOLDOWN_KEY = 'enchantmentCooldown:';
+    public static readonly PERCEPTION_COOLDOWN_KEY = 'perceptionCooldown:';
+    public static readonly INTIMIDATION_COOLDOWN_KEY = 'intimidationCooldown:';
     public static readonly RESET_CONFIRM_TIMER_KEY = 'resetConfirmTime:';
 }

@@ -23,12 +23,16 @@ import { ClassType } from '../Enums/ClassType';
 import { LogType } from '../Enums/LogType';
 import { Redis } from '../Providers/Redis';
 import { Utils } from '../Utils/Utils';
+import EmojiConstants from '../Constants/EmojiConstants';
 
 export default class Character {
 
     private static readonly battleCooldownPrefix = RedisConstants.REDIS_KEY + RedisConstants.BATTLE_COOLDOWN_KEY;
     private static readonly healingCooldownPrefix = RedisConstants.REDIS_KEY + RedisConstants.HEALING_COOLDOWN_KEY;
     private static readonly inspiringCooldownPrefix = RedisConstants.REDIS_KEY + RedisConstants.INSPIRING_COOLDOWN_KEY;
+    private static readonly enchantmentCooldownPrefix = RedisConstants.REDIS_KEY + RedisConstants.ENCHANTMENT_COOLDOWN_KEY;
+    private static readonly perceptionCooldownPrefix = RedisConstants.REDIS_KEY + RedisConstants.PERCEPTION_COOLDOWN_KEY;
+    private static readonly intimidationCooldownPrefix = RedisConstants.REDIS_KEY + RedisConstants.INTIMIDATION_COOLDOWN_KEY;
 
     protected id:string;
     private player:Player;
@@ -53,6 +57,7 @@ export default class Character {
     private beingHealed:boolean;
     private beingInspired:boolean;
     private inspiration:number;
+    private enchanted:boolean;
     private avatarUrl:string;
     private lore:string;
     private regenerated:number;
@@ -66,6 +71,9 @@ export default class Character {
     private healFailDescription:string;
     private inspireDescription:string;
     private inspireFailDescription:string;
+    private enchantmentDescription:string;
+    private perceptionDescription:string;
+    private intimidationDescription:string;
 
     constructor(player?:Player) {
         if (player) {
@@ -177,6 +185,7 @@ export default class Character {
         this.currentHealth = model.health;
         this.equipment = this.player.GetCards().filter(pc => pc.IsEquipped()).map(c => c.GetCard());
         this.inspiration = model.inspiration;
+        this.enchanted = model.enchanted;
         this.avatarUrl = model.avatar_url;
         this.lore = model.lore;
         this.regenerated = model.regenerated;
@@ -255,7 +264,7 @@ export default class Character {
     }
 
     public GetXPForNextLevel() {
-        const nextLevel = this.level == 20 ? 20 : this.level + 1;
+        const nextLevel = this.level == CharacterConstants.MAX_LEVEL ? 20 : this.level + 1;
         return CharacterConstants.XP_PER_LEVEL[nextLevel - 1];
     }
 
@@ -385,6 +394,10 @@ export default class Character {
         return this.beingInspired;
     }
 
+    public GetEnhancementsString() {
+        return ` ${(this.IsInspired() ? `${EmojiConstants.CHARACTER_STATES.INSPIRED}` : '')}${(this.IsEnchanted() ? `${EmojiConstants.CHARACTER_STATES.ENCHANTED}` : '')}`;
+    }
+
     public async Sleep() {
         const healing = Math.min(Math.ceil(this.maxHealth/10), this.maxHealth - this.currentHealth);
         this.currentHealth += healing;
@@ -427,6 +440,18 @@ export default class Character {
         return this.classType == ClassType.Bard;
     }
 
+    public CanEnchant() {
+        return this.classType == ClassType.Wizard;
+    }
+
+    public CanPercept() {
+        return this.classType == ClassType.Ranger;
+    }
+
+    public CanIntimidate() {
+        return this.classType == ClassType.Fighter;
+    }
+
     public async BecomeInspired(amount:number) {
         this.inspiration = amount;
         this.UpdateFullModifierStats();
@@ -443,7 +468,7 @@ export default class Character {
         this.inspiration = 0;
         this.UpdateFullModifierStats();
         await this.UPDATE({
-            inspired: this.inspiration
+            inspiration: this.inspiration
         })
     }
 
@@ -457,6 +482,34 @@ export default class Character {
 
     public GetMaxInspiringCooldown() {
         return CharacterConstants.BASE_COOLDOWN_DURATION - this.fullModifierStats.dexterity;
+    }
+
+    public async BecomeEnchanted() {
+        this.enchanted = true;
+        this.UpdateFullModifierStats();
+        await this.UPDATE({
+            enchanted: this.enchanted
+        })
+    }
+
+    public async StopBeingEnchanted() {
+        if (!this.enchanted) {
+            return;
+        }
+
+        this.enchanted = false;
+        this.UpdateFullModifierStats();
+        await this.UPDATE({
+            enchanted: this.enchanted
+        })
+    }
+
+    public IsEnchanted() {
+        return this.enchanted;
+    }
+
+    public GetMaxAbilityCooldown() {
+        return CharacterConstants.BASE_COOLDOWN_DURATION + CharacterConstants.BASE_COOLDOWN_DURATION * (this.level/CharacterConstants.MAX_LEVEL);
     }
 
     public CalculateDamageWithArmor(damage:number) {
@@ -503,6 +556,30 @@ export default class Character {
         await Redis.set(Character.inspiringCooldownPrefix + this.GetId(), '1', 'EX', Utils.GetMinutesInSeconds(this.GetMaxInspiringCooldown()));
     }
 
+    public async GetEnchantmentCooldown() {
+        return await Redis.ttl(Character.enchantmentCooldownPrefix + this.GetId());
+    }
+
+    public async SetEnchantmentCooldown() {
+        await Redis.set(Character.enchantmentCooldownPrefix + this.GetId(), '1', 'EX', Utils.GetMinutesInSeconds(this.GetMaxAbilityCooldown()));
+    }
+
+    public async GetPerceptionCooldown() {
+        return await Redis.ttl(Character.perceptionCooldownPrefix + this.GetId());
+    }
+
+    public async SetPerceptionCooldown() {
+        await Redis.set(Character.perceptionCooldownPrefix + this.GetId(), '1', 'EX', Utils.GetMinutesInSeconds(this.GetMaxAbilityCooldown()));
+    }
+
+    public async GetIntimidationCooldown() {
+        return await Redis.ttl(Character.intimidationCooldownPrefix + this.GetId());
+    }
+
+    public async SetIntimidationCooldown() {
+        await Redis.set(Character.intimidationCooldownPrefix + this.GetId(), '1', 'EX', Utils.GetMinutesInSeconds(this.GetMaxAbilityCooldown()));
+    }
+
     public async IncreaseXP(amount:number, trx?:any, updateData:boolean = true) {
         this.xp += amount;
         if (updateData) {
@@ -519,7 +596,7 @@ export default class Character {
     }
 
     public async CheckLevelUp(trx?:any) {
-        if (this.level == 20) {
+        if (this.level == CharacterConstants.MAX_LEVEL) {
             return;
         }
 
@@ -646,6 +723,10 @@ export default class Character {
         return this.inspireFailDescription || CharacterConstants.INSPIRE_FAIL_MESSAGE;
     }
 
+    public GetEnchantmentDescription() {
+        return this.enchantmentDescription || CharacterConstants.ENCHANTMENT_MESSAGE;
+    }
+
     public async UpdateAttackDescription(description:string) {
         this.attackDescription = description;
         await this.UPDATE({
@@ -688,6 +769,27 @@ export default class Character {
         })
     }
 
+    public async UpdateEnchantmentDescription(description:string) {
+        this.enchantmentDescription = description;
+        await this.UPDATE({
+            enchantment_description : this.enchantmentDescription
+        })
+    }
+
+    public async UpdatePerceptionDescription(description:string) {
+        this.perceptionDescription = description;
+        await this.UPDATE({
+            perception_description : this.perceptionDescription
+        })
+    }
+
+    public async UpdateIntimidationDescription(description:string) {
+        this.intimidationDescription = description;
+        await this.UPDATE({
+            intimidation_description : this.intimidationDescription
+        })
+    }
+
     public async GiveDamagePoints(damagePoints:number, battleId?:string, messageInfo?:IMessageInfo) {
         this.GiveRewardPoints(damagePoints * SettingsConstants.DAMAGE_REWARD_POINTS_MULTIPLIER, battleId, messageInfo);
     }
@@ -697,6 +799,10 @@ export default class Character {
     }
 
     public async GiveInspirePoints(battleId?:string, messageInfo?:IMessageInfo) {
+        this.GiveRewardPoints(SettingsConstants.INSPIRE_REWARD_POINTS, battleId, messageInfo);
+    }
+
+    public async GiveAbilityPoints(battleId?:string, messageInfo?:IMessageInfo) {
         this.GiveRewardPoints(SettingsConstants.INSPIRE_REWARD_POINTS, battleId, messageInfo);
     }
 

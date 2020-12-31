@@ -96,7 +96,6 @@ export default class BattleHandler {
             }
         }
 
-        const inspired = character.IsInspired();
         character.SetBattleCooldown();
         character.SetInBattle(true);
         BattleHandler.inBattle = true;
@@ -135,10 +134,10 @@ export default class BattleHandler {
         await Utils.Sleep(3);
         const roll1 = Utils.Dice(20);
         if (roll1 == 1) {
-            this.OnMonsterCrit(messageInfo, message, battle, character, roll1, undefined, undefined, inspired)
+            this.OnMonsterCrit(messageInfo, message, battle, character, roll1, undefined, undefined)
             return
         } else if (roll1 == 20) {
-            this.OnCharacterCrit(messageInfo, message, battle, character, roll1, undefined, undefined, inspired)
+            this.OnCharacterCrit(messageInfo, message, battle, character, roll1, undefined, undefined)
             return
         }
 
@@ -150,6 +149,12 @@ export default class BattleHandler {
             roll2 = Utils.Dice(playerAttackRoll);
         }
 
+        if (character.IsEnchanted()) {
+            await this.UpdateBattleEmbed(message, battle, character, roll1, roll2);
+            await Utils.Sleep(1.5);
+            roll2 += roll2;
+        }
+
         do {
             await this.UpdateBattleEmbed(message, battle, character, roll1, roll2);
             await Utils.Sleep(3);
@@ -157,10 +162,10 @@ export default class BattleHandler {
             const roll3 = Utils.Dice(20);
 
             if (roll3 == 20) {
-                this.OnMonsterCrit(messageInfo, message, battle, character, roll1, roll2, roll3, inspired)
+                this.OnMonsterCrit(messageInfo, message, battle, character, roll1, roll2, roll3)
                 return
             } else if (roll3 == 1) {
-                this.OnCharacterCrit(messageInfo, message, battle, character, roll1, roll2, roll3, inspired)
+                this.OnCharacterCrit(messageInfo, message, battle, character, roll1, roll2, roll3)
                 return
             }
 
@@ -187,13 +192,14 @@ export default class BattleHandler {
                 }
 
                 const damage = await this.ResolveAttackResult(messageInfo, message, battle, character, playerWon, playerWon ? character.GetAttackStrength() : monsterAttackStrength, roll1, roll2 || 0, roll3, roll4 || 0);
-                await this.UpdateBattleEmbed(message, battle, character, roll1, roll2, roll3, roll4, playerWon, damage, false, inspired);
+                await this.UpdateBattleEmbed(message, battle, character, roll1, roll2, roll3, roll4, playerWon, damage, false);
                 secondAttack = false;
             }
 
         } while (secondAttack);
 
         await character.StopBeingInspired();
+        await character.StopBeingEnchanted();
 
         if (this.inBattleTimeout != null) {
             clearTimeout(this.inBattleTimeout);
@@ -219,15 +225,16 @@ export default class BattleHandler {
         }
     }
 
-    private static async OnCharacterCrit(messageInfo:IMessageInfo, message:Message, battle:Battle, character:Character, roll1:number, roll2:number = 0, roll3:number = 0, inspired:boolean = false) {
+    private static async OnCharacterCrit(messageInfo:IMessageInfo, message:Message, battle:Battle, character:Character, roll1:number, roll2:number = 0, roll3:number = 0) {
         var playerWon = true;
         if (battle.GetMonster().GetId() == '57ea9222-d3d5-4f26-96a7-07c7415d3873') {
             playerWon = false;
         }
 
         const damage = await this.ResolveAttackResult(messageInfo, message, battle, character, playerWon, playerWon ? character.GetAttackStrength(true) : battle.GetMonsterAttackStrength(true), roll1, roll2, roll3, 0);
-        await this.UpdateBattleEmbed(message, battle, character, roll1, roll2, roll3, 0, playerWon, damage, true, inspired);
+        await this.UpdateBattleEmbed(message, battle, character, roll1, roll2, roll3, 0, playerWon, damage, true);
         await character.StopBeingInspired();
+        await character.StopBeingEnchanted();
 
         if (this.inBattleTimeout != null) {
             clearTimeout(this.inBattleTimeout);
@@ -235,7 +242,7 @@ export default class BattleHandler {
         }
     }
 
-    private static async OnMonsterCrit(messageInfo:IMessageInfo, message:Message, battle:Battle, character:Character, roll1:number, roll2:number = 0, roll3:number = 0, inspired:boolean = false) {
+    private static async OnMonsterCrit(messageInfo:IMessageInfo, message:Message, battle:Battle, character:Character, roll1:number, roll2:number = 0, roll3:number = 0) {
         var playerWon = false;
         const monsterId = battle.GetMonster().GetId();
         if (monsterId == '57ea9222-d3d5-4f26-96a7-07c7415d3873') {
@@ -248,8 +255,9 @@ export default class BattleHandler {
         }
 
         const damage = await this.ResolveAttackResult(messageInfo, message, battle, character, playerWon, playerWon ? character.GetAttackStrength(true) : monsterAttackStrength, roll1, roll2, roll3, 0);
-        await this.UpdateBattleEmbed(message, battle, character, roll1, roll2, roll3, 0, playerWon, damage, true, inspired);
+        await this.UpdateBattleEmbed(message, battle, character, roll1, roll2, roll3, 0, playerWon, damage, true);
         await character.StopBeingInspired();
+        await character.StopBeingEnchanted();
 
         if (this.inBattleTimeout != null) {
             clearTimeout(this.inBattleTimeout);
@@ -359,7 +367,7 @@ export default class BattleHandler {
         return await MessageService.ReplyEmbed(messageInfo, await BattleEmbeds.GetBattleEmbed(battle, character));
     }
 
-    private static async UpdateBattleEmbed(message:Message, battle:Battle, character:Character, roll1?:number, roll2?:number, roll3?:number, roll4?:number, playerWon?:boolean, damage?:number, crit?:boolean, inspired?:boolean) {
-        await message.edit('', await BattleEmbeds.GetBattleEmbed(battle, character, roll1, roll2, roll3, roll4, playerWon, damage, crit, inspired));
+    private static async UpdateBattleEmbed(message:Message, battle:Battle, character:Character, roll1?:number, roll2?:number, roll3?:number, roll4?:number, playerWon?:boolean, damage?:number, crit?:boolean) {
+        await message.edit('', await BattleEmbeds.GetBattleEmbed(battle, character, roll1, roll2, roll3, roll4, playerWon, damage, crit));
     }
 }

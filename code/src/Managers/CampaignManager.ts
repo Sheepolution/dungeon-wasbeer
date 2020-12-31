@@ -18,6 +18,8 @@ import ConfigurationManager from './ConfigurationManager';
 import PuzzleService from '../Services/PuzzleService';
 import LogService from '../Services/LogService';
 import Log from '../Objects/Log';
+import Inspire from '../Objects/Inspire';
+import Enchantment from '../Objects/Enchantment';
 const { transaction } = require('objection');
 
 export default class CampaignManager {
@@ -140,6 +142,7 @@ export default class CampaignManager {
         const attackData = await Attack.FIND_TOTAL_DAMAGE_GIVEN_IN_BATTLE_FOR_ALL_CHARACTERS(battle);
         const healData = await Heal.FIND_TOTAL_HEALED_OTHERS_IN_BATTLE_FOR_ALL_CHARACTERS(battle);
         const inspireData = await Log.FIND_TOTAL_INSPIRED_OTHERS_IN_BATTLE_FOR_ALL_CHARACTERS(battle);
+        const enchantmentData = await Enchantment.FIND_TOTAL_ENCHANTED_OTHERS_IN_BATTLE_FOR_ALL_CHARACTERS(battle);
         const data:any = {};
 
         for (const row of attackData) {
@@ -157,6 +160,15 @@ export default class CampaignManager {
         }
 
         for (const row of inspireData) {
+            const xp = parseInt(row.cnt) * 10;
+            if (data[row.id]) {
+                data[row.id] += xp;
+            } else {
+                data[row.id] = xp;
+            }
+        }
+
+        for (const row of enchantmentData) {
             const xp = parseInt(row.cnt) * 10;
             if (data[row.id]) {
                 data[row.id] += xp;
