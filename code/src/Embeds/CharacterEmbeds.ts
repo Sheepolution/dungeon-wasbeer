@@ -327,6 +327,7 @@ export default class CharacterEmbeds {
         embed.setTitle('Inspire roll')
             .setThumbnail(character.GetAvatarUrl())
             .setDescription(`${character.GetName()}${character.GetEnhancementsString()} rollt om ${receiver == character ? 'zichzelf' : receiver.GetName()}${receiver.GetEnhancementsString()} te inspireren.\n\n-- Statistieken --`)
+            .addField(`Charisma van ${characterName}`, character.GetFullModifierStats().charisma)
             .addField('--------------------------------', '-- Roll --')
 
         if (roll == null)  {
