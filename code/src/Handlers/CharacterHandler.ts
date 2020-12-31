@@ -21,6 +21,7 @@ import Inspire from '../Objects/Inspire';
 import Enchantment from '../Objects/Enchantment';
 import Perception from '../Objects/Perception';
 import Intimidation from '../Objects/Intimidation';
+import BattleHandler from './BattleHandler';
 
 export default class CharacterHandler {
 
@@ -667,8 +668,8 @@ export default class CharacterHandler {
             return;
         }
 
-        if (character.IsInBattle()) {
-            MessageService.ReplyMessage(messageInfo, 'Je kan niet intimideren want je zit momenteel in een gevecht.', false);
+        if (BattleHandler.IsInBattle()) {
+            MessageService.ReplyMessage(messageInfo, 'Je kan niet intimideren terwijl er een gevecht gaande is.', false);
             return;
         }
 

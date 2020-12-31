@@ -44,6 +44,10 @@ export default class BattleHandler {
         return true;
     }
 
+    public static IsInBattle() {
+        return this.inBattle;
+    }
+
     private static async OnAttack(messageInfo:IMessageInfo, player:Player, fromWaitlist?:boolean) {
         const character = PlayerManager.GetCharacterFromPlayer(messageInfo, player);
         if (character == null) { return; }
