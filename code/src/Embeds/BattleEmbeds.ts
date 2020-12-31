@@ -24,7 +24,7 @@ export default class BattleEmbeds {
         const embed = new MessageEmbed()
             .setColor(SettingsConstants.COLORS.MONSTER)
             .setAuthor(monster.GetCategory(), 'https://cdn.discordapp.com/attachments/694331679204180029/698606955496734781/unknown.png')
-            .setTitle(monster.GetName())
+            .setTitle(`${monster.GetName()}${battle.GetEnhancementsString()}`)
             .setDescription(monster.GetDescription())
             .setImage(battle.GetMonsterImageUrl())
             .addField('Level', monster.GetLevelString())
@@ -53,7 +53,7 @@ export default class BattleEmbeds {
             .setColor(SettingsConstants.COLORS.DEFAULT)
             .setAuthor('Aanval')
             .setThumbnail(playerWon ? character.GetAvatarUrl() : battle.GetMonsterImageUrl())
-            .setTitle(`${characterName}${character.GetEnhancementsString()} VS ${monsterName}`)
+            .setTitle(`${characterName}${character.GetEnhancementsString()} VS ${monsterName}${battle.GetEnhancementsString()}`)
             .setDescription('-- Statistieken --')
             .addField(characterName, `Health: ${character.GetCurrentHealth()}/${character.GetMaxHealth()}\n${character.GetAttackName()}: ${characterStrength}\nAttack: ${characterAttack}\nArmor: ${character.GetArmor()}`, true)
             .addField(monsterName, `Health: ${battle.GetCurrentMonsterHealth()}/${battle.GetMaxMonsterHealth()}\nStrength: ${monsterStrength}\nAttack: ${monsterAttack}`, true)
@@ -162,20 +162,29 @@ export default class BattleEmbeds {
             }
 
             if (character.CanEnchant()) {
-                const inspiringCooldown = await character.GetEnchantmentCooldown();
-                if (inspiringCooldown > 0) {
-                    embed.addField('Enchantment', `🕒 ${Utils.GetSecondsInMinutesAndSeconds(inspiringCooldown)}`, true)
+                const enchantingCooldown = await character.GetEnchantmentCooldown();
+                if (enchantingCooldown > 0) {
+                    embed.addField('Enchantment', `🕒 ${Utils.GetSecondsInMinutesAndSeconds(enchantingCooldown)}`, true)
                 } else {
                     embed.addField('Enchantment', 'Klaar om te enchantment spelen!', true);
                 }
             }
 
             if (character.CanPercept()) {
-                const inspiringCooldown = await character.GetEnchantmentCooldown();
-                if (inspiringCooldown > 0) {
-                    embed.addField('Perception check', `🕒 ${Utils.GetSecondsInMinutesAndSeconds(inspiringCooldown)}`, true)
+                const perceptingCooldown = await character.GetPerceptionCooldown();
+                if (perceptingCooldown > 0) {
+                    embed.addField('Perception check', `🕒 ${Utils.GetSecondsInMinutesAndSeconds(perceptingCooldown)}`, true)
                 } else {
                     embed.addField('Perception check', 'Klaar voor een perception check!', true);
+                }
+            }
+
+            if (character.CanIntimidate()) {
+                const intimidatingCooldown = await character.GetIntimidationCooldown();
+                if (intimidatingCooldown > 0) {
+                    embed.addField('Intimidation', `🕒 ${Utils.GetSecondsInMinutesAndSeconds(intimidatingCooldown)}`, true)
+                } else {
+                    embed.addField('Intimidation', 'Klaar om het monster te intimideren!', true);
                 }
             }
         }

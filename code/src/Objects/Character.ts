@@ -395,7 +395,12 @@ export default class Character {
     }
 
     public GetEnhancementsString() {
-        return ` ${(this.IsInspired() ? `${EmojiConstants.CHARACTER_STATES.INSPIRED}` : '')}${(this.IsEnchanted() ? `${EmojiConstants.CHARACTER_STATES.ENCHANTED}` : '')}`;
+        const str = ` ${(this.IsInspired() ? `${EmojiConstants.DNW_STATES.INSPIRED}` : '')}${(this.IsEnchanted() ? `${EmojiConstants.DNW_STATES.ENCHANTED}` : '')}`;
+        if (str.length == 1) {
+            return '';
+        }
+
+        return str;
     }
 
     public async Sleep() {
@@ -510,7 +515,9 @@ export default class Character {
 
     public async OnPerception() {
         const battleCooldown = await this.GetBattleCooldown();
-        await Redis.expire(Character.battleCooldownPrefix + this.GetId(), Math.floor(battleCooldown/2));
+        const newCooldown = Math.floor(battleCooldown/2)
+        await Redis.expire(Character.battleCooldownPrefix + this.GetId(), newCooldown);
+        return newCooldown;
     }
 
     public GetMaxAbilityCooldown() {
@@ -734,6 +741,10 @@ export default class Character {
 
     public GetPerceptionDescription() {
         return this.perceptionDescription || CharacterConstants.PERCEPTION_MESSAGE;
+    }
+
+    public GetIntimidationDescription() {
+        return this.intimidationDescription || CharacterConstants.INTIMIDATION_MESSAGE;
     }
 
     public async UpdateAttackDescription(description:string) {

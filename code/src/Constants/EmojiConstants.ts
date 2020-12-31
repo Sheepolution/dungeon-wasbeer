@@ -48,8 +48,9 @@ export default class EmojiConstants {
         WIZARD: '<:wizard:708771356216524801>',
     }
 
-    public static readonly CHARACTER_STATES = {
+    public static readonly DNW_STATES = {
         INSPIRED: '✨',
         ENCHANTED: '🎲',
+        INTIMIDATED: '😨',
     }
 }

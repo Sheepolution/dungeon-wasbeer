@@ -1,6 +1,8 @@
 import { Utils } from '../Utils/Utils';
 import Monster from '../Objects/Monster';
 import MonsterModel from './MonsterModel';
+import IntimidationsModel from './IntimidationModel';
+import Intimidation from '../Objects/Intimidation';
 
 const { Model } = require('objection');
 
@@ -18,6 +20,14 @@ export default class BattleModel extends Model {
                 from: 'battles.monster_id',
                 to: 'monsters.id',
             }
+        },
+        intimidations: {
+            relation: Model.BelongsToOneRelation,
+            modelClass: IntimidationsModel,
+            join: {
+                from: 'battles.intimidation_id',
+                to: 'intimidations.id',
+            }
         }
     }
 
@@ -31,7 +41,6 @@ export default class BattleModel extends Model {
                 monster_id: monster.GetId(),
                 monster_health: monster.GetHealth(),
                 start_date: Utils.GetNowString(),
-                end_date: null,
             })
 
         return battle;
@@ -41,5 +50,15 @@ export default class BattleModel extends Model {
         const monster = new Monster();
         monster.ApplyModel(await this.$relatedQuery('monsters'));
         return monster;
+    }
+
+    public async GetIntimidation() {
+        if (this.intimidation_id == null) {
+            return;
+        }
+
+        const intimidation = new Intimidation();
+        intimidation.ApplyModel(await this.$relatedQuery('intimidations'));
+        return intimidation;
     }
 }

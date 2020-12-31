@@ -198,8 +198,7 @@ export default class BattleHandler {
 
         } while (secondAttack);
 
-        await character.StopBeingInspired();
-        await character.StopBeingEnchanted();
+        await this.UpdateStates(character, battle);
 
         if (this.inBattleTimeout != null) {
             clearTimeout(this.inBattleTimeout);
@@ -233,8 +232,7 @@ export default class BattleHandler {
 
         const damage = await this.ResolveAttackResult(messageInfo, message, battle, character, playerWon, playerWon ? character.GetAttackStrength(true) : battle.GetMonsterAttackStrength(true), roll1, roll2, roll3, 0);
         await this.UpdateBattleEmbed(message, battle, character, roll1, roll2, roll3, 0, playerWon, damage, true);
-        await character.StopBeingInspired();
-        await character.StopBeingEnchanted();
+        await this.UpdateStates(character, battle);
 
         if (this.inBattleTimeout != null) {
             clearTimeout(this.inBattleTimeout);
@@ -256,8 +254,7 @@ export default class BattleHandler {
 
         const damage = await this.ResolveAttackResult(messageInfo, message, battle, character, playerWon, playerWon ? character.GetAttackStrength(true) : monsterAttackStrength, roll1, roll2, roll3, 0);
         await this.UpdateBattleEmbed(message, battle, character, roll1, roll2, roll3, 0, playerWon, damage, true);
-        await character.StopBeingInspired();
-        await character.StopBeingEnchanted();
+        await this.UpdateStates(character, battle);
 
         if (this.inBattleTimeout != null) {
             clearTimeout(this.inBattleTimeout);
@@ -369,5 +366,11 @@ export default class BattleHandler {
 
     private static async UpdateBattleEmbed(message:Message, battle:Battle, character:Character, roll1?:number, roll2?:number, roll3?:number, roll4?:number, playerWon?:boolean, damage?:number, crit?:boolean) {
         await message.edit('', await BattleEmbeds.GetBattleEmbed(battle, character, roll1, roll2, roll3, roll4, playerWon, damage, crit));
+    }
+
+    private static async UpdateStates(character:Character, battle:Battle) {
+        await character.StopBeingInspired();
+        await character.StopBeingEnchanted();
+        await battle.StopBeingIntimidated(character);
     }
 }

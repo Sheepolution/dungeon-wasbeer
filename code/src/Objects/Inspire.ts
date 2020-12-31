@@ -22,6 +22,11 @@ export default class Inspire {
         return totalInspired[0].count || 0;
     }
 
+    public static async FIND_TOTAL_INSPIRED_OTHERS_IN_BATTLE_FOR_ALL_CHARACTERS(battle:Battle) {
+        const totalHealed = await InspireModel.query().where({battle_id: battle.GetId()}).whereRaw('??!=??', ['character_id', 'receiver_id']).groupBy('character_id').select('character_id').sum('final_inspiration');
+        return totalHealed;
+    }
+
     public static async GET_TOP_INSPIRES_DONE_LIST(battleId?:string) {
         var whereObj:any = {};
         if (battleId != null) {

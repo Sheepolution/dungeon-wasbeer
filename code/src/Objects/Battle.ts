@@ -1,6 +1,10 @@
 import BattleModel from '../Models/BattleModel';
 import Monster from './Monster';
 import { Utils } from '../Utils/Utils';
+import Intimidation from './Intimidation';
+import EmojiConstants from '../Constants/EmojiConstants';
+import CharacterConstants from '../Constants/CharacterConstants';
+import Character from './Character';
 
 export default class Battle {
 
@@ -10,6 +14,7 @@ export default class Battle {
     private monsterHealth:number;
     private startDate:Date;
     private endDate:Date;
+    private intimidation?:Intimidation;
 
     public static async GET_COUNT() {
         const battles = await BattleModel.query().count('id');
@@ -45,6 +50,7 @@ export default class Battle {
         this.monsterHealth = model.monster_health;
         this.startDate = model.start_date;
         this.endDate = model.end_date;
+        this.intimidation = await model.GetIntimidation();
     }
 
     public GetId() {
@@ -53,6 +59,10 @@ export default class Battle {
 
     public GetMonster() {
         return this.monster;
+    }
+
+    public GetEnhancementsString() {
+        return ` ${this.intimidation != null ? EmojiConstants.DNW_STATES.INTIMIDATED : ' '}`.replace('  ', '');
     }
 
     public GetMaxMonsterHealth() {
@@ -70,6 +80,10 @@ export default class Battle {
             strength += missing * 3;
         }
 
+        if (this.intimidation != null) {
+            strength = Math.floor(strength * CharacterConstants.INTIMIDATION_STAT_MULTIPLIER);
+        }
+
         return strength * (crit ? 2 : 1);
     }
 
@@ -78,6 +92,10 @@ export default class Battle {
         if (this.monster.GetId() == '7e476ee1-c32a-426b-b278-a03d6f85f164') {
             var missing = Math.ceil(this.monster.GetHealth() / 1000) - Math.ceil(this.monsterHealth / 1000);
             attackRoll += missing * 2;
+        }
+
+        if (this.intimidation != null) {
+            attackRoll = Math.floor(attackRoll * CharacterConstants.INTIMIDATION_STAT_MULTIPLIER);
         }
 
         return attackRoll;
@@ -126,6 +144,35 @@ export default class Battle {
 
     public IsMonsterDead() {
         return this.monsterHealth <= 0;
+    }
+
+    public async BecomeIntimidated(intimidation?:Intimidation) {
+        if (intimidation == null) {
+            return;
+        }
+
+        this.intimidation = intimidation;
+        await this.UPDATE({
+            intimidation_id: intimidation.GetId()
+        })
+    }
+
+    public async StopBeingIntimidated(claimer:Character) {
+        if (this.intimidation == null) {
+            return;
+        }
+
+        this.intimidation.SetClaimer(claimer);
+
+        this.intimidation = undefined;
+
+        await this.UPDATE({
+            intimidation_id: null
+        })
+    }
+
+    public IsMonsterIntimidated() {
+        return this.intimidation != null;
     }
 
     public async HealMonster(amount:number) {

@@ -14,7 +14,7 @@ export default class Perception {
         return totalPerceptions[0].count || 0;
     }
 
-    public static async FIND_TOTAL_PERCEPTIONS_OTHERS_IN_BATTLE_FOR_ALL_CHARACTERS(battle:Battle) {
+    public static async FIND_TOTAL_PERCEPT_OTHERS_IN_BATTLE_FOR_ALL_CHARACTERS(battle:Battle) {
         const totalPerceptions = await PerceptionModel.query().where({battle_id: battle.GetId()}).whereRaw('??!=??', ['character_id', 'receiver_id']).groupBy('character_id').select('character_id').count('id as cnt');
         return totalPerceptions;
     }
@@ -26,7 +26,7 @@ export default class Perception {
         }
 
         var list = await PerceptionModel.query()
-            .join('characters', 'characters.id', '=', 'perception.character_id')
+            .join('characters', 'characters.id', '=', 'perceptions.character_id')
             .join('players', 'characters.player_id', '=', 'players.id')
             .where(whereObj)
             .select('name', 'discord_name')
@@ -57,7 +57,7 @@ export default class Perception {
         return list;
     }
 
-    public static async STATIC_POST(battle:Battle, character:Character, receiver:Character) {
-        return await PerceptionModel.New(battle, character, receiver);
+    public static async STATIC_POST(battle:Battle, character:Character, receiver:Character, oldCooldown:number, newCooldown:number) {
+        return await PerceptionModel.New(battle, character, receiver, oldCooldown, newCooldown);
     }
 }

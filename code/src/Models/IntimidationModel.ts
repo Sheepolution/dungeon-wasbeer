@@ -6,10 +6,10 @@ import Character from '../Objects/Character';
 
 const { Model } = require('objection');
 
-export default class PerceptionsModel extends Model {
+export default class IntimidationsModel extends Model {
 
     static get tableName() {
-        return 'perceptions';
+        return 'intimidations';
     }
 
     static relationMappings = {
@@ -17,7 +17,7 @@ export default class PerceptionsModel extends Model {
             relation: Model.BelongsToOneRelation,
             modelClass: BattleModel,
             join: {
-                from: 'perceptions.battle_id',
+                from: 'intimidations.battle_id',
                 to: 'battles.id',
             }
         },
@@ -25,35 +25,24 @@ export default class PerceptionsModel extends Model {
             relation: Model.BelongsToOneRelation,
             modelClass: CharacterModel,
             join: {
-                from: 'perceptions.character_id',
+                from: 'intimidations.character_id',
                 to: 'characters.id',
             }
-        },
-        receiver: {
-            relation: Model.BelongsToOneRelation,
-            modelClass: CharacterModel,
-            join: {
-                from: 'perceptions.receiver_id',
-                to: 'characters.id',
-            }
-        },
+        }
     }
 
-    public static async New(battle:Battle, character:Character, receiver:Character, oldCooldown:number, newCooldown:number) {
-        const perceptionId = Utils.UUID();
+    public static async New(battle:Battle, character:Character) {
+        const intimidationId = Utils.UUID();
 
-        const perception = await PerceptionsModel.query()
+        const intimidation = await IntimidationsModel.query()
             .insert({
-                id: perceptionId,
+                id: intimidationId,
                 battle_id: battle.GetId(),
                 character_id: character.GetId(),
-                receiver_id: receiver.GetId(),
-                old_cooldown: oldCooldown,
-                new_cooldown: newCooldown,
-                perception_date: Utils.GetNowString(),
+                intimidation_date: Utils.GetNowString(),
             })
 
-        return perception;
+        return intimidation;
     }
 
     public async GetBattle() {
@@ -66,11 +55,5 @@ export default class PerceptionsModel extends Model {
         const character = new Character();
         character.ApplyModel(await this.$relatedQuery('character'));
         return character;
-    }
-
-    public async GetReceiver() {
-        const receiver = new Character();
-        receiver.ApplyModel(await this.$relatedQuery('receiver'));
-        return receiver;
     }
 }

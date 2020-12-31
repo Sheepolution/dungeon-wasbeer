@@ -20,6 +20,7 @@ import { Message } from 'discord.js';
 import Inspire from '../Objects/Inspire';
 import Enchantment from '../Objects/Enchantment';
 import Perception from '../Objects/Perception';
+import Intimidation from '../Objects/Intimidation';
 
 export default class CharacterHandler {
 
@@ -103,12 +104,19 @@ export default class CharacterHandler {
             case 'enchant':
             case 'betover':
             case 'e':
-                this.OnEnchantment(messageInfo, player, args[0]);
+                this.OnEnchant(messageInfo, player, args[0]);
                 break;
             case 'perception':
+            case 'percept':
             case 'kijk':
             case 'p':
-                this.OnPerception(messageInfo, player, args[0]);
+                this.OnPercept(messageInfo, player, args[0]);
+                break;
+            case 'intimidation':
+            case 'intimidate':
+            case 'intimideer':
+            case 'int':
+                this.OnIntimidate(messageInfo, player);
                 break;
             case 'art':
             case 'avatar':
@@ -495,7 +503,7 @@ export default class CharacterHandler {
         this.SaveInspire(character, receiver, character.GetFullModifierStats().charisma, roll, inspiration);
     }
 
-    private static async OnEnchantment(messageInfo:IMessageInfo, player:Player, mention:string) {
+    private static async OnEnchant(messageInfo:IMessageInfo, player:Player, mention:string) {
         const character = PlayerManager.GetCharacterFromPlayer(messageInfo, player);
         if (character == null) {
             return;
@@ -566,7 +574,7 @@ export default class CharacterHandler {
         MessageService.ReplyMessage(messageInfo, character.GetEnchantmentDescription().replaceAll('\\[jij\\]', character.GetName()).replaceAll('\\[naam\\]', receiverName), true);
     }
 
-    private static async OnPerception(messageInfo:IMessageInfo, player:Player, mention:string) {
+    private static async OnPercept(messageInfo:IMessageInfo, player:Player, mention:string) {
         const character = PlayerManager.GetCharacterFromPlayer(messageInfo, player);
         if (character == null) {
             return;
@@ -625,18 +633,60 @@ export default class CharacterHandler {
             return;
         }
 
-        await receiver.OnPerception();
+        const newCooldown = await receiver.OnPerception();
         await character.SetPerceptionCooldown();
 
         if (!selfPerception) {
             await character.GiveAbilityPoints(CampaignManager.GetBattle()?.GetId(), messageInfo);
         }
 
-        this.SaveEnchantment(character, receiver);
+        this.SavePerception(character, receiver, battleCooldown, newCooldown);
 
         const receiverName = receiver == character ? 'zichzelf' : receiver.GetName();
 
         MessageService.ReplyMessage(messageInfo, character.GetPerceptionDescription().replaceAll('\\[jij\\]', character.GetName()).replaceAll('\\[naam\\]', receiverName), true);
+    }
+
+    private static async OnIntimidate(messageInfo:IMessageInfo, player:Player) {
+        const character = PlayerManager.GetCharacterFromPlayer(messageInfo, player);
+        if (character == null) {
+            return;
+        }
+
+        if (!character.CanIntimidate()) {
+            MessageService.ReplyMessage(messageInfo, `Alleen fighters kunnen intimideren, en jij bent een ${character.GetClassName().toLowerCase()}.`, false);
+            return;
+        }
+
+        const battle = CampaignManager.GetBattle();
+        if (battle == null) {
+            MessageService.ReplyMessage(messageInfo, 'Je kan alleen intimideren wanneer er een monster is.', false);
+            return;
+        }
+
+        if (character.IsInBattle()) {
+            MessageService.ReplyMessage(messageInfo, 'Je kan niet intimideren want je zit momenteel in een gevecht.', false);
+            return;
+        }
+
+        const cooldown = await character.GetIntimidationCooldown();
+        if (cooldown > 0) {
+            const minutes = Utils.GetSecondsInMinutes(cooldown);
+            MessageService.ReplyMessage(messageInfo, `Je hebt nog ${minutes + (minutes == 1 ? ' minuut' : ' minuten')} cooldown voordat je weer mag intimideren.`);
+            return;
+        }
+
+        if (battle.IsMonsterIntimidated()) {
+            MessageService.ReplyMessage(messageInfo, `De ${battle.GetMonster().GetName()} is al geïntimideerd.`, false);
+            return;
+        }
+
+        const intimidation = await this.SaveIntimidation(character);
+
+        await battle.BecomeIntimidated(intimidation);
+        await character.SetIntimidationCooldown();
+
+        MessageService.ReplyMessage(messageInfo, character.GetIntimidationDescription().replaceAll('\\[jij\\]', character.GetName()).replaceAll('\\[monster\\]', battle.GetMonster().GetName()), true);
     }
 
     private static async SaveHeal(character:Character, receiver:Character, receiverHealth:number, characterHealing:number, roll:number, finalHealing:number) {
@@ -660,11 +710,21 @@ export default class CharacterHandler {
         await LogService.Log(character.GetPlayer(), enchantment.id, LogType.Enchantment, `${character.GetName()} heeft ${character.GetId() == receiver.GetId() ? 'zichzelf' : `${receiver.GetName()}`} enchanted.`);
     }
 
-    private static async SavePerception(character:Character, receiver:Character) {
+    private static async SavePerception(character:Character, receiver:Character, oldCooldown:number, newCooldown:number) {
         const battle = CampaignManager.GetBattle();
         if (battle == null) { return; }
-        const perception = await Perception.STATIC_POST(battle, character, receiver);
+        const perception = await Perception.STATIC_POST(battle, character, receiver, oldCooldown, newCooldown);
         await LogService.Log(character.GetPlayer(), perception.id, LogType.Perception, `${character.GetName()} heeft ${character.GetId() == receiver.GetId() ? 'zichzelf' : `${receiver.GetName()}`} een perception check gegeven.`);
+    }
+
+    private static async SaveIntimidation(character:Character) {
+        const battle = CampaignManager.GetBattle();
+        if (battle == null) { return; }
+        const intimidationModel = await Intimidation.STATIC_POST(battle, character);
+        await LogService.Log(character.GetPlayer(), intimidationModel.id, LogType.Perception, `${character.GetName()} heeft het monster ${battle.GetMonster().GetName()} geïntimideerd.`);
+        const intimidation = new Intimidation();
+        intimidation.ApplyModel(intimidationModel);
+        return intimidation;
     }
 
     private static async SendHealingEmbed(messageInfo:IMessageInfo, character:Character, receiver:Character) {
