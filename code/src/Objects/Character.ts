@@ -521,7 +521,7 @@ export default class Character {
     }
 
     public GetMaxAbilityCooldown() {
-        return CharacterConstants.BASE_COOLDOWN_DURATION + CharacterConstants.BASE_COOLDOWN_DURATION * (this.level/CharacterConstants.MAX_LEVEL);
+        return (CharacterConstants.BASE_COOLDOWN_DURATION * 2) - (CharacterConstants.BASE_COOLDOWN_DURATION * (this.level/CharacterConstants.MAX_LEVEL));
     }
 
     public CalculateDamageWithArmor(damage:number) {
