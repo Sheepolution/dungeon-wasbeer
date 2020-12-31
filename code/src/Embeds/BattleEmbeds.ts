@@ -169,6 +169,15 @@ export default class BattleEmbeds {
                     embed.addField('Enchantment', 'Klaar om te enchantment spelen!', true);
                 }
             }
+
+            if (character.CanPercept()) {
+                const inspiringCooldown = await character.GetEnchantmentCooldown();
+                if (inspiringCooldown > 0) {
+                    embed.addField('Perception check', `🕒 ${Utils.GetSecondsInMinutesAndSeconds(inspiringCooldown)}`, true)
+                } else {
+                    embed.addField('Perception check', 'Klaar voor een perception check!', true);
+                }
+            }
         }
 
         return embed;

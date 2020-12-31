@@ -6,10 +6,10 @@ import Character from '../Objects/Character';
 
 const { Model } = require('objection');
 
-export default class EnchantmentModel extends Model {
+export default class PerceptionsModel extends Model {
 
     static get tableName() {
-        return 'enchantments';
+        return 'perceptions';
     }
 
     static relationMappings = {
@@ -17,7 +17,7 @@ export default class EnchantmentModel extends Model {
             relation: Model.BelongsToOneRelation,
             modelClass: BattleModel,
             join: {
-                from: 'enchantments.battle_id',
+                from: 'perceptions.battle_id',
                 to: 'battles.id',
             }
         },
@@ -25,7 +25,7 @@ export default class EnchantmentModel extends Model {
             relation: Model.BelongsToOneRelation,
             modelClass: CharacterModel,
             join: {
-                from: 'enchantments.character_id',
+                from: 'perceptions.character_id',
                 to: 'characters.id',
             }
         },
@@ -33,25 +33,25 @@ export default class EnchantmentModel extends Model {
             relation: Model.BelongsToOneRelation,
             modelClass: CharacterModel,
             join: {
-                from: 'enchantments.receiver_id',
+                from: 'perceptions.receiver_id',
                 to: 'characters.id',
             }
         },
     }
 
     public static async New(battle:Battle, character:Character, receiver:Character) {
-        const enchantmentId = Utils.UUID();
+        const perceptionId = Utils.UUID();
 
-        const enchantment = await EnchantmentModel.query()
+        const perception = await PerceptionsModel.query()
             .insert({
-                id: enchantmentId,
+                id: perceptionId,
                 battle_id: battle.GetId(),
                 character_id: character.GetId(),
                 receiver_id: receiver.GetId(),
-                enchantment_date: Utils.GetNowString(),
+                perception_date: Utils.GetNowString(),
             })
 
-        return enchantment;
+        return perception;
     }
 
     public async GetBattle() {

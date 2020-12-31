@@ -508,6 +508,11 @@ export default class Character {
         return this.enchanted;
     }
 
+    public async OnPerception() {
+        const battleCooldown = await this.GetBattleCooldown();
+        await Redis.expire(Character.battleCooldownPrefix + this.GetId(), Math.floor(battleCooldown/2));
+    }
+
     public GetMaxAbilityCooldown() {
         return CharacterConstants.BASE_COOLDOWN_DURATION + CharacterConstants.BASE_COOLDOWN_DURATION * (this.level/CharacterConstants.MAX_LEVEL);
     }
@@ -725,6 +730,10 @@ export default class Character {
 
     public GetEnchantmentDescription() {
         return this.enchantmentDescription || CharacterConstants.ENCHANTMENT_MESSAGE;
+    }
+
+    public GetPerceptionDescription() {
+        return this.perceptionDescription || CharacterConstants.PERCEPTION_MESSAGE;
     }
 
     public async UpdateAttackDescription(description:string) {

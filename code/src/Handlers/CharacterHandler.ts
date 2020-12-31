@@ -19,6 +19,7 @@ import { Utils } from '../Utils/Utils';
 import { Message } from 'discord.js';
 import Inspire from '../Objects/Inspire';
 import Enchantment from '../Objects/Enchantment';
+import Perception from '../Objects/Perception';
 
 export default class CharacterHandler {
 
@@ -103,6 +104,11 @@ export default class CharacterHandler {
             case 'betover':
             case 'e':
                 this.OnEnchantment(messageInfo, player, args[0]);
+                break;
+            case 'perception':
+            case 'kijk':
+            case 'p':
+                this.OnPerception(messageInfo, player, args[0]);
                 break;
             case 'art':
             case 'avatar':
@@ -560,6 +566,79 @@ export default class CharacterHandler {
         MessageService.ReplyMessage(messageInfo, character.GetEnchantmentDescription().replaceAll('\\[jij\\]', character.GetName()).replaceAll('\\[naam\\]', receiverName), true);
     }
 
+    private static async OnPerception(messageInfo:IMessageInfo, player:Player, mention:string) {
+        const character = PlayerManager.GetCharacterFromPlayer(messageInfo, player);
+        if (character == null) {
+            return;
+        }
+
+        if (!character.CanPercept()) {
+            MessageService.ReplyMessage(messageInfo, `Alleen rangers kunnen perception checken, en jij bent een ${character.GetClassName().toLowerCase()}.`, false);
+            return;
+        }
+
+        const battle = CampaignManager.GetBattle();
+        if (battle == null) {
+            MessageService.ReplyMessage(messageInfo, 'Je kan alleen perception checken wanneer er een monster is.', false);
+            return;
+        }
+
+        if (character.IsInBattle()) {
+            MessageService.ReplyMessage(messageInfo, 'Je kan niet perception checken want je zit momenteel in een gevecht.', false);
+            return;
+        }
+
+        const cooldown = await character.GetPerceptionCooldown();
+        if (cooldown > 0) {
+            const minutes = Utils.GetSecondsInMinutes(cooldown);
+            MessageService.ReplyMessage(messageInfo, `Je hebt nog ${minutes + (minutes == 1 ? ' minuut' : ' minuten')} cooldown voordat je weer mag perception checken.`);
+            return;
+        }
+
+        var receiver = character;
+        if (mention != null) {
+            const receiverId = DiscordUtils.GetMemberId(mention);
+            if (receiverId == null) {
+                MessageService.ReplyMessage(messageInfo, 'Als je iemand anders dan jezelf een perception check wilt geven moet je die persoon taggen.\n`;perception @persoon`', false);
+                return;
+            }
+
+            const receiverPlayer = await PlayerManager.GetPlayer(receiverId);
+            receiver = receiverPlayer?.GetCharacter();
+            if (receiverPlayer == null || receiver == null) {
+                MessageService.ReplyMessage(messageInfo, 'Deze persoon heeft geen character.', false);
+                return;
+            }
+        }
+
+        const selfPerception = receiver == character;
+
+        if (receiver.IsInBattle()) {
+            MessageService.ReplyMessage(messageInfo, `Je kan ${receiver.GetName()} geen perception check geven want die zit momenteel in een gevecht.`, false);
+            return;
+        }
+
+        const battleCooldown = await receiver.GetBattleCooldown();
+
+        if (battleCooldown == null || battleCooldown <= 0) {
+            MessageService.ReplyMessage(messageInfo, 'Het heeft geen zin om een perception check te geven aan iemand die geen cooldown heeft.', false);
+            return;
+        }
+
+        await receiver.OnPerception();
+        await character.SetPerceptionCooldown();
+
+        if (!selfPerception) {
+            await character.GiveAbilityPoints(CampaignManager.GetBattle()?.GetId(), messageInfo);
+        }
+
+        this.SaveEnchantment(character, receiver);
+
+        const receiverName = receiver == character ? 'zichzelf' : receiver.GetName();
+
+        MessageService.ReplyMessage(messageInfo, character.GetPerceptionDescription().replaceAll('\\[jij\\]', character.GetName()).replaceAll('\\[naam\\]', receiverName), true);
+    }
+
     private static async SaveHeal(character:Character, receiver:Character, receiverHealth:number, characterHealing:number, roll:number, finalHealing:number) {
         const battle = CampaignManager.GetBattle();
         if (battle == null) { return; }
@@ -577,8 +656,15 @@ export default class CharacterHandler {
     private static async SaveEnchantment(character:Character, receiver:Character) {
         const battle = CampaignManager.GetBattle();
         if (battle == null) { return; }
-        const inspire = await Enchantment.STATIC_POST(battle, character, receiver);
-        await LogService.Log(character.GetPlayer(), inspire.id, LogType.Enchantment, `${character.GetName()} heeft ${character.GetId() == receiver.GetId() ? 'zichzelf' : `${receiver.GetName()}`} enchanted.`);
+        const enchantment = await Enchantment.STATIC_POST(battle, character, receiver);
+        await LogService.Log(character.GetPlayer(), enchantment.id, LogType.Enchantment, `${character.GetName()} heeft ${character.GetId() == receiver.GetId() ? 'zichzelf' : `${receiver.GetName()}`} enchanted.`);
+    }
+
+    private static async SavePerception(character:Character, receiver:Character) {
+        const battle = CampaignManager.GetBattle();
+        if (battle == null) { return; }
+        const perception = await Perception.STATIC_POST(battle, character, receiver);
+        await LogService.Log(character.GetPlayer(), perception.id, LogType.Perception, `${character.GetName()} heeft ${character.GetId() == receiver.GetId() ? 'zichzelf' : `${receiver.GetName()}`} een perception check gegeven.`);
     }
 
     private static async SendHealingEmbed(messageInfo:IMessageInfo, character:Character, receiver:Character) {
