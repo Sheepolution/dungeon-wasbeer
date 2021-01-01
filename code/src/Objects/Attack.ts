@@ -148,7 +148,8 @@ export default class Attack {
             ${battleId == null ? '' : `where a.battle_id = ${battleId}`}
             group by p.discord_name, c.name) as q
             where q.cnt > ${battleId == null ? '100' : '10'}
-            order by q.res desc;`);
+            order by q.res desc
+            limit 10;`);
 
         return averageRolls.rows;
     }
