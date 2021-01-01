@@ -1236,6 +1236,12 @@ export default class CharacterHandler {
             case 'perceptions gedaan':
                 MessageService.ReplyEmbed(messageInfo, await CharacterEmbeds.GetTopPerceptionsDoneEmbed(topListType, battleId));
                 break;
+            case 'luck':
+            case 'geluk':
+            case 'rolls':
+            case 'lucky':
+                MessageService.ReplyEmbed(messageInfo, await CharacterEmbeds.GetTopLuckEmbed(topListType, battleId));
+                break;
             case 'puzzel':
             case 'puzzels':
             case 'puzzels opgelost':

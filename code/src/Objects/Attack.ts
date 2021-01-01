@@ -140,24 +140,38 @@ export default class Attack {
     }
 
     public static async GET_TOP_MOST_LUCK_LIST(battleId?:string) {
-        const whereObj:any = {};
-        if (battleId != null) {
-            whereObj.battle_id = battleId;
-        }
+        const knex = AttackModel.knex();
+        var averageRolls = await knex.raw(`select q.discord_name, q.name, q.res from (
+            select count(c.id) as cnt, p.discord_name as discord_name, c.name as name, avg(roll_character_base) - avg(roll_monster_base) as res from attacks a
+            join characters c on c.id = a.character_id
+            join players p on p.character_id = c.id
+            ${battleId == null ? '' : `where a.battle_id = ${battleId}`}
+            group by p.discord_name, c.name) as q
+            where q.cnt > ${battleId == null ? '100' : '10'}
+            order by q.res desc;`);
 
-        const list = await AttackModel.query()
-            .join('characters', 'characters.id', '=', 'attacks.character_id')
-            .join('players', 'characters.player_id', '=', 'players.id')
-            .where(whereObj)
-            .select('name', 'discord_name')
-            .groupBy('characters.name', 'players.discord_name')
-            .avg('roll_character_base as avgc')
-            .avg('roll_monster_base as avgm')
-            .orderBy('sumd', 'desc')
-            .limit(10);
-
-        return list;
+        return averageRolls.rows;
     }
+
+    // public static async GET_TOP_MOST_LUCK_LIST(battleId?:string) {
+    //     const whereObj:any = {};
+    //     if (battleId != null) {
+    //         whereObj.battle_id = battleId;
+    //     }
+
+    //     const list = await AttackModel.query()
+    //         .join('characters', 'characters.id', '=', 'attacks.character_id')
+    //         .join('players', 'characters.player_id', '=', 'players.id')
+    //         .where(whereObj)
+    //         .select('name', 'discord_name')
+    //         .groupBy('characters.name', 'players.discord_name')
+    //         .avg('roll_character_base as avgc')
+    //         .avg('roll_monster_base as avgm')
+    //         .orderBy('sumd', 'desc')
+    //         .limit(10);
+
+    //     return list;
+    // }
 
     public static async STATIC_POST(battle:Battle, character:Character, messageId:string, rollCharacterBase:number, rollCharacterModifier:number, rollCharacterModifierMax:number, rollMonsterBase:number, rollMonsterModifier:number, rollMonsterModifierMax:number, victory:boolean, damage:number, healthAfter:number) {
         return await AttackModel.New(battle, character, messageId, rollCharacterBase, rollCharacterModifier, rollCharacterModifierMax, rollMonsterBase, rollMonsterModifier, rollMonsterModifierMax, victory, damage, healthAfter);

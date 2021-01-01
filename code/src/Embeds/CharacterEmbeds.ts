@@ -693,10 +693,10 @@ export default class CharacterEmbeds {
         return embed;
     }
 
-    public static async GetTopLuckEmbed() {
-        const list:any = await Attack.GET_TOP_MOST_LUCK_LIST();
+    public static async GetTopLuckEmbed(topListType:TopListType, battleId?:string) {
+        const list:any = await Attack.GET_TOP_MOST_LUCK_LIST(battleId);
         const embed = new MessageEmbed()
-            .setTitle(`Top ${list.length} meeste puzzels opgelost`);
+            .setTitle(`Top ${list.length} hoogste gemiddelde rolls vergelijken met het monster${topListType == TopListType.Current ? ' in dit gevecht' : topListType == TopListType.Previous ? ' in het vorige gevecht' : ''}`);
 
         var listString = '';
 
