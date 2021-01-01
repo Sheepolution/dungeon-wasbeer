@@ -781,6 +781,8 @@ export default class CharacterEmbeds {
             }
         }
 
+        listInspires.sort((a:any, b:any) => b.cnt - a.cnt);
+
         const embed = new MessageEmbed()
             .setTitle(`Top ${listInspires.length} meeste inspires gedaan${topListType == TopListType.Current ? ' in dit gevecht' : topListType == TopListType.Previous ? ' in het vorige gevecht' : ''}`);
 
@@ -815,6 +817,8 @@ export default class CharacterEmbeds {
                 }
             }
         }
+
+        listInspires.sort((a:any, b:any) => b.cnt - a.cnt);
 
         const embed = new MessageEmbed()
             .setTitle(`Top ${listInspires.length} meeste inspires gekregen${topListType == TopListType.Current ? ' in dit gevecht' : topListType == TopListType.Previous ? ' in het vorige gevecht' : ''}`);
