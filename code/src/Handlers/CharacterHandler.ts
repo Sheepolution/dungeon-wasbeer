@@ -1245,6 +1245,11 @@ export default class CharacterHandler {
             case 'lucky':
                 MessageService.ReplyEmbed(messageInfo, await CharacterEmbeds.GetTopLuckEmbed(topListType, battleId));
                 break;
+            case 'unlucky':
+            case 'pech':
+            case 'laagste rolls':
+                MessageService.ReplyEmbed(messageInfo, await CharacterEmbeds.GetTopLuckEmbed(topListType, battleId, true));
+                break;
             case 'cooldowns':
             case 'cooldown':
             case 'cd':

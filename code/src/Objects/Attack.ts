@@ -139,7 +139,7 @@ export default class Attack {
         return list;
     }
 
-    public static async GET_TOP_MOST_LUCK_LIST(battleId?:string) {
+    public static async GET_TOP_MOST_LUCK_LIST(battleId?:string, unlucky:boolean = false) {
         const knex = AttackModel.knex();
         var averageRolls = await knex.raw(`select q.discord_name, q.name, q.res from (
             select count(c.id) as cnt, p.discord_name as discord_name, c.name as name, avg(roll_character_base) - avg(roll_monster_base) as res from attacks a
@@ -149,7 +149,7 @@ export default class Attack {
             ${battleId == null ? '' : `and a.battle_id = '${battleId}'`}
             group by p.discord_name, c.name) as q
             where q.cnt > ${battleId == null ? '100' : '10'}
-            order by q.res desc
+            order by q.res ${unlucky ? '' : 'desc'}
             limit 10;`);
 
         return averageRolls.rows;
