@@ -1058,6 +1058,9 @@ export default class CharacterHandler {
             case 'graaf':
             case 'afgepakt':
             case 'gestolen':
+            case 'cooldowns':
+            case 'cooldown':
+            case 'cd':
                 ignoreTopListType = true;
                 break;
         }
@@ -1241,6 +1244,11 @@ export default class CharacterHandler {
             case 'rolls':
             case 'lucky':
                 MessageService.ReplyEmbed(messageInfo, await CharacterEmbeds.GetTopLuckEmbed(topListType, battleId));
+                break;
+            case 'cooldowns':
+            case 'cooldown':
+            case 'cd':
+                MessageService.ReplyEmbed(messageInfo, await CharacterEmbeds.GetTopCooldownsEmbed());
                 break;
             case 'puzzel':
             case 'puzzels':

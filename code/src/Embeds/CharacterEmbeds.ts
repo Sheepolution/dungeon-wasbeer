@@ -16,6 +16,8 @@ import Inspire from '../Objects/Inspire';
 import Enchantment from '../Objects/Enchantment';
 import Perception from '../Objects/Perception';
 import Intimidation from '../Objects/Intimidation';
+import { Redis } from '../Providers/Redis';
+import RedisConstants from '../Constants/RedisConstants';
 
 export default class CharacterEmbeds {
 
@@ -709,6 +711,35 @@ export default class CharacterEmbeds {
 
         return embed;
     }
+
+    public static async GetTopCooldownsEmbed() {
+        const prefix = RedisConstants.REDIS_KEY + RedisConstants.BATTLE_COOLDOWN_KEY;
+        const cooldownKeys = await Redis.keys(`${prefix}*`);
+        const list = new Array<any>();
+
+        for (const key of cooldownKeys) {
+            const cooldown = await Redis.ttl(key);
+            const id = key.substr(prefix.length);
+            const character = new Character();
+            await character.GET(id);
+
+            list.push({
+                cooldown: cooldown,
+                character: character,
+            })
+        }
+
+        list.sort((a:any, b:any) => a.duration - b.duration);
+
+        list.splice(0, 10);
+
+        const embed = new MessageEmbed()
+            .setTitle('Deze characters hebben de hoogste gevechtscooldown');
+
+        var listString = '';
+
+        for (const item of list) {
+            listString += `Cooldown: ${Utils.GetSecondsInMinutesAndSeconds(item.cooldown)} - ${item.character.GetName()} (${item.character.GetPlayer().GetDiscordName()})\n`;
         }
 
         embed.setDescription(listString);
