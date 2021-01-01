@@ -40,6 +40,25 @@ export default class Intimidation {
         return list;
     }
 
+    public static async GET_TOP_INTIMIDATIONS_CLAIMED_LIST(battleId?:string) {
+        var whereObj:any = {};
+        if (battleId != null) {
+            whereObj.battle_id = battleId;
+        }
+
+        var list = await IntimidationModel.query()
+            .join('characters', 'characters.id', '=', 'intimidations.claimer_id')
+            .join('players', 'characters.player_id', '=', 'players.id')
+            .where(whereObj)
+            .select('name', 'discord_name')
+            .groupBy('characters.name', 'players.discord_name')
+            .count('characters.id as cnt')
+            .orderBy('cnt', 'desc')
+            .limit(10);
+
+        return list;
+    }
+
     public static async STATIC_POST(battle:Battle, character:Character) {
         return await IntimidationModel.New(battle, character);
     }

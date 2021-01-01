@@ -1222,7 +1222,7 @@ export default class CharacterHandler {
             case 'intimidations done':
             case 'intimidations gegeven':
             case 'intimidations gedaan':
-                MessageService.ReplyEmbed(messageInfo, await CharacterEmbeds.GetTopIntimdationsDoneEmbed(topListType, battleId));
+                MessageService.ReplyEmbed(messageInfo, await CharacterEmbeds.GetTopIntimidationsDoneEmbed(topListType, battleId));
                 break;
             case 'perceptions gekregen':
             case 'perceptions ontvangen':

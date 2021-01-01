@@ -139,6 +139,26 @@ export default class Attack {
         return list;
     }
 
+    public static async GET_TOP_MOST_LUCK_LIST(battleId?:string) {
+        const whereObj:any = {};
+        if (battleId != null) {
+            whereObj.battle_id = battleId;
+        }
+
+        const list = await AttackModel.query()
+            .join('characters', 'characters.id', '=', 'attacks.character_id')
+            .join('players', 'characters.player_id', '=', 'players.id')
+            .where(whereObj)
+            .select('name', 'discord_name')
+            .groupBy('characters.name', 'players.discord_name')
+            .avg('roll_character_base as avgc')
+            .avg('roll_monster_base as avgm')
+            .orderBy('sumd', 'desc')
+            .limit(10);
+
+        return list;
+    }
+
     public static async STATIC_POST(battle:Battle, character:Character, messageId:string, rollCharacterBase:number, rollCharacterModifier:number, rollCharacterModifierMax:number, rollMonsterBase:number, rollMonsterModifier:number, rollMonsterModifierMax:number, victory:boolean, damage:number, healthAfter:number) {
         return await AttackModel.New(battle, character, messageId, rollCharacterBase, rollCharacterModifier, rollCharacterModifierMax, rollMonsterBase, rollMonsterModifier, rollMonsterModifierMax, victory, damage, healthAfter);
     }

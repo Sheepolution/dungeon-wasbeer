@@ -15,6 +15,7 @@ import Log from '../Objects/Log';
 import Inspire from '../Objects/Inspire';
 import Enchantment from '../Objects/Enchantment';
 import Perception from '../Objects/Perception';
+import Intimidation from '../Objects/Intimidation';
 
 export default class CharacterEmbeds {
 
@@ -692,6 +693,23 @@ export default class CharacterEmbeds {
         return embed;
     }
 
+    public static async GetTopLuckEmbed() {
+        const list:any = await Attack.GET_TOP_MOST_LUCK_LIST();
+        const embed = new MessageEmbed()
+            .setTitle(`Top ${list.length} meeste puzzels opgelost`);
+
+        var listString = '';
+
+        for (let i = 0; i < list.length; i++) {
+            const item = list[i];
+            listString += `${i+1}. ${item.cnt} - ${item.name} (${item.discord_name})\n`;
+        }
+
+        embed.setDescription(listString);
+
+        return embed;
+    }
+
     public static async GetTopPuzzlesSolvedEmbed() {
         const list:any = await Puzzle.GET_TOP_SOLVED_LIST();
         const embed = new MessageEmbed()
@@ -939,10 +957,10 @@ export default class CharacterEmbeds {
         return embed;
     }
 
-    public static async GetTopIntimdationsDoneEmbed(topListType:TopListType, battleId?:string) {
-        const list:any = await Perception.GET_TOP_PERCEPTIONS_DONE_LIST(battleId);
+    public static async GetTopIntimidationsDoneEmbed(topListType:TopListType, battleId?:string) {
+        const list:any = await Intimidation.GET_TOP_INTIMIDATIONS_DONE_LIST(battleId);
         const embed = new MessageEmbed()
-            .setTitle(`Top ${list.length} meeste intimdaties gedaan${topListType == TopListType.Current ? ' in dit gevecht' : topListType == TopListType.Previous ? ' in het vorige gevecht' : ''}`);
+            .setTitle(`Top ${list.length} meeste intimidations gedaan${topListType == TopListType.Current ? ' in dit gevecht' : topListType == TopListType.Previous ? ' in het vorige gevecht' : ''}`);
 
         var listString = '';
 
@@ -957,9 +975,9 @@ export default class CharacterEmbeds {
     }
 
     public static async GetTopIntimidationsClaimedEmbed(topListType:TopListType, battleId?:string) {
-        const list:any = await Perception.GET_TOP_PERCEPTIONS_RECEIVED_LIST(battleId);
+        const list:any = await Intimidation.GET_TOP_INTIMIDATIONS_CLAIMED_LIST(battleId);
         const embed = new MessageEmbed()
-            .setTitle(`Top ${list.length} meeste intimidaties geclaimed${topListType == TopListType.Current ? ' in dit gevecht' : topListType == TopListType.Previous ? ' in het vorige gevecht' : ''}`);
+            .setTitle(`Top ${list.length} meeste intimidations geclaimed${topListType == TopListType.Current ? ' in dit gevecht' : topListType == TopListType.Previous ? ' in het vorige gevecht' : ''}`);
 
         var listString = '';
 
