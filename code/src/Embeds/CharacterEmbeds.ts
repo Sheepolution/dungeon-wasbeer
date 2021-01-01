@@ -13,6 +13,8 @@ import { Utils } from '../Utils/Utils';
 import { MessageEmbed } from 'discord.js';
 import Log from '../Objects/Log';
 import Inspire from '../Objects/Inspire';
+import Enchantment from '../Objects/Enchantment';
+import Perception from '../Objects/Perception';
 
 export default class CharacterEmbeds {
 
@@ -798,7 +800,7 @@ export default class CharacterEmbeds {
         return embed;
     }
 
-    public static async GetTopInspiresGet(topListType:TopListType, battleId?:string) {
+    public static async GetTopInspiresReceived(topListType:TopListType, battleId?:string) {
 
         const listInspires:any = await Inspire.GET_TOP_INSPIRES_RECEIVED_LIST(battleId);
         var listLogs:any = null;
@@ -827,6 +829,142 @@ export default class CharacterEmbeds {
 
         for (let i = 0; i < listInspires.length; i++) {
             const item = listInspires[i];
+            listString += `${i+1}. ${item.cnt} - ${item.name} (${item.discord_name})\n`;
+        }
+
+        embed.setDescription(listString);
+
+        return embed;
+    }
+
+    public static async GetTopInspirationDoneEmbed(topListType:TopListType, battleId?:string) {
+        const list:any = await Inspire.GET_TOP_INSPIRATION_DONE_LIST(battleId);
+        const embed = new MessageEmbed()
+            .setTitle(`Top ${list.length} meeste inspiratie gedaan${topListType == TopListType.Current ? ' in dit gevecht' : topListType == TopListType.Previous ? ' in het vorige gevecht' : ''}`);
+
+        var listString = '';
+
+        for (let i = 0; i < list.length; i++) {
+            const item = list[i];
+            listString += `${i+1}. ${item.sumi} - ${item.name} (${item.discord_name})\n`;
+        }
+
+        embed.setDescription(listString);
+
+        return embed;
+    }
+
+    public static async GetTopInspirationReceivedEmbed(topListType:TopListType, battleId?:string) {
+        const list:any = await Inspire.GET_TOP_INSPIRATION_RECEIVED_LIST(battleId);
+        const embed = new MessageEmbed()
+            .setTitle(`Top ${list.length} meeste inspiratie gekregen${topListType == TopListType.Current ? ' in dit gevecht' : topListType == TopListType.Previous ? ' in het vorige gevecht' : ''}`);
+
+        var listString = '';
+
+        for (let i = 0; i < list.length; i++) {
+            const item = list[i];
+            listString += `${i+1}. ${item.sumi} - ${item.name} (${item.discord_name})\n`;
+        }
+
+        embed.setDescription(listString);
+
+        return embed;
+    }
+
+    public static async GetTopEnchantmentsDoneEmbed(topListType:TopListType, battleId?:string) {
+        const list:any = await Enchantment.GET_TOP_ENCHANTMENTS_DONE_LIST(battleId);
+        const embed = new MessageEmbed()
+            .setTitle(`Top ${list.length} meeste enchantments gedaan${topListType == TopListType.Current ? ' in dit gevecht' : topListType == TopListType.Previous ? ' in het vorige gevecht' : ''}`);
+
+        var listString = '';
+
+        for (let i = 0; i < list.length; i++) {
+            const item = list[i];
+            listString += `${i+1}. ${item.cnt} - ${item.name} (${item.discord_name})\n`;
+        }
+
+        embed.setDescription(listString);
+
+        return embed;
+    }
+
+    public static async GetTopEnchantmentsReceivedEmbed(topListType:TopListType, battleId?:string) {
+        const list:any = await Enchantment.GET_TOP_ENCHANTMENTS_RECEIVED_LIST(battleId);
+        const embed = new MessageEmbed()
+            .setTitle(`Top ${list.length} meeste enchantments gekregen${topListType == TopListType.Current ? ' in dit gevecht' : topListType == TopListType.Previous ? ' in het vorige gevecht' : ''}`);
+
+        var listString = '';
+
+        for (let i = 0; i < list.length; i++) {
+            const item = list[i];
+            listString += `${i+1}. ${item.cnt} - ${item.name} (${item.discord_name})\n`;
+        }
+
+        embed.setDescription(listString);
+
+        return embed;
+    }
+
+    public static async GetTopPerceptionsDoneEmbed(topListType:TopListType, battleId?:string) {
+        const list:any = await Perception.GET_TOP_PERCEPTIONS_DONE_LIST(battleId);
+        const embed = new MessageEmbed()
+            .setTitle(`Top ${list.length} meeste perception checks gedaan${topListType == TopListType.Current ? ' in dit gevecht' : topListType == TopListType.Previous ? ' in het vorige gevecht' : ''}`);
+
+        var listString = '';
+
+        for (let i = 0; i < list.length; i++) {
+            const item = list[i];
+            listString += `${i+1}. ${item.cnt} - ${item.name} (${item.discord_name})\n`;
+        }
+
+        embed.setDescription(listString);
+
+        return embed;
+    }
+
+    public static async GetTopPerceptionsReceivedEmbed(topListType:TopListType, battleId?:string) {
+        const list:any = await Perception.GET_TOP_PERCEPTIONS_RECEIVED_LIST(battleId);
+        const embed = new MessageEmbed()
+            .setTitle(`Top ${list.length} meeste perception checks gekregen${topListType == TopListType.Current ? ' in dit gevecht' : topListType == TopListType.Previous ? ' in het vorige gevecht' : ''}`);
+
+        var listString = '';
+
+        for (let i = 0; i < list.length; i++) {
+            const item = list[i];
+            listString += `${i+1}. ${item.cnt} - ${item.name} (${item.discord_name})\n`;
+        }
+
+        embed.setDescription(listString);
+
+        return embed;
+    }
+
+    public static async GetTopIntimdationsDoneEmbed(topListType:TopListType, battleId?:string) {
+        const list:any = await Perception.GET_TOP_PERCEPTIONS_DONE_LIST(battleId);
+        const embed = new MessageEmbed()
+            .setTitle(`Top ${list.length} meeste intimdaties gedaan${topListType == TopListType.Current ? ' in dit gevecht' : topListType == TopListType.Previous ? ' in het vorige gevecht' : ''}`);
+
+        var listString = '';
+
+        for (let i = 0; i < list.length; i++) {
+            const item = list[i];
+            listString += `${i+1}. ${item.cnt} - ${item.name} (${item.discord_name})\n`;
+        }
+
+        embed.setDescription(listString);
+
+        return embed;
+    }
+
+    public static async GetTopIntimidationsClaimedEmbed(topListType:TopListType, battleId?:string) {
+        const list:any = await Perception.GET_TOP_PERCEPTIONS_RECEIVED_LIST(battleId);
+        const embed = new MessageEmbed()
+            .setTitle(`Top ${list.length} meeste intimidaties geclaimed${topListType == TopListType.Current ? ' in dit gevecht' : topListType == TopListType.Previous ? ' in het vorige gevecht' : ''}`);
+
+        var listString = '';
+
+        for (let i = 0; i < list.length; i++) {
+            const item = list[i];
             listString += `${i+1}. ${item.cnt} - ${item.name} (${item.discord_name})\n`;
         }
 

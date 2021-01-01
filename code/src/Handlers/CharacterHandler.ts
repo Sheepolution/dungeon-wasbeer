@@ -1163,17 +1163,74 @@ export default class CharacterHandler {
             case 'healing done':
                 MessageService.ReplyEmbed(messageInfo, await CharacterEmbeds.GetTopHealingDoneEmbed(topListType, battleId));
                 break;
+            case 'inspires gekregen':
+            case 'inspires ontvangen':
+            case 'inspires received':
+            case 'inspires get':
+                MessageService.ReplyEmbed(messageInfo, await CharacterEmbeds.GetTopInspiresReceived(topListType, battleId));
+                break;
+            case 'inspiratie gekregen':
+            case 'inspiratie ontvangen':
+            case 'inspiration received':
+            case 'inspiration get':
+                MessageService.ReplyEmbed(messageInfo, await CharacterEmbeds.GetTopInspirationReceivedEmbed(topListType, battleId));
+                break;
             case 'inspires':
             case 'inspires done':
             case 'inspires gegeven':
             case 'inspires gedaan':
                 MessageService.ReplyEmbed(messageInfo, await CharacterEmbeds.GetTopInspiresDone(topListType, battleId));
                 break;
-            case 'inspires gekregen':
-            case 'inspires ontvangen':
-            case 'inspires received':
-            case 'inspires get':
-                MessageService.ReplyEmbed(messageInfo, await CharacterEmbeds.GetTopInspiresGet(topListType, battleId));
+            case 'inspiratie':
+            case 'inspiration':
+            case 'inspiration done':
+            case 'inspiratie gegeven':
+            case 'inspiratie gedaan':
+                MessageService.ReplyEmbed(messageInfo, await CharacterEmbeds.GetTopInspirationDoneEmbed(topListType, battleId));
+                break;
+            case 'enchants gekregen':
+            case 'enchants ontvangen':
+            case 'enchants received':
+            case 'enchants get':
+            case 'enchantments gekregen':
+            case 'enchantments ontvangen':
+            case 'enchantments received':
+            case 'enchantments get':
+                MessageService.ReplyEmbed(messageInfo, await CharacterEmbeds.GetTopEnchantmentsReceivedEmbed(topListType, battleId));
+                break;
+            case 'enchants':
+            case 'enchants done':
+            case 'enchants gegeven':
+            case 'enchants gedaan':
+            case 'enchantments':
+            case 'enchantments done':
+            case 'enchantments gegeven':
+            case 'enchantments gedaan':
+                MessageService.ReplyEmbed(messageInfo, await CharacterEmbeds.GetTopEnchantmentsDoneEmbed(topListType, battleId));
+                break;
+            case 'intimidaties gekregen':
+            case 'intimidaties ontvangen':
+            case 'intimidaties received':
+            case 'intimidations get':
+                MessageService.ReplyEmbed(messageInfo, await CharacterEmbeds.GetTopIntimidationsClaimedEmbed(topListType, battleId));
+                break;
+            case 'intimidations':
+            case 'intimidations done':
+            case 'intimidations gegeven':
+            case 'intimidations gedaan':
+                MessageService.ReplyEmbed(messageInfo, await CharacterEmbeds.GetTopIntimdationsDoneEmbed(topListType, battleId));
+                break;
+            case 'perceptions gekregen':
+            case 'perceptions ontvangen':
+            case 'perceptions received':
+            case 'perceptions get':
+                MessageService.ReplyEmbed(messageInfo, await CharacterEmbeds.GetTopPerceptionsReceivedEmbed(topListType, battleId));
+                break;
+            case 'perceptions':
+            case 'perceptions done':
+            case 'perceptions gegeven':
+            case 'perceptions gedaan':
+                MessageService.ReplyEmbed(messageInfo, await CharacterEmbeds.GetTopPerceptionsDoneEmbed(topListType, battleId));
                 break;
             case 'puzzel':
             case 'puzzels':

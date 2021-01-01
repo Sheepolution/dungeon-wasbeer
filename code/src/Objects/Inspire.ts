@@ -46,6 +46,25 @@ export default class Inspire {
         return list;
     }
 
+    public static async GET_TOP_INSPIRATION_DONE_LIST(battleId?:string) {
+        var whereObj:any = {};
+        if (battleId != null) {
+            whereObj.battle_id = battleId;
+        }
+
+        var list = await InspireModel.query()
+            .join('characters', 'characters.id', '=', 'inspires.character_id')
+            .join('players', 'characters.player_id', '=', 'players.id')
+            .where(whereObj)
+            .groupBy('characters.name', 'players.discord_name')
+            .select('name', 'discord_name')
+            .sum('final_inspiration as sumi')
+            .orderBy('sumi', 'desc')
+            .limit(10);
+
+        return list;
+    }
+
     public static async GET_TOP_INSPIRES_RECEIVED_LIST(battleId?:string) {
         var whereObj:any = {};
         if (battleId != null) {
@@ -60,6 +79,25 @@ export default class Inspire {
             .groupBy('characters.id', 'characters.name', 'players.discord_name')
             .count('characters.id as cnt')
             .orderBy('cnt', 'desc')
+            .limit(10);
+
+        return list;
+    }
+
+    public static async GET_TOP_INSPIRATION_RECEIVED_LIST(battleId?:string) {
+        var whereObj:any = {};
+        if (battleId != null) {
+            whereObj.battle_id = battleId;
+        }
+
+        var list = await InspireModel.query()
+            .join('characters', 'characters.id', '=', 'inspires.receiver_id')
+            .join('players', 'characters.player_id', '=', 'players.id')
+            .where(whereObj)
+            .groupBy('characters.name', 'players.discord_name')
+            .select('name', 'discord_name')
+            .sum('final_inspiration as sumi')
+            .orderBy('sumh', 'desc')
             .limit(10);
 
         return list;
