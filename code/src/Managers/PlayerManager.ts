@@ -39,9 +39,9 @@ export default class PlayerManager {
     }
 
     public static async GetPlayerById(playerId:string) {
-        const cachedPlayer = Object.values(this.players).find((e:any) => e.player.GetId() == playerId);
+        const cachedPlayer:any = Object.values(this.players).find((e:any) => e.player.GetId() == playerId);
         if (cachedPlayer) {
-            return cachedPlayer;
+            return cachedPlayer.player;
         }
 
         const player = new Player();
