@@ -37,8 +37,8 @@ export default class Inspire {
             .join('characters', 'characters.id', '=', 'inspires.character_id')
             .join('players', 'characters.player_id', '=', 'players.id')
             .where(whereObj)
-            .select('name', 'discord_name')
-            .groupBy('characters.name', 'players.discord_name')
+            .select('players.id', 'name', 'discord_name')
+            .groupBy('players.id', 'characters.name', 'players.discord_name')
             .count('characters.id as cnt')
             .orderBy('cnt', 'desc')
             .limit(10);
@@ -56,8 +56,8 @@ export default class Inspire {
             .join('characters', 'characters.id', '=', 'inspires.receiver_id')
             .join('players', 'characters.player_id', '=', 'players.id')
             .where(whereObj)
-            .select('name', 'discord_name')
-            .groupBy('characters.name', 'players.discord_name')
+            .select('players.id', 'name', 'discord_name')
+            .groupBy('players.id', 'characters.name', 'players.discord_name')
             .count('characters.id as cnt')
             .orderBy('cnt', 'desc')
             .limit(10);

@@ -24,6 +24,7 @@ import { LogType } from '../Enums/LogType';
 import { Redis } from '../Providers/Redis';
 import { Utils } from '../Utils/Utils';
 import EmojiConstants from '../Constants/EmojiConstants';
+import Inspire from './Inspire';
 
 export default class Character {
 
@@ -925,7 +926,7 @@ export default class Character {
     }
 
     public async GetTotalInspiresDone() {
-        return await Log.FIND_TOTAL_INSPIRES_BY_CHARACTER(this);
+        return await Log.FIND_TOTAL_INSPIRES_BY_CHARACTER(this) + Inspire.FIND_INSPIRES_DONE_BY_CHARACTER(this);
     }
 
     public async GetTotalPuzzlesSolved() {
