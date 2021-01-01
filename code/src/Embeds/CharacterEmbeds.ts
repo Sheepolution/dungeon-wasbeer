@@ -729,7 +729,7 @@ export default class CharacterEmbeds {
             })
         }
 
-        list.sort((a:any, b:any) => b.duration - a.duration);
+        list.sort((a:any, b:any) => b.cooldown - a.cooldown);
 
         list.splice(10);
 
