@@ -145,7 +145,7 @@ export default class Attack {
             select count(c.id) as cnt, p.discord_name as discord_name, c.name as name, avg(roll_character_base) - avg(roll_monster_base) as res from attacks a
             join characters c on c.id = a.character_id
             join players p on p.character_id = c.id
-            ${battleId == null ? '' : `where a.battle_id = ${battleId}`}
+            ${battleId == null ? '' : `where a.battle_id = '${battleId}'`}
             group by p.discord_name, c.name) as q
             where q.cnt > ${battleId == null ? '100' : '10'}
             order by q.res desc
