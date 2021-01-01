@@ -731,7 +731,7 @@ export default class CharacterEmbeds {
 
         list.sort((a:any, b:any) => a.duration - b.duration);
 
-        list.splice(0, 10);
+        list.splice(10);
 
         const embed = new MessageEmbed()
             .setTitle('Deze characters hebben de hoogste gevechtscooldown');
