@@ -926,7 +926,7 @@ export default class Character {
     }
 
     public async GetTotalInspiresDone() {
-        return await Log.FIND_TOTAL_INSPIRES_BY_CHARACTER(this) + await Inspire.FIND_INSPIRES_DONE_BY_CHARACTER(this);
+        return parseInt(await Log.FIND_TOTAL_INSPIRES_BY_CHARACTER(this)) + parseInt(await Inspire.FIND_INSPIRES_DONE_BY_CHARACTER(this));
     }
 
     public async GetTotalPuzzlesSolved() {
