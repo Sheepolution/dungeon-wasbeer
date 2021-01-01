@@ -702,7 +702,13 @@ export default class CharacterEmbeds {
 
         for (let i = 0; i < list.length; i++) {
             const item = list[i];
-            listString += `${i+1}. ${item.cnt} - ${item.name} (${item.discord_name})\n`;
+            listString += `${i+1}. ${Math.floor(parseInt(item.res)*10)/10} - ${item.name} (${item.discord_name})\n`;
+        }
+
+        embed.setDescription(listString);
+
+        return embed;
+    }
         }
 
         embed.setDescription(listString);
