@@ -698,7 +698,7 @@ export default class CharacterEmbeds {
     public static async GetTopLuckEmbed(topListType:TopListType, battleId?:string, unlucky:boolean = false) {
         const list:any = await Attack.GET_TOP_MOST_LUCK_LIST(battleId, unlucky);
         const embed = new MessageEmbed()
-            .setTitle(`Top ${list.length} hoogste gemiddelde rolls vergeleken met het monster${topListType == TopListType.Current ? ' in dit gevecht' : topListType == TopListType.Previous ? ' in het vorige gevecht' : ''}`);
+            .setTitle(`Top ${list.length} ${unlucky ? 'laagste' : 'hoogste'} gemiddelde rolls vergeleken met het monster${topListType == TopListType.Current ? ' in dit gevecht' : topListType == TopListType.Previous ? ' in het vorige gevecht' : ''}`);
 
         var listString = '';
 
