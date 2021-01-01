@@ -775,7 +775,8 @@ export default class CharacterEmbeds {
         for (const inspire of listInspires) {
             for (const log of listLogs) {
                 if (inspire.id == log.id) {
-                    inspire.cnt += log.cnt;
+                    inspire.cnt = parseInt(inspire.cnt);
+                    inspire.cnt += parseInt(log.cnt);
                 }
             }
         }
@@ -808,8 +809,9 @@ export default class CharacterEmbeds {
 
         for (const inspire of listInspires) {
             for (const log of listLogs) {
-                if (inspire.name == log.name && inspire.discord_name == log.discord_name) {
-                    inspire.cnt += log.cnt;
+                if (inspire.id == log.id) {
+                    inspire.cnt = parseInt(inspire.cnt);
+                    inspire.cnt += parseInt(log.cnt);
                 }
             }
         }
