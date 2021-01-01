@@ -648,7 +648,11 @@ export default class CharacterHandler {
 
         const receiverName = receiver == character ? 'zichzelf' : receiver.GetName();
 
-        MessageService.ReplyMessage(messageInfo, character.GetPerceptionDescription().replaceAll('\\[jij\\]', character.GetName()).replaceAll('\\[naam\\]', receiverName), true);
+        MessageService.ReplyMessage(messageInfo, character.GetPerceptionDescription()
+            .replaceAll('\\[jij\\]', character.GetName())
+            .replaceAll('\\[naam\\]', receiverName)
+            .replaceAll('\\[voor\\]', Utils.GetSecondsInMinutesAndSeconds(battleCooldown))
+            .replaceAll('\\[na\\]', Utils.GetSecondsInMinutesAndSeconds(newCooldown)), true);
     }
 
     private static async OnIntimidate(messageInfo:IMessageInfo, player:Player) {
