@@ -17,7 +17,6 @@ import { Utils } from '../Utils/Utils';
 import ConfigurationManager from './ConfigurationManager';
 import PuzzleService from '../Services/PuzzleService';
 import LogService from '../Services/LogService';
-import Log from '../Objects/Log';
 import Enchantment from '../Objects/Enchantment';
 import Perception from '../Objects/Perception';
 import Intimidation from '../Objects/Intimidation';
@@ -143,8 +142,7 @@ export default class CampaignManager {
     private static async GiveXPToBattlers(battle:Battle) {
         const attackData = await Attack.FIND_TOTAL_DAMAGE_GIVEN_IN_BATTLE_FOR_ALL_CHARACTERS(battle);
         const healData = await Heal.FIND_TOTAL_HEALED_OTHERS_IN_BATTLE_FOR_ALL_CHARACTERS(battle);
-        const newInspireData = await Inspire.FIND_TOTAL_INSPIRED_OTHERS_IN_BATTLE_FOR_ALL_CHARACTERS(battle);
-        const inspireData = await Log.FIND_TOTAL_INSPIRED_OTHERS_IN_BATTLE_FOR_ALL_CHARACTERS(battle);
+        const inspireData = await Inspire.FIND_TOTAL_INSPIRED_OTHERS_IN_BATTLE_FOR_ALL_CHARACTERS(battle);
         const enchantmentData = await Enchantment.FIND_TOTAL_ENCHANTED_OTHERS_IN_BATTLE_FOR_ALL_CHARACTERS(battle);
         const perceptionData = await Perception.FIND_TOTAL_PERCEPT_OTHERS_IN_BATTLE_FOR_ALL_CHARACTERS(battle);
         const intimidationData = await Intimidation.FIND_TOTAL_INTIMIDATIONS_FOR_OTHERS_IN_BATTLE_FOR_ALL_CHARACTERS(battle);
@@ -164,7 +162,7 @@ export default class CampaignManager {
             }
         }
 
-        for (const row of newInspireData) {
+        for (const row of inspireData) {
             const xp = Math.floor(parseInt(row.sum)/2);
             if (data[row.character_id]) {
                 data[row.character_id] += xp;
@@ -173,39 +171,30 @@ export default class CampaignManager {
             }
         }
 
-        for (const row of inspireData) {
-            const xp = parseInt(row.cnt) * 10;
-            if (data[row.id]) {
-                data[row.id] += xp;
-            } else {
-                data[row.id] = xp;
-            }
-        }
-
         for (const row of enchantmentData) {
             const xp = parseInt(row.cnt) * 10;
-            if (data[row.id]) {
-                data[row.id] += xp;
+            if (data[row.character_id]) {
+                data[row.character_id] += xp;
             } else {
-                data[row.id] = xp;
+                data[row.character_id] = xp;
             }
         }
 
         for (const row of perceptionData) {
             const xp = parseInt(row.cnt) * 10;
-            if (data[row.id]) {
-                data[row.id] += xp;
+            if (data[row.character_id]) {
+                data[row.character_id] += xp;
             } else {
-                data[row.id] = xp;
+                data[row.character_id] = xp;
             }
         }
 
         for (const row of intimidationData) {
             const xp = parseInt(row.cnt) * 10;
-            if (data[row.id]) {
-                data[row.id] += xp;
+            if (data[row.character_id]) {
+                data[row.character_id] += xp;
             } else {
-                data[row.id] = xp;
+                data[row.character_id] = xp;
             }
         }
 
