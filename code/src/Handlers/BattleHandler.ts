@@ -94,6 +94,8 @@ export default class BattleHandler {
                     messageInfo.message?.react(EmojiConstants.STATUS.BAD);
                     return;
                 }
+
+                character.SetInBattle(true);
                 this.waitList.push(messageInfo);
                 messageInfo.message?.react(EmojiConstants.STATUS.GOOD);
                 return;
