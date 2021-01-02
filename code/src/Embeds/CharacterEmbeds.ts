@@ -820,33 +820,23 @@ export default class CharacterEmbeds {
 
     public static async GetTopInspiresDone(topListType:TopListType, battleId?:string) {
 
-        const listInspires:any = await Inspire.GET_TOP_INSPIRES_DONE_LIST(battleId);
-        var listLogs:any = null;
+        var list:any = null;
 
         if (topListType == TopListType.All) {
-            listLogs = await Log.GET_TOP_ALL_INSPIRES_DONE();
+            list = await Log.GET_TOP_ALL_INSPIRES_DONE();
         } else {
-            listLogs = await Log.GET_TOP_INSPIRES_DONE(battleId);
+            list = await Inspire.GET_TOP_INSPIRES_DONE_LIST(battleId);
         }
 
-        for (const inspire of listInspires) {
-            for (const log of listLogs) {
-                if (inspire.id == log.id) {
-                    inspire.cnt = parseInt(inspire.cnt);
-                    inspire.cnt += parseInt(log.cnt);
-                }
-            }
-        }
-
-        listInspires.sort((a:any, b:any) => b.cnt - a.cnt);
+        list.sort((a:any, b:any) => b.cnt - a.cnt);
 
         const embed = new MessageEmbed()
-            .setTitle(`Top ${listInspires.length} meeste inspires gedaan${topListType == TopListType.Current ? ' in dit gevecht' : topListType == TopListType.Previous ? ' in het vorige gevecht' : ''}`);
+            .setTitle(`Top ${list.length} meeste inspires gedaan${topListType == TopListType.Current ? ' in dit gevecht' : topListType == TopListType.Previous ? ' in het vorige gevecht' : ''}`);
 
         var listString = '';
 
-        for (let i = 0; i < listInspires.length; i++) {
-            const item = listInspires[i];
+        for (let i = 0; i < list.length; i++) {
+            const item = list[i];
             listString += `${i+1}. ${item.cnt} - ${item.name} (${item.discord_name})\n`;
         }
 
@@ -857,33 +847,23 @@ export default class CharacterEmbeds {
 
     public static async GetTopInspiresReceived(topListType:TopListType, battleId?:string) {
 
-        const listInspires:any = await Inspire.GET_TOP_INSPIRES_RECEIVED_LIST(battleId);
-        var listLogs:any = null;
+        var list:any = null;
 
         if (topListType == TopListType.All) {
-            listLogs = await Log.GET_TOP_ALL_INSPIRES_GET();
+            list = await Log.GET_TOP_ALL_INSPIRES_GET();
         } else {
-            listLogs = await Log.GET_TOP_INSPIRES_GET(battleId)
+            list = await Inspire.GET_TOP_INSPIRES_RECEIVED_LIST(battleId);
         }
 
-        for (const inspire of listInspires) {
-            for (const log of listLogs) {
-                if (inspire.id == log.id) {
-                    inspire.cnt = parseInt(inspire.cnt);
-                    inspire.cnt += parseInt(log.cnt);
-                }
-            }
-        }
-
-        listInspires.sort((a:any, b:any) => b.cnt - a.cnt);
+        list.sort((a:any, b:any) => b.cnt - a.cnt);
 
         const embed = new MessageEmbed()
-            .setTitle(`Top ${listInspires.length} meeste inspires gekregen${topListType == TopListType.Current ? ' in dit gevecht' : topListType == TopListType.Previous ? ' in het vorige gevecht' : ''}`);
+            .setTitle(`Top ${list.length} meeste inspires gekregen${topListType == TopListType.Current ? ' in dit gevecht' : topListType == TopListType.Previous ? ' in het vorige gevecht' : ''}`);
 
         var listString = '';
 
-        for (let i = 0; i < listInspires.length; i++) {
-            const item = listInspires[i];
+        for (let i = 0; i < list.length; i++) {
+            const item = list[i];
             listString += `${i+1}. ${item.cnt} - ${item.name} (${item.discord_name})\n`;
         }
 
