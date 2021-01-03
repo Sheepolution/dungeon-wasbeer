@@ -198,6 +198,8 @@ export default class BattleHandler {
                     } else {
                         playerStrength += (roll1 + (roll2 || 0)) - (roll3 + (roll4 || 0));
                     }
+
+                    playerStrength = Math.min(playerStrength, character.GetAttackStrength(true));
                 }
 
                 var monsterAttackStrength = battle.GetMonsterAttackStrength();
@@ -244,12 +246,7 @@ export default class BattleHandler {
             playerWon = false;
         }
 
-        var playerStrength = character.GetAttackStrength(true);
-        if (playerWon && character.IsReinforced()) {
-            playerStrength += character.GetAttackRoll();
-        }
-
-        const damage = await this.ResolveAttackResult(messageInfo, message, battle, character, playerWon, playerWon ? playerStrength : battle.GetMonsterAttackStrength(true), roll1, roll2, roll3, 0);
+        const damage = await this.ResolveAttackResult(messageInfo, message, battle, character, playerWon, playerWon ? character.GetAttackStrength(true) : battle.GetMonsterAttackStrength(true), roll1, roll2, roll3, 0);
         await this.UpdateBattleEmbed(message, battle, character, roll1, roll2, roll3, 0, playerWon, damage, true);
         await this.UpdateStates(character);
 
