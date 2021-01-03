@@ -670,8 +670,8 @@ export default class CharacterHandler {
             return;
         }
 
-        if (BattleHandler.IsInBattle()) {
-            MessageService.ReplyMessage(messageInfo, 'Je kan niet reinforcen terwijl er een gevecht gaande is.', false);
+        if (character.IsInBattle()) {
+            MessageService.ReplyMessage(messageInfo, 'Je kan niet reinforcen want je zit momenteel in een gevecht.', false);
             return;
         }
 
