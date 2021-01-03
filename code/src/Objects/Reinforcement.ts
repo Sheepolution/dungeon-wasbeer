@@ -17,7 +17,7 @@ export default class Reinforcement {
     }
 
     public static async FIND_TOTAL_REINFORCEMENTS_FOR_OTHERS_IN_BATTLE_FOR_ALL_CHARACTERS(battle:Battle) {
-        const totalPerceptions = await ReinforcementModel.query().where({battle_id: battle.GetId()}).whereRaw('??!=??', ['character_id', 'claimer_id']).groupBy('character_id').select('character_id').count('id as cnt');
+        const totalPerceptions = await ReinforcementModel.query().where({battle_id: battle.GetId()}).whereRaw('??!=??', ['character_id', 'receiver_id']).groupBy('character_id').select('character_id').count('id as cnt');
         return totalPerceptions;
     }
 
@@ -40,14 +40,14 @@ export default class Reinforcement {
         return list;
     }
 
-    public static async GET_TOP_REINFORCEMENTS_CLAIMED_LIST(battleId?:string) {
+    public static async GET_TOP_REINFORCEMENTS_RECEIVED_LIST(battleId?:string) {
         var whereObj:any = {};
         if (battleId != null) {
             whereObj.battle_id = battleId;
         }
 
         var list = await ReinforcementModel.query()
-            .join('characters', 'characters.id', '=', 'reinforcements.claimer_id')
+            .join('characters', 'characters.id', '=', 'reinforcements.receiver_id')
             .join('players', 'characters.player_id', '=', 'players.id')
             .where(whereObj)
             .select('name', 'discord_name')
@@ -75,11 +75,5 @@ export default class Reinforcement {
 
     public GetId() {
         return this.id;
-    }
-
-    public async SetClaimer(claimer:Character) {
-        await this.UPDATE({
-            claimer_id: claimer.GetId()
-        })
     }
 }

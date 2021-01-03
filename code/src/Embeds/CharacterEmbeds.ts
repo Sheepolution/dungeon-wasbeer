@@ -1003,10 +1003,10 @@ export default class CharacterEmbeds {
         return embed;
     }
 
-    public static async GetTopReinforcementsClaimedEmbed(topListType:TopListType, battleId?:string) {
-        const list:any = await Reinforcement.GET_TOP_REINFORCEMENTS_CLAIMED_LIST(battleId);
+    public static async GetTopReinforcementsReceivedEmbed(topListType:TopListType, battleId?:string) {
+        const list:any = await Reinforcement.GET_TOP_REINFORCEMENTS_RECEIVED_LIST(battleId);
         const embed = new MessageEmbed()
-            .setTitle(`Top ${list.length} meeste reinforcements geclaimed${topListType == TopListType.Current ? ' in dit gevecht' : topListType == TopListType.Previous ? ' in het vorige gevecht' : ''}`);
+            .setTitle(`Top ${list.length} meeste reinforcements gekregen${topListType == TopListType.Current ? ' in dit gevecht' : topListType == TopListType.Previous ? ' in het vorige gevecht' : ''}`);
 
         var listString = '';
 

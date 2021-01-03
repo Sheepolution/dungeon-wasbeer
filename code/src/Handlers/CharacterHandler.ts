@@ -1242,7 +1242,7 @@ export default class CharacterHandler {
             case 'reinforcements gekregen':
             case 'reinforcements ontvangen':
             case 'reinforcements received':
-                MessageService.ReplyEmbed(messageInfo, await CharacterEmbeds.GetTopReinforcementsClaimedEmbed(topListType, battleId));
+                MessageService.ReplyEmbed(messageInfo, await CharacterEmbeds.GetTopReinforcementsReceivedEmbed(topListType, battleId));
                 break;
             case 'reinforcements':
             case 'reinforcements done':
