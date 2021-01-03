@@ -57,8 +57,8 @@ export default class AttackModel extends Model {
                 monster_strength: battle.GetMonsterAttackStrength(),
                 character_armor: modifierStats.armor,
                 inspiration: character.GetInspiration(),
-                enchanted: false,
-                intimidated: false,
+                enchanted: character.IsEnchanted(),
+                reinforced: character.IsReinforced(),
             })
 
         return attack;

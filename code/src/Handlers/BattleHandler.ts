@@ -191,20 +191,28 @@ export default class BattleHandler {
             if (playerWon && !secondAttack && monsterId == 'fb835c7f-0eea-402f-97a2-e4f9cdd7fc35') {
                 secondAttack = true;
             } else {
+                var playerStrength = character.GetAttackStrength();
+                if (playerWon && character.IsReinforced()) {
+                    if (monsterId == '57ea9222-d3d5-4f26-96a7-07c7415d3873') {
+                        playerStrength += (roll3 + (roll4 || 0)) - (roll1 + (roll2 || 0));
+                    } else {
+                        playerStrength += (roll1 + (roll2 || 0)) - (roll3 + (roll4 || 0));
+                    }
+                }
 
                 var monsterAttackStrength = battle.GetMonsterAttackStrength();
                 if (!playerWon && monsterId == 'e6e3aa15-b39b-40aa-a113-6b5add2994c4') {
                     monsterAttackStrength = (roll3 + (roll4 || 0)) - (roll1 + (roll2 || 0));
                 }
 
-                const damage = await this.ResolveAttackResult(messageInfo, message, battle, character, playerWon, playerWon ? character.GetAttackStrength() : monsterAttackStrength, roll1, roll2 || 0, roll3, roll4 || 0);
+                const damage = await this.ResolveAttackResult(messageInfo, message, battle, character, playerWon, playerWon ? playerStrength : monsterAttackStrength, roll1, roll2 || 0, roll3, roll4 || 0);
                 await this.UpdateBattleEmbed(message, battle, character, roll1, roll2, roll3, roll4, playerWon, damage, false);
                 secondAttack = false;
             }
 
         } while (secondAttack);
 
-        await this.UpdateStates(character, battle);
+        await this.UpdateStates(character);
 
         if (this.inBattleTimeout != null) {
             clearTimeout(this.inBattleTimeout);
@@ -236,9 +244,14 @@ export default class BattleHandler {
             playerWon = false;
         }
 
-        const damage = await this.ResolveAttackResult(messageInfo, message, battle, character, playerWon, playerWon ? character.GetAttackStrength(true) : battle.GetMonsterAttackStrength(true), roll1, roll2, roll3, 0);
+        var playerStrength = character.GetAttackStrength(true);
+        if (playerWon && character.IsReinforced()) {
+            playerStrength += character.GetAttackRoll();
+        }
+
+        const damage = await this.ResolveAttackResult(messageInfo, message, battle, character, playerWon, playerWon ? playerStrength : battle.GetMonsterAttackStrength(true), roll1, roll2, roll3, 0);
         await this.UpdateBattleEmbed(message, battle, character, roll1, roll2, roll3, 0, playerWon, damage, true);
-        await this.UpdateStates(character, battle);
+        await this.UpdateStates(character);
 
         if (this.inBattleTimeout != null) {
             clearTimeout(this.inBattleTimeout);
@@ -253,14 +266,19 @@ export default class BattleHandler {
             playerWon = true;
         }
 
+        var playerStrength = character.GetAttackStrength(true);
+        if (playerWon && character.IsReinforced()) {
+            playerStrength += battle.GetMonsterAttackRoll();
+        }
+
         var monsterAttackStrength = battle.GetMonsterAttackStrength(true);
         if (!playerWon && monsterId == 'e6e3aa15-b39b-40aa-a113-6b5add2994c4') {
             monsterAttackStrength = 20 + battle.GetMonsterAttackRoll();
         }
 
-        const damage = await this.ResolveAttackResult(messageInfo, message, battle, character, playerWon, playerWon ? character.GetAttackStrength(true) : monsterAttackStrength, roll1, roll2, roll3, 0);
+        const damage = await this.ResolveAttackResult(messageInfo, message, battle, character, playerWon, playerWon ? playerStrength : monsterAttackStrength, roll1, roll2, roll3, 0);
         await this.UpdateBattleEmbed(message, battle, character, roll1, roll2, roll3, 0, playerWon, damage, true);
-        await this.UpdateStates(character, battle);
+        await this.UpdateStates(character);
 
         if (this.inBattleTimeout != null) {
             clearTimeout(this.inBattleTimeout);
@@ -374,9 +392,9 @@ export default class BattleHandler {
         await message.edit('', await BattleEmbeds.GetBattleEmbed(battle, character, roll1, roll2, roll3, roll4, playerWon, damage, crit));
     }
 
-    private static async UpdateStates(character:Character, battle:Battle) {
+    private static async UpdateStates(character:Character) {
         await character.StopBeingInspired();
         await character.StopBeingEnchanted();
-        await battle.StopBeingIntimidated(character);
+        await character.StopBeingReinforced();
     }
 }

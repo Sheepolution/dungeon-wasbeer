@@ -20,7 +20,7 @@ import { Message } from 'discord.js';
 import Inspire from '../Objects/Inspire';
 import Enchantment from '../Objects/Enchantment';
 import Perception from '../Objects/Perception';
-import Intimidation from '../Objects/Intimidation';
+import Reinforcement from '../Objects/Reinforcement';
 import BattleHandler from './BattleHandler';
 
 export default class CharacterHandler {
@@ -113,11 +113,9 @@ export default class CharacterHandler {
             case 'p':
                 this.OnPercept(messageInfo, player, args[0]);
                 break;
-            case 'intimidation':
-            case 'intimidate':
-            case 'intimideer':
-            case 'int':
-                this.OnIntimidate(messageInfo, player);
+            case 'reinforce':
+            case 'r':
+                this.OnReinforce(messageInfo, player, args[0]);
                 break;
             case 'art':
             case 'avatar':
@@ -655,46 +653,75 @@ export default class CharacterHandler {
             .replaceAll('\\[na\\]', Utils.GetSecondsInMinutesAndSeconds(newCooldown)), true);
     }
 
-    private static async OnIntimidate(messageInfo:IMessageInfo, player:Player) {
+    private static async OnReinforce(messageInfo:IMessageInfo, player:Player, mention:string) {
         const character = PlayerManager.GetCharacterFromPlayer(messageInfo, player);
         if (character == null) {
             return;
         }
 
-        if (!character.CanIntimidate()) {
-            MessageService.ReplyMessage(messageInfo, `Alleen fighters kunnen intimideren, en jij bent een ${character.GetClassName().toLowerCase()}.`, false);
+        if (!character.CanReinforce()) {
+            MessageService.ReplyMessage(messageInfo, `Alleen fighters kunnen reinforcen, en jij bent een ${character.GetClassName().toLowerCase()}.`, false);
             return;
         }
 
         const battle = CampaignManager.GetBattle();
         if (battle == null) {
-            MessageService.ReplyMessage(messageInfo, 'Je kan alleen intimideren wanneer er een monster is.', false);
+            MessageService.ReplyMessage(messageInfo, 'Je kan alleen reinforcen wanneer er een monster is.', false);
             return;
         }
 
         if (BattleHandler.IsInBattle()) {
-            MessageService.ReplyMessage(messageInfo, 'Je kan niet intimideren terwijl er een gevecht gaande is.', false);
+            MessageService.ReplyMessage(messageInfo, 'Je kan niet reinforcen terwijl er een gevecht gaande is.', false);
             return;
         }
 
-        const cooldown = await character.GetIntimidationCooldown();
+        const cooldown = await character.GetReinforcementCooldown();
         if (cooldown > 0) {
             const minutes = Utils.GetSecondsInMinutes(cooldown);
-            MessageService.ReplyMessage(messageInfo, `Je hebt nog ${minutes + (minutes == 1 ? ' minuut' : ' minuten')} cooldown voordat je weer mag intimideren.`);
+            MessageService.ReplyMessage(messageInfo, `Je hebt nog ${minutes + (minutes == 1 ? ' minuut' : ' minuten')} cooldown voordat je weer mag reinforcen.`);
             return;
         }
 
-        if (battle.IsMonsterIntimidated()) {
-            MessageService.ReplyMessage(messageInfo, `De ${battle.GetMonster().GetName()} is al geïntimideerd.`, false);
+        var receiver = character;
+        if (mention != null) {
+            const receiverId = DiscordUtils.GetMemberId(mention);
+            if (receiverId == null) {
+                MessageService.ReplyMessage(messageInfo, 'Als je iemand anders dan jezelf wilt reinforcen moet je die persoon taggen.\n`;reinforce @persoon`', false);
+                return;
+            }
+
+            const receiverPlayer = await PlayerManager.GetPlayer(receiverId);
+            receiver = receiverPlayer?.GetCharacter();
+            if (receiverPlayer == null || receiver == null) {
+                MessageService.ReplyMessage(messageInfo, 'Deze persoon heeft geen character.', false);
+                return;
+            }
+        }
+
+        const selfEnchant = receiver == character;
+
+        if (receiver.IsInBattle()) {
+            MessageService.ReplyMessage(messageInfo, `Je kan ${receiver.GetName()} niet reinforcen want die zit momenteel in een gevecht.`, false);
             return;
         }
 
-        const intimidation = await this.SaveIntimidation(character);
+        if (receiver.IsReinforced()) {
+            MessageService.ReplyMessage(messageInfo, `${selfEnchant ? 'Je bent ' : 'Deze persoon is '}al voorzien van reinforcement.`, false);
+            return;
+        }
 
-        await battle.BecomeIntimidated(intimidation);
-        await character.SetIntimidationCooldown();
+        await receiver.BecomeReinforced();
+        await character.SetReinforcementCooldown();
 
-        MessageService.ReplyMessage(messageInfo, character.GetIntimidationDescription().replaceAll('\\[jij\\]', character.GetName()).replaceAll('\\[monster\\]', battle.GetMonster().GetName()), true);
+        if (!selfEnchant) {
+            await character.GiveAbilityPoints(CampaignManager.GetBattle()?.GetId(), messageInfo);
+        }
+
+        this.SaveReinforcement(character, receiver);
+
+        const receiverName = receiver == character ? 'zichzelf' : receiver.GetName();
+
+        MessageService.ReplyMessage(messageInfo, character.GetReinforcementDescription().replaceAll('\\[jij\\]', character.GetName()).replaceAll('\\[naam\\]', receiverName), true);
     }
 
     private static async SaveHeal(character:Character, receiver:Character, receiverHealth:number, characterHealing:number, roll:number, finalHealing:number) {
@@ -725,14 +752,11 @@ export default class CharacterHandler {
         await LogService.Log(character.GetPlayer(), perception.id, LogType.Perception, `${character.GetName()} heeft ${character.GetId() == receiver.GetId() ? 'zichzelf' : `${receiver.GetName()}`} een perception check gegeven.`);
     }
 
-    private static async SaveIntimidation(character:Character) {
+    private static async SaveReinforcement(character:Character, receiver:Character) {
         const battle = CampaignManager.GetBattle();
         if (battle == null) { return; }
-        const intimidationModel = await Intimidation.STATIC_POST(battle, character);
-        await LogService.Log(character.GetPlayer(), intimidationModel.id, LogType.Perception, `${character.GetName()} heeft het monster ${battle.GetMonster().GetName()} geïntimideerd.`);
-        const intimidation = new Intimidation();
-        intimidation.ApplyModel(intimidationModel);
-        return intimidation;
+        const reinforcement = await Reinforcement.STATIC_POST(battle, character, receiver);
+        await LogService.Log(character.GetPlayer(), reinforcement.id, LogType.Reinforcement, `${character.GetName()} heeft ${character.GetId() == receiver.GetId() ? 'zichzelf' : `${receiver.GetName()}`} voorzien van reinforcement.`);
     }
 
     private static async SendHealingEmbed(messageInfo:IMessageInfo, character:Character, receiver:Character) {
@@ -1215,17 +1239,16 @@ export default class CharacterHandler {
             case 'enchantments gedaan':
                 MessageService.ReplyEmbed(messageInfo, await CharacterEmbeds.GetTopEnchantmentsDoneEmbed(topListType, battleId));
                 break;
-            case 'intimidaties gekregen':
-            case 'intimidaties ontvangen':
-            case 'intimidaties received':
-            case 'intimidations get':
-                MessageService.ReplyEmbed(messageInfo, await CharacterEmbeds.GetTopIntimidationsClaimedEmbed(topListType, battleId));
+            case 'reinforcements gekregen':
+            case 'reinforcements ontvangen':
+            case 'reinforcements received':
+                MessageService.ReplyEmbed(messageInfo, await CharacterEmbeds.GetTopReinforcementsClaimedEmbed(topListType, battleId));
                 break;
-            case 'intimidations':
-            case 'intimidations done':
-            case 'intimidations gegeven':
-            case 'intimidations gedaan':
-                MessageService.ReplyEmbed(messageInfo, await CharacterEmbeds.GetTopIntimidationsDoneEmbed(topListType, battleId));
+            case 'reinforcements':
+            case 'reinforcements done':
+            case 'reinforcements gegeven':
+            case 'reinforcements gedaan':
+                MessageService.ReplyEmbed(messageInfo, await CharacterEmbeds.GetTopReinforcementsDoneEmbed(topListType, battleId));
                 break;
             case 'perceptions gekregen':
             case 'perceptions ontvangen':

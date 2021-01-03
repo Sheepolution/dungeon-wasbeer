@@ -6,10 +6,10 @@ import Character from '../Objects/Character';
 
 const { Model } = require('objection');
 
-export default class IntimidationsModel extends Model {
+export default class ReinforcementsModel extends Model {
 
     static get tableName() {
-        return 'intimidations';
+        return 'reinforcements';
     }
 
     static relationMappings = {
@@ -17,7 +17,7 @@ export default class IntimidationsModel extends Model {
             relation: Model.BelongsToOneRelation,
             modelClass: BattleModel,
             join: {
-                from: 'intimidations.battle_id',
+                from: 'reinforcements.battle_id',
                 to: 'battles.id',
             }
         },
@@ -25,24 +25,25 @@ export default class IntimidationsModel extends Model {
             relation: Model.BelongsToOneRelation,
             modelClass: CharacterModel,
             join: {
-                from: 'intimidations.character_id',
+                from: 'reinforcements.character_id',
                 to: 'characters.id',
             }
         }
     }
 
-    public static async New(battle:Battle, character:Character) {
-        const intimidationId = Utils.UUID();
+    public static async New(battle:Battle, character:Character, receiver:Character) {
+        const reinforcementId = Utils.UUID();
 
-        const intimidation = await IntimidationsModel.query()
+        const reinforcement = await ReinforcementsModel.query()
             .insert({
-                id: intimidationId,
+                id: reinforcementId,
                 battle_id: battle.GetId(),
                 character_id: character.GetId(),
-                intimidation_date: Utils.GetNowString(),
+                receiver_id: receiver.GetId(),
+                reinforcement_date: Utils.GetNowString(),
             })
 
-        return intimidation;
+        return reinforcement;
     }
 
     public async GetBattle() {

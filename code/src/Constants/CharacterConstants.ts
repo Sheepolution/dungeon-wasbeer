@@ -34,8 +34,6 @@ export default class CharacterConstants {
 
     public static readonly INSPIRE_STAT_MULTIPLIER = 1.2;
 
-    public static readonly INTIMIDATION_STAT_MULTIPLIER = .8;
-
     public static readonly HEALTH_DEXTERITY_PENALTY_MAX = 15;
 
     public static readonly CHARACTER_IMAGE = {
@@ -115,5 +113,5 @@ export default class CharacterConstants {
     public static readonly INSPIRE_FAIL_MESSAGE = '"[jij] speelt een hoop valse noten en wordt gevraagd te stoppen. Dit was alles behalve inspirerend."';
     public static readonly ENCHANTMENT_MESSAGE = `"[jij] gebruikt een spreuk om de attack roll van [naam] te verdubbelen in het volgende gevecht." ${EmojiConstants.DNW_STATES.ENCHANTED}`;
     public static readonly PERCEPTION_MESSAGE = '"[jij] doet een perception check om [naam] te informeren over de situatie en de gevechtscooldown te halveren van [voor] naar [na]."';
-    public static readonly INTIMIDATION_MESSAGE = '"[jij] kijkt de [monster] boos aan. Het monster wordt er een beetje bang van, en zijn stats verlagen met 20% tot na het volgende gevecht."';
+    public static readonly REINFORCEMENT_MESSAGE = `"[jij] voorziet [naam] van een extra wapen. Het verschil in attack rolls wordt toegevoegd aan de strength in het volgende gevecht." ${EmojiConstants.DNW_STATES.REINFORCED}`;
 }

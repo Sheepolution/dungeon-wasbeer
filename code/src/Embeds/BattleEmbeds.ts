@@ -24,7 +24,7 @@ export default class BattleEmbeds {
         const embed = new MessageEmbed()
             .setColor(SettingsConstants.COLORS.MONSTER)
             .setAuthor(monster.GetCategory(), 'https://cdn.discordapp.com/attachments/694331679204180029/698606955496734781/unknown.png')
-            .setTitle(`${monster.GetName()}${battle.GetEnhancementsString()}`)
+            .setTitle(monster.GetName())
             .setDescription(monster.GetDescription())
             .setImage(battle.GetMonsterImageUrl())
             .addField('Level', monster.GetLevelString())
@@ -53,7 +53,7 @@ export default class BattleEmbeds {
             .setColor(SettingsConstants.COLORS.DEFAULT)
             .setAuthor('Aanval')
             .setThumbnail(playerWon ? character.GetAvatarUrl() : battle.GetMonsterImageUrl())
-            .setTitle(`${characterName}${character.GetEnhancementsString()} VS ${monsterName}${battle.GetEnhancementsString()}`)
+            .setTitle(`${characterName}${character.GetEnhancementsString()} VS ${monsterName}`)
             .setDescription('-- Statistieken --')
             .addField(characterName, `Health: ${character.GetCurrentHealth()}/${character.GetMaxHealth()}\n${character.GetAttackName()}: ${characterStrength}\nAttack: ${characterAttack}\nArmor: ${character.GetArmor()}`, true)
             .addField(monsterName, `Health: ${battle.GetCurrentMonsterHealth()}/${battle.GetMaxMonsterHealth()}\nStrength: ${monsterStrength}\nAttack: ${monsterAttack}`, true)
@@ -166,7 +166,7 @@ export default class BattleEmbeds {
                 if (enchantingCooldown > 0) {
                     embed.addField('Enchantment', `🕒 ${Utils.GetSecondsInMinutesAndSeconds(enchantingCooldown)}`, true)
                 } else {
-                    embed.addField('Enchantment', 'Klaar om te enchantment spelen!', true);
+                    embed.addField('Enchantment', 'Klaar voor een enchantment!', true);
                 }
             }
 
@@ -179,12 +179,12 @@ export default class BattleEmbeds {
                 }
             }
 
-            if (character.CanIntimidate()) {
-                const intimidatingCooldown = await character.GetIntimidationCooldown();
-                if (intimidatingCooldown > 0) {
-                    embed.addField('Intimidation', `🕒 ${Utils.GetSecondsInMinutesAndSeconds(intimidatingCooldown)}`, true)
+            if (character.CanReinforce()) {
+                const reinforcementCooldown = await character.GetReinforcementCooldown();
+                if (reinforcementCooldown > 0) {
+                    embed.addField('Reinforcement', `🕒 ${Utils.GetSecondsInMinutesAndSeconds(reinforcementCooldown)}`, true)
                 } else {
-                    embed.addField('Intimidation', 'Klaar om het monster te intimideren!', true);
+                    embed.addField('Reinforcement', 'Klaar om te reinforcen!', true);
                 }
             }
         }

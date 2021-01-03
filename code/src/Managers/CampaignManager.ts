@@ -19,7 +19,7 @@ import PuzzleService from '../Services/PuzzleService';
 import LogService from '../Services/LogService';
 import Enchantment from '../Objects/Enchantment';
 import Perception from '../Objects/Perception';
-import Intimidation from '../Objects/Intimidation';
+import Reinforcement from '../Objects/Reinforcement';
 import Inspire from '../Objects/Inspire';
 const { transaction } = require('objection');
 
@@ -145,7 +145,7 @@ export default class CampaignManager {
         const inspireData = await Inspire.FIND_TOTAL_INSPIRED_OTHERS_IN_BATTLE_FOR_ALL_CHARACTERS(battle);
         const enchantmentData = await Enchantment.FIND_TOTAL_ENCHANTED_OTHERS_IN_BATTLE_FOR_ALL_CHARACTERS(battle);
         const perceptionData = await Perception.FIND_TOTAL_PERCEPT_OTHERS_IN_BATTLE_FOR_ALL_CHARACTERS(battle);
-        const intimidationData = await Intimidation.FIND_TOTAL_INTIMIDATIONS_FOR_OTHERS_IN_BATTLE_FOR_ALL_CHARACTERS(battle);
+        const reinforcementData = await Reinforcement.FIND_TOTAL_REINFORCEMENTS_FOR_OTHERS_IN_BATTLE_FOR_ALL_CHARACTERS(battle);
         const data:any = {};
 
         for (const row of attackData) {
@@ -189,7 +189,7 @@ export default class CampaignManager {
             }
         }
 
-        for (const row of intimidationData) {
+        for (const row of reinforcementData) {
             const xp = parseInt(row.cnt) * 10;
             if (data[row.character_id]) {
                 data[row.character_id] += xp;

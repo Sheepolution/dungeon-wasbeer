@@ -21,7 +21,7 @@ export enum LogType {
     Inspire = 'Inspire',
     Enchantment = 'Enchantment',
     Perception = 'Perception',
-    Intimidation = 'Intimidation',
+    Reinforcement = 'Reinforcement',
     PuzzleSolved = 'PuzzleSolved',
     PuzzleWrong = 'PuzzleWrong',
     PieceFound = 'PieceFound',

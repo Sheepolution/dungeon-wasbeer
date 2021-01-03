@@ -15,7 +15,7 @@ import Log from '../Objects/Log';
 import Inspire from '../Objects/Inspire';
 import Enchantment from '../Objects/Enchantment';
 import Perception from '../Objects/Perception';
-import Intimidation from '../Objects/Intimidation';
+import Reinforcement from '../Objects/Reinforcement';
 import { Redis } from '../Providers/Redis';
 import RedisConstants from '../Constants/RedisConstants';
 
@@ -178,7 +178,7 @@ export default class CharacterEmbeds {
             if (enchantingCooldown > 0) {
                 embed.addField('Enchantment', `🕒 ${Utils.GetSecondsInMinutesAndSeconds(enchantingCooldown)}`, true)
             } else {
-                embed.addField('Enchantment', 'Klaar om te enchantment spelen!', true);
+                embed.addField('Enchantment', 'Klaar voor een enchantment!', true);
             }
         }
 
@@ -191,12 +191,12 @@ export default class CharacterEmbeds {
             }
         }
 
-        if (character.CanIntimidate()) {
-            const intimidatingCooldown = await character.GetIntimidationCooldown();
-            if (intimidatingCooldown > 0) {
-                embed.addField('Intimidation', `🕒 ${Utils.GetSecondsInMinutesAndSeconds(intimidatingCooldown)}`, true)
+        if (character.CanReinforce()) {
+            const reinforcementCooldown = await character.GetReinforcementCooldown();
+            if (reinforcementCooldown > 0) {
+                embed.addField('reinforcement', `🕒 ${Utils.GetSecondsInMinutesAndSeconds(reinforcementCooldown)}`, true)
             } else {
-                embed.addField('Intimidation', 'Klaar om het monster te intimideren!', true);
+                embed.addField('reinforcement', 'Klaar om te reinforcen!', true);
             }
         }
 
@@ -986,10 +986,10 @@ export default class CharacterEmbeds {
         return embed;
     }
 
-    public static async GetTopIntimidationsDoneEmbed(topListType:TopListType, battleId?:string) {
-        const list:any = await Intimidation.GET_TOP_INTIMIDATIONS_DONE_LIST(battleId);
+    public static async GetTopReinforcementsDoneEmbed(topListType:TopListType, battleId?:string) {
+        const list:any = await Reinforcement.GET_TOP_REINFORCEMENTS_DONE_LIST(battleId);
         const embed = new MessageEmbed()
-            .setTitle(`Top ${list.length} meeste intimidations gedaan${topListType == TopListType.Current ? ' in dit gevecht' : topListType == TopListType.Previous ? ' in het vorige gevecht' : ''}`);
+            .setTitle(`Top ${list.length} meeste reinforcements gedaan${topListType == TopListType.Current ? ' in dit gevecht' : topListType == TopListType.Previous ? ' in het vorige gevecht' : ''}`);
 
         var listString = '';
 
@@ -1003,10 +1003,10 @@ export default class CharacterEmbeds {
         return embed;
     }
 
-    public static async GetTopIntimidationsClaimedEmbed(topListType:TopListType, battleId?:string) {
-        const list:any = await Intimidation.GET_TOP_INTIMIDATIONS_CLAIMED_LIST(battleId);
+    public static async GetTopReinforcementsClaimedEmbed(topListType:TopListType, battleId?:string) {
+        const list:any = await Reinforcement.GET_TOP_REINFORCEMENTS_CLAIMED_LIST(battleId);
         const embed = new MessageEmbed()
-            .setTitle(`Top ${list.length} meeste intimidations geclaimed${topListType == TopListType.Current ? ' in dit gevecht' : topListType == TopListType.Previous ? ' in het vorige gevecht' : ''}`);
+            .setTitle(`Top ${list.length} meeste reinforcements geclaimed${topListType == TopListType.Current ? ' in dit gevecht' : topListType == TopListType.Previous ? ' in het vorige gevecht' : ''}`);
 
         var listString = '';
 

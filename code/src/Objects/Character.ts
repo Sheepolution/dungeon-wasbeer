@@ -33,7 +33,7 @@ export default class Character {
     private static readonly inspiringCooldownPrefix = RedisConstants.REDIS_KEY + RedisConstants.INSPIRING_COOLDOWN_KEY;
     private static readonly enchantmentCooldownPrefix = RedisConstants.REDIS_KEY + RedisConstants.ENCHANTMENT_COOLDOWN_KEY;
     private static readonly perceptionCooldownPrefix = RedisConstants.REDIS_KEY + RedisConstants.PERCEPTION_COOLDOWN_KEY;
-    private static readonly intimidationCooldownPrefix = RedisConstants.REDIS_KEY + RedisConstants.INTIMIDATION_COOLDOWN_KEY;
+    private static readonly reinforcementCooldownPrefix = RedisConstants.REDIS_KEY + RedisConstants.REINFORCEMENT_COOLDOWN_KEY;
 
     protected id:string;
     private player:Player;
@@ -59,6 +59,7 @@ export default class Character {
     private beingInspired:boolean;
     private inspiration:number;
     private enchanted:boolean;
+    private reinforced:boolean;
     private avatarUrl:string;
     private lore:string;
     private regenerated:number;
@@ -74,7 +75,7 @@ export default class Character {
     private inspireFailDescription:string;
     private enchantmentDescription:string;
     private perceptionDescription:string;
-    private intimidationDescription:string;
+    private reinforcementDescription:string;
 
     constructor(player?:Player) {
         if (player) {
@@ -396,7 +397,7 @@ export default class Character {
     }
 
     public GetEnhancementsString() {
-        const str = ` ${(this.IsInspired() ? `${EmojiConstants.DNW_STATES.INSPIRED}` : '')}${(this.IsEnchanted() ? `${EmojiConstants.DNW_STATES.ENCHANTED}` : '')}`;
+        const str = ` ${(this.IsInspired() ? `${EmojiConstants.DNW_STATES.INSPIRED}` : '')}${(this.IsEnchanted() ? `${EmojiConstants.DNW_STATES.ENCHANTED}` : '')}${(this.IsReinforced() ? `${EmojiConstants.DNW_STATES.REINFORCED}` : '')}`;
         if (str.length == 1) {
             return '';
         }
@@ -454,7 +455,7 @@ export default class Character {
         return this.classType == ClassType.Ranger;
     }
 
-    public CanIntimidate() {
+    public CanReinforce() {
         return this.classType == ClassType.Fighter;
     }
 
@@ -521,6 +522,29 @@ export default class Character {
         return newCooldown;
     }
 
+    public async BecomeReinforced() {
+        this.reinforced = true;
+        this.UpdateFullModifierStats();
+        await this.UPDATE({
+            reinforced: this.reinforced
+        })
+    }
+
+    public async StopBeingReinforced() {
+        if (!this.reinforced) {
+            return;
+        }
+
+        this.reinforced = false;
+        await this.UPDATE({
+            reinforced: this.reinforced
+        })
+    }
+
+    public IsReinforced() {
+        return this.reinforced;
+    }
+
     public GetMaxAbilityCooldown() {
         return (CharacterConstants.BASE_COOLDOWN_DURATION * 2) - (CharacterConstants.BASE_COOLDOWN_DURATION * (this.level/CharacterConstants.MAX_LEVEL));
     }
@@ -585,12 +609,12 @@ export default class Character {
         await Redis.set(Character.perceptionCooldownPrefix + this.GetId(), '1', 'EX', Utils.GetMinutesInSeconds(this.GetMaxAbilityCooldown()));
     }
 
-    public async GetIntimidationCooldown() {
-        return await Redis.ttl(Character.intimidationCooldownPrefix + this.GetId());
+    public async GetReinforcementCooldown() {
+        return await Redis.ttl(Character.reinforcementCooldownPrefix + this.GetId());
     }
 
-    public async SetIntimidationCooldown() {
-        await Redis.set(Character.intimidationCooldownPrefix + this.GetId(), '1', 'EX', Utils.GetMinutesInSeconds(this.GetMaxAbilityCooldown()));
+    public async SetReinforcementCooldown() {
+        await Redis.set(Character.reinforcementCooldownPrefix + this.GetId(), '1', 'EX', Utils.GetMinutesInSeconds(this.GetMaxAbilityCooldown()));
     }
 
     public async IncreaseXP(amount:number, trx?:any, updateData:boolean = true) {
@@ -744,8 +768,8 @@ export default class Character {
         return this.perceptionDescription || CharacterConstants.PERCEPTION_MESSAGE;
     }
 
-    public GetIntimidationDescription() {
-        return this.intimidationDescription || CharacterConstants.INTIMIDATION_MESSAGE;
+    public GetReinforcementDescription() {
+        return this.reinforcementDescription || CharacterConstants.REINFORCEMENT_MESSAGE;
     }
 
     public async UpdateAttackDescription(description:string) {
@@ -804,10 +828,10 @@ export default class Character {
         })
     }
 
-    public async UpdateIntimidationDescription(description:string) {
-        this.intimidationDescription = description;
+    public async UpdateReinforcementDescription(description:string) {
+        this.reinforcementDescription = description;
         await this.UPDATE({
-            intimidation_description : this.intimidationDescription
+            reinforcement_description : this.reinforcementDescription
         })
     }
 
