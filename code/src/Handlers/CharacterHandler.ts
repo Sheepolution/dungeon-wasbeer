@@ -1008,7 +1008,7 @@ export default class CharacterHandler {
             return;
         }
 
-        if (!character.CanEnchant()) {
+        if (!character.CanPercept()) {
             MessageService.ReplyMessage(messageInfo, 'Je character kan helemaal niet perception checken!', false);
             return;
         }
@@ -1028,7 +1028,7 @@ export default class CharacterHandler {
             return;
         }
 
-        if (!character.CanEnchant()) {
+        if (!character.CanReinforce()) {
             MessageService.ReplyMessage(messageInfo, 'Je character kan helemaal niet reinforcen!', false);
             return;
         }
