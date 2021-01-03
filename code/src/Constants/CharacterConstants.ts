@@ -112,6 +112,6 @@ export default class CharacterConstants {
     public static readonly INSPIRE_MESSAGE = `"[jij] speelt prachtige muziek en inspireert [naam] voor een [inspiratie]% stat boost tot na het volgende gevecht." ${EmojiConstants.DNW_STATES.INSPIRED}`;
     public static readonly INSPIRE_FAIL_MESSAGE = '"[jij] speelt een hoop valse noten en wordt gevraagd te stoppen. Dit was alles behalve inspirerend."';
     public static readonly ENCHANTMENT_MESSAGE = `"[jij] gebruikt een spreuk om de attack roll van [naam] te verdubbelen in het volgende gevecht." ${EmojiConstants.DNW_STATES.ENCHANTED}`;
-    public static readonly PERCEPTION_MESSAGE = '"[jij] doet een perception check om [naam] te informeren over de situatie en de gevechtscooldown te halveren van [voor] naar [na]."';
+    public static readonly PERCEPTION_MESSAGE = '"[jij] doet een perception check om [naam] te informeren over de situatie en de gevechtscooldown te halveren van [voor] naar [na]."👁️';
     public static readonly REINFORCEMENT_MESSAGE = `"[jij] voorziet [naam] van een extra wapen. Het verschil in attack rolls wordt toegevoegd aan de strength in het volgende gevecht." ${EmojiConstants.DNW_STATES.REINFORCED}`;
 }

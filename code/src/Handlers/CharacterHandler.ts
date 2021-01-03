@@ -21,7 +21,6 @@ import Inspire from '../Objects/Inspire';
 import Enchantment from '../Objects/Enchantment';
 import Perception from '../Objects/Perception';
 import Reinforcement from '../Objects/Reinforcement';
-import BattleHandler from './BattleHandler';
 
 export default class CharacterHandler {
 
@@ -154,6 +153,18 @@ export default class CharacterHandler {
             case 'inspire-faal-beschrijving':
             case 'ifb':
                 this.EditInspireFailDescription(messageInfo, player, content);
+                break;
+            case 'enchantment-beschrijving':
+            case 'eb':
+                this.EditEnchantmentDescription(messageInfo, player, content);
+                break;
+            case 'perception-beschrijving':
+            case 'pb':
+                this.EditPerceptionDescription(messageInfo, player, content);
+                break;
+            case 'reinforcement-beschrijving':
+            case 'rb':
+                this.EditReinforcementDescription(messageInfo, player, content);
                 break;
             case 'reset':
                 this.OnReset(messageInfo, player);
@@ -969,6 +980,66 @@ export default class CharacterHandler {
 
         await character.UpdateInspireDescription(description);
         MessageService.ReplyMessage(messageInfo, 'Je inspire faal beschrijving is aangepast.');
+    }
+
+    private static async EditEnchantmentDescription(messageInfo:IMessageInfo, player:Player, description:string) {
+        const character = PlayerManager.GetCharacterFromPlayer(messageInfo, player);
+        if (character == null) {
+            return;
+        }
+
+        if (!character.CanEnchant()) {
+            MessageService.ReplyMessage(messageInfo, 'Je character kan helemaal niet enchanten!', false);
+            return;
+        }
+
+        if (description.length > 250) {
+            MessageService.ReplyMessage(messageInfo, 'De beschrijving van je enchantment mag niet langer zijn dan 250 tekens.', false);
+            return;
+        }
+
+        await character.UpdateEnchantmentDescription(description);
+        MessageService.ReplyMessage(messageInfo, 'Je enchantment beschrijving is aangepast.');
+    }
+
+    private static async EditPerceptionDescription(messageInfo:IMessageInfo, player:Player, description:string) {
+        const character = PlayerManager.GetCharacterFromPlayer(messageInfo, player);
+        if (character == null) {
+            return;
+        }
+
+        if (!character.CanEnchant()) {
+            MessageService.ReplyMessage(messageInfo, 'Je character kan helemaal niet perception checken!', false);
+            return;
+        }
+
+        if (description.length > 250) {
+            MessageService.ReplyMessage(messageInfo, 'De beschrijving van je perception check mag niet langer zijn dan 250 tekens.', false);
+            return;
+        }
+
+        await character.UpdatePerceptionDescription(description);
+        MessageService.ReplyMessage(messageInfo, 'Je perception check beschrijving is aangepast.');
+    }
+
+    private static async EditReinforcementDescription(messageInfo:IMessageInfo, player:Player, description:string) {
+        const character = PlayerManager.GetCharacterFromPlayer(messageInfo, player);
+        if (character == null) {
+            return;
+        }
+
+        if (!character.CanEnchant()) {
+            MessageService.ReplyMessage(messageInfo, 'Je character kan helemaal niet reinforcen!', false);
+            return;
+        }
+
+        if (description.length > 250) {
+            MessageService.ReplyMessage(messageInfo, 'De beschrijving van je reinforcement mag niet langer zijn dan 250 tekens.', false);
+            return;
+        }
+
+        await character.UpdateReinforcementDescription(description);
+        MessageService.ReplyMessage(messageInfo, 'Je reinforcement beschrijving is aangepast.');
     }
 
     private static async OnReset(messageInfo:IMessageInfo, player:Player) {
