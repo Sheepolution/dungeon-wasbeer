@@ -200,6 +200,9 @@ export default class Character {
         this.healDescription = model.heal_description;
         this.healFailDescription = model.heal_fail_description;
         this.inspireDescription = model.inspire_description;
+        this.enchantmentDescription = model.enchantment_description;
+        this.perceptionDescription = model.perception_description;
+        this.reinforcementDescription = model.reinforcement_description;
         this.rewardDate = model.reward_date ? new Date(model.reward_date) : undefined;
         this.bornDate = new Date(model.born_date);
         this.deathDate = model.death_date ? new Date(model.death_date) : undefined;
