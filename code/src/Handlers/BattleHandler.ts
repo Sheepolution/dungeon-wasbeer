@@ -156,9 +156,18 @@ export default class BattleHandler {
         }
 
         if (character.IsEnchanted()) {
-            await this.UpdateBattleEmbed(message, battle, character, roll1, roll2);
-            await Utils.Sleep(1.5);
-            roll2 += roll2;
+            const secondRoll2 = Utils.Dice(playerAttackRoll);
+            var lowestRoll = 0;
+            if (secondRoll2 < roll2) {
+                lowestRoll = secondRoll2;
+            } else {
+                lowestRoll = roll2;
+                roll2 = secondRoll2;
+            }
+            if (lowestRoll != roll2) {
+                await this.UpdateBattleEmbed(message, battle, character, roll1, lowestRoll);
+                await Utils.Sleep(1.5);
+            }
         }
 
         do {
