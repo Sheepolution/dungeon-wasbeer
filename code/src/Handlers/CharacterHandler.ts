@@ -554,8 +554,7 @@ export default class CharacterHandler {
 
         const cooldown = await character.GetEnchantmentCooldown();
         if (cooldown > 0) {
-            const minutes = Utils.GetSecondsInMinutes(cooldown);
-            MessageService.ReplyMessage(messageInfo, `Je hebt nog ${minutes + (minutes == 1 ? ' minuut' : ' minuten')} cooldown voordat je weer mag enchanten.`);
+            MessageService.ReplyMessage(messageInfo, `Je hebt nog ${Utils.GetSecondsInMinutesAndSeconds(cooldown)} cooldown voordat je weer mag enchanten.`);
             return;
         }
 
@@ -625,8 +624,7 @@ export default class CharacterHandler {
 
         const cooldown = await character.GetPerceptionCooldown();
         if (cooldown > 0) {
-            const minutes = Utils.GetSecondsInMinutes(cooldown);
-            MessageService.ReplyMessage(messageInfo, `Je hebt nog ${minutes + (minutes == 1 ? ' minuut' : ' minuten')} cooldown voordat je weer mag perception checken.`);
+            MessageService.ReplyMessage(messageInfo, `Je hebt nog ${Utils.GetSecondsInMinutesAndSeconds(cooldown)} cooldown voordat je weer mag perception checken.`);
             return;
         }
 
@@ -702,8 +700,7 @@ export default class CharacterHandler {
 
         const cooldown = await character.GetReinforcementCooldown();
         if (cooldown > 0) {
-            const minutes = Utils.GetSecondsInMinutes(cooldown);
-            MessageService.ReplyMessage(messageInfo, `Je hebt nog ${minutes + (minutes == 1 ? ' minuut' : ' minuten')} cooldown voordat je weer mag reinforcen.`);
+            MessageService.ReplyMessage(messageInfo, `Je hebt nog ${Utils.GetSecondsInMinutesAndSeconds(cooldown)} cooldown voordat je weer mag reinforcen.`);
             return;
         }
 
