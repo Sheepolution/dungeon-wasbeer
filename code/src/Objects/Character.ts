@@ -391,7 +391,7 @@ export default class Character {
         this.isInspiring = isInspiring;
     }
 
-    public IsInsprining() {
+    public IsInspiring() {
         return this.isInspiring;
     }
 

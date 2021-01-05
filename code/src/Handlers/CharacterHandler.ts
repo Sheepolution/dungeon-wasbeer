@@ -456,10 +456,19 @@ export default class CharacterHandler {
             return;
         }
 
+        if (character.IsInspiring()) {
+            MessageService.ReplyMessage(messageInfo, 'Je bent al iemand aan het inspireren.', false);
+            return;
+        }
+
+        if (character.IsBeingInspired()) {
+            MessageService.ReplyMessage(messageInfo, 'Je kan niet inspireren want je wordt momenteel zelf geïnspireerd.', false);
+            return;
+        }
+
         const cooldown = await character.GetInspireCooldown();
         if (cooldown > 0) {
-            const minutes = Utils.GetSecondsInMinutes(cooldown);
-            MessageService.ReplyMessage(messageInfo, `Je hebt nog ${minutes + (minutes == 1 ? ' minuut' : ' minuten')} cooldown voordat je weer mag inspireren.`);
+            MessageService.ReplyMessage(messageInfo, `Je hebt nog ${Utils.GetSecondsInMinutesAndSeconds(cooldown)} cooldown voordat je weer mag inspireren.`);
             return;
         }
 
@@ -488,6 +497,11 @@ export default class CharacterHandler {
 
         if (receiver.IsInspired()) {
             MessageService.ReplyMessage(messageInfo, `${selfInspire ? 'Je bent ' : 'Deze persoon is '}al geïnspireerd.`, false);
+            return;
+        }
+
+        if (receiver.IsBeingInspired()) {
+            MessageService.ReplyMessage(messageInfo, 'Je kan niet inspireren want die wordt momenteel al geïnspireerd.', false);
             return;
         }
 
