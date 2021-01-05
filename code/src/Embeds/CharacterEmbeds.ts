@@ -194,9 +194,9 @@ export default class CharacterEmbeds {
         if (character.CanReinforce()) {
             const reinforcementCooldown = await character.GetReinforcementCooldown();
             if (reinforcementCooldown > 0) {
-                embed.addField('reinforcement', `🕒 ${Utils.GetSecondsInMinutesAndSeconds(reinforcementCooldown)}`, true)
+                embed.addField('Reinforcement', `🕒 ${Utils.GetSecondsInMinutesAndSeconds(reinforcementCooldown)}`, true)
             } else {
-                embed.addField('reinforcement', 'Klaar om te reinforcen!', true);
+                embed.addField('Reinforcement', 'Klaar om te reinforcen!', true);
             }
         }
 
