@@ -347,6 +347,10 @@ export default class Character {
         return this.fullModifierStats;
     }
 
+    public GetFullModifierStatsWithoutInspire() {
+        return this.CalculateFullModifierStats();
+    }
+
     public GetBornDateString() {
         return this.bornDate.toISOString().slice(0, 10);
     }
