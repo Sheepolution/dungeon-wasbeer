@@ -45,7 +45,7 @@ export default class SpoilersHandler {
 
         try {
             channel.setName(`spoilers${name}`);
-        } catch (error:any) {
+        } catch (error) {
             MessageService.ReplyMessage(messageInfo, 'Er is iets fout gegaan bij het instellen van de naam. Zorg dat je geen gekke leestekens gebruikt.', false, true);
             return;
         }
