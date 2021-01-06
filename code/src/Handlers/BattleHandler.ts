@@ -203,13 +203,16 @@ export default class BattleHandler {
             } else {
                 var playerStrength = character.GetAttackStrength();
                 if (playerWon && character.IsReinforced()) {
+                    var reinforcementAddition = 0;
                     if (monsterId == '57ea9222-d3d5-4f26-96a7-07c7415d3873') {
-                        playerStrength += Math.ceil(((roll3 + (roll4 || 0)) - (roll1 + (roll2 || 0)))/2);
+                        reinforcementAddition = Math.ceil(((roll3 + (roll4 || 0)) - (roll1 + (roll2 || 0)))/2);
+                        reinforcementAddition -= ((monsterAttackRoll - playerAttackRoll)/60) * reinforcementAddition;
                     } else {
-                        playerStrength += Math.ceil(((roll1 + (roll2 || 0)) - (roll3 + (roll4 || 0)))/2);
+                        reinforcementAddition = Math.ceil(((roll1 + (roll2 || 0)) - (roll3 + (roll4 || 0)))/2);
+                        reinforcementAddition -= ((playerAttackRoll - monsterAttackRoll)/60) * reinforcementAddition;
                     }
 
-                    playerStrength = Math.min(playerStrength, character.GetAttackStrength(true));
+                    playerStrength = Math.min(playerStrength + Math.ceil(reinforcementAddition), character.GetAttackStrength(true));
                 }
 
                 var monsterAttackStrength = battle.GetMonsterAttackStrength();
