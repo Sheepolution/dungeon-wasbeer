@@ -14,6 +14,7 @@ export default class SettingsConstants {
     public static readonly CARD_CHANNEL_ID = process.env.CARD_CHANNEL_ID || '';
     public static readonly DND_CHANNEL_ID = process.env.DND_CHANNEL_ID || '';
     public static readonly ART_CHANNEL_ID = process.env.ART_CHANNEL_ID || '';
+    public static readonly SPOILERS_CHANNEL_ID = process.env.SPOILERS_CHANNEL_ID || '';
     public static readonly CHAT_CHANNEL_ID = process.env.CHAT_CHANNEL_ID || '';
     public static readonly LOG_CHANNEL_ID = process.env.LOG_CHANNEL_ID || '';
 

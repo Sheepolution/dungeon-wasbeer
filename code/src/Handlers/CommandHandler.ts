@@ -10,6 +10,7 @@ import CharacterHandler from './CharacterHandler';
 import PuzzleHandler from './PuzzleHandler';
 import ShoeHandler from './ShoeHandler';
 import BotManager from '../Managers/BotManager';
+import SpoilersHandler from './SpoilersHandler';
 
 export default class CommandHandler {
 
@@ -54,6 +55,10 @@ export default class CommandHandler {
             } else if (await BattleHandler.OnCommand(messageInfo, player, command)) {
                 return;
             } else if (await PuzzleHandler.OnCommand(messageInfo, player, command, content)) {
+                return;
+            }
+        } else if (messageInfo.channel.id == SettingsConstants.SPOILERS_CHANNEL_ID) {
+            if (await SpoilersHandler.OnCommand(messageInfo, command, content)) {
                 return;
             }
         }
