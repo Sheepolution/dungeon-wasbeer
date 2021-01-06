@@ -26,7 +26,7 @@ export default class SpoilersHandler {
         }
 
         const channel = BotManager.GetSpoilersChannel()
-        const oldChannelName = channel.name.substr(9);
+        const oldChannelName = channel.name.substr(8);
         const warning = `⚠️ Ho! Uitkijken! Als je nog verder omhoog scrollt krijg je spoilers te zien voor '${oldChannelName}'! ⚠️`
 
         var text = '';
@@ -36,7 +36,7 @@ export default class SpoilersHandler {
         }
 
         if (name != '-kanaal') {
-            text += `\n\nVanaf hier is het gespreksonderwerp voor het spoilers-kanaal ${content}.`;
+            text += `\n\nVanaf hier is het gespreksonderwerp voor het spoiler-kanaal ${content}.`;
         }
 
         if (text == '') {
@@ -44,7 +44,7 @@ export default class SpoilersHandler {
         }
 
         try {
-            channel.setName(`spoilers${name}`);
+            channel.setName(`spoiler${name}`);
         } catch (error) {
             MessageService.ReplyMessage(messageInfo, 'Er is iets fout gegaan bij het instellen van de naam. Zorg dat je geen gekke leestekens gebruikt.', false, true);
             return;
