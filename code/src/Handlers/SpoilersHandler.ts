@@ -21,7 +21,6 @@ export default class SpoilersHandler {
         var name = '-kanaal';
         if (content != null && content.trim().length > 0) {
             name = `-${content.toLowerCase().replaceAll(' ', '-')}`;
-            name = name.replaceAll('[\\d\'"]', '');
             name = name.slice(0, 100);
         }
 
