@@ -59,7 +59,8 @@ export default class FocusHandler {
     private static async OnSolution(messageInfo:IMessageInfo, solved:string) {
         const solution = await Redis.get(`${this.focusPuzzlePrefix}${messageInfo.member.id}`);
         if (!solution || solution == '' || solution == solved) {
-            messageInfo.member.roles.remove(SettingsConstants.FOCUS_ROLE_ID);
+            await messageInfo.member.roles.remove(SettingsConstants.FOCUS_ROLE_ID);
+            await Redis.del(`${this.focusPuzzlePrefix}${messageInfo.member.id}`);
         } else {
             const message = await MessageService.ReplyMessage(messageInfo, 'Incorrect! Misschien moet je zo\'n sudoku solver gebruiken.', false, true);
             await Utils.Sleep(5);
