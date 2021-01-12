@@ -11,6 +11,7 @@ import PuzzleHandler from './PuzzleHandler';
 import ShoeHandler from './ShoeHandler';
 import BotManager from '../Managers/BotManager';
 import SpoilersHandler from './SpoilersHandler';
+import FocusHandler from './FocusHandler';
 
 export default class CommandHandler {
 
@@ -59,6 +60,14 @@ export default class CommandHandler {
             }
         } else if (messageInfo.channel.id == SettingsConstants.SPOILERS_CHANNEL_ID) {
             if (await SpoilersHandler.OnCommand(messageInfo, command, content)) {
+                return;
+            }
+        } else if (messageInfo.channel.id == SettingsConstants.CHAT_CHANNEL_ID) {
+            if (await FocusHandler.OnCommand(messageInfo, command)) {
+                return;
+            }
+        } else if (messageInfo.channel.id == SettingsConstants.FOCUS_CHANNEL_ID) {
+            if (await FocusHandler.OnFocusCommand(messageInfo, command, content)) {
                 return;
             }
         }

@@ -16,7 +16,9 @@ export default class SettingsConstants {
     public static readonly ART_CHANNEL_ID = process.env.ART_CHANNEL_ID || '';
     public static readonly SPOILERS_CHANNEL_ID = process.env.SPOILERS_CHANNEL_ID || '';
     public static readonly CHAT_CHANNEL_ID = process.env.CHAT_CHANNEL_ID || '';
+    public static readonly FOCUS_CHANNEL_ID = process.env.FOCUS_CHANNEL_ID || '';
     public static readonly LOG_CHANNEL_ID = process.env.LOG_CHANNEL_ID || '';
+    public static readonly FOCUS_ROLE_ID = process.env.FOCUS_ROLE_ID || '';
 
     // Sheep, Wout, Juul, Nova, Iris, Gerrit, Toet, Stees, Julia, Konijn
     public static readonly CAN_RESTART_BOT_IDS = [

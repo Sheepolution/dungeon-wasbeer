@@ -21,6 +21,11 @@ export default class MessageService {
         return DiscordService.SendEmbed(messageInfo.channel, embed, message)
     }
 
+    public static async SendMessageToDM(messageInfo: IMessageInfo, message: string, embed?: MessageEmbed) {
+        const dmChannel = messageInfo.member.user.dmChannel || await messageInfo.member.user.createDM();
+        return await DiscordService.SendMessage(dmChannel, message, embed);
+    }
+
     public static async SendMessageToCardChannel(message:string, embed?:MessageEmbed) {
         return await this.SendMessage(BotManager.GetCardChannel(), message, embed);
     }

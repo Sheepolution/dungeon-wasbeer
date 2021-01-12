@@ -27,6 +27,11 @@ export default class MessageHandler {
             this.OnPostingArt(messageInfo);
         }
 
+        if (messageInfo.message?.channel.id == SettingsConstants.FOCUS_CHANNEL_ID) {
+            await messageInfo.message.delete().catch();
+            return;
+        }
+
         const content = messageInfo.message?.content;
 
         if (content) {

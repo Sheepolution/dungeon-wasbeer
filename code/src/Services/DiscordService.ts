@@ -1,5 +1,6 @@
 import { Channel, Client, Guild, GuildMember, MessageEmbed, TextChannel } from 'discord.js';
 import DiscordUtils from '../Utils/DiscordUtils';
+import { Utils } from '../Utils/Utils';
 
 export default class DiscordService {
 
@@ -94,16 +95,17 @@ export default class DiscordService {
         }
     }
 
-    public static async SendMessage(channel:TextChannel, message:string, embed?:MessageEmbed) {
-        const textChannel:TextChannel = <TextChannel>channel;
-        if (embed) {
-            return await this.SendEmbed(textChannel, embed, message)
-        }
-
+    public static async SendMessage(channel: Channel, message: string, embed?: MessageEmbed) {
         try {
+            const textChannel: TextChannel = <TextChannel>channel;
+            if (embed) {
+                return await this.SendEmbed(textChannel, embed, message)
+            }
+
             return await textChannel.send(message);
         } catch (error) {
-            // Error
+            // Was not able to send message.
+            console.log(`(${Utils.GetNowString()}) ${error}`);
         }
     }
 

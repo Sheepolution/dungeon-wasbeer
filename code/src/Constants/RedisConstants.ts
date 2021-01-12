@@ -11,4 +11,5 @@ export default class RedisConstants {
     public static readonly PERCEPTION_COOLDOWN_KEY = 'perceptionCooldown:';
     public static readonly REINFORCEMENT_COOLDOWN_KEY = 'reinforcementCooldown:';
     public static readonly RESET_CONFIRM_TIMER_KEY = 'resetConfirmTime:';
+    public static readonly FOCUS_PUZZLE_KEY = 'focusPuzzle:';
 }
