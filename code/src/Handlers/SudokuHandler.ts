@@ -46,7 +46,9 @@ export default class SudokuHandler {
         await Redis.hset(key, 'solution', sudoku.solution, 'start', Utils.GetNow().getTime());
         await Redis.expire(key, Utils.GetHoursInSeconds(24));
 
-        MessageService.ReplyMessage(messageInfo, 'Start de tijd!', undefined, false, PuzzleEmbeds.GetTrainingSudokuEmbed(sudoku.puzzle));
+        const count = sudoku.puzzle.match(/\./g).length;
+
+        MessageService.ReplyMessage(messageInfo, `Start de tijd! Moeilijkheidsgraad: ${count - 44}`, undefined, false, PuzzleEmbeds.GetTrainingSudokuEmbed(sudoku.puzzle));
     }
 
     public static async OnSolve(messageInfo:IMessageInfo, solved:string) {
