@@ -12,6 +12,7 @@ import ShoeHandler from './ShoeHandler';
 import BotManager from '../Managers/BotManager';
 import SpoilersHandler from './SpoilersHandler';
 import FocusHandler from './FocusHandler';
+import SudokuHandler from './SudokuHandler';
 
 export default class CommandHandler {
 
@@ -68,6 +69,10 @@ export default class CommandHandler {
             }
         } else if (messageInfo.channel.id == SettingsConstants.FOCUS_CHANNEL_ID) {
             if (await FocusHandler.OnFocusCommand(messageInfo, command, content)) {
+                return;
+            }
+        } else if (messageInfo.channel.id == SettingsConstants.SUDOKU_CHANNEL_ID) {
+            if (await SudokuHandler.OnCommand(messageInfo, command, content)) {
                 return;
             }
         }

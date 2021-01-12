@@ -17,6 +17,7 @@ export default class SettingsConstants {
     public static readonly SPOILERS_CHANNEL_ID = process.env.SPOILERS_CHANNEL_ID || '';
     public static readonly CHAT_CHANNEL_ID = process.env.CHAT_CHANNEL_ID || '';
     public static readonly FOCUS_CHANNEL_ID = process.env.FOCUS_CHANNEL_ID || '';
+    public static readonly SUDOKU_CHANNEL_ID = process.env.SUDOKU_CHANNEL_ID || '';
     public static readonly LOG_CHANNEL_ID = process.env.LOG_CHANNEL_ID || '';
     public static readonly FOCUS_ROLE_ID = process.env.FOCUS_ROLE_ID || '';
 
