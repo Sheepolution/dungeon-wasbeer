@@ -71,10 +71,10 @@ export default class CharacterHandler {
                 this.SendEquipment(messageInfo, player);
                 break;
             case 'equip':
-                this.Equip(messageInfo, player, args[0]);
+                this.Equip(messageInfo, player, content);
                 break;
             case 'unequip':
-                this.Unequip(messageInfo, player, args[0]);
+                this.Unequip(messageInfo, player, content);
                 break;
             case 'heal':
             case 'genees':
