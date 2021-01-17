@@ -31,7 +31,7 @@ export default class SpoilersHandler {
         var text = '';
 
         if (oldChannelName != 'kanaal') {
-            text = `${warning}${'\n'.repeat(50)}${warning}`;
+            text = `${warning}${'ᅠ\n'.repeat(50)}${warning}`;
         }
 
         if (name != '-kanaal') {
