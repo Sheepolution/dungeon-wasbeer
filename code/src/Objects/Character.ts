@@ -976,9 +976,9 @@ export default class Character {
         }
 
         const healthMissing = this.currentHealth / this.maxHealth;
-        cardModifierStats.strength *= healthMissing;
-        cardModifierStats.attack *= healthMissing;
-        cardModifierStats.dexterity *= healthMissing;
+        cardModifierStats.strength = Math.ceil(cardModifierStats.strength * healthMissing);
+        cardModifierStats.attack = Math.ceil(cardModifierStats.attack * healthMissing);
+        cardModifierStats.dexterity = Math.ceil(cardModifierStats.dexterity * healthMissing);
 
         return cardModifierStats
     }
