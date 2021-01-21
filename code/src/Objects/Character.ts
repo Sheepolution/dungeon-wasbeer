@@ -975,11 +975,6 @@ export default class Character {
             cardModifierStats = CharacterService.GetSummedUpModifierStats(cardModifierStats, card.GetModifierStats());
         }
 
-        const healthMissing = this.currentHealth / this.maxHealth;
-        cardModifierStats.strength = Math.ceil(cardModifierStats.strength * healthMissing);
-        cardModifierStats.attack = Math.ceil(cardModifierStats.attack * healthMissing);
-        cardModifierStats.dexterity = Math.ceil(cardModifierStats.dexterity * healthMissing);
-
         return cardModifierStats
     }
 
@@ -1027,6 +1022,12 @@ export default class Character {
             max_health: this.maxHealth
         });
         this.currentHealth = Math.min(this.maxHealth, this.currentHealth);
+
+        const healthMissing = (1 - this.currentHealth / this.maxHealth);
+        this.fullModifierStats.spell -= Math.floor(this.fullModifierStats.spell * healthMissing);
+        this.fullModifierStats.strength -= Math.floor(this.fullModifierStats.strength * healthMissing);
+        this.fullModifierStats.attack -= Math.floor(this.fullModifierStats.attack * healthMissing);
+        this.fullModifierStats.dexterity -= Math.floor(this.fullModifierStats.dexterity * healthMissing);
     }
 
     private async OnLevelUp(trx?:any) {
