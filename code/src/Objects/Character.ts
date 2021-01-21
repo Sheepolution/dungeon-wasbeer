@@ -561,11 +561,7 @@ export default class Character {
     }
 
     public GetMaxBattleCooldown() {
-        return CharacterConstants.BASE_COOLDOWN_DURATION - this.fullModifierStats.dexterity + this.GetHealthDexterityPenalty();
-    }
-
-    public GetHealthDexterityPenalty() {
-        return Math.floor(CharacterConstants.HEALTH_DEXTERITY_PENALTY_MAX * (1 - (this.currentHealth / this.maxHealth)));
+        return CharacterConstants.BASE_COOLDOWN_DURATION - this.fullModifierStats.dexterity;
     }
 
     public async GetBattleCooldown() {
@@ -978,6 +974,11 @@ export default class Character {
         for (const card of this.equipment) {
             cardModifierStats = CharacterService.GetSummedUpModifierStats(cardModifierStats, card.GetModifierStats());
         }
+
+        const healthMissing = this.currentHealth / this.maxHealth;
+        cardModifierStats.strength *= healthMissing;
+        cardModifierStats.attack *= healthMissing;
+        cardModifierStats.dexterity *= healthMissing;
 
         return cardModifierStats
     }
