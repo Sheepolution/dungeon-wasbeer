@@ -865,7 +865,7 @@ export default class CharacterEmbeds {
             for (const inspire of listInspires) {
                 for (const log of listLogs) {
                     if (inspire.id == log.id) {
-                        inspire.cnt = log.cnt;
+                        inspire.cnt += log.cnt;
                     }
                 }
             }
