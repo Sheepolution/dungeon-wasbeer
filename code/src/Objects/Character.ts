@@ -1031,11 +1031,13 @@ export default class Character {
 
         this.currentHealth = Math.min(this.maxHealth, this.currentHealth);
 
-        const healthMissing = (1 - this.currentHealth / this.maxHealth);
-        this.fullModifierStats.spell -= Math.floor(this.cardModifierStats.spell * healthMissing);
-        this.fullModifierStats.strength -= Math.floor(this.cardModifierStats.strength * healthMissing);
-        this.fullModifierStats.attack -= Math.floor(this.cardModifierStats.attack * healthMissing);
-        this.fullModifierStats.dexterity -= Math.floor(this.cardModifierStats.dexterity * healthMissing);
+        if (this.currentHealth < this.maxHealth / 2) {
+            const healthMissing = ((1 - this.currentHealth / (this.maxHealth/2)))/2;
+            this.fullModifierStats.spell -= Math.floor(this.cardModifierStats.spell * healthMissing);
+            this.fullModifierStats.strength -= Math.floor(this.cardModifierStats.strength * healthMissing);
+            this.fullModifierStats.attack -= Math.floor(this.cardModifierStats.attack * healthMissing);
+            this.fullModifierStats.dexterity -= Math.floor(this.cardModifierStats.dexterity * healthMissing);
+        }
     }
 
     private async OnLevelUp(trx?:any) {
