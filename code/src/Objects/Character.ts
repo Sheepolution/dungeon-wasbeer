@@ -418,6 +418,7 @@ export default class Character {
         this.slept += 1;
         await this.SetSleepCooldown();
         await this.UPDATE({health: this.currentHealth, slept: this.slept});
+        this.UpdateFullModifierStats();
         return healing;
     }
 
@@ -443,6 +444,7 @@ export default class Character {
         const damageAfterArmor = this.CalculateDamageWithArmor(damage);
         this.currentHealth = Math.max(0, this.currentHealth - damageAfterArmor);
         await this.UPDATE({health: this.currentHealth})
+        this.UpdateFullModifierStats();
         return damageAfterArmor;
     }
 
@@ -679,6 +681,7 @@ export default class Character {
         this.currentHealth += healing;
         this.regenerated += healing;
         this.UPDATE({ health: this.currentHealth, regenerated: this.regenerated })
+        this.UpdateFullModifierStats();
         return true;
     }
 
@@ -686,6 +689,7 @@ export default class Character {
         if (this.IsFullHealth()) { return false; }
         this.currentHealth = Math.min(this.maxHealth, this.currentHealth + amount);
         this.UPDATE({ health: this.currentHealth })
+        this.UpdateFullModifierStats();
         return true;
     }
 
@@ -1017,10 +1021,13 @@ export default class Character {
         this.fullModifierStats.strength = Math.min(Math.max(0, this.fullModifierStats.strength), max.strength);
         this.fullModifierStats.dexterity = Math.min(Math.max(0, this.fullModifierStats.dexterity), max.dexterity);
 
+        const oldMaxHealth = this.maxHealth;
         this.maxHealth = this.CalculateMaxHealth();
-        this.UPDATE({
-            max_health: this.maxHealth
-        });
+        if (oldMaxHealth != this.maxHealth) {
+            this.UPDATE({
+                max_health: this.maxHealth
+            });
+        }
 
         this.currentHealth = Math.min(this.maxHealth, this.currentHealth);
 
