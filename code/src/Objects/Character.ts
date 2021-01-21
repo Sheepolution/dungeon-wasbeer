@@ -188,6 +188,7 @@ export default class Character {
         this.equipment = this.player.GetCards().filter(pc => pc.IsEquipped()).map(c => c.GetCard());
         this.inspiration = model.inspiration;
         this.enchanted = model.enchanted;
+        this.reinforced = model.reinforced;
         this.avatarUrl = model.avatar_url;
         this.lore = model.lore;
         this.regenerated = model.regenerated;
