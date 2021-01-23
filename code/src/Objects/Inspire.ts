@@ -97,7 +97,7 @@ export default class Inspire {
             .groupBy('characters.name', 'players.discord_name')
             .select('name', 'discord_name')
             .sum('final_inspiration as sumi')
-            .orderBy('sumh', 'desc')
+            .orderBy('sumi', 'desc')
             .limit(10);
 
         return list;
