@@ -21,6 +21,9 @@ import Inspire from '../Objects/Inspire';
 import Enchantment from '../Objects/Enchantment';
 import Perception from '../Objects/Perception';
 import Reinforcement from '../Objects/Reinforcement';
+import DiscordService from '../Services/DiscordService';
+
+const Canvas = require('canvas');
 
 export default class CharacterHandler {
 
@@ -171,6 +174,9 @@ export default class CharacterHandler {
                 break;
             case 'ikweetzekerdatikwilstoppenmetditcharacter':
                 this.OnResetConfirm(messageInfo, player);
+                break;
+            case 'profile':
+                this.OnProfile(messageInfo, player);
                 break;
             default:
                 return false;
@@ -1399,6 +1405,77 @@ export default class CharacterHandler {
                 MessageService.ReplyMessage(messageInfo, `Ik heb geen lijst van top 10 ${category}. Kijk ff in die pins voor de lijst van mogelijke lijsten.`, false);
                 return;
         }
+    }
+
+    private static async OnProfile(messageInfo:IMessageInfo, player:Player) {
+        const character = PlayerManager.GetCharacterFromPlayer(messageInfo, player);
+        if (character == null) {
+            return;
+        }
+
+        const applyText = (canvas:any, text:any) => {
+            const ctx = canvas.getContext('2d');
+
+            // Declare a base size of the font
+            let fontSize = 70;
+
+            do {
+                // Assign the font to the context and decrement it so it can be measured again
+                ctx.font = `${fontSize -= 10}px sans-serif`;
+                // Compare pixel width of the text to the canvas minus the approximate avatar size
+            } while (ctx.measureText(text).width > canvas.width - 300);
+
+            // Return the result to use in the actual canvas
+            return ctx.font;
+        };
+
+        const equipment = character.GetEquipment();
+
+        const canvas = Canvas.createCanvas(700, 250 + 133 * Math.ceil(equipment.length / 5));
+        const ctx = canvas.getContext('2d');
+
+        // const background = await Canvas.loadImage('./wallpaper.jpg');
+        // ctx.drawImage(background, 0, 0, canvas.width, canvas.height);
+
+        ctx.strokeStyle = '#000000';
+        ctx.fillRect(0, 0, canvas.width, canvas.height);
+
+        // ctx.beginPath();
+        // ctx.arc(125, 125, 100, 0, Math.PI * 2, true);
+        // ctx.closePath();
+        // ctx.clip();
+
+        const avatar = await Canvas.loadImage(character.GetAvatarUrl());
+        ctx.drawImage(avatar, 25, 25, 200, 200);
+
+        var done = false;
+        for (let i = 0; i < 3; i++) {
+            for (let j = 0; j < 5; j++) {
+                const index = i * 5 + j;
+                if (index > equipment.length - 1) {
+                    done = true;
+                    break;
+                }
+
+                const card = equipment[index];
+                const avatar = await Canvas.loadImage(card.GetImageUrl());
+                ctx.drawImage(avatar, 25 + j * 130, 250 + i * 130, 125, 125);
+            }
+
+            if (done) {
+                break;
+            }
+        }
+
+        // Add an exclamation point here and below
+        // ctx.font = applyText(canvas, `${character.GetName()}!`);
+        ctx.font = applyText(canvas, character.GetName());
+        ctx.fillStyle = '#ffffff';
+        ctx.fillText(character.GetName(), canvas.width / 2.5 - 20, 100);
+
+        const attachment = DiscordService.GetMessageAttachment(canvas.toBuffer(), 'profile.png');
+
+        MessageService.ReplyMessage(messageInfo, 'Test', undefined, undefined, undefined, [attachment]);
     }
 
     private static async SendEquipment(messageInfo:IMessageInfo, player:Player) {

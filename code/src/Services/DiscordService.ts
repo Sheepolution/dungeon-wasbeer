@@ -1,4 +1,4 @@
-import { Channel, Client, Guild, GuildMember, MessageEmbed, TextChannel } from 'discord.js';
+import { Channel, Client, Guild, GuildMember, MessageEmbed, TextChannel, MessageAttachment } from 'discord.js';
 import DiscordUtils from '../Utils/DiscordUtils';
 import { Utils } from '../Utils/Utils';
 
@@ -95,27 +95,39 @@ export default class DiscordService {
         }
     }
 
-    public static async SendMessage(channel: Channel, message: string, embed?: MessageEmbed) {
+    public static async SendMessage(channel: Channel, message: string, embed?: MessageEmbed, attachments?: Array<MessageAttachment>) {
         try {
             const textChannel: TextChannel = <TextChannel>channel;
             if (embed) {
                 return await this.SendEmbed(textChannel, embed, message)
             }
+            if (attachments != null) {
+                return await textChannel.send(message, attachments);
+            } else {
+                return await textChannel.send(message);
+            }
 
-            return await textChannel.send(message);
         } catch (error) {
             // Was not able to send message.
             console.log(`(${Utils.GetNowString()}) ${error}`);
         }
     }
 
-    public static async ReplyMessage(textChannel:TextChannel, member:GuildMember, message:string, embed?:MessageEmbed) {
+    public static async ReplyMessage(textChannel:TextChannel, member:GuildMember, message:string, embed?:MessageEmbed, attachments?: Array<MessageAttachment>) {
         const reply = `<@${member.user}> ${message}`;
 
         if (embed) {
             return await this.SendEmbed(textChannel, embed, reply)
         }
 
-        return await textChannel.send(reply);
+        if (attachments != null) {
+            return await textChannel.send(reply, attachments);
+        } else {
+            return await textChannel.send(reply);
+        }
+    }
+
+    public static GetMessageAttachment(data:any, name:string) {
+        return new MessageAttachment(data, name);
     }
 }
