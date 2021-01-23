@@ -1446,7 +1446,11 @@ export default class CharacterHandler {
         // ctx.clip();
 
         const avatar = await Canvas.loadImage(character.GetAvatarUrl());
-        ctx.drawImage(avatar, 25, 25, 200, 200);
+        const higherWidth = avatar.width > avatar.height;
+        const factor = higherWidth ? 200/avatar.width : 200/avatar.height;
+        const width = avatar.width * factor;
+        const height = avatar.height * factor
+        ctx.drawImage(avatar, 25 + (200 - width)/2, 25 + (200 - height)/2, width, height);
 
         var done = false;
         for (let i = 0; i < 3; i++) {
@@ -1458,8 +1462,17 @@ export default class CharacterHandler {
                 }
 
                 const card = equipment[index];
-                const avatar = await Canvas.loadImage(card.GetImageUrl());
-                ctx.drawImage(avatar, 25 + j * 130, 250 + i * 130, 125, 125);
+                const cardImage = await Canvas.loadImage(card.GetImageUrl());
+                const higherWidth = cardImage.width > cardImage.height;
+                const factor = higherWidth ? 125/cardImage.width : 125/cardImage.height;
+                const width = cardImage.width * factor;
+                const height = cardImage.height * factor
+                ctx.fillStyle = '#24120D';
+                ctx.strokeStyle = '#693427';
+                ctx.strokeWidth = 2;
+                ctx.fillRect(25 + j * 130, 250 + i * 130, 125, 125);
+                ctx.strokeRect(25 + j * 130, 250 + i * 130, 125, 125);
+                ctx.drawImage(cardImage, 25 + j * 130 + (125 - width)/2, 250 + i * 130 + (125 - height)/2, width, height);j
             }
 
             if (done) {
@@ -1475,7 +1488,7 @@ export default class CharacterHandler {
 
         const attachment = DiscordService.GetMessageAttachment(canvas.toBuffer(), 'profile.png');
 
-        MessageService.ReplyMessage(messageInfo, 'Test', undefined, undefined, undefined, [attachment]);
+        MessageService.ReplyMessage(messageInfo, '', undefined, undefined, undefined, [attachment]);
     }
 
     private static async SendEquipment(messageInfo:IMessageInfo, player:Player) {
