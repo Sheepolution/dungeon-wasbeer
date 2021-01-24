@@ -379,6 +379,59 @@ export default class CharacterEmbeds {
         return embed;
     }
 
+    public static async GetProtectionEmbed(character:Character, receiver:Character, roll?:number, protection:number = 0) {
+        const embed = new MessageEmbed();
+        if (protection != null) {
+            embed.setColor((roll != null && protection == 0) ? SettingsConstants.COLORS.BAD : SettingsConstants.COLORS.GOOD)
+        } else {
+            embed.setColor(SettingsConstants.COLORS.DEFAULT)
+        }
+
+        const characterName = character.GetName();
+        const receiverName = receiver.GetName();
+
+        embed.setTitle('Protection roll')
+            .setThumbnail(character.GetAvatarUrl())
+            .setDescription(`${character.GetName()}${character.GetEnhancementsString()} rollt om ${receiver == character ? 'zichzelf' : receiver.GetName()}${receiver.GetEnhancementsString()} te beschermen.\n\n-- Statistieken --`)
+            .addField(`Armor van ${receiverName}`, receiver.GetArmor())
+            .addField(`Armor van ${characterName}`, character.GetFullModifierStats().armor)
+            .addField('--------------------------------', '-- Roll --')
+
+        if (roll == null)  {
+            embed.addField(characterName, 'Rollt de D20...')
+        } else {
+            embed.addField(characterName, `D20 = ${roll}`)
+                .addField('--------------------------------', '-- Resultaat --')
+                .setFooter(`Participatiepunten: ${character.GetRewardPoints(CampaignManager.GetBattle()?.GetId())}/${character.GetNextRewardPoints()}`);
+
+            if (protection == 0 ) {
+                embed.addField(`${characterName} faalt met beschermen!`, character.GetProtectionFailDescription().replaceAll('\\[naam\\]', receiverName).replaceAll('\\[jij\\]', characterName));
+            } else {
+                embed.addField(`${characterName} slaagt er in te beschermen`, character.GetProtectionDescription().replaceAll('\\[naam\\]', receiverName).replaceAll('\\[jij\\]', characterName).replaceAll('\\[bescherming\\]', protection.toString()));
+            }
+
+            embed.addField('--------------------------------', '-- Cooldown(s) --');
+
+            const battleCooldown = await character.GetBattleCooldown();
+            if (battleCooldown > 0) {
+                embed.addField('Vechten', `🕒 ${Utils.GetSecondsInMinutesAndSeconds(battleCooldown)}`, true)
+            } else {
+                embed.addField('Vechten', 'Klaar om te vechten!', true);
+            }
+
+            if (character.CanProtect()) {
+                const protectingCooldown = await character.GetProtectCooldown();
+                if (protectingCooldown > 0) {
+                    embed.addField('Protecting', `🕒 ${Utils.GetSecondsInMinutesAndSeconds(protectingCooldown)}`, true)
+                } else {
+                    embed.addField('Protecting', 'Klaar om iemand te beschermen!', true);
+                }
+            }
+        }
+
+        return embed;
+    }
+
     public static async GetLowestHealthEmbed() {
         const list:any = await Character.GET_LOW_HEALTH_LIST();
         const embed = new MessageEmbed()

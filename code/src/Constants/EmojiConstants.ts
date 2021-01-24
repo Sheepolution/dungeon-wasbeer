@@ -52,5 +52,6 @@ export default class EmojiConstants {
         INSPIRED: '✨',
         ENCHANTED: '🎲',
         REINFORCED: '⚔️',
+        PROTECTED: '🛡️',
     }
 }

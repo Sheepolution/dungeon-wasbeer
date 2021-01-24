@@ -59,6 +59,7 @@ export default class AttackModel extends Model {
                 inspiration: character.GetInspiration(),
                 enchanted: character.IsEnchanted(),
                 reinforced: character.IsReinforced(),
+                protection: character.GetProtection(),
             })
 
         return attack;

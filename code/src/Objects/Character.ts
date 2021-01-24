@@ -31,6 +31,7 @@ export default class Character {
     private static readonly battleCooldownPrefix = RedisConstants.REDIS_KEY + RedisConstants.BATTLE_COOLDOWN_KEY;
     private static readonly healingCooldownPrefix = RedisConstants.REDIS_KEY + RedisConstants.HEALING_COOLDOWN_KEY;
     private static readonly inspiringCooldownPrefix = RedisConstants.REDIS_KEY + RedisConstants.INSPIRING_COOLDOWN_KEY;
+    private static readonly protectCooldownPrefix = RedisConstants.REDIS_KEY + RedisConstants.PROTECTING_COOLDOWN_KEY;
     private static readonly enchantmentCooldownPrefix = RedisConstants.REDIS_KEY + RedisConstants.ENCHANTMENT_COOLDOWN_KEY;
     private static readonly perceptionCooldownPrefix = RedisConstants.REDIS_KEY + RedisConstants.PERCEPTION_COOLDOWN_KEY;
     private static readonly reinforcementCooldownPrefix = RedisConstants.REDIS_KEY + RedisConstants.REINFORCEMENT_COOLDOWN_KEY;
@@ -55,11 +56,14 @@ export default class Character {
     private inBattle:boolean;
     private isHealing:boolean;
     private isInspiring:boolean;
+    private isProtecting:boolean;
     private beingHealed:boolean;
     private beingInspired:boolean;
+    private beingProtected:boolean;
     private inspiration:number;
     private enchanted:boolean;
     private reinforced:boolean;
+    private protection:number;
     private avatarUrl:string;
     private lore:string;
     private regenerated:number;
@@ -73,6 +77,8 @@ export default class Character {
     private healFailDescription:string;
     private inspireDescription:string;
     private inspireFailDescription:string;
+    private protectionDescription:string;
+    private protectionFailDescription:string;
     private enchantmentDescription:string;
     private perceptionDescription:string;
     private reinforcementDescription:string;
@@ -187,6 +193,7 @@ export default class Character {
         this.currentHealth = model.health;
         this.equipment = this.player.GetCards().filter(pc => pc.IsEquipped()).map(c => c.GetCard());
         this.inspiration = model.inspiration;
+        this.protection = model.protection;
         this.enchanted = model.enchanted;
         this.reinforced = model.reinforced;
         this.avatarUrl = model.avatar_url;
@@ -404,8 +411,24 @@ export default class Character {
         return this.beingInspired;
     }
 
+    public SetIsProtecting(isProtecting:boolean) {
+        this.isProtecting = isProtecting;
+    }
+
+    public IsProtecting() {
+        return this.isProtecting;
+    }
+
+    public SetBeingProtected(beingProtected:boolean) {
+        this.beingProtected = beingProtected;
+    }
+
+    public IsBeingProtected() {
+        return this.beingProtected;
+    }
+
     public GetEnhancementsString() {
-        const str = ` ${(this.IsInspired() ? `${EmojiConstants.DNW_STATES.INSPIRED}` : '')}${(this.IsEnchanted() ? `${EmojiConstants.DNW_STATES.ENCHANTED}` : '')}${(this.IsReinforced() ? `${EmojiConstants.DNW_STATES.REINFORCED}` : '')}`;
+        const str = ` ${(this.IsInspired() ? `${EmojiConstants.DNW_STATES.INSPIRED}` : '')}${(this.IsEnchanted() ? `${EmojiConstants.DNW_STATES.ENCHANTED}` : '')}${(this.IsReinforced() ? `${EmojiConstants.DNW_STATES.REINFORCED}` : '')}${(this.IsProtected() ? `${EmojiConstants.DNW_STATES.PROTECTED}` : '')}`;
         if (str.length == 1) {
             return '';
         }
@@ -467,6 +490,10 @@ export default class Character {
 
     public CanReinforce() {
         return this.classType == ClassType.Fighter;
+    }
+
+    public CanProtect() {
+        return this.classType == ClassType.Paladin;
     }
 
     public async BecomeInspired(amount:number) {
@@ -555,6 +582,34 @@ export default class Character {
         return this.reinforced;
     }
 
+    public async BecomeProtected(amount:number) {
+        this.protection = amount;
+        this.UpdateFullModifierStats();
+        await this.UPDATE({
+            protection: this.protection
+        })
+    }
+
+    public async StopBeingProtected() {
+        if (this.protection == 0) {
+            return;
+        }
+
+        this.protection = 0;
+        this.UpdateFullModifierStats();
+        await this.UPDATE({
+            protection: this.protection
+        })
+    }
+
+    public GetProtection() {
+        return this.protection;
+    }
+
+    public IsProtected() {
+        return this.protection != 0;
+    }
+
     public GetMaxAbilityCooldown() {
         return (CharacterConstants.BASE_COOLDOWN_DURATION * 2) - (CharacterConstants.BASE_COOLDOWN_DURATION * (this.level/CharacterConstants.MAX_LEVEL));
     }
@@ -596,6 +651,14 @@ export default class Character {
     }
 
     public async SetInspireCooldown() {
+        await Redis.set(Character.inspiringCooldownPrefix + this.GetId(), '1', 'EX', Utils.GetMinutesInSeconds(this.GetMaxInspiringCooldown()));
+    }
+
+    public async GetProtectCooldown() {
+        return await Redis.ttl(Character.inspiringCooldownPrefix + this.GetId());
+    }
+
+    public async SetProtectCooldown() {
         await Redis.set(Character.inspiringCooldownPrefix + this.GetId(), '1', 'EX', Utils.GetMinutesInSeconds(this.GetMaxInspiringCooldown()));
     }
 
@@ -653,7 +716,7 @@ export default class Character {
     }
 
     public CanHeal() {
-        return this.classType == ClassType.Cleric || this.classType == ClassType.Paladin;
+        return this.classType == ClassType.Cleric;
     }
 
     public GetMaxHealingCooldown() {
@@ -674,6 +737,14 @@ export default class Character {
         }
 
         return Math.floor((roll/10) * this.fullModifierStats.charisma);
+    }
+
+    public GetProtectionBasedOnRoll(roll:number) {
+        if (roll == 1) {
+            return 0;
+        }
+
+        return Math.floor((roll/10) * this.cardModifierStats.armor - this.protection);
     }
 
     public async GetHealthFromMessage() {
@@ -768,6 +839,14 @@ export default class Character {
         return this.inspireFailDescription || CharacterConstants.INSPIRE_FAIL_MESSAGE;
     }
 
+    public GetProtectionDescription() {
+        return this.protectionDescription || CharacterConstants.PROTECTION_MESSAGE;
+    }
+
+    public GetProtectionFailDescription() {
+        return this.protectionFailDescription || CharacterConstants.PROTECTION_FAIL_MESSAGE;
+    }
+
     public GetEnchantmentDescription() {
         return this.enchantmentDescription || CharacterConstants.ENCHANTMENT_MESSAGE;
     }
@@ -822,6 +901,20 @@ export default class Character {
         })
     }
 
+    public async UpdateProtectionDescription(description:string) {
+        this.protectionDescription = description;
+        await this.UPDATE({
+            protection_description : this.protectionDescription
+        })
+    }
+
+    public async UpdateProtectionFailDescription(description:string) {
+        this.protectionFailDescription = description;
+        await this.UPDATE({
+            protection_fail_description : this.protectionFailDescription
+        })
+    }
+
     public async UpdateEnchantmentDescription(description:string) {
         this.enchantmentDescription = description;
         await this.UPDATE({
@@ -851,15 +944,23 @@ export default class Character {
         this.GiveRewardPoints(healingPoints * SettingsConstants.HEALING_REWARD_POINTS_MULTIPLIER, battleId, messageInfo);
     }
 
-    public async GiveInspirePoints(battleId?:string, messageInfo?:IMessageInfo) {
-        this.GiveRewardPoints(SettingsConstants.INSPIRE_REWARD_POINTS, battleId, messageInfo);
+    public async GiveInspirePoints(inspirationPoints:number, battleId?:string, messageInfo?:IMessageInfo) {
+        this.GiveRewardPoints(inspirationPoints * SettingsConstants.INSPIRE_REWARD_POINTS_MULITPLIER, battleId, messageInfo);
+    }
+
+    public async GiveProtectionPoints(protectionPoints:number, battleId?:string, messageInfo?:IMessageInfo) {
+        this.GiveRewardPoints(protectionPoints * SettingsConstants.PROTECTION_REWARD_POINTS_MULITPLIER, battleId, messageInfo);
     }
 
     public async GiveAbilityPoints(battleId?:string, messageInfo?:IMessageInfo) {
-        this.GiveRewardPoints(SettingsConstants.INSPIRE_REWARD_POINTS, battleId, messageInfo);
+        this.GiveRewardPoints(SettingsConstants.INSPIRE_REWARD_POINTS_MULITPLIER, battleId, messageInfo);
     }
 
     public async GiveRewardPoints(rewardPoints:number, battleId?:string, messageInfo?:IMessageInfo) {
+        if (rewardPoints == 0) {
+            return;
+        }
+
         var rewardPoints = Math.ceil(rewardPoints);
         this.rewardPoints += rewardPoints;
         this.rewardPoints = Math.min(this.rewardPoints, 5000);
@@ -1009,6 +1110,10 @@ export default class Character {
             emptyModifierStats.health = 1;
             emptyModifierStats.charisma = 1;
             this.fullModifierStats = CharacterService.GetMultipliedModifierStats(this.fullModifierStats, emptyModifierStats);
+        }
+
+        if (this.protection > 0) {
+            this.fullModifierStats.armor = this.fullModifierStats.armor + this.protection;
         }
 
         const max = CharacterService.GetMaxModifierStats(this.classType);

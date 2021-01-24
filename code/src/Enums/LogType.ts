@@ -19,6 +19,7 @@ export enum LogType {
     AttackKilled = 'AttackKilled',
     Heal = 'Heal',
     Inspire = 'Inspire',
+    Protect = 'Protect',
     Enchantment = 'Enchantment',
     Perception = 'Perception',
     Reinforcement = 'Reinforcement',

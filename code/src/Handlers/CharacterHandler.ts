@@ -22,6 +22,7 @@ import Enchantment from '../Objects/Enchantment';
 import Perception from '../Objects/Perception';
 import Reinforcement from '../Objects/Reinforcement';
 import DiscordService from '../Services/DiscordService';
+import Protection from '../Objects/Protection';
 
 const Canvas = require('canvas');
 
@@ -118,6 +119,11 @@ export default class CharacterHandler {
             case 'reinforce':
             case 'r':
                 this.OnReinforce(messageInfo, player, args[0]);
+                break;
+            case 'protect':
+            case 'bescherm':
+            case 'b':
+                this.OnProtect(messageInfo, player, args[0]);
                 break;
             case 'art':
             case 'avatar':
@@ -530,7 +536,7 @@ export default class CharacterHandler {
         receiver.SetBeingInspired(false);
 
         if (!selfInspire) {
-            await character.GiveInspirePoints(CampaignManager.GetBattle()?.GetId(), messageInfo);
+            await character.GiveInspirePoints(inspiration, CampaignManager.GetBattle()?.GetId(), messageInfo);
         }
 
         this.SaveInspire(character, receiver, character.GetFullModifierStats().charisma, roll, inspiration);
@@ -752,6 +758,93 @@ export default class CharacterHandler {
         MessageService.ReplyMessage(messageInfo, character.GetReinforcementDescription().replaceAll('\\[jij\\]', character.GetName()).replaceAll('\\[naam\\]', receiverName), true);
     }
 
+    private static async OnProtect(messageInfo:IMessageInfo, player:Player, mention:string) {
+        const character = PlayerManager.GetCharacterFromPlayer(messageInfo, player);
+        if (character == null) {
+            return;
+        }
+
+        if (!character.CanProtect()) {
+            MessageService.ReplyMessage(messageInfo, `Alleen paladins kunnen protecten, en jij bent een ${character.GetClassName().toLowerCase()}.`, false);
+            return;
+        }
+
+        const battle = CampaignManager.GetBattle();
+        if (battle == null) {
+            MessageService.ReplyMessage(messageInfo, 'Je kan alleen protecten wanneer er een monster is.', false);
+            return;
+        }
+
+        if (character.IsInBattle()) {
+            MessageService.ReplyMessage(messageInfo, 'Je kan niet protecten want je zit momenteel in een gevecht.', false);
+            return;
+        }
+
+        if (character.IsProtecting()) {
+            MessageService.ReplyMessage(messageInfo, 'Je bent al iemand aan het protecten.', false);
+            return;
+        }
+
+        const cooldown = await character.GetProtectCooldown();
+        if (cooldown > 0) {
+            MessageService.ReplyMessage(messageInfo, `Je hebt nog ${Utils.GetSecondsInMinutesAndSeconds(cooldown)} cooldown voordat je weer mag protecten.`);
+            return;
+        }
+
+        var receiver = character;
+        if (mention != null) {
+            const receiverId = DiscordUtils.GetMemberId(mention);
+            if (receiverId == null) {
+                MessageService.ReplyMessage(messageInfo, 'Als je iemand anders dan jezelf wilt protecten moet je die persoon taggen.\n`;protect @persoon`', false);
+                return;
+            }
+
+            const receiverPlayer = await PlayerManager.GetPlayer(receiverId);
+            receiver = receiverPlayer?.GetCharacter();
+            if (receiverPlayer == null || receiver == null) {
+                MessageService.ReplyMessage(messageInfo, 'Deze persoon heeft geen character.', false);
+                return;
+            }
+        }
+
+        if (receiver.IsInBattle()) {
+            MessageService.ReplyMessage(messageInfo, `Je kan ${receiver.GetName()} niet protecten want die zit momenteel in een gevecht.`, false);
+            return;
+        }
+
+        if (receiver.IsProtected()) {
+            MessageService.ReplyMessage(messageInfo, 'Deze persoon is al protected.', false);
+            return;
+        }
+
+        if (receiver.IsBeingProtected()) {
+            MessageService.ReplyMessage(messageInfo, 'Je kan die niet protecten want die wordt momenteel al protected.', false);
+            return;
+        }
+
+        character.SetIsProtecting(true);
+        receiver.SetBeingProtected(true);
+        const message = await this.SendProtectionEmbed(messageInfo, character, receiver);
+        if (message == null) {
+            return;
+        }
+
+        await Utils.Sleep(3);
+        const roll = Utils.Dice(20);
+        const protection = character.GetProtectionBasedOnRoll(roll);
+
+        await character.SetProtectCooldown();
+        await receiver.BecomeProtected(protection);
+        await this.UpdateProtectionEmbed(message, character, receiver, roll, protection);
+
+        character.SetIsProtecting(false);
+        receiver.SetBeingProtected(false);
+
+        await character.GiveProtectionPoints(protection, CampaignManager.GetBattle()?.GetId(), messageInfo);
+
+        this.SaveProtection(character, receiver, character.GetFullModifierStats().armor, roll, protection);
+    }
+
     private static async SaveHeal(character:Character, receiver:Character, receiverHealth:number, characterHealing:number, roll:number, finalHealing:number) {
         const battle = CampaignManager.GetBattle();
         if (battle == null) { return; }
@@ -787,6 +880,13 @@ export default class CharacterHandler {
         await LogService.Log(character.GetPlayer(), reinforcement.id, LogType.Reinforcement, `${character.GetName()} heeft ${character.GetId() == receiver.GetId() ? 'zichzelf' : `${receiver.GetName()}`} voorzien van reinforcement.`);
     }
 
+    private static async SaveProtection(character:Character, receiver:Character, characterArmor:number, roll:number, finalProtection:number) {
+        const battle = CampaignManager.GetBattle();
+        if (battle == null) { return; }
+        const protection = await Protection.STATIC_POST(battle, character, receiver, characterArmor, roll, finalProtection);
+        await LogService.Log(character.GetPlayer(), protection.id, LogType.Protect, `${character.GetName()} heeft ${character.GetId() == receiver.GetId() ? 'zichzelf' : `${receiver.GetName()}`} beschermd.`);
+    }
+
     private static async SendHealingEmbed(messageInfo:IMessageInfo, character:Character, receiver:Character) {
         return await MessageService.ReplyEmbed(messageInfo, await CharacterEmbeds.GetHealingEmbed(character, receiver))
     }
@@ -795,12 +895,20 @@ export default class CharacterHandler {
         return await MessageService.ReplyEmbed(messageInfo, await CharacterEmbeds.GetInspiringEmbed(character, receiver))
     }
 
+    private static async SendProtectionEmbed(messageInfo:IMessageInfo, character:Character, receiver:Character) {
+        return await MessageService.ReplyEmbed(messageInfo, await CharacterEmbeds.GetProtectionEmbed(character, receiver))
+    }
+
     private static async UpdateHealingEmbed(message:Message, character:Character, receiver:Character, roll:number, healing:number) {
         message.edit('', await CharacterEmbeds.GetHealingEmbed(character, receiver, roll, healing));
     }
 
     private static async UpdateInspiringEmbed(message:Message, character:Character, receiver:Character, roll:number, inspiration:number) {
         message.edit('', await CharacterEmbeds.GetInspiringEmbed(character, receiver, roll, inspiration));
+    }
+
+    private static async UpdateProtectionEmbed(message:Message, character:Character, receiver:Character, roll:number, protection:number) {
+        message.edit('', await CharacterEmbeds.GetProtectionEmbed(character, receiver, roll, protection));
     }
 
     private static async EditAvatar(messageInfo:IMessageInfo, player:Player, url?:string) {
