@@ -1,29 +1,29 @@
 import Battle from './Battle';
 import Character from './Character';
-import ChargeModel from '../Models/ChargeModel';
+import PrayerModel from '../Models/PrayerModel';
 import { Utils } from '../Utils/Utils';
 
-export default class Charge {
+export default class Prayer {
 
     protected id: string;
     private battle: Battle;
     private character: Character;
     private roll: number;
-    private chargeDate: Date;
+    private prayDate: Date;
 
-    public static async FIND_CHARGES_DONE_BY_CHARACTER(character: Character) {
-        const totalCharges = await ChargeModel.query().where({ character_id: character.GetId() }).count('id');
+    public static async FIND_PRAYERS_DONE_BY_CHARACTER(character: Character) {
+        const totalCharges = await PrayerModel.query().where({ character_id: character.GetId() }).count('id');
         return totalCharges[0].count || 0;
     }
 
-    public static async GET_TOP_CHARGES_DONE_LIST(battleId?: string) {
+    public static async GET_TOP_PRAYER_DONE_LIST(battleId?: string) {
         var whereObj: any = {};
         if (battleId != null) {
             whereObj.battle_id = battleId;
         }
 
-        var list = await ChargeModel.query()
-            .join('characters', 'characters.id', '=', 'charges.character_id')
+        var list = await PrayerModel.query()
+            .join('characters', 'characters.id', '=', 'prayers.character_id')
             .join('players', 'characters.player_id', '=', 'players.id')
             .where(whereObj)
             .select('players.id', 'name', 'discord_name')
@@ -35,46 +35,46 @@ export default class Charge {
         return list;
     }
 
-    public static async GET_TOP_CHARGING_DONE_LIST(battleId?: string) {
+    public static async GET_TOP_BLESSING_DONE_LIST(battleId?: string) {
         var whereObj: any = {};
         if (battleId != null) {
             whereObj.battle_id = battleId;
         }
 
-        var list = await ChargeModel.query()
-            .join('characters', 'characters.id', '=', 'charges.character_id')
+        var list = await PrayerModel.query()
+            .join('characters', 'characters.id', '=', 'prayers.character_id')
             .join('players', 'characters.player_id', '=', 'players.id')
             .where(whereObj)
             .groupBy('characters.name', 'players.discord_name')
             .select('name', 'discord_name')
-            .sum('final_charge as sumc')
-            .orderBy('sumc', 'desc')
+            .sum('final_blessing as sumb')
+            .orderBy('sumb', 'desc')
             .limit(10);
 
         return list;
     }
 
-    public static async STATIC_POST(battle: Battle, character: Character, characterArmor: number, roll: number, finalCharge: number) {
-        return await ChargeModel.New(battle, character, characterArmor, roll, finalCharge);
+    public static async STATIC_POST(battle: Battle, character: Character, characterWisdom: number, roll: number, finalBlessing: number) {
+        return await PrayerModel.New(battle, character, characterWisdom, roll, finalBlessing);
     }
 
     public async GET(id: string) {
-        const model: ChargeModel = await ChargeModel.query().findById(id);
+        const model: PrayerModel = await PrayerModel.query().findById(id);
         await this.ApplyModel(model);
     }
 
     public async UPDATE(data: any, trx?: any) {
-        await ChargeModel.query(trx)
+        await PrayerModel.query(trx)
             .findById(this.id)
             .patch(data);
     }
 
-    public async ApplyModel(model: ChargeModel) {
+    public async ApplyModel(model: PrayerModel) {
         this.id = model.id;
         this.battle = await model.GetBattle();
         this.character = await model.GetCharacter();
         this.roll = model.roll;
-        this.chargeDate = <Date>Utils.ConvertDateToUtc(model.charge_date);
+        this.prayDate = <Date>Utils.ConvertDateToUtc(model.pray_date);
     }
 
     public GetId() {

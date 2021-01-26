@@ -55,14 +55,14 @@ export default class CharacterConstants {
     }
 
     public static readonly CLASS_BASE_STATS = {
-        BASE: { armor: 5, dexterity: 5, healing: 10, health: 200, regeneration: 3, strength: 10, spell: 8, attack: 5, charisma: 10 },
-        MAX: { armor: 75, dexterity: 20, healing: 50, health: 1000, regeneration: 15, strength: 50, spell: 50, attack: 50, charisma: 50 },
-        BARD: { armor: 2, dexterity: 2, healing: 0, health: 200, regeneration: 4, strength: 0, spell: 13, attack: 2, charisma: 10 },
-        CLERIC: { armor: 5, dexterity: 7, healing: 10, health: 200, regeneration: 3, strength: 0, spell: 5, attack: 3, charisma: 0 },
-        WIZARD: { armor: 0, dexterity: 0, healing: 0, health: 220, regeneration: 3, strength: 0, spell: 18, attack: 2, charisma: 0 },
-        PALADIN: { armor: 10, dexterity: 5, healing: 5, health: 200, regeneration: 3, strength: 10, spell: 0, attack: 5, charisma: 0 },
-        FIGHTER: { armor: 5, dexterity: 0, healing: 0, health: 180, regeneration: 1, strength: 13, spell: 0, attack: 7, charisma: 0 },
-        RANGER: { armor: 5, dexterity: 8, healing: 0, health: 200, regeneration: 3, strength: 8, spell: 0, attack: 8, charisma: 0 },
+        BASE: { armor: 5, dexterity: 5, wisdom: 10, health: 200, regeneration: 3, strength: 10, spell: 8, attack: 5, charisma: 10 },
+        MAX: { armor: 75, dexterity: 20, wisdom: 50, health: 1000, regeneration: 15, strength: 50, spell: 50, attack: 50, charisma: 50 },
+        BARD: { armor: 2, dexterity: 2, wisdom: 0, health: 200, regeneration: 4, strength: 0, spell: 13, attack: 2, charisma: 10 },
+        CLERIC: { armor: 5, dexterity: 7, wisdom: 10, health: 200, regeneration: 3, strength: 0, spell: 5, attack: 3, charisma: 0 },
+        WIZARD: { armor: 0, dexterity: 0, wisdom: 0, health: 220, regeneration: 3, strength: 0, spell: 18, attack: 2, charisma: 0 },
+        PALADIN: { armor: 10, dexterity: 5, wisdom: 5, health: 200, regeneration: 3, strength: 10, spell: 0, attack: 5, charisma: 0 },
+        FIGHTER: { armor: 5, dexterity: 0, wisdom: 0, health: 180, regeneration: 1, strength: 13, spell: 0, attack: 7, charisma: 0 },
+        RANGER: { armor: 5, dexterity: 8, wisdom: 0, health: 200, regeneration: 3, strength: 8, spell: 0, attack: 8, charisma: 0 },
     };
 
     public static readonly CLASS_ATTACK_MESSAGES = {
@@ -115,6 +115,8 @@ export default class CharacterConstants {
     public static readonly PROTECTION_FAIL_MESSAGE = '"[jij] rent naar [naam] voor bescherming, maar struikelt onderweg en heeft moeite overeind komen in het harnas."';
     public static readonly CHARGE_MESSAGE = `"[jij] doet voor de aanval zoveel mogelijk armor uit. Het verschil in gewicht zorgt voor [charge] meer strength. Ten aanval!" ${EmojiConstants.DNW_STATES.CHARGED}`;
     public static readonly CHARGE_FAIL_MESSAGE = '"[jij] probeert het harnas los te maken, maar lukt het maar niet om dat knoopje op de rug los te maken. Nouja, dan maar niet."';
+    public static readonly PRAY_MESSAGE = `"[jij] gaat op de knieën zitten en bidt naar de hemel. Uit het niets schijnt er een zonnestraal op [jij], die een blessing krijgt van [blessing]." ${EmojiConstants.DNW_STATES.BLESSED}`;
+    public static readonly PRAY_FAIL_MESSAGE = '"[jij] probeert te bidden, maar er gebeurt niks. Komt het misschien door die vunzige gedachten van laatst?"';
     public static readonly ENCHANTMENT_MESSAGE = `"[jij] gebruikt een spreuk om de attack roll van [naam] te verdubbelen in het volgende gevecht." ${EmojiConstants.DNW_STATES.ENCHANTED}`;
     public static readonly PERCEPTION_MESSAGE = '"[jij] doet een perception check om [naam] te informeren over de situatie en de gevechtscooldown te halveren van [voor] naar [na]."👁️';
     public static readonly REINFORCEMENT_MESSAGE = `"[jij] voorziet [naam] van een extra wapen. Het verschil in attack rolls wordt toegevoegd aan de strength in het volgende gevecht." ${EmojiConstants.DNW_STATES.REINFORCED}`;

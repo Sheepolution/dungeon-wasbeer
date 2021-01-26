@@ -317,7 +317,6 @@ export default class BattleHandler {
         const damage = await this.ResolveAttackResult(messageInfo, message, battle, character, playerWon, playerWon ? character.GetAttackStrength(true) : battle.GetMonsterAttackStrength(true), roll1, roll2, roll3, 0);
         await this.UpdateBattleEmbed(message, battle, character, roll1, roll2, roll3, 0, playerWon, damage, true);
         await this.UpdateStates(character);
-        await this.UpdateCharge(character);
 
         if (this.inBattleTimeout != null) {
             clearTimeout(this.inBattleTimeout);
@@ -472,9 +471,6 @@ export default class BattleHandler {
         await character.StopBeingReinforced();
         await character.StopBeingProtected();
         await character.StopBeingCharged();
-    }
-
-    private static async UpdateCharge(character: Character) {
-        character.StopBeingCharged();
+        await character.StopBeingBlessed();
     }
 }

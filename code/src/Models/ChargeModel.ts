@@ -6,7 +6,7 @@ import Character from '../Objects/Character';
 
 const { Model } = require('objection');
 
-export default class ProtectionModel extends Model {
+export default class ChargeModel extends Model {
 
     static get tableName() {
         return 'charges';
@@ -28,23 +28,15 @@ export default class ProtectionModel extends Model {
                 from: 'charges.character_id',
                 to: 'characters.id',
             }
-        },
-        receiver: {
-            relation: Model.BelongsToOneRelation,
-            modelClass: CharacterModel,
-            join: {
-                from: 'charges.receiver_id',
-                to: 'characters.id',
-            }
-        },
+        }
     }
 
     public static async New(battle: Battle, character: Character, characterArmor: number, roll: number, finalCharge: number) {
-        const protectionId = Utils.UUID();
+        const chargeId = Utils.UUID();
 
-        const protection = await ProtectionModel.query()
+        const protection = await ChargeModel.query()
             .insert({
-                id: protectionId,
+                id: chargeId,
                 battle_id: battle.GetId(),
                 character_id: character.GetId(),
                 character_armor: characterArmor,

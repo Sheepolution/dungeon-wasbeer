@@ -23,6 +23,7 @@ import Perception from '../Objects/Perception';
 import Reinforcement from '../Objects/Reinforcement';
 import DiscordService from '../Services/DiscordService';
 import Protection from '../Objects/Protection';
+import Prayer from '../Objects/Prayer';
 
 const Canvas = require('canvas');
 
@@ -105,6 +106,15 @@ export default class CharacterHandler {
             case 'i':
                 this.OnInspire(messageInfo, player, args[0]);
                 break;
+            case 'protect':
+            case 'bescherm':
+            case 'b':
+                this.OnProtect(messageInfo, player, args[0]);
+                break;
+            case 'pray':
+            case 'bid':
+                this.OnPray(messageInfo, player);
+                break;
             case 'enchant':
             case 'betover':
             case 'e':
@@ -119,11 +129,6 @@ export default class CharacterHandler {
             case 'reinforce':
             case 'r':
                 this.OnReinforce(messageInfo, player, args[0]);
-                break;
-            case 'protect':
-            case 'bescherm':
-            case 'b':
-                this.OnProtect(messageInfo, player, args[0]);
                 break;
             case 'art':
             case 'avatar':
@@ -330,7 +335,6 @@ export default class CharacterHandler {
         }
 
         if (character.IsHealing()) {
-            MessageService.ReplyMessage(messageInfo, 'Je bent al iemand aan het healen.', false);
             return;
         }
 
@@ -402,7 +406,7 @@ export default class CharacterHandler {
 
         await character.StopBeingInspired();
 
-        await this.SaveHeal(character, receiver, healthBefore, character.GetFullModifierStats().healing, roll, healing);
+        await this.SaveHeal(character, receiver, healthBefore, character.GetFullModifierStats().wisdom, roll, healing);
     }
 
     private static async Sleep(messageInfo: IMessageInfo, player: Player) {
@@ -469,7 +473,6 @@ export default class CharacterHandler {
         }
 
         if (character.IsInspiring()) {
-            MessageService.ReplyMessage(messageInfo, 'Je bent al iemand aan het inspireren.', false);
             return;
         }
 
@@ -781,7 +784,6 @@ export default class CharacterHandler {
         }
 
         if (character.IsProtecting()) {
-            MessageService.ReplyMessage(messageInfo, 'Je bent al iemand aan het protecten.', false);
             return;
         }
 
@@ -845,6 +847,57 @@ export default class CharacterHandler {
         this.SaveProtection(character, receiver, character.GetFullModifierStats().armor, roll, protection);
     }
 
+    private static async OnPray(messageInfo: IMessageInfo, player: Player) {
+        const character = PlayerManager.GetCharacterFromPlayer(messageInfo, player);
+        if (character == null) {
+            return;
+        }
+
+        if (character.IsPraying()) {
+            return;
+        }
+
+        if (!character.CanPray()) {
+            MessageService.ReplyMessage(messageInfo, `Alleen clerics kunnen bidden, en jij bent een ${character.GetClassName().toLowerCase()}.`, false);
+            return;
+        }
+
+        const battle = CampaignManager.GetBattle();
+        if (battle == null) {
+            MessageService.ReplyMessage(messageInfo, 'Je kan alleen bidden wanneer er een monster is.', false);
+            return;
+        }
+
+        if (character.IsInBattle()) {
+            MessageService.ReplyMessage(messageInfo, 'Je kan niet bidden want je zit momenteel in een gevecht.', false);
+            return;
+        }
+
+        const cooldown = await character.GetProtectCooldown();
+        if (cooldown > 0) {
+            MessageService.ReplyMessage(messageInfo, `Je hebt nog ${Utils.GetSecondsInMinutesAndSeconds(cooldown)} cooldown voordat je weer mag protecten.`);
+            return;
+        }
+
+        character.SetIsPraying(true);
+        const message = await this.SendPrayingEmbed(messageInfo, character);
+        if (message == null) {
+            return;
+        }
+
+        await Utils.Sleep(3);
+        const roll = Utils.Dice(20);
+        const blessing = character.GetBlessingBasedOnRoll(roll);
+
+        await character.SetPrayCooldown();
+        await character.BecomeBlessed(blessing);
+        await this.UpdatePrayingEmbed(message, character, roll, blessing);
+
+        character.SetIsProtecting(false);
+
+        this.SavePrayer(character, character.GetFullModifierStats().wisdom, roll, blessing);
+    }
+
     private static async SaveHeal(character: Character, receiver: Character, receiverHealth: number, characterHealing: number, roll: number, finalHealing: number) {
         const battle = CampaignManager.GetBattle();
         if (battle == null) { return; }
@@ -887,6 +940,13 @@ export default class CharacterHandler {
         await LogService.Log(character.GetPlayer(), protection.id, LogType.Protect, `${character.GetName()} heeft ${character.GetId() == receiver.GetId() ? 'zichzelf' : `${receiver.GetName()}`} beschermd.`);
     }
 
+    private static async SavePrayer(character: Character, characterHealing: number, roll: number, finalBlessing: number) {
+        const battle = CampaignManager.GetBattle();
+        if (battle == null) { return; }
+        const charge = await Prayer.STATIC_POST(battle, character, characterHealing, roll, finalBlessing);
+        await LogService.Log(character.GetPlayer(), charge.id, LogType.Charge, `${character.GetName()} heeft een prayer gedaan.`);
+    }
+
     private static async SendHealingEmbed(messageInfo: IMessageInfo, character: Character, receiver: Character) {
         return await MessageService.ReplyEmbed(messageInfo, await CharacterEmbeds.GetHealingEmbed(character, receiver))
     }
@@ -899,6 +959,10 @@ export default class CharacterHandler {
         return await MessageService.ReplyEmbed(messageInfo, await CharacterEmbeds.GetProtectionEmbed(character, receiver))
     }
 
+    private static async SendPrayingEmbed(messageInfo: IMessageInfo, character: Character) {
+        return await MessageService.ReplyEmbed(messageInfo, await CharacterEmbeds.GetPrayingEmbed(character))
+    }
+
     private static async UpdateHealingEmbed(message: Message, character: Character, receiver: Character, roll: number, healing: number) {
         message.edit('', await CharacterEmbeds.GetHealingEmbed(character, receiver, roll, healing));
     }
@@ -909,6 +973,10 @@ export default class CharacterHandler {
 
     private static async UpdateProtectionEmbed(message: Message, character: Character, receiver: Character, roll: number, protection: number) {
         message.edit('', await CharacterEmbeds.GetProtectionEmbed(character, receiver, roll, protection));
+    }
+
+    private static async UpdatePrayingEmbed(message: Message, character: Character, roll: number, blessing: number) {
+        message.edit('', await CharacterEmbeds.GetPrayingEmbed(character, roll, blessing));
     }
 
     private static async EditAvatar(messageInfo: IMessageInfo, player: Player, url?: string) {

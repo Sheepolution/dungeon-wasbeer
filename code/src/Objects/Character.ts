@@ -58,6 +58,7 @@ export default class Character {
     private isInspiring: boolean;
     private isProtecting: boolean;
     private isCharging: boolean;
+    private isPraying: boolean;
     private beingHealed: boolean;
     private beingInspired: boolean;
     private beingProtected: boolean;
@@ -66,6 +67,7 @@ export default class Character {
     private reinforced: boolean;
     private protection: number;
     private charge: number;
+    private blessing: number;
     private avatarUrl: string;
     private lore: string;
     private regenerated: number;
@@ -83,6 +85,8 @@ export default class Character {
     private protectionFailDescription: string;
     private chargeDescription: string;
     private chargeFailDescription: string;
+    private prayDescription: string;
+    private prayFailDescription: string;
     private enchantmentDescription: string;
     private perceptionDescription: string;
     private reinforcementDescription: string;
@@ -198,6 +202,8 @@ export default class Character {
         this.equipment = this.player.GetCards().filter(pc => pc.IsEquipped()).map(c => c.GetCard());
         this.inspiration = model.inspiration;
         this.protection = model.protection;
+        this.charge = 0;
+        this.blessing = model.blessing;
         this.enchanted = model.enchanted;
         this.reinforced = model.reinforced;
         this.avatarUrl = model.avatar_url;
@@ -212,6 +218,13 @@ export default class Character {
         this.healDescription = model.heal_description;
         this.healFailDescription = model.heal_fail_description;
         this.inspireDescription = model.inspire_description;
+        this.inspireFailDescription = model.inspire_fail_description;
+        this.protectionDescription = model.protection_description;
+        this.protectionFailDescription = model.protection_fail_description;
+        this.chargeDescription = model.charge_description;
+        this.chargeFailDescription = model.charge_fail_description;
+        this.prayDescription = model.pray_description;
+        this.prayFailDescription = model.pray_fail_description;
         this.enchantmentDescription = model.enchantment_description;
         this.perceptionDescription = model.perception_description;
         this.reinforcementDescription = model.reinforcement_description;
@@ -439,8 +452,16 @@ export default class Character {
         return this.isCharging;
     }
 
+    public SetIsPraying(isPraying: boolean) {
+        this.isPraying = isPraying;
+    }
+
+    public IsPraying() {
+        return this.isPraying;
+    }
+
     public GetEnhancementsString() {
-        const str = ` ${(this.IsInspired() ? `${EmojiConstants.DNW_STATES.INSPIRED}` : '')}${(this.IsEnchanted() ? `${EmojiConstants.DNW_STATES.ENCHANTED}` : '')}${(this.IsReinforced() ? `${EmojiConstants.DNW_STATES.REINFORCED}` : '')}${(this.IsProtected() ? `${EmojiConstants.DNW_STATES.PROTECTED}` : '')}`;
+        const str = ` ${(this.IsInspired() ? `${EmojiConstants.DNW_STATES.INSPIRED}` : '')}${(this.IsEnchanted() ? `${EmojiConstants.DNW_STATES.ENCHANTED}` : '')}${(this.IsReinforced() ? `${EmojiConstants.DNW_STATES.REINFORCED}` : '')}${(this.IsProtected() ? `${EmojiConstants.DNW_STATES.PROTECTED}` : '')}${(this.IsCharged() ? `${EmojiConstants.DNW_STATES.CHARGED}` : '')}${(this.IsBlessed() ? `${EmojiConstants.DNW_STATES.BLESSED}` : '')}`;
         if (str.length == 1) {
             return '';
         }
@@ -510,6 +531,10 @@ export default class Character {
 
     public CanCharge() {
         return this.classType == ClassType.Paladin;
+    }
+
+    public CanPray() {
+        return this.classType == ClassType.Cleric;
     }
 
     public async BecomeInspired(amount: number) {
@@ -600,6 +625,38 @@ export default class Character {
 
     public GetMaxChargeCooldown() {
         return CharacterConstants.BASE_COOLDOWN_DURATION + 5 - this.fullModifierStats.dexterity;
+    }
+
+    public async BecomeBlessed(amount: number) {
+        this.blessing += amount;
+        this.UpdateFullModifierStats();
+        await this.UPDATE({
+            blessing: this.blessing
+        })
+    }
+
+    public async StopBeingBlessed() {
+        if (this.blessing == 0) {
+            return;
+        }
+
+        this.blessing = 0;
+        this.UpdateFullModifierStats();
+        await this.UPDATE({
+            blessing: this.blessing
+        })
+    }
+
+    public GetBlessing() {
+        return this.blessing;
+    }
+
+    public IsBlessed() {
+        return this.blessing != 0;
+    }
+
+    public GetMaxPrayingCooldown() {
+        return CharacterConstants.BASE_COOLDOWN_DURATION - this.fullModifierStats.dexterity;
     }
 
     public async BecomeEnchanted() {
@@ -720,6 +777,14 @@ export default class Character {
         await Redis.set(Character.protectCooldownPrefix + this.GetId(), '1', 'EX', Utils.GetMinutesInSeconds(this.GetMaxChargeCooldown()));
     }
 
+    public async GetPrayCooldown() {
+        return await Redis.ttl(Character.protectCooldownPrefix + this.GetId());
+    }
+
+    public async SetPrayCooldown() {
+        await Redis.set(Character.healingCooldownPrefix + this.GetId(), '1', 'EX', Utils.GetMinutesInSeconds(this.GetMaxPrayingCooldown()));
+    }
+
     public async GetEnchantmentCooldown() {
         return await Redis.ttl(Character.enchantmentCooldownPrefix + this.GetId());
     }
@@ -786,7 +851,7 @@ export default class Character {
             return 0;
         }
 
-        return Math.floor((roll / 10) * this.fullModifierStats.healing);
+        return Math.floor((roll / 10) * this.fullModifierStats.wisdom);
     }
 
     public GetInspirationBasedOnRoll(roll: number) {
@@ -802,7 +867,7 @@ export default class Character {
             return 0;
         }
 
-        return Math.floor((roll / 10) * this.cardModifierStats.armor - this.protection);
+        return Math.floor((roll / 10) * this.fullModifierStats.armor - this.protection);
     }
 
     public GetChargeBasedOnRoll(roll: number) {
@@ -810,7 +875,15 @@ export default class Character {
             return 0;
         }
 
-        return Math.floor((roll / 20) * this.cardModifierStats.armor - this.protection);
+        return Math.floor((roll / 20) * this.fullModifierStats.armor - this.protection);
+    }
+
+    public GetBlessingBasedOnRoll(roll: number) {
+        if (roll == 1) {
+            return 0;
+        }
+
+        return Math.floor((roll / 20) * this.fullModifierStats.wisdom);
     }
 
     public async GetHealthFromMessage() {
@@ -919,6 +992,14 @@ export default class Character {
 
     public GetChargeFailDescription() {
         return this.chargeFailDescription || CharacterConstants.CHARGE_FAIL_MESSAGE;
+    }
+
+    public GetPrayDescription() {
+        return this.prayDescription || CharacterConstants.PRAY_MESSAGE;
+    }
+
+    public GetPrayFailDescription() {
+        return this.prayFailDescription || CharacterConstants.PRAY_FAIL_MESSAGE;
     }
 
     public GetEnchantmentDescription() {
@@ -1198,11 +1279,18 @@ export default class Character {
             this.fullModifierStats.strength += this.charge;
         }
 
+        if (this.blessing > 0) {
+            const buff = Math.floor(this.blessing / 3);
+            this.fullModifierStats.spell += buff;
+            this.fullModifierStats.attack += buff;
+            this.fullModifierStats.armor += buff;
+        }
+
         const max = CharacterService.GetMaxModifierStats(this.classType);
         this.fullModifierStats.armor = Math.min(Math.max(0, this.fullModifierStats.armor), max.armor);
         this.fullModifierStats.attack = Math.min(Math.max(0, this.fullModifierStats.attack), max.attack);
         this.fullModifierStats.charisma = Math.min(Math.max(0, this.fullModifierStats.charisma), max.charisma);
-        this.fullModifierStats.healing = Math.min(Math.max(0, this.fullModifierStats.healing), max.healing);
+        this.fullModifierStats.wisdom = Math.min(Math.max(0, this.fullModifierStats.wisdom), max.wisdom);
         this.fullModifierStats.health = Math.min(Math.max(0, this.fullModifierStats.health), max.health);
         this.fullModifierStats.regeneration = Math.min(Math.max(0, this.fullModifierStats.regeneration), max.regeneration);
         this.fullModifierStats.spell = Math.min(Math.max(0, this.fullModifierStats.spell), max.spell);

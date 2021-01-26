@@ -7,31 +7,31 @@ import IModifierStats from '../Interfaces/IModifierStats';
 import CharacterService from '../Services/CharacterService';
 
 export default class Card {
-    protected id:string;
-    private name:string;
-    private description:string;
-    private rank:number;
-    private category:string
-    private modifiers:Array<ICardModifier>;
-    private modifierClass:ClassType;
-    private modifierStats:IModifierStats;
-    private season:number;
-    private imageUrl:string;
-    private creatorId:string;
-    private creationDate:string;
+    protected id: string;
+    private name: string;
+    private description: string;
+    private rank: number;
+    private category: string
+    private modifiers: Array<ICardModifier>;
+    private modifierClass: ClassType;
+    private modifierStats: IModifierStats;
+    private season: number;
+    private imageUrl: string;
+    private creatorId: string;
+    private creationDate: string;
 
     public static async GET_ALL() {
-        const models = await CardModel.query().where({active: true})
+        const models = await CardModel.query().where({ active: true })
         return models;
     }
 
-    public async GET(id:string) {
-        const model:CardModel = await CardModel.query().findById(id);
+    public async GET(id: string) {
+        const model: CardModel = await CardModel.query().findById(id);
         await this.ApplyModel(model);
     }
 
-    public async FIND_BY_NAME(name:string) {
-        const models:CardModel = await CardModel.query().where('name', 'like', `%${name}%`);
+    public async FIND_BY_NAME(name: string) {
+        const models: CardModel = await CardModel.query().where('name', 'like', `%${name}%`);
 
         if (models.length == 0) {
             return false;
@@ -41,19 +41,19 @@ export default class Card {
         return true;
     }
 
-    public async POST(name:string, description:string, rank:number, category:string, imageUrl:string, creatorId:string, modifiers?:Array<ICardModifier>, modifierClass?:ClassType) {
+    public async POST(name: string, description: string, rank: number, category: string, imageUrl: string, creatorId: string, modifiers?: Array<ICardModifier>, modifierClass?: ClassType) {
         const model = await CardModel.New(name, description, rank, category, imageUrl, creatorId, modifiers, modifierClass);
         await this.ApplyModel(model);
         return this;
     }
 
-    public async UPDATE(data:any, trx?:any) {
+    public async UPDATE(data: any, trx?: any) {
         await CardModel.query(trx)
             .findById(this.id)
             .patch(data);
     }
 
-    public async ApplyModel(model:CardModel) {
+    public async ApplyModel(model: CardModel) {
         this.id = model.id;
         this.name = model.name;
         this.description = model.description;
@@ -68,7 +68,7 @@ export default class Card {
         this.season = model.season;
     }
 
-    public async EditCard(name:string = this.name, description:string = this.description, rank:number = this.rank, category:string = this.category, modifiers:Array<ICardModifier> = this.modifiers, modifierClass:ClassType = this.modifierClass, imageUrl:string = this.imageUrl) {
+    public async EditCard(name: string = this.name, description: string = this.description, rank: number = this.rank, category: string = this.category, modifiers: Array<ICardModifier> = this.modifiers, modifierClass: ClassType = this.modifierClass, imageUrl: string = this.imageUrl) {
         this.name = name;
         this.description = description;
         this.rank = rank;
@@ -152,8 +152,8 @@ export default class Card {
                 case ModifierType.Dexterity:
                     modifierStats.dexterity = modifier.value;
                     break;
-                case ModifierType.Healing:
-                    modifierStats.healing = modifier.value;
+                case ModifierType.Wisdom:
+                    modifierStats.wisdom = modifier.value;
                     break;
                 case ModifierType.Health:
                     modifierStats.health = modifier.value;

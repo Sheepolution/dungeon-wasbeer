@@ -21,6 +21,7 @@ export enum LogType {
     Inspire = 'Inspire',
     Protect = 'Protect',
     Charge = 'Charge',
+    Prayer = 'Prayer',
     Enchantment = 'Enchantment',
     Perception = 'Perception',
     Reinforcement = 'Reinforcement',

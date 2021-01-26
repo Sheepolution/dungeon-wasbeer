@@ -6,10 +6,10 @@ import Character from '../Objects/Character';
 
 const { Model } = require('objection');
 
-export default class HealModel extends Model {
+export default class PrayerModel extends Model {
 
     static get tableName() {
-        return 'heals';
+        return 'prayers';
     }
 
     static relationMappings = {
@@ -17,7 +17,7 @@ export default class HealModel extends Model {
             relation: Model.BelongsToOneRelation,
             modelClass: BattleModel,
             join: {
-                from: 'heals.battle_id',
+                from: 'prayers.battle_id',
                 to: 'battles.id',
             }
         },
@@ -25,37 +25,27 @@ export default class HealModel extends Model {
             relation: Model.BelongsToOneRelation,
             modelClass: CharacterModel,
             join: {
-                from: 'heals.character_id',
+                from: 'prayers.character_id',
                 to: 'characters.id',
             }
-        },
-        receiver: {
-            relation: Model.BelongsToOneRelation,
-            modelClass: CharacterModel,
-            join: {
-                from: 'heals.receiver_id',
-                to: 'characters.id',
-            }
-        },
+        }
     }
 
-    public static async New(battle: Battle, character: Character, receiver: Character, receiverHealth: number, characterWisdom: number, roll: number, finalHealing: number) {
-        const healId = Utils.UUID();
+    public static async New(battle: Battle, character: Character, characterHealing: number, roll: number, finalBlessing: number) {
+        const prayerId = Utils.UUID();
 
-        const heal = await HealModel.query()
+        const prayer = await PrayerModel.query()
             .insert({
-                id: healId,
+                id: prayerId,
                 battle_id: battle.GetId(),
                 character_id: character.GetId(),
-                receiver_id: receiver.GetId(),
-                receiver_health: receiverHealth,
-                character_wisdom: characterWisdom,
+                character_armor: characterHealing,
                 roll: roll,
-                final_healing: finalHealing,
-                heal_date: Utils.GetNowString(),
+                final_blessing: finalBlessing,
+                pray_date: Utils.GetNowString(),
             })
 
-        return heal;
+        return prayer;
     }
 
     public async GetBattle() {
@@ -68,11 +58,5 @@ export default class HealModel extends Model {
         const character = new Character();
         character.ApplyModel(await this.$relatedQuery('character'));
         return character;
-    }
-
-    public async GetReceiver() {
-        const receiver = new Character();
-        receiver.ApplyModel(await this.$relatedQuery('receiver'));
-        return receiver;
     }
 }

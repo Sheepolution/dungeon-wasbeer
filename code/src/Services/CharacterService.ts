@@ -5,7 +5,7 @@ import CharacterConstants from '../Constants/CharacterConstants';
 
 export default class CharacterService {
 
-    public static GetClassIconEmoji(classType:ClassType) {
+    public static GetClassIconEmoji(classType: ClassType) {
         switch (classType) {
             case ClassType.Bard:
                 return EmojiConstants.CLASSES.BARD;
@@ -22,7 +22,7 @@ export default class CharacterService {
         }
     }
 
-    public static GetClassIconImage(classType:ClassType) {
+    public static GetClassIconImage(classType: ClassType) {
         switch (classType) {
             case ClassType.Bard:
                 return CharacterConstants.ICON_IMAGE.BARD;
@@ -39,7 +39,7 @@ export default class CharacterService {
         }
     }
 
-    public static GetClassModifierStats(classType:ClassType) {
+    public static GetClassModifierStats(classType: ClassType) {
         switch (classType) {
             case ClassType.Bard:
                 return CharacterConstants.CLASS_BASE_STATS.BARD;
@@ -56,7 +56,7 @@ export default class CharacterService {
         }
     }
 
-    public static GetClassImage(classType:ClassType) {
+    public static GetClassImage(classType: ClassType) {
         switch (classType) {
             case ClassType.Bard:
                 return CharacterConstants.CHARACTER_IMAGE.BARD;
@@ -73,7 +73,7 @@ export default class CharacterService {
         }
     }
 
-    public static GetClassAttackDescription(classType:ClassType, crit?:boolean) {
+    public static GetClassAttackDescription(classType: ClassType, crit?: boolean) {
         switch (classType) {
             case ClassType.Bard:
                 return crit ? CharacterConstants.CLASS_ATTACK_CRIT_MESSAGES.BARD : CharacterConstants.CLASS_ATTACK_MESSAGES.BARD
@@ -90,17 +90,17 @@ export default class CharacterService {
         }
     }
 
-    public static GetMaxModifierStats(classType:ClassType) {
+    public static GetMaxModifierStats(classType: ClassType) {
         const stats = this.GetClassModifierStats(classType);
         const base = CharacterConstants.CLASS_BASE_STATS.BASE;
         const max = CharacterConstants.CLASS_BASE_STATS.MAX;
 
         return {
             armor: max.armor + (stats.armor - base.armor),
-            attack:max.attack + (stats.attack - base.attack),
-            charisma:max.charisma + (stats.charisma - base.charisma),
+            attack: max.attack + (stats.attack - base.attack),
+            charisma: max.charisma + (stats.charisma - base.charisma),
             dexterity: max.dexterity + (stats.dexterity - base.dexterity),
-            healing: max.healing + (stats.healing - base.healing),
+            wisdom: max.wisdom + (stats.wisdom - base.wisdom),
             health: max.health + (stats.health - base.health),
             regeneration: max.regeneration + (stats.regeneration - base.regeneration),
             strength: max.strength + (stats.strength - base.strength),
@@ -108,13 +108,13 @@ export default class CharacterService {
         }
     }
 
-    public static GetEmptyModifierStats(n:number = 0):IModifierStats {
+    public static GetEmptyModifierStats(n: number = 0): IModifierStats {
         return {
             armor: n,
             attack: n,
             charisma: n,
             dexterity: n,
-            healing: n,
+            wisdom: n,
             health: n,
             regeneration: n,
             strength: n,
@@ -122,13 +122,13 @@ export default class CharacterService {
         }
     }
 
-    public static GetSummedUpModifierStats(a:IModifierStats, b:IModifierStats) {
+    public static GetSummedUpModifierStats(a: IModifierStats, b: IModifierStats) {
         return {
             armor: a.armor + b.armor,
             attack: a.attack + b.attack,
             charisma: a.charisma + b.charisma,
             dexterity: a.dexterity + b.dexterity,
-            healing: a.healing + b.healing,
+            wisdom: a.wisdom + b.wisdom,
             health: a.health + b.health,
             regeneration: a.regeneration + b.regeneration,
             strength: a.strength + b.strength,
@@ -136,13 +136,13 @@ export default class CharacterService {
         }
     }
 
-    public static GetMultipliedModifierStats(a:IModifierStats, b:IModifierStats) {
+    public static GetMultipliedModifierStats(a: IModifierStats, b: IModifierStats) {
         return {
             armor: Math.max(a.armor + 1, Math.ceil(a.armor * b.armor)),
             attack: Math.max(a.attack + 1, Math.ceil(a.attack * b.attack)),
             charisma: Math.max(a.charisma, Math.ceil(a.charisma * b.charisma)),
             dexterity: Math.max(a.dexterity + 1, Math.ceil(a.dexterity * b.dexterity)),
-            healing: Math.max(a.healing + 1, Math.ceil(a.healing * b.healing)),
+            wisdom: Math.max(a.wisdom + 1, Math.ceil(a.wisdom * b.wisdom)),
             health: Math.max(a.health, Math.ceil(a.health * b.health)),
             regeneration: Math.max(a.regeneration + 1, Math.ceil(a.regeneration * b.regeneration)),
             strength: Math.max(a.strength + 1, Math.ceil(a.strength * b.strength)),
