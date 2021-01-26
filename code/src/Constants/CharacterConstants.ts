@@ -9,25 +9,25 @@ export default class CharacterConstants {
     public static readonly MAX_LEVEL = 20;
 
     public static readonly EQUIPMENT_SPACE_PER_LEVEL = [
-        3,        4,        4,        5,        5,
-        6,        6,        7,        7,        9,
-        9,        10,       10,       11,       11,
-        12,       12,       13,       13,       15,
+        3, 4, 4, 5, 5,
+        6, 6, 7, 7, 9,
+        9, 10, 10, 11, 11,
+        12, 12, 13, 13, 15,
     ]
 
     public static readonly HEALTH_ADDITION_PER_LEVEL = [
-        0,        25,       50,       75,       100,
-        125,      150,      175,      200,      225,
-        250,      275,      300,      325,      350,
-        350,      375,      400,      425,      500,
+        0, 25, 50, 75, 100,
+        125, 150, 175, 200, 225,
+        250, 275, 300, 325, 350,
+        350, 375, 400, 425, 500,
     ]
 
     public static readonly XP_PER_LEVEL = [
-        0,        50,        150,        450,
-        1100,     2400,      3900,       5700,
-        8000,     11000,     14500,      16500,
-        22000,    29000,     37500,      47000,
-        57000,    68000,     82000,      100000
+        0, 50, 150, 450,
+        1100, 2400, 3900, 5700,
+        8000, 11000, 14500, 16500,
+        22000, 29000, 37500, 47000,
+        57000, 68000, 82000, 100000
     ]
 
     public static readonly CHARACTER_DIED = 'https://media.discordapp.net/attachments/694331679204180029/703293328552362014/unknown.png';
@@ -55,9 +55,9 @@ export default class CharacterConstants {
     }
 
     public static readonly CLASS_BASE_STATS = {
-        BASE: { armor: 5, dexterity: 5, healing: 10, health: 200,  regeneration: 3, strength: 10, spell: 8, attack: 5, charisma: 10 },
-        MAX: { armor: 75, dexterity: 20, healing: 50, health: 1000,  regeneration: 15, strength: 50, spell: 50, attack: 50, charisma: 50 },
-        BARD: { armor: 2, dexterity: 2, healing: 0, health: 200,  regeneration: 4, strength: 0, spell: 13, attack: 2, charisma: 10 },
+        BASE: { armor: 5, dexterity: 5, healing: 10, health: 200, regeneration: 3, strength: 10, spell: 8, attack: 5, charisma: 10 },
+        MAX: { armor: 75, dexterity: 20, healing: 50, health: 1000, regeneration: 15, strength: 50, spell: 50, attack: 50, charisma: 50 },
+        BARD: { armor: 2, dexterity: 2, healing: 0, health: 200, regeneration: 4, strength: 0, spell: 13, attack: 2, charisma: 10 },
         CLERIC: { armor: 5, dexterity: 7, healing: 10, health: 200, regeneration: 3, strength: 0, spell: 5, attack: 3, charisma: 0 },
         WIZARD: { armor: 0, dexterity: 0, healing: 0, health: 220, regeneration: 3, strength: 0, spell: 18, attack: 2, charisma: 0 },
         PALADIN: { armor: 10, dexterity: 5, healing: 5, health: 200, regeneration: 3, strength: 10, spell: 0, attack: 5, charisma: 0 },
@@ -113,6 +113,8 @@ export default class CharacterConstants {
     public static readonly INSPIRE_FAIL_MESSAGE = '"[jij] speelt een hoop valse noten en wordt gevraagd te stoppen. Dit was alles behalve inspirerend."';
     public static readonly PROTECTION_MESSAGE = `"[jij] gaat voor [naam] staan met een schild, wat een [bescherming] armor boost geeft tot na het volgende gevecht." ${EmojiConstants.DNW_STATES.PROTECTED}`;
     public static readonly PROTECTION_FAIL_MESSAGE = '"[jij] rent naar [naam] voor bescherming, maar struikelt onderweg en heeft moeite overeind komen in het harnas."';
+    public static readonly CHARGE_MESSAGE = `"[jij] doet voor de aanval zoveel mogelijk armor uit. Het verschil in gewicht zorgt voor [charge] meer strength. Ten aanval!" ${EmojiConstants.DNW_STATES.CHARGED}`;
+    public static readonly CHARGE_FAIL_MESSAGE = '"[jij] probeert het harnas los te maken, maar lukt het maar niet om dat knoopje op de rug los te maken. Nouja, dan maar niet."';
     public static readonly ENCHANTMENT_MESSAGE = `"[jij] gebruikt een spreuk om de attack roll van [naam] te verdubbelen in het volgende gevecht." ${EmojiConstants.DNW_STATES.ENCHANTED}`;
     public static readonly PERCEPTION_MESSAGE = '"[jij] doet een perception check om [naam] te informeren over de situatie en de gevechtscooldown te halveren van [voor] naar [na]."👁️';
     public static readonly REINFORCEMENT_MESSAGE = `"[jij] voorziet [naam] van een extra wapen. Het verschil in attack rolls wordt toegevoegd aan de strength in het volgende gevecht." ${EmojiConstants.DNW_STATES.REINFORCED}`;

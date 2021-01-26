@@ -13,7 +13,7 @@ export default class EmojiConstants {
     public static readonly CARD_CATEGORIES = {
         BABY: '<:baby:708627201859387425>',
         SNACK: '<:snacc:708627202224160789>',
-        HOLIDAYS:'<:feestdagen:708627202526150716>',
+        HOLIDAYS: '<:feestdagen:708627202526150716>',
         FASHION: '<:fashion:708627202152857621>',
         COSPLAY: '<:cosplay:708627202387869696>',
         CHONKY: '<:chonky:708627202027159607>',
@@ -53,5 +53,6 @@ export default class EmojiConstants {
         ENCHANTED: '🎲',
         REINFORCED: '⚔️',
         PROTECTED: '🛡️',
+        CHARGED: '💪',
     }
 }

@@ -13,14 +13,15 @@ import Attack from '../Objects/Attack';
 import { LogType } from '../Enums/LogType';
 import EmojiConstants from '../Constants/EmojiConstants';
 import LogService from '../Services/LogService';
+import Charge from '../Objects/Charge';
 
 export default class BattleHandler {
 
-    private static waitList:Array<IMessageInfo> = new Array<IMessageInfo>();
-    private static inBattle:boolean = false;
-    private static inBattleTimeout:any;
+    private static waitList: Array<IMessageInfo> = new Array<IMessageInfo>();
+    private static inBattle: boolean = false;
+    private static inBattleTimeout: any;
 
-    public static async OnCommand(messageInfo:IMessageInfo, player:Player, command:string) {
+    public static async OnCommand(messageInfo: IMessageInfo, player: Player, command: string) {
         switch (command) {
             case 'attack':
             case 'fight':
@@ -31,6 +32,10 @@ export default class BattleHandler {
             case 'v':
             case 'f':
                 this.OnAttack(messageInfo, player);
+                break;
+            case 'charge':
+            case 'charging':
+                this.OnAttack(messageInfo, player, false, true);
                 break;
             case 'battle':
             case 'monster':
@@ -48,7 +53,7 @@ export default class BattleHandler {
         return this.inBattle;
     }
 
-    private static async OnAttack(messageInfo:IMessageInfo, player:Player, fromWaitlist?:boolean) {
+    private static async OnAttack(messageInfo: IMessageInfo, player: Player, fromWaitlist?: boolean, charge?: boolean) {
         const character = PlayerManager.GetCharacterFromPlayer(messageInfo, player);
         if (character == null) { return; }
 
@@ -80,11 +85,29 @@ export default class BattleHandler {
             return;
         }
 
+        if (character.IsBeingProtected()) {
+            MessageService.ReplyMessage(messageInfo, 'Je kan niet vechten want je wordt momenteel beschermd.', false);
+            return;
+        }
+
         const cooldown = await character.GetBattleCooldown();
 
         if (cooldown > 0) {
             MessageService.ReplyMessage(messageInfo, `Je hebt nog ${Utils.GetSecondsInMinutesAndSeconds(cooldown)} cooldown voordat je weer mag aanvallen.`);
             return;
+        }
+
+        if (charge) {
+            if (!character.CanCharge()) {
+                MessageService.ReplyMessage(messageInfo, `Alleen paladins kunnen chargen, en jij bent een ${character.GetClassName().toLowerCase()}.`, false);
+                return;
+            }
+
+            const chargeCooldown = await character.GetChargeCooldown();
+            if (chargeCooldown > 0) {
+                MessageService.ReplyMessage(messageInfo, `Je hebt nog ${Utils.GetSecondsInMinutesAndSeconds(chargeCooldown)} cooldown voordat je weer mag chargen.`);
+                return;
+            }
         }
 
         if (!fromWaitlist) {
@@ -96,15 +119,24 @@ export default class BattleHandler {
                 }
 
                 character.SetInBattle(true);
+                if (charge) {
+                    character.SetIsCharging(true);
+                }
                 this.waitList.push(messageInfo);
                 messageInfo.message?.react(EmojiConstants.STATUS.GOOD);
                 return;
             }
         }
 
-        character.SetBattleCooldown();
         character.SetInBattle(true);
         BattleHandler.inBattle = true;
+
+        if (charge) {
+            await this.OnCharge(messageInfo, character);
+            await Utils.Sleep(2);
+        } else {
+            await character.SetBattleCooldown();
+        }
 
         const monster = battle.GetMonster();
         const monsterId = monster.GetId();
@@ -128,7 +160,7 @@ export default class BattleHandler {
             this.inBattleTimeout = null;
             character.SetInBattle(false);
             character.RemoveBattleCooldown();
-        }, Utils.GetMinutesInMiliSeconds(.5));
+        }, Utils.GetMinutesInMiliSeconds(1));
 
         // Start attack
         var secondAttack = false;
@@ -205,11 +237,11 @@ export default class BattleHandler {
                 if (playerWon && character.IsReinforced()) {
                     var reinforcementAddition = 0;
                     if (monsterId == '57ea9222-d3d5-4f26-96a7-07c7415d3873') {
-                        reinforcementAddition = Math.ceil(((roll3 + (roll4 || 0)) - (roll1 + (roll2 || 0)))/2);
-                        reinforcementAddition -= ((monsterAttackRoll - playerAttackRoll)/60) * reinforcementAddition;
+                        reinforcementAddition = Math.ceil(((roll3 + (roll4 || 0)) - (roll1 + (roll2 || 0))) / 2);
+                        reinforcementAddition -= ((monsterAttackRoll - playerAttackRoll) / 60) * reinforcementAddition;
                     } else {
-                        reinforcementAddition = Math.ceil(((roll1 + (roll2 || 0)) - (roll3 + (roll4 || 0)))/2);
-                        reinforcementAddition -= ((playerAttackRoll - monsterAttackRoll)/60) * reinforcementAddition;
+                        reinforcementAddition = Math.ceil(((roll1 + (roll2 || 0)) - (roll3 + (roll4 || 0))) / 2);
+                        reinforcementAddition -= ((playerAttackRoll - monsterAttackRoll) / 60) * reinforcementAddition;
                     }
 
                     playerStrength = Math.min(playerStrength + Math.ceil(reinforcementAddition), character.GetAttackStrength(true));
@@ -224,22 +256,38 @@ export default class BattleHandler {
                 await this.UpdateBattleEmbed(message, battle, character, roll1, roll2, roll3, roll4, playerWon, damage, false);
                 secondAttack = false;
             }
-
         } while (secondAttack);
-
-        await this.UpdateStates(character);
 
         if (this.inBattleTimeout != null) {
             clearTimeout(this.inBattleTimeout);
             this.inBattleTimeout = null;
         }
 
-        if (battle.IsMonsterDead()) {
-            return;
-        }
+        await this.UpdateStates(character);
     }
 
-    private static async SaveAttack(battle:Battle, character:Character, messageId:string, rollCharacterBase:number, rollCharacterModifier:number, rollCharacterModifierMax:number, rollMonsterBase:number, rollMonsterModifier:number, rollMonsterModifierMax:number, victory:boolean, damage:number, healthAfter:number) {
+    private static async OnCharge(messageInfo: IMessageInfo, character: Character) {
+        character.SetIsCharging(true);
+
+        const message = await this.SendChargeEmbed(messageInfo, character);
+        if (message == null) {
+            return;
+        }
+
+        await Utils.Sleep(3);
+        const roll = Utils.Dice(20);
+        const charge = character.GetChargeBasedOnRoll(roll);
+
+        const oldArmor = character.GetFullModifierStats().armor;
+        await character.BecomeCharged(charge);
+        await this.UpdateChargeEmbed(message, character, roll, charge);
+        await character.SetChargeCooldown();
+        await character.SetBattleCooldown();
+
+        this.SaveCharge(character, oldArmor, roll, charge);
+    }
+
+    private static async SaveAttack(battle: Battle, character: Character, messageId: string, rollCharacterBase: number, rollCharacterModifier: number, rollCharacterModifierMax: number, rollMonsterBase: number, rollMonsterModifier: number, rollMonsterModifierMax: number, victory: boolean, damage: number, healthAfter: number) {
         const attack = await Attack.STATIC_POST(battle, character, messageId, rollCharacterBase, rollCharacterModifier, rollCharacterModifierMax, rollMonsterBase, rollMonsterModifier, rollMonsterModifierMax, victory, damage, healthAfter);
         const crit = rollCharacterBase == 20 || rollCharacterBase == 1 || rollMonsterBase == 20 || rollMonsterBase == 1;
         if (healthAfter <= 0) {
@@ -253,7 +301,14 @@ export default class BattleHandler {
         }
     }
 
-    private static async OnCharacterCrit(messageInfo:IMessageInfo, message:Message, battle:Battle, character:Character, roll1:number, roll2:number = 0, roll3:number = 0) {
+    private static async SaveCharge(character: Character, characterArmor: number, roll: number, finalCharge: number) {
+        const battle = CampaignManager.GetBattle();
+        if (battle == null) { return; }
+        const charge = await Charge.STATIC_POST(battle, character, characterArmor, roll, finalCharge);
+        await LogService.Log(character.GetPlayer(), charge.id, LogType.Charge, `${character.GetName()} heeft een charge gedaan.`);
+    }
+
+    private static async OnCharacterCrit(messageInfo: IMessageInfo, message: Message, battle: Battle, character: Character, roll1: number, roll2: number = 0, roll3: number = 0) {
         var playerWon = true;
         if (battle.GetMonster().GetId() == '57ea9222-d3d5-4f26-96a7-07c7415d3873') {
             playerWon = false;
@@ -262,6 +317,7 @@ export default class BattleHandler {
         const damage = await this.ResolveAttackResult(messageInfo, message, battle, character, playerWon, playerWon ? character.GetAttackStrength(true) : battle.GetMonsterAttackStrength(true), roll1, roll2, roll3, 0);
         await this.UpdateBattleEmbed(message, battle, character, roll1, roll2, roll3, 0, playerWon, damage, true);
         await this.UpdateStates(character);
+        await this.UpdateCharge(character);
 
         if (this.inBattleTimeout != null) {
             clearTimeout(this.inBattleTimeout);
@@ -269,7 +325,7 @@ export default class BattleHandler {
         }
     }
 
-    private static async OnMonsterCrit(messageInfo:IMessageInfo, message:Message, battle:Battle, character:Character, roll1:number, roll2:number = 0, roll3:number = 0) {
+    private static async OnMonsterCrit(messageInfo: IMessageInfo, message: Message, battle: Battle, character: Character, roll1: number, roll2: number = 0, roll3: number = 0) {
         var playerWon = false;
         const monsterId = battle.GetMonster().GetId();
         if (monsterId == '57ea9222-d3d5-4f26-96a7-07c7415d3873') {
@@ -296,7 +352,7 @@ export default class BattleHandler {
         }
     }
 
-    private static async ResolveAttackResult(messageInfo:IMessageInfo, message:Message, battle:Battle, character:Character, playerWon:boolean, damage:number, roll1:number, roll2:number, roll3:number, roll4:number) {
+    private static async ResolveAttackResult(messageInfo: IMessageInfo, message: Message, battle: Battle, character: Character, playerWon: boolean, damage: number, roll1: number, roll2: number, roll3: number, roll4: number) {
         if (playerWon) {
             var monsterId = battle.GetMonster().GetId();
 
@@ -341,13 +397,13 @@ export default class BattleHandler {
         }
     }
 
-    private static async OnDefeatingMonster(battle:Battle) {
+    private static async OnDefeatingMonster(battle: Battle) {
         await battle.Complete();
         await MessageService.SendMessageToDNDChannel(`De ${battle.GetMonster().GetName()} is verslagen! Iedereen die heeft meegeholpen in deze strijd heeft XP ontvangen.`)
         await CampaignManager.OnCompletingSession();
     }
 
-    private static async OnDefeatingCharacter(messageInfo:IMessageInfo, character:Character) {
+    private static async OnDefeatingCharacter(messageInfo: IMessageInfo, character: Character) {
         await character.Kill();
         await Utils.Sleep(2);
         await MessageService.SendMessageToDNDChannel('', await CharacterEmbeds.GetDeadCharacterEmbed(character));
@@ -371,11 +427,11 @@ export default class BattleHandler {
         this.OnAttack(<IMessageInfo>nextBattle, nextPlayer, true)
     }
 
-    private static async ReplyNoBattle(messageInfo:IMessageInfo) {
+    private static async ReplyNoBattle(messageInfo: IMessageInfo) {
         MessageService.ReplyMessage(messageInfo, 'Er is geen monster om tegen te vechten.', false);
     }
 
-    private static async SendBattleInfo(messageInfo:IMessageInfo) {
+    private static async SendBattleInfo(messageInfo: IMessageInfo) {
         const battle = CampaignManager.GetBattle();
         if (battle == null) {
             this.ReplyNoBattle(messageInfo);
@@ -390,21 +446,35 @@ export default class BattleHandler {
         return await MessageService.ReplyEmbed(messageInfo, BattleEmbeds.GetBattleInfoEmbed(battle));
     }
 
-    private static async ReplyMonsterDefeated(messageInfo:IMessageInfo) {
+    private static async ReplyMonsterDefeated(messageInfo: IMessageInfo) {
         MessageService.ReplyMessage(messageInfo, 'Het monster is al verslagen.', false);
     }
 
-    private static async SendBattleEmbed(messageInfo:IMessageInfo, battle:Battle, character:Character) {
+    private static async SendBattleEmbed(messageInfo: IMessageInfo, battle: Battle, character: Character) {
         return await MessageService.ReplyEmbed(messageInfo, await BattleEmbeds.GetBattleEmbed(battle, character));
     }
 
-    private static async UpdateBattleEmbed(message:Message, battle:Battle, character:Character, roll1?:number, roll2?:number, roll3?:number, roll4?:number, playerWon?:boolean, damage?:number, crit?:boolean) {
+    private static async SendChargeEmbed(messageInfo: IMessageInfo, character: Character) {
+        return await MessageService.ReplyEmbed(messageInfo, await CharacterEmbeds.GetChargingEmbed(character));
+    }
+
+    private static async UpdateBattleEmbed(message: Message, battle: Battle, character: Character, roll1?: number, roll2?: number, roll3?: number, roll4?: number, playerWon?: boolean, damage?: number, crit?: boolean) {
         await message.edit('', await BattleEmbeds.GetBattleEmbed(battle, character, roll1, roll2, roll3, roll4, playerWon, damage, crit));
     }
 
-    private static async UpdateStates(character:Character) {
+    private static async UpdateChargeEmbed(message: Message, character: Character, roll?: number, charge?: number) {
+        await message.edit('', await CharacterEmbeds.GetChargingEmbed(character, roll, charge));
+    }
+
+    private static async UpdateStates(character: Character) {
         await character.StopBeingInspired();
         await character.StopBeingEnchanted();
         await character.StopBeingReinforced();
+        await character.StopBeingProtected();
+        await character.StopBeingCharged();
+    }
+
+    private static async UpdateCharge(character: Character) {
+        character.StopBeingCharged();
     }
 }

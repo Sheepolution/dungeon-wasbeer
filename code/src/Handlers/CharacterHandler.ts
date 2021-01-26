@@ -29,9 +29,9 @@ const Canvas = require('canvas');
 export default class CharacterHandler {
 
     private static readonly classNames = Object.keys(ClassType);
-    private static readonly  resetConfirmTimerPrefix = RedisConstants.REDIS_KEY + RedisConstants.RESET_CONFIRM_TIMER_KEY;
+    private static readonly resetConfirmTimerPrefix = RedisConstants.REDIS_KEY + RedisConstants.RESET_CONFIRM_TIMER_KEY;
 
-    public static async OnCommand(messageInfo:IMessageInfo, player:Player, command:string, args:Array<string>, content:string) {
+    public static async OnCommand(messageInfo: IMessageInfo, player: Player, command: string, args: Array<string>, content: string) {
         if (command == 'class') {
             this.CreateCharacter(messageInfo, player, args[0]);
             return;
@@ -191,7 +191,7 @@ export default class CharacterHandler {
         return true;
     }
 
-    private static async CreateCharacter(messageInfo:IMessageInfo, player:Player, className:string) {
+    private static async CreateCharacter(messageInfo: IMessageInfo, player: Player, className: string) {
         const character = player.GetCharacter();
         if (character != null) {
             MessageService.ReplyMessage(messageInfo, `Je hebt al een character genaamd ${character.GetName()}. Je kan een nieuw character aanmaken wanneer deze overlijdt, of wanneer je opnieuw begint met \`;reset\`.`, false);
@@ -216,7 +216,7 @@ export default class CharacterHandler {
         LogService.Log(player, newCharacter.GetId(), LogType.CharacterCreated, `${player.GetDiscordName()} heeft een nieuw character aangemaakt van de class ${classType}.`);
     }
 
-    private static async Equip(messageInfo:IMessageInfo, player:Player, cardName:string) {
+    private static async Equip(messageInfo: IMessageInfo, player: Player, cardName: string) {
         // TODO: Dit soort checks doe je ergens anders ook. Dat moet anders kunnen.
         // TODO: Dat je gewoon iets hebt van GetCardFromArgument() ofzo.
         // TODO: Net zoals met het aanmaken/aanpassen van kaarten en monsters. Dat moet minder DRY hebben.
@@ -274,7 +274,7 @@ export default class CharacterHandler {
         MessageService.ReplyMessage(messageInfo, `De kaart '${realCardName}' is aan je equipment toegevoegd.`, true, true, CharacterEmbeds.GetEquipmentEmbed(character));
     }
 
-    private static async Unequip(messageInfo:IMessageInfo, player:Player, cardName:string) {
+    private static async Unequip(messageInfo: IMessageInfo, player: Player, cardName: string) {
         const character = PlayerManager.GetCharacterFromPlayer(messageInfo, player);
         if (character == null) {
             return;
@@ -307,7 +307,7 @@ export default class CharacterHandler {
         MessageService.ReplyMessage(messageInfo, `De kaart '${realCardName}' is uit je equipment gehaald.`, true, true, CharacterEmbeds.GetEquipmentEmbed(character));
     }
 
-    private static async OnHeal(messageInfo:IMessageInfo, player:Player, mention:string) {
+    private static async OnHeal(messageInfo: IMessageInfo, player: Player, mention: string) {
         const character = PlayerManager.GetCharacterFromPlayer(messageInfo, player);
         if (character == null) {
             return;
@@ -405,7 +405,7 @@ export default class CharacterHandler {
         await this.SaveHeal(character, receiver, healthBefore, character.GetFullModifierStats().healing, roll, healing);
     }
 
-    private static async Sleep(messageInfo:IMessageInfo, player:Player) {
+    private static async Sleep(messageInfo: IMessageInfo, player: Player) {
         const character = PlayerManager.GetCharacterFromPlayer(messageInfo, player);
         if (character == null) {
             return;
@@ -442,11 +442,11 @@ export default class CharacterHandler {
         MessageService.ReplyMessage(messageInfo, `Je verstopt jezelf voor het monster om een dutje te kunnen doen en krijgt ${healing} health terug.`, true);
     }
 
-    private static async ShowLowestHealth(messageInfo:IMessageInfo) {
+    private static async ShowLowestHealth(messageInfo: IMessageInfo) {
         MessageService.ReplyEmbed(messageInfo, await CharacterEmbeds.GetLowestHealthEmbed());
     }
 
-    private static async OnInspire(messageInfo:IMessageInfo, player:Player, mention:string) {
+    private static async OnInspire(messageInfo: IMessageInfo, player: Player, mention: string) {
         const character = PlayerManager.GetCharacterFromPlayer(messageInfo, player);
         if (character == null) {
             return;
@@ -542,7 +542,7 @@ export default class CharacterHandler {
         this.SaveInspire(character, receiver, character.GetFullModifierStats().charisma, roll, inspiration);
     }
 
-    private static async OnEnchant(messageInfo:IMessageInfo, player:Player, mention:string) {
+    private static async OnEnchant(messageInfo: IMessageInfo, player: Player, mention: string) {
         const character = PlayerManager.GetCharacterFromPlayer(messageInfo, player);
         if (character == null) {
             return;
@@ -612,7 +612,7 @@ export default class CharacterHandler {
         MessageService.ReplyMessage(messageInfo, character.GetEnchantmentDescription().replaceAll('\\[jij\\]', character.GetName()).replaceAll('\\[naam\\]', receiverName), true);
     }
 
-    private static async OnPercept(messageInfo:IMessageInfo, player:Player, mention:string) {
+    private static async OnPercept(messageInfo: IMessageInfo, player: Player, mention: string) {
         const character = PlayerManager.GetCharacterFromPlayer(messageInfo, player);
         if (character == null) {
             return;
@@ -688,7 +688,7 @@ export default class CharacterHandler {
             .replaceAll('\\[na\\]', Utils.GetSecondsInMinutesAndSeconds(newCooldown)), true);
     }
 
-    private static async OnReinforce(messageInfo:IMessageInfo, player:Player, mention:string) {
+    private static async OnReinforce(messageInfo: IMessageInfo, player: Player, mention: string) {
         const character = PlayerManager.GetCharacterFromPlayer(messageInfo, player);
         if (character == null) {
             return;
@@ -758,7 +758,7 @@ export default class CharacterHandler {
         MessageService.ReplyMessage(messageInfo, character.GetReinforcementDescription().replaceAll('\\[jij\\]', character.GetName()).replaceAll('\\[naam\\]', receiverName), true);
     }
 
-    private static async OnProtect(messageInfo:IMessageInfo, player:Player, mention:string) {
+    private static async OnProtect(messageInfo: IMessageInfo, player: Player, mention: string) {
         const character = PlayerManager.GetCharacterFromPlayer(messageInfo, player);
         if (character == null) {
             return;
@@ -845,73 +845,73 @@ export default class CharacterHandler {
         this.SaveProtection(character, receiver, character.GetFullModifierStats().armor, roll, protection);
     }
 
-    private static async SaveHeal(character:Character, receiver:Character, receiverHealth:number, characterHealing:number, roll:number, finalHealing:number) {
+    private static async SaveHeal(character: Character, receiver: Character, receiverHealth: number, characterHealing: number, roll: number, finalHealing: number) {
         const battle = CampaignManager.GetBattle();
         if (battle == null) { return; }
         const heal = await Heal.STATIC_POST(battle, character, receiver, receiverHealth, characterHealing, roll, finalHealing);
         LogService.Log(character.GetPlayer(), heal.id, LogType.Heal, `${character.GetName()} heeft een heal gedaan op ${character.GetId() == receiver.GetId() ? 'zichzelf.' : `${receiver.GetName()}.`}`);
     }
 
-    private static async SaveInspire(character:Character, receiver:Character, characterCharisma:number, roll:number, finalInspiration:number) {
+    private static async SaveInspire(character: Character, receiver: Character, characterCharisma: number, roll: number, finalInspiration: number) {
         const battle = CampaignManager.GetBattle();
         if (battle == null) { return; }
         const inspire = await Inspire.STATIC_POST(battle, character, receiver, characterCharisma, roll, finalInspiration);
         await LogService.Log(character.GetPlayer(), inspire.id, LogType.Inspire, `${character.GetName()} heeft ${character.GetId() == receiver.GetId() ? 'zichzelf' : `${receiver.GetName()}`} geïnspireerd.`);
     }
 
-    private static async SaveEnchantment(character:Character, receiver:Character) {
+    private static async SaveEnchantment(character: Character, receiver: Character) {
         const battle = CampaignManager.GetBattle();
         if (battle == null) { return; }
         const enchantment = await Enchantment.STATIC_POST(battle, character, receiver);
         await LogService.Log(character.GetPlayer(), enchantment.id, LogType.Enchantment, `${character.GetName()} heeft ${character.GetId() == receiver.GetId() ? 'zichzelf' : `${receiver.GetName()}`} enchanted.`);
     }
 
-    private static async SavePerception(character:Character, receiver:Character, oldCooldown:number, newCooldown:number) {
+    private static async SavePerception(character: Character, receiver: Character, oldCooldown: number, newCooldown: number) {
         const battle = CampaignManager.GetBattle();
         if (battle == null) { return; }
         const perception = await Perception.STATIC_POST(battle, character, receiver, oldCooldown, newCooldown);
         await LogService.Log(character.GetPlayer(), perception.id, LogType.Perception, `${character.GetName()} heeft ${character.GetId() == receiver.GetId() ? 'zichzelf' : `${receiver.GetName()}`} een perception check gegeven.`);
     }
 
-    private static async SaveReinforcement(character:Character, receiver:Character) {
+    private static async SaveReinforcement(character: Character, receiver: Character) {
         const battle = CampaignManager.GetBattle();
         if (battle == null) { return; }
         const reinforcement = await Reinforcement.STATIC_POST(battle, character, receiver);
         await LogService.Log(character.GetPlayer(), reinforcement.id, LogType.Reinforcement, `${character.GetName()} heeft ${character.GetId() == receiver.GetId() ? 'zichzelf' : `${receiver.GetName()}`} voorzien van reinforcement.`);
     }
 
-    private static async SaveProtection(character:Character, receiver:Character, characterArmor:number, roll:number, finalProtection:number) {
+    private static async SaveProtection(character: Character, receiver: Character, characterArmor: number, roll: number, finalProtection: number) {
         const battle = CampaignManager.GetBattle();
         if (battle == null) { return; }
         const protection = await Protection.STATIC_POST(battle, character, receiver, characterArmor, roll, finalProtection);
         await LogService.Log(character.GetPlayer(), protection.id, LogType.Protect, `${character.GetName()} heeft ${character.GetId() == receiver.GetId() ? 'zichzelf' : `${receiver.GetName()}`} beschermd.`);
     }
 
-    private static async SendHealingEmbed(messageInfo:IMessageInfo, character:Character, receiver:Character) {
+    private static async SendHealingEmbed(messageInfo: IMessageInfo, character: Character, receiver: Character) {
         return await MessageService.ReplyEmbed(messageInfo, await CharacterEmbeds.GetHealingEmbed(character, receiver))
     }
 
-    private static async SendInspiringEmbed(messageInfo:IMessageInfo, character:Character, receiver:Character) {
+    private static async SendInspiringEmbed(messageInfo: IMessageInfo, character: Character, receiver: Character) {
         return await MessageService.ReplyEmbed(messageInfo, await CharacterEmbeds.GetInspiringEmbed(character, receiver))
     }
 
-    private static async SendProtectionEmbed(messageInfo:IMessageInfo, character:Character, receiver:Character) {
+    private static async SendProtectionEmbed(messageInfo: IMessageInfo, character: Character, receiver: Character) {
         return await MessageService.ReplyEmbed(messageInfo, await CharacterEmbeds.GetProtectionEmbed(character, receiver))
     }
 
-    private static async UpdateHealingEmbed(message:Message, character:Character, receiver:Character, roll:number, healing:number) {
+    private static async UpdateHealingEmbed(message: Message, character: Character, receiver: Character, roll: number, healing: number) {
         message.edit('', await CharacterEmbeds.GetHealingEmbed(character, receiver, roll, healing));
     }
 
-    private static async UpdateInspiringEmbed(message:Message, character:Character, receiver:Character, roll:number, inspiration:number) {
+    private static async UpdateInspiringEmbed(message: Message, character: Character, receiver: Character, roll: number, inspiration: number) {
         message.edit('', await CharacterEmbeds.GetInspiringEmbed(character, receiver, roll, inspiration));
     }
 
-    private static async UpdateProtectionEmbed(message:Message, character:Character, receiver:Character, roll:number, protection:number) {
+    private static async UpdateProtectionEmbed(message: Message, character: Character, receiver: Character, roll: number, protection: number) {
         message.edit('', await CharacterEmbeds.GetProtectionEmbed(character, receiver, roll, protection));
     }
 
-    private static async EditAvatar(messageInfo:IMessageInfo, player:Player, url?:string) {
+    private static async EditAvatar(messageInfo: IMessageInfo, player: Player, url?: string) {
         const character = PlayerManager.GetCharacterFromPlayer(messageInfo, player);
         if (character == null) {
             return;
@@ -935,7 +935,7 @@ export default class CharacterHandler {
         MessageService.ReplyMessage(messageInfo, 'De avatar van je character is aangepast.', true, true, await CharacterEmbeds.GetCharacterInfoEmbed(character));
     }
 
-    private static async EditLore(messageInfo:IMessageInfo, player:Player, lore:string) {
+    private static async EditLore(messageInfo: IMessageInfo, player: Player, lore: string) {
         const character = PlayerManager.GetCharacterFromPlayer(messageInfo, player);
         if (character == null) {
             return;
@@ -956,7 +956,7 @@ export default class CharacterHandler {
 
     }
 
-    private static async EditName(messageInfo:IMessageInfo, player:Player, name:string) {
+    private static async EditName(messageInfo: IMessageInfo, player: Player, name: string) {
         const character = PlayerManager.GetCharacterFromPlayer(messageInfo, player);
         if (character == null) {
             return;
@@ -971,7 +971,7 @@ export default class CharacterHandler {
         MessageService.ReplyMessage(messageInfo, `Je naam is aangepast naar ${name}.`);
     }
 
-    private static async EditAttackDescription(messageInfo:IMessageInfo, player:Player, description:string) {
+    private static async EditAttackDescription(messageInfo: IMessageInfo, player: Player, description: string) {
         const character = PlayerManager.GetCharacterFromPlayer(messageInfo, player);
         if (character == null) {
             return;
@@ -990,7 +990,7 @@ export default class CharacterHandler {
         MessageService.ReplyMessage(messageInfo, 'Je aanval beschrijving is aangepast.');
     }
 
-    private static async EditAttackCritDescription(messageInfo:IMessageInfo, player:Player, description:string) {
+    private static async EditAttackCritDescription(messageInfo: IMessageInfo, player: Player, description: string) {
         const character = PlayerManager.GetCharacterFromPlayer(messageInfo, player);
         if (character == null) {
             return;
@@ -1009,7 +1009,7 @@ export default class CharacterHandler {
         MessageService.ReplyMessage(messageInfo, 'Je crit aanval beschrijving is aangepast.');
     }
 
-    private static async EditHealDescription(messageInfo:IMessageInfo, player:Player, description:string) {
+    private static async EditHealDescription(messageInfo: IMessageInfo, player: Player, description: string) {
         const character = PlayerManager.GetCharacterFromPlayer(messageInfo, player);
         if (character == null) {
             return;
@@ -1043,7 +1043,7 @@ export default class CharacterHandler {
         MessageService.ReplyMessage(messageInfo, 'Je heal beschrijving is aangepast.');
     }
 
-    private static async EditHealFailDescription(messageInfo:IMessageInfo, player:Player, description:string) {
+    private static async EditHealFailDescription(messageInfo: IMessageInfo, player: Player, description: string) {
         const character = PlayerManager.GetCharacterFromPlayer(messageInfo, player);
         if (character == null) {
             return;
@@ -1067,7 +1067,7 @@ export default class CharacterHandler {
         MessageService.ReplyMessage(messageInfo, 'Je gefaalde heal beschrijving is aangepast.');
     }
 
-    private static async EditInspireDescription(messageInfo:IMessageInfo, player:Player, description:string) {
+    private static async EditInspireDescription(messageInfo: IMessageInfo, player: Player, description: string) {
         const character = PlayerManager.GetCharacterFromPlayer(messageInfo, player);
         if (character == null) {
             return;
@@ -1087,7 +1087,7 @@ export default class CharacterHandler {
         MessageService.ReplyMessage(messageInfo, 'Je inspire beschrijving is aangepast.');
     }
 
-    private static async EditInspireFailDescription(messageInfo:IMessageInfo, player:Player, description:string) {
+    private static async EditInspireFailDescription(messageInfo: IMessageInfo, player: Player, description: string) {
         const character = PlayerManager.GetCharacterFromPlayer(messageInfo, player);
         if (character == null) {
             return;
@@ -1107,7 +1107,7 @@ export default class CharacterHandler {
         MessageService.ReplyMessage(messageInfo, 'Je inspire faal beschrijving is aangepast.');
     }
 
-    private static async EditEnchantmentDescription(messageInfo:IMessageInfo, player:Player, description:string) {
+    private static async EditEnchantmentDescription(messageInfo: IMessageInfo, player: Player, description: string) {
         const character = PlayerManager.GetCharacterFromPlayer(messageInfo, player);
         if (character == null) {
             return;
@@ -1127,7 +1127,7 @@ export default class CharacterHandler {
         MessageService.ReplyMessage(messageInfo, 'Je enchantment beschrijving is aangepast.');
     }
 
-    private static async EditPerceptionDescription(messageInfo:IMessageInfo, player:Player, description:string) {
+    private static async EditPerceptionDescription(messageInfo: IMessageInfo, player: Player, description: string) {
         const character = PlayerManager.GetCharacterFromPlayer(messageInfo, player);
         if (character == null) {
             return;
@@ -1147,7 +1147,7 @@ export default class CharacterHandler {
         MessageService.ReplyMessage(messageInfo, 'Je perception check beschrijving is aangepast.');
     }
 
-    private static async EditReinforcementDescription(messageInfo:IMessageInfo, player:Player, description:string) {
+    private static async EditReinforcementDescription(messageInfo: IMessageInfo, player: Player, description: string) {
         const character = PlayerManager.GetCharacterFromPlayer(messageInfo, player);
         if (character == null) {
             return;
@@ -1167,7 +1167,7 @@ export default class CharacterHandler {
         MessageService.ReplyMessage(messageInfo, 'Je reinforcement beschrijving is aangepast.');
     }
 
-    private static async OnReset(messageInfo:IMessageInfo, player:Player) {
+    private static async OnReset(messageInfo: IMessageInfo, player: Player) {
         const character = PlayerManager.GetCharacterFromPlayer(messageInfo, player);
         if (character == null) {
             return;
@@ -1178,7 +1178,7 @@ export default class CharacterHandler {
         MessageService.ReplyEmbed(messageInfo, CharacterEmbeds.GetResetCharacterWarningEmbed());
     }
 
-    private static async OnResetConfirm(messageInfo:IMessageInfo, player:Player) {
+    private static async OnResetConfirm(messageInfo: IMessageInfo, player: Player) {
         const character = PlayerManager.GetCharacterFromPlayer(messageInfo, player);
         if (character == null) {
             return;
@@ -1195,15 +1195,15 @@ export default class CharacterHandler {
         LogService.Log(character.GetPlayer(), character.GetId(), LogType.CharacterStop, `${character.GetName()} is gestopt.`);
     }
 
-    private static async GetResetCharacterTimer(character:Character) {
+    private static async GetResetCharacterTimer(character: Character) {
         return await Redis.ttl(CharacterHandler.resetConfirmTimerPrefix + character.GetId());
     }
 
-    private static async SetResetCharacterTimer(character:Character) {
+    private static async SetResetCharacterTimer(character: Character) {
         await Redis.set(CharacterHandler.resetConfirmTimerPrefix + character.GetId(), '1', 'EX', Utils.GetMinutesInSeconds(CharacterConstants.RESET_CHARACTER_TIMER_DURATION));
     }
 
-    private static async SendCharacterInfo(messageInfo:IMessageInfo, player:Player) {
+    private static async SendCharacterInfo(messageInfo: IMessageInfo, player: Player) {
         const character = PlayerManager.GetCharacterFromPlayer(messageInfo, player);
         if (character == null) {
             return;
@@ -1211,7 +1211,7 @@ export default class CharacterHandler {
         MessageService.ReplyEmbed(messageInfo, await CharacterEmbeds.GetCharacterInfoEmbed(character));
     }
 
-    private static async SendCharacterDescription(messageInfo:IMessageInfo, player:Player) {
+    private static async SendCharacterDescription(messageInfo: IMessageInfo, player: Player) {
         const character = PlayerManager.GetCharacterFromPlayer(messageInfo, player);
         if (character == null) {
             return;
@@ -1219,7 +1219,7 @@ export default class CharacterHandler {
         MessageService.ReplyEmbed(messageInfo, await CharacterEmbeds.GetCharacterDescriptionEmbed(character));
     }
 
-    private static async SendCooldownsInfo(messageInfo:IMessageInfo, player:Player) {
+    private static async SendCooldownsInfo(messageInfo: IMessageInfo, player: Player) {
         const character = PlayerManager.GetCharacterFromPlayer(messageInfo, player);
         if (character == null) {
             return;
@@ -1227,15 +1227,16 @@ export default class CharacterHandler {
         MessageService.ReplyEmbed(messageInfo, await CharacterEmbeds.GetCharacterCooldownsEmbed(character));
     }
 
-    private static async SendStatsInfo(messageInfo:IMessageInfo, player:Player) {
+    private static async SendStatsInfo(messageInfo: IMessageInfo, player: Player) {
         const character = PlayerManager.GetCharacterFromPlayer(messageInfo, player);
         if (character == null) {
             return;
         }
+
         MessageService.ReplyEmbed(messageInfo, await CharacterEmbeds.GetCharacterStatsEmbed(character));
     }
 
-    private static async SendHistoryInfo(messageInfo:IMessageInfo, player:Player) {
+    private static async SendHistoryInfo(messageInfo: IMessageInfo, player: Player) {
         const character = PlayerManager.GetCharacterFromPlayer(messageInfo, player);
         if (character == null) {
             return;
@@ -1243,7 +1244,7 @@ export default class CharacterHandler {
         MessageService.ReplyEmbed(messageInfo, await CharacterEmbeds.GetCharacterHistoryEmbed(character));
     }
 
-    private static async SendTopList(messageInfo:IMessageInfo, category:string, topListType:TopListType) {
+    private static async SendTopList(messageInfo: IMessageInfo, category: string, topListType: TopListType) {
         category = category.toLowerCase();
         var battleId;
         var ignoreTopListType = false;
@@ -1515,13 +1516,13 @@ export default class CharacterHandler {
         }
     }
 
-    private static async OnProfile(messageInfo:IMessageInfo, player:Player) {
+    private static async OnProfile(messageInfo: IMessageInfo, player: Player) {
         const character = PlayerManager.GetCharacterFromPlayer(messageInfo, player);
         if (character == null) {
             return;
         }
 
-        const applyText = (canvas:any, text:any) => {
+        const applyText = (canvas: any, text: any) => {
             const ctx = canvas.getContext('2d');
 
             // Declare a base size of the font
@@ -1555,10 +1556,10 @@ export default class CharacterHandler {
 
         const avatar = await Canvas.loadImage(character.GetAvatarUrl());
         const higherWidth = avatar.width > avatar.height;
-        const factor = higherWidth ? 200/avatar.width : 200/avatar.height;
+        const factor = higherWidth ? 200 / avatar.width : 200 / avatar.height;
         const width = avatar.width * factor;
         const height = avatar.height * factor
-        ctx.drawImage(avatar, 25 + (200 - width)/2, 25 + (200 - height)/2, width, height);
+        ctx.drawImage(avatar, 25 + (200 - width) / 2, 25 + (200 - height) / 2, width, height);
 
         var done = false;
         for (let i = 0; i < 3; i++) {
@@ -1572,7 +1573,7 @@ export default class CharacterHandler {
                 const card = equipment[index];
                 const cardImage = await Canvas.loadImage(card.GetImageUrl());
                 const higherWidth = cardImage.width > cardImage.height;
-                const factor = higherWidth ? 125/cardImage.width : 125/cardImage.height;
+                const factor = higherWidth ? 125 / cardImage.width : 125 / cardImage.height;
                 const width = cardImage.width * factor;
                 const height = cardImage.height * factor
                 ctx.fillStyle = '#24120D';
@@ -1580,7 +1581,7 @@ export default class CharacterHandler {
                 ctx.strokeWidth = 2;
                 ctx.fillRect(25 + j * 130, 250 + i * 130, 125, 125);
                 ctx.strokeRect(25 + j * 130, 250 + i * 130, 125, 125);
-                ctx.drawImage(cardImage, 25 + j * 130 + (125 - width)/2, 250 + i * 130 + (125 - height)/2, width, height);j
+                ctx.drawImage(cardImage, 25 + j * 130 + (125 - width) / 2, 250 + i * 130 + (125 - height) / 2, width, height); j
             }
 
             if (done) {
@@ -1599,7 +1600,7 @@ export default class CharacterHandler {
         MessageService.ReplyMessage(messageInfo, '', undefined, undefined, undefined, [attachment]);
     }
 
-    private static async SendEquipment(messageInfo:IMessageInfo, player:Player) {
+    private static async SendEquipment(messageInfo: IMessageInfo, player: Player) {
         const character = PlayerManager.GetCharacterFromPlayer(messageInfo, player);
         if (character == null) {
             return;
@@ -1607,11 +1608,11 @@ export default class CharacterHandler {
         MessageService.ReplyEmbed(messageInfo, CharacterEmbeds.GetEquipmentEmbed(character));
     }
 
-    private static async SendUnknownClassName(messageInfo:IMessageInfo) {
+    private static async SendUnknownClassName(messageInfo: IMessageInfo) {
         MessageService.ReplyMessage(messageInfo, `Kies een van de volgende classes:\n${this.classNames.join(', ')}`, false);
     }
 
-    private static async ReplyNotFullHealth(messageInfo:IMessageInfo, character:Character) {
+    private static async ReplyNotFullHealth(messageInfo: IMessageInfo, character: Character) {
         MessageService.ReplyMessage(messageInfo, `Je mag dit alleen doen wanneer je full health bent.\nHealth: ${character.GetCurrentHealth()}/${character.GetMaxHealth()}`, false);
     }
 }

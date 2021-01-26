@@ -36,69 +36,73 @@ export default class Character {
     private static readonly perceptionCooldownPrefix = RedisConstants.REDIS_KEY + RedisConstants.PERCEPTION_COOLDOWN_KEY;
     private static readonly reinforcementCooldownPrefix = RedisConstants.REDIS_KEY + RedisConstants.REINFORCEMENT_COOLDOWN_KEY;
 
-    protected id:string;
-    private player:Player;
-    private status:CharacterStatus;
-    private classType:ClassType;
-    private xp:number;
-    private level:number;
-    private classModifierStats:IModifierStats;
-    private cardModifierStats:IModifierStats;
-    private fullModifierStats:IModifierStats;
-    private currentHealth:number;
-    private maxHealth:number;
-    private name:string;
-    private equipment:Array<Card>;
-    private bornDate:Date;
-    private deathDate?:Date;
-    private rewardDate?:Date;
-    private isSorcerer:boolean;
-    private inBattle:boolean;
-    private isHealing:boolean;
-    private isInspiring:boolean;
-    private isProtecting:boolean;
-    private beingHealed:boolean;
-    private beingInspired:boolean;
-    private beingProtected:boolean;
-    private inspiration:number;
-    private enchanted:boolean;
-    private reinforced:boolean;
-    private protection:number;
-    private avatarUrl:string;
-    private lore:string;
-    private regenerated:number;
-    private slept:number;
-    private rewardPoints:number;
-    private rewardPointsTotal:number;
-    private rewardBattleId:string;
-    private attackDescription:string;
-    private attackCritDescription:string;
-    private healDescription:string;
-    private healFailDescription:string;
-    private inspireDescription:string;
-    private inspireFailDescription:string;
-    private protectionDescription:string;
-    private protectionFailDescription:string;
-    private enchantmentDescription:string;
-    private perceptionDescription:string;
-    private reinforcementDescription:string;
+    protected id: string;
+    private player: Player;
+    private status: CharacterStatus;
+    private classType: ClassType;
+    private xp: number;
+    private level: number;
+    private classModifierStats: IModifierStats;
+    private cardModifierStats: IModifierStats;
+    private fullModifierStats: IModifierStats;
+    private currentHealth: number;
+    private maxHealth: number;
+    private name: string;
+    private equipment: Array<Card>;
+    private bornDate: Date;
+    private deathDate?: Date;
+    private rewardDate?: Date;
+    private isSorcerer: boolean;
+    private inBattle: boolean;
+    private isHealing: boolean;
+    private isInspiring: boolean;
+    private isProtecting: boolean;
+    private isCharging: boolean;
+    private beingHealed: boolean;
+    private beingInspired: boolean;
+    private beingProtected: boolean;
+    private inspiration: number;
+    private enchanted: boolean;
+    private reinforced: boolean;
+    private protection: number;
+    private charge: number;
+    private avatarUrl: string;
+    private lore: string;
+    private regenerated: number;
+    private slept: number;
+    private rewardPoints: number;
+    private rewardPointsTotal: number;
+    private rewardBattleId: string;
+    private attackDescription: string;
+    private attackCritDescription: string;
+    private healDescription: string;
+    private healFailDescription: string;
+    private inspireDescription: string;
+    private inspireFailDescription: string;
+    private protectionDescription: string;
+    private protectionFailDescription: string;
+    private chargeDescription: string;
+    private chargeFailDescription: string;
+    private enchantmentDescription: string;
+    private perceptionDescription: string;
+    private reinforcementDescription: string;
 
-    constructor(player?:Player) {
+    constructor(player?: Player) {
         if (player) {
             this.player = player;
         }
     }
 
-    public static async INCREASE_XP(amount:any, id:string, trx?:any) {
+    public static async INCREASE_XP(amount: any, id: string, trx?: any) {
         await CharacterModel.query(trx)
-            .where({id: id, status: '01'})
+            .where({ id: id, status: '01' })
             .increment('xp', amount);
     }
 
-    public static async RESTORE_HEALTH(id:string, trx:any) {
+    public static async RESTORE_HEALTH(id: string, trx: any) {
         await CharacterModel.query(trx)
-            .where({id: id, status: '01'})
-            .patch({health: 10000});
+            .where({ id: id, status: '01' })
+            .patch({ health: 10000 });
     }
 
     public static async GET_LOW_HEALTH_LIST() {
@@ -165,24 +169,24 @@ export default class Character {
         return list;
     }
 
-    public async GET(id:string) {
-        const model:CharacterModel = await CharacterModel.query().findById(id);
+    public async GET(id: string) {
+        const model: CharacterModel = await CharacterModel.query().findById(id);
         await this.ApplyModel(model);
     }
 
-    public async POST(classType:ClassType) {
+    public async POST(classType: ClassType) {
         const model = await CharacterModel.New(this.player, classType);
         await this.ApplyModel(model);
         return this;
     }
 
-    public async UPDATE(data:any, trx?:any) {
+    public async UPDATE(data: any, trx?: any) {
         await CharacterModel.query(trx)
             .findById(this.id)
             .patch(data);
     }
 
-    public async ApplyModel(model:CharacterModel) {
+    public async ApplyModel(model: CharacterModel) {
         this.id = model.id;
         this.player = this.player || await PlayerManager.GetPlayerById(model.player_id);
         this.status = model.GetStatus()
@@ -259,9 +263,9 @@ export default class Character {
         return this.slept;
     }
 
-    public async RestoreToFullHealth(trx:any) {
+    public async RestoreToFullHealth(trx: any) {
         this.currentHealth = this.GetMaxHealth();
-        await this.UPDATE({health: this.currentHealth}, trx);
+        await this.UPDATE({ health: this.currentHealth }, trx);
     }
 
     public GetArmor() {
@@ -293,17 +297,17 @@ export default class Character {
         return this.lore;
     }
 
-    public async UpdateName(name:string) {
+    public async UpdateName(name: string) {
         this.name = name;
         await this.UPDATE({ name: this.name });
     }
 
-    public async UpdateAvatarUrl(avatarUrl:string) {
+    public async UpdateAvatarUrl(avatarUrl: string) {
         this.avatarUrl = avatarUrl;
         await this.UPDATE({ avatar_url: this.avatarUrl });
     }
 
-    public async UpdateLore(lore:string) {
+    public async UpdateLore(lore: string) {
         this.lore = lore;
         await this.UPDATE({ lore: this.lore });
     }
@@ -371,7 +375,7 @@ export default class Character {
         return this.isSorcerer;
     }
 
-    public SetInBattle(inBattle:boolean) {
+    public SetInBattle(inBattle: boolean) {
         this.inBattle = inBattle;
     }
 
@@ -379,7 +383,7 @@ export default class Character {
         return this.inBattle;
     }
 
-    public SetIsHealing(isHealing:boolean) {
+    public SetIsHealing(isHealing: boolean) {
         this.isHealing = isHealing;
     }
 
@@ -387,7 +391,7 @@ export default class Character {
         return this.isHealing;
     }
 
-    public SetBeingHealed(beingHealed:boolean) {
+    public SetBeingHealed(beingHealed: boolean) {
         this.beingHealed = beingHealed;
     }
 
@@ -395,7 +399,7 @@ export default class Character {
         return this.beingHealed;
     }
 
-    public SetIsInspiring(isInspiring:boolean) {
+    public SetIsInspiring(isInspiring: boolean) {
         this.isInspiring = isInspiring;
     }
 
@@ -403,7 +407,7 @@ export default class Character {
         return this.isInspiring;
     }
 
-    public SetBeingInspired(beingInspired:boolean) {
+    public SetBeingInspired(beingInspired: boolean) {
         this.beingInspired = beingInspired;
     }
 
@@ -411,7 +415,7 @@ export default class Character {
         return this.beingInspired;
     }
 
-    public SetIsProtecting(isProtecting:boolean) {
+    public SetIsProtecting(isProtecting: boolean) {
         this.isProtecting = isProtecting;
     }
 
@@ -419,12 +423,20 @@ export default class Character {
         return this.isProtecting;
     }
 
-    public SetBeingProtected(beingProtected:boolean) {
+    public SetBeingProtected(beingProtected: boolean) {
         this.beingProtected = beingProtected;
     }
 
     public IsBeingProtected() {
         return this.beingProtected;
+    }
+
+    public SetIsCharging(isCharging: boolean) {
+        this.isCharging = isCharging;
+    }
+
+    public IsCharging() {
+        return this.isCharging;
     }
 
     public GetEnhancementsString() {
@@ -437,11 +449,11 @@ export default class Character {
     }
 
     public async Sleep() {
-        const healing = Math.min(Math.ceil(this.maxHealth/10), this.maxHealth - this.currentHealth);
+        const healing = Math.min(Math.ceil(this.maxHealth / 10), this.maxHealth - this.currentHealth);
         this.currentHealth += healing;
         this.slept += 1;
         await this.SetSleepCooldown();
-        await this.UPDATE({health: this.currentHealth, slept: this.slept});
+        await this.UPDATE({ health: this.currentHealth, slept: this.slept });
         this.UpdateFullModifierStats();
         return healing;
     }
@@ -450,7 +462,7 @@ export default class Character {
         return this.fullModifierStats.attack;
     }
 
-    public GetAttackStrength(crit?:boolean) {
+    public GetAttackStrength(crit?: boolean) {
         const fullModifierStats = this.GetFullModifierStats();
 
         if (this.isSorcerer) {
@@ -464,10 +476,10 @@ export default class Character {
         return this.isSorcerer ? 'Spell attack' : 'Strength';
     }
 
-    public async ReceiveDamage(damage:number) {
+    public async ReceiveDamage(damage: number) {
         const damageAfterArmor = this.CalculateDamageWithArmor(damage);
         this.currentHealth = Math.max(0, this.currentHealth - damageAfterArmor);
-        await this.UPDATE({health: this.currentHealth})
+        await this.UPDATE({ health: this.currentHealth })
         this.UpdateFullModifierStats();
         return damageAfterArmor;
     }
@@ -496,7 +508,11 @@ export default class Character {
         return this.classType == ClassType.Paladin;
     }
 
-    public async BecomeInspired(amount:number) {
+    public CanCharge() {
+        return this.classType == ClassType.Paladin;
+    }
+
+    public async BecomeInspired(amount: number) {
         this.inspiration = amount;
         this.UpdateFullModifierStats();
         await this.UPDATE({
@@ -528,61 +544,7 @@ export default class Character {
         return CharacterConstants.BASE_COOLDOWN_DURATION - this.fullModifierStats.dexterity;
     }
 
-    public async BecomeEnchanted() {
-        this.enchanted = true;
-        this.UpdateFullModifierStats();
-        await this.UPDATE({
-            enchanted: this.enchanted
-        })
-    }
-
-    public async StopBeingEnchanted() {
-        if (!this.enchanted) {
-            return;
-        }
-
-        this.enchanted = false;
-        this.UpdateFullModifierStats();
-        await this.UPDATE({
-            enchanted: this.enchanted
-        })
-    }
-
-    public IsEnchanted() {
-        return this.enchanted;
-    }
-
-    public async OnPerception() {
-        const battleCooldown = await this.GetBattleCooldown();
-        const newCooldown = Math.floor(battleCooldown/2)
-        await Redis.expire(Character.battleCooldownPrefix + this.GetId(), newCooldown);
-        return newCooldown;
-    }
-
-    public async BecomeReinforced() {
-        this.reinforced = true;
-        this.UpdateFullModifierStats();
-        await this.UPDATE({
-            reinforced: this.reinforced
-        })
-    }
-
-    public async StopBeingReinforced() {
-        if (!this.reinforced) {
-            return;
-        }
-
-        this.reinforced = false;
-        await this.UPDATE({
-            reinforced: this.reinforced
-        })
-    }
-
-    public IsReinforced() {
-        return this.reinforced;
-    }
-
-    public async BecomeProtected(amount:number) {
+    public async BecomeProtected(amount: number) {
         this.protection = amount;
         this.UpdateFullModifierStats();
         await this.UPDATE({
@@ -610,16 +572,100 @@ export default class Character {
         return this.protection != 0;
     }
 
-    public GetMaxAbilityCooldown() {
-        return (CharacterConstants.BASE_COOLDOWN_DURATION * 2) - (CharacterConstants.BASE_COOLDOWN_DURATION * (this.level/CharacterConstants.MAX_LEVEL));
+    public GetMaxProtectionCooldown() {
+        return CharacterConstants.BASE_COOLDOWN_DURATION - this.fullModifierStats.dexterity;
     }
 
-    public CalculateDamageWithArmor(damage:number) {
-        return Math.ceil(damage * (1 - Math.min(50, this.fullModifierStats.armor)/100));
+    public async BecomeCharged(amount: number) {
+        this.charge = amount;
+        this.UpdateFullModifierStats();
+    }
+
+    public async StopBeingCharged() {
+        if (this.charge == 0) {
+            return;
+        }
+
+        this.charge = 0;
+        this.UpdateFullModifierStats();
+    }
+
+    public GetCharge() {
+        return this.charge;
+    }
+
+    public IsCharged() {
+        return this.charge != 0;
+    }
+
+    public GetMaxChargeCooldown() {
+        return CharacterConstants.BASE_COOLDOWN_DURATION + 5 - this.fullModifierStats.dexterity;
+    }
+
+    public async BecomeEnchanted() {
+        this.enchanted = true;
+        this.UpdateFullModifierStats();
+        await this.UPDATE({
+            enchanted: this.enchanted
+        })
+    }
+
+    public async StopBeingEnchanted() {
+        if (!this.enchanted) {
+            return;
+        }
+
+        this.enchanted = false;
+        this.UpdateFullModifierStats();
+        await this.UPDATE({
+            enchanted: this.enchanted
+        })
+    }
+
+    public IsEnchanted() {
+        return this.enchanted;
+    }
+
+    public async OnPerception() {
+        const battleCooldown = await this.GetBattleCooldown();
+        const newCooldown = Math.floor(battleCooldown / 2)
+        await Redis.expire(Character.battleCooldownPrefix + this.GetId(), newCooldown);
+        return newCooldown;
+    }
+
+    public async BecomeReinforced() {
+        this.reinforced = true;
+        this.UpdateFullModifierStats();
+        await this.UPDATE({
+            reinforced: this.reinforced
+        })
+    }
+
+    public async StopBeingReinforced() {
+        if (!this.reinforced) {
+            return;
+        }
+
+        this.reinforced = false;
+        await this.UPDATE({
+            reinforced: this.reinforced
+        })
+    }
+
+    public IsReinforced() {
+        return this.reinforced;
+    }
+
+    public GetMaxAbilityCooldown() {
+        return (CharacterConstants.BASE_COOLDOWN_DURATION * 2) - (CharacterConstants.BASE_COOLDOWN_DURATION * (this.level / CharacterConstants.MAX_LEVEL));
+    }
+
+    public CalculateDamageWithArmor(damage: number) {
+        return Math.ceil(damage * (1 - Math.min(50, this.fullModifierStats.armor) / 100));
     }
 
     public GetMaxBattleCooldown() {
-        return CharacterConstants.BASE_COOLDOWN_DURATION - this.fullModifierStats.dexterity;
+        return CharacterConstants.BASE_COOLDOWN_DURATION - this.fullModifierStats.dexterity + (this.charge ? 5 : 0);
     }
 
     public async GetBattleCooldown() {
@@ -632,6 +678,10 @@ export default class Character {
 
     public async RemoveBattleCooldown() {
         await Redis.del(Character.battleCooldownPrefix + this.GetId());
+
+        if (this.IsCharged()) {
+            await Redis.del(Character.protectCooldownPrefix + this.GetId());
+        }
     }
 
     public async SetSleepCooldown() {
@@ -655,11 +705,19 @@ export default class Character {
     }
 
     public async GetProtectCooldown() {
-        return await Redis.ttl(Character.inspiringCooldownPrefix + this.GetId());
+        return await Redis.ttl(Character.protectCooldownPrefix + this.GetId());
     }
 
     public async SetProtectCooldown() {
-        await Redis.set(Character.inspiringCooldownPrefix + this.GetId(), '1', 'EX', Utils.GetMinutesInSeconds(this.GetMaxInspiringCooldown()));
+        await Redis.set(Character.protectCooldownPrefix + this.GetId(), '1', 'EX', Utils.GetMinutesInSeconds(this.GetMaxProtectionCooldown()));
+    }
+
+    public async GetChargeCooldown() {
+        return await Redis.ttl(Character.protectCooldownPrefix + this.GetId());
+    }
+
+    public async SetChargeCooldown() {
+        await Redis.set(Character.protectCooldownPrefix + this.GetId(), '1', 'EX', Utils.GetMinutesInSeconds(this.GetMaxChargeCooldown()));
     }
 
     public async GetEnchantmentCooldown() {
@@ -686,7 +744,7 @@ export default class Character {
         await Redis.set(Character.reinforcementCooldownPrefix + this.GetId(), '1', 'EX', Utils.GetMinutesInSeconds(this.GetMaxAbilityCooldown()));
     }
 
-    public async IncreaseXP(amount:number, trx?:any, updateData:boolean = true) {
+    public async IncreaseXP(amount: number, trx?: any, updateData: boolean = true) {
         this.xp += amount;
         if (updateData) {
             await this.UPDATE({ xp: this.xp }, trx)
@@ -701,7 +759,7 @@ export default class Character {
         this.CheckLevelUp();
     }
 
-    public async CheckLevelUp(trx?:any) {
+    public async CheckLevelUp(trx?: any) {
         if (this.level == CharacterConstants.MAX_LEVEL) {
             return;
         }
@@ -723,28 +781,36 @@ export default class Character {
         return CharacterConstants.BASE_COOLDOWN_DURATION - this.fullModifierStats.dexterity;
     }
 
-    public GetHealingBasedOnRoll(roll:number) {
+    public GetHealingBasedOnRoll(roll: number) {
         if (roll == 1) {
             return 0;
         }
 
-        return Math.floor((roll/10) * this.fullModifierStats.healing);
+        return Math.floor((roll / 10) * this.fullModifierStats.healing);
     }
 
-    public GetInspirationBasedOnRoll(roll:number) {
+    public GetInspirationBasedOnRoll(roll: number) {
         if (roll == 1) {
             return 0;
         }
 
-        return Math.floor((roll/10) * this.fullModifierStats.charisma);
+        return Math.floor((roll / 10) * this.fullModifierStats.charisma);
     }
 
-    public GetProtectionBasedOnRoll(roll:number) {
+    public GetProtectionBasedOnRoll(roll: number) {
         if (roll == 1) {
             return 0;
         }
 
-        return Math.floor((roll/10) * this.cardModifierStats.armor - this.protection);
+        return Math.floor((roll / 10) * this.cardModifierStats.armor - this.protection);
+    }
+
+    public GetChargeBasedOnRoll(roll: number) {
+        if (roll == 1) {
+            return 0;
+        }
+
+        return Math.floor((roll / 20) * this.cardModifierStats.armor - this.protection);
     }
 
     public async GetHealthFromMessage() {
@@ -757,7 +823,7 @@ export default class Character {
         return true;
     }
 
-    public async GetHealthFromHealing(amount:number) {
+    public async GetHealthFromHealing(amount: number) {
         if (this.IsFullHealth()) { return false; }
         this.currentHealth = Math.min(this.maxHealth, this.currentHealth + amount);
         this.UPDATE({ health: this.currentHealth })
@@ -777,7 +843,7 @@ export default class Character {
         return this.equipment.length < this.GetTotalEquipmentSpace();
     }
 
-    public async Equip(playerCard:PlayerCard) {
+    public async Equip(playerCard: PlayerCard) {
         await playerCard.SetEquipped(true);
         this.equipment.push(playerCard.GetCard());
         this.UpdateFullModifierStats();
@@ -789,7 +855,7 @@ export default class Character {
         })
     }
 
-    public async Unequip(playerCard:PlayerCard) {
+    public async Unequip(playerCard: PlayerCard) {
         await playerCard.SetEquipped(false);
         const cardId = playerCard.GetCard().GetId();
         const index = this.equipment.findIndex(c => c.GetId() == cardId);
@@ -803,7 +869,7 @@ export default class Character {
         })
     }
 
-    public GetRewardPoints(battleId?:string) {
+    public GetRewardPoints(battleId?: string) {
         if (battleId == null || battleId != this.rewardBattleId) {
             return this.rewardPoints;
         } else {
@@ -815,7 +881,7 @@ export default class Character {
         return this.level * SettingsConstants.REWARD_POINTS_MULTIPLIER;
     }
 
-    public GetAttackDescription(crit:boolean = false) {
+    public GetAttackDescription(crit: boolean = false) {
         if (crit) {
             return this.attackCritDescription || this.GetRandomAttackDescription(true);
         }
@@ -847,6 +913,14 @@ export default class Character {
         return this.protectionFailDescription || CharacterConstants.PROTECTION_FAIL_MESSAGE;
     }
 
+    public GetChargeDescription() {
+        return this.chargeDescription || CharacterConstants.CHARGE_MESSAGE;
+    }
+
+    public GetChargeFailDescription() {
+        return this.chargeFailDescription || CharacterConstants.CHARGE_FAIL_MESSAGE;
+    }
+
     public GetEnchantmentDescription() {
         return this.enchantmentDescription || CharacterConstants.ENCHANTMENT_MESSAGE;
     }
@@ -859,104 +933,104 @@ export default class Character {
         return this.reinforcementDescription || CharacterConstants.REINFORCEMENT_MESSAGE;
     }
 
-    public async UpdateAttackDescription(description:string) {
+    public async UpdateAttackDescription(description: string) {
         this.attackDescription = description;
         await this.UPDATE({
             attack_description: this.attackDescription
         })
     }
 
-    public async UpdateAttackCritDescription(description:string) {
+    public async UpdateAttackCritDescription(description: string) {
         this.attackCritDescription = description;
         await this.UPDATE({
             attack_crit_description: this.attackCritDescription
         })
     }
 
-    public async UpdateHealDescription(description:string) {
+    public async UpdateHealDescription(description: string) {
         this.healDescription = description;
         await this.UPDATE({
-            heal_description : this.healDescription
+            heal_description: this.healDescription
         })
     }
 
-    public async UpdateHealFailDescription(description:string) {
+    public async UpdateHealFailDescription(description: string) {
         this.healFailDescription = description;
         await this.UPDATE({
-            heal_fail_description : this.healFailDescription
+            heal_fail_description: this.healFailDescription
         })
     }
 
-    public async UpdateInspireDescription(description:string) {
+    public async UpdateInspireDescription(description: string) {
         this.inspireDescription = description;
         await this.UPDATE({
-            inspire_description : this.inspireDescription
+            inspire_description: this.inspireDescription
         })
     }
 
-    public async UpdateInspireFailDescription(description:string) {
+    public async UpdateInspireFailDescription(description: string) {
         this.inspireFailDescription = description;
         await this.UPDATE({
-            inspire_fail_description : this.inspireFailDescription
+            inspire_fail_description: this.inspireFailDescription
         })
     }
 
-    public async UpdateProtectionDescription(description:string) {
+    public async UpdateProtectionDescription(description: string) {
         this.protectionDescription = description;
         await this.UPDATE({
-            protection_description : this.protectionDescription
+            protection_description: this.protectionDescription
         })
     }
 
-    public async UpdateProtectionFailDescription(description:string) {
+    public async UpdateProtectionFailDescription(description: string) {
         this.protectionFailDescription = description;
         await this.UPDATE({
-            protection_fail_description : this.protectionFailDescription
+            protection_fail_description: this.protectionFailDescription
         })
     }
 
-    public async UpdateEnchantmentDescription(description:string) {
+    public async UpdateEnchantmentDescription(description: string) {
         this.enchantmentDescription = description;
         await this.UPDATE({
-            enchantment_description : this.enchantmentDescription
+            enchantment_description: this.enchantmentDescription
         })
     }
 
-    public async UpdatePerceptionDescription(description:string) {
+    public async UpdatePerceptionDescription(description: string) {
         this.perceptionDescription = description;
         await this.UPDATE({
-            perception_description : this.perceptionDescription
+            perception_description: this.perceptionDescription
         })
     }
 
-    public async UpdateReinforcementDescription(description:string) {
+    public async UpdateReinforcementDescription(description: string) {
         this.reinforcementDescription = description;
         await this.UPDATE({
-            reinforcement_description : this.reinforcementDescription
+            reinforcement_description: this.reinforcementDescription
         })
     }
 
-    public async GiveDamagePoints(damagePoints:number, battleId?:string, messageInfo?:IMessageInfo) {
+    public async GiveDamagePoints(damagePoints: number, battleId?: string, messageInfo?: IMessageInfo) {
         this.GiveRewardPoints(damagePoints * SettingsConstants.DAMAGE_REWARD_POINTS_MULTIPLIER, battleId, messageInfo);
     }
 
-    public async GiveHealingPoints(healingPoints:number, battleId?:string, messageInfo?:IMessageInfo) {
+    public async GiveHealingPoints(healingPoints: number, battleId?: string, messageInfo?: IMessageInfo) {
         this.GiveRewardPoints(healingPoints * SettingsConstants.HEALING_REWARD_POINTS_MULTIPLIER, battleId, messageInfo);
     }
 
-    public async GiveInspirePoints(inspirationPoints:number, battleId?:string, messageInfo?:IMessageInfo) {
+    public async GiveInspirePoints(inspirationPoints: number, battleId?: string, messageInfo?: IMessageInfo) {
         this.GiveRewardPoints(inspirationPoints * SettingsConstants.INSPIRE_REWARD_POINTS_MULITPLIER, battleId, messageInfo);
     }
 
-    public async GiveProtectionPoints(protectionPoints:number, battleId?:string, messageInfo?:IMessageInfo) {
+    public async GiveProtectionPoints(protectionPoints: number, battleId?: string, messageInfo?: IMessageInfo) {
         this.GiveRewardPoints(protectionPoints * SettingsConstants.PROTECTION_REWARD_POINTS_MULITPLIER, battleId, messageInfo);
     }
 
-    public async GiveAbilityPoints(battleId?:string, messageInfo?:IMessageInfo) {
+    public async GiveAbilityPoints(battleId?: string, messageInfo?: IMessageInfo) {
         this.GiveRewardPoints(SettingsConstants.INSPIRE_REWARD_POINTS_MULITPLIER, battleId, messageInfo);
     }
 
-    public async GiveRewardPoints(rewardPoints:number, battleId?:string, messageInfo?:IMessageInfo) {
+    public async GiveRewardPoints(rewardPoints: number, battleId?: string, messageInfo?: IMessageInfo) {
         if (rewardPoints == 0) {
             return;
         }
@@ -1066,7 +1140,7 @@ export default class Character {
         return await Puzzle.FIND_SOLVED_BY_CHARACTER(this);
     }
 
-    public GetRandomAttackDescription(crit?:boolean) {
+    public GetRandomAttackDescription(crit?: boolean) {
         return CharacterService.GetClassAttackDescription(this.classType, crit).randomChoice();
     }
 
@@ -1088,7 +1162,7 @@ export default class Character {
         return CharacterService.GetSummedUpModifierStats(this.classModifierStats, this.cardModifierStats)
     }
 
-    private CalculateLevel(level:number = 1) {
+    private CalculateLevel(level: number = 1) {
         while (level < 20) {
             if (this.xp >= CharacterConstants.XP_PER_LEVEL[level]) {
                 level += 1;
@@ -1105,8 +1179,12 @@ export default class Character {
         this.cardModifierStats = this.CalculateCardModifierStats();
         this.fullModifierStats = this.CalculateFullModifierStats();
 
+        if (this.charge > 0) {
+            this.fullModifierStats.armor -= this.charge;
+        }
+
         if (this.inspiration > 0) {
-            const emptyModifierStats = CharacterService.GetEmptyModifierStats(1 + (this.inspiration/100));
+            const emptyModifierStats = CharacterService.GetEmptyModifierStats(1 + (this.inspiration / 100));
             emptyModifierStats.health = 1;
             emptyModifierStats.charisma = 1;
             this.fullModifierStats = CharacterService.GetMultipliedModifierStats(this.fullModifierStats, emptyModifierStats);
@@ -1114,6 +1192,10 @@ export default class Character {
 
         if (this.protection > 0) {
             this.fullModifierStats.armor = this.fullModifierStats.armor + this.protection;
+        }
+
+        if (this.charge > 0) {
+            this.fullModifierStats.strength += this.charge;
         }
 
         const max = CharacterService.GetMaxModifierStats(this.classType);
@@ -1138,7 +1220,7 @@ export default class Character {
         this.currentHealth = Math.min(this.maxHealth, this.currentHealth);
 
         if (this.currentHealth < this.maxHealth / 2) {
-            const healthMissing = ((1 - this.currentHealth / (this.maxHealth/2)))/2;
+            const healthMissing = ((1 - this.currentHealth / (this.maxHealth / 2))) / 2;
             this.fullModifierStats.spell -= Math.floor(this.cardModifierStats.spell * healthMissing);
             this.fullModifierStats.strength -= Math.floor(this.cardModifierStats.strength * healthMissing);
             this.fullModifierStats.attack -= Math.floor(this.cardModifierStats.attack * healthMissing);
@@ -1146,7 +1228,7 @@ export default class Character {
         }
     }
 
-    private async OnLevelUp(trx?:any) {
+    private async OnLevelUp(trx?: any) {
         this.maxHealth = this.CalculateMaxHealth();
         this.UPDATE({
             max_health: this.maxHealth

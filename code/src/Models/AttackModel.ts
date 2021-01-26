@@ -31,7 +31,7 @@ export default class AttackModel extends Model {
         }
     }
 
-    public static async New(battle:Battle, character:Character, messageId:string, rollCharacterBase:number, rollCharacterModifier:number, rollCharacterModifierMax:number, rollMonsterBase:number, rollMonsterModifier:number, rollMonsterModifierMax:number, victory:boolean, damage:number, healthAfter:number) {
+    public static async New(battle: Battle, character: Character, messageId: string, rollCharacterBase: number, rollCharacterModifier: number, rollCharacterModifierMax: number, rollMonsterBase: number, rollMonsterModifier: number, rollMonsterModifierMax: number, victory: boolean, damage: number, healthAfter: number) {
         const attackId = Utils.UUID();
         const modifierStats = character.GetFullModifierStats();
 
@@ -60,6 +60,7 @@ export default class AttackModel extends Model {
                 enchanted: character.IsEnchanted(),
                 reinforced: character.IsReinforced(),
                 protection: character.GetProtection(),
+                charge: character.GetCharge(),
             })
 
         return attack;

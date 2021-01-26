@@ -3,26 +3,26 @@ import DiscordService from '../Services/DiscordService';
 
 export default class Discord {
 
-    public static client:Client;
+    public static client: Client;
 
-    public static eventReadyCallback:Function;
-    public static eventMessageCallback:Function;
-    public static eventReactionAddCallback:Function;
-    public static eventReactionRemoveCallback:Function;
+    public static eventReadyCallback: Function;
+    public static eventMessageCallback: Function;
+    public static eventReactionAddCallback: Function;
+    public static eventReactionRemoveCallback: Function;
 
-    public static SetEventReadyCallback(callback:Function) {
+    public static SetEventReadyCallback(callback: Function) {
         this.eventReadyCallback = callback;
     }
 
-    public static SetEventMessageCallback(callback:Function) {
+    public static SetEventMessageCallback(callback: Function) {
         this.eventMessageCallback = callback;
     }
 
-    public static SetEventReactionAddCallback(callback:Function) {
+    public static SetEventReactionAddCallback(callback: Function) {
         this.eventReactionAddCallback = callback;
     }
 
-    public static SetEventReactionRemoveCallback(callback:Function) {
+    public static SetEventReactionRemoveCallback(callback: Function) {
         this.eventReactionRemoveCallback = callback;
     }
 
@@ -38,11 +38,11 @@ export default class Discord {
         this.client.login(process.env.TOKEN);
     }
 
-    private static async EventReady () {
+    private static async EventReady() {
         this.eventReadyCallback();
     }
 
-    private static async EventMessage (message:Message) {
+    private static async EventMessage(message: Message) {
         if (message.author.bot) {
             return;
         }
@@ -54,7 +54,7 @@ export default class Discord {
         this.eventMessageCallback(message);
     }
 
-    private static async EventReactionAdd(reaction:MessageReaction, user:User) {
+    private static async EventReactionAdd(reaction: MessageReaction, user: User) {
         if (user.bot) {
             return;
         }
@@ -62,7 +62,7 @@ export default class Discord {
         this.eventReactionAddCallback(reaction, user);
     }
 
-    private static async EventReactionRemove(reaction:MessageReaction, user:User) {
+    private static async EventReactionRemove(reaction: MessageReaction, user: User) {
         if (user.bot) {
             return;
         }

@@ -9,7 +9,7 @@ const { Model } = require('objection');
 export default class ProtectionModel extends Model {
 
     static get tableName() {
-        return 'protections';
+        return 'charges';
     }
 
     static relationMappings = {
@@ -17,7 +17,7 @@ export default class ProtectionModel extends Model {
             relation: Model.BelongsToOneRelation,
             modelClass: BattleModel,
             join: {
-                from: 'protections.battle_id',
+                from: 'charges.battle_id',
                 to: 'battles.id',
             }
         },
@@ -25,7 +25,7 @@ export default class ProtectionModel extends Model {
             relation: Model.BelongsToOneRelation,
             modelClass: CharacterModel,
             join: {
-                from: 'protections.character_id',
+                from: 'charges.character_id',
                 to: 'characters.id',
             }
         },
@@ -33,13 +33,13 @@ export default class ProtectionModel extends Model {
             relation: Model.BelongsToOneRelation,
             modelClass: CharacterModel,
             join: {
-                from: 'protections.receiver_id',
+                from: 'charges.receiver_id',
                 to: 'characters.id',
             }
         },
     }
 
-    public static async New(battle: Battle, character: Character, receiver: Character, characterArmor: number, roll: number, finalProtection: number) {
+    public static async New(battle: Battle, character: Character, characterArmor: number, roll: number, finalCharge: number) {
         const protectionId = Utils.UUID();
 
         const protection = await ProtectionModel.query()
@@ -47,11 +47,10 @@ export default class ProtectionModel extends Model {
                 id: protectionId,
                 battle_id: battle.GetId(),
                 character_id: character.GetId(),
-                receiver_id: receiver.GetId(),
                 character_armor: characterArmor,
                 roll: roll,
-                final_protection: finalProtection,
-                protection_date: Utils.GetNowString(),
+                final_charge: finalCharge,
+                charge_date: Utils.GetNowString(),
             })
 
         return protection;
@@ -67,11 +66,5 @@ export default class ProtectionModel extends Model {
         const character = new Character();
         character.ApplyModel(await this.$relatedQuery('character'));
         return character;
-    }
-
-    public async GetReceiver() {
-        const receiver = new Character();
-        receiver.ApplyModel(await this.$relatedQuery('receiver'));
-        return receiver;
     }
 }

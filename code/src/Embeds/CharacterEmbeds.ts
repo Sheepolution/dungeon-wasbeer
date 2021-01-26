@@ -21,7 +21,7 @@ import RedisConstants from '../Constants/RedisConstants';
 
 export default class CharacterEmbeds {
 
-    public static async GetCharacterInfoEmbed(character:Character) {
+    public static async GetCharacterInfoEmbed(character: Character) {
         const embed = new MessageEmbed()
             .setColor(SettingsConstants.COLORS.DEFAULT)
             .setAuthor(character.GetClassName(), CharacterService.GetClassIconImage(character.GetClass()))
@@ -88,7 +88,7 @@ export default class CharacterEmbeds {
         return embed;
     }
 
-    public static async GetCharacterDescriptionEmbed(character:Character) {
+    public static async GetCharacterDescriptionEmbed(character: Character) {
         const embed = new MessageEmbed()
             .setColor(SettingsConstants.COLORS.DEFAULT)
             .setAuthor(character.GetClassName(), CharacterService.GetClassIconImage(character.GetClass()))
@@ -105,7 +105,7 @@ export default class CharacterEmbeds {
         return embed;
     }
 
-    public static async GetCharacterStatsEmbed(character:Character) {
+    public static async GetCharacterStatsEmbed(character: Character) {
         const embed = new MessageEmbed()
             .setColor(SettingsConstants.COLORS.DEFAULT)
             .setAuthor(character.GetClassName(), CharacterService.GetClassIconImage(character.GetClass()))
@@ -141,7 +141,7 @@ export default class CharacterEmbeds {
         return embed;
     }
 
-    public static async GetCharacterCooldownsEmbed(character:Character) {
+    public static async GetCharacterCooldownsEmbed(character: Character) {
         const embed = new MessageEmbed()
             .setColor(SettingsConstants.COLORS.DEFAULT)
             .setAuthor(character.GetClassName(), CharacterService.GetClassIconImage(character.GetClass()))
@@ -203,7 +203,7 @@ export default class CharacterEmbeds {
         return embed;
     }
 
-    public static GetEquipmentEmbed(character:Character) {
+    public static GetEquipmentEmbed(character: Character) {
         const equipment = character.GetEquipment();
         const embed = new MessageEmbed()
             .setColor(SettingsConstants.COLORS.DEFAULT)
@@ -213,7 +213,7 @@ export default class CharacterEmbeds {
         return embed;
     }
 
-    public static GetNewCharacterEmbed(character:Character) {
+    public static GetNewCharacterEmbed(character: Character) {
         const embed = new MessageEmbed()
             .setColor(SettingsConstants.COLORS.DEFAULT)
             .setAuthor(character.GetClassName(), CharacterService.GetClassIconImage(character.GetClass()))
@@ -223,7 +223,7 @@ export default class CharacterEmbeds {
         return embed;
     }
 
-    public static async GetCharacterHistoryEmbed(character:Character) {
+    public static async GetCharacterHistoryEmbed(character: Character) {
         const embed = new MessageEmbed()
             .setColor(SettingsConstants.COLORS.DEFAULT)
             .setAuthor(character.GetClassName(), CharacterService.GetClassIconImage(character.GetClass()))
@@ -236,7 +236,7 @@ export default class CharacterEmbeds {
         return embed;
     }
 
-    public static async GetDeadCharacterEmbed(character:Character) {
+    public static async GetDeadCharacterEmbed(character: Character) {
         const embed = new MessageEmbed()
             .setColor(SettingsConstants.COLORS.BAD)
             .setImage(CharacterConstants.CHARACTER_DIED)
@@ -256,7 +256,7 @@ export default class CharacterEmbeds {
         return embed;
     }
 
-    public static async GetHealingEmbed(character:Character, receiver:Character, roll?:number, healing:number = 0) {
+    public static async GetHealingEmbed(character: Character, receiver: Character, roll?: number, healing: number = 0) {
         const embed = new MessageEmbed();
         if (healing != null) {
             embed.setColor((roll != null && healing == 0) ? SettingsConstants.COLORS.BAD : SettingsConstants.COLORS.GOOD)
@@ -274,14 +274,14 @@ export default class CharacterEmbeds {
             .addField(`Healing van ${characterName}`, character.GetFullModifierStats().healing)
             .addField('--------------------------------', '-- Roll --')
 
-        if (roll == null)  {
+        if (roll == null) {
             embed.addField(characterName, 'Rollt de D20...')
         } else {
             embed.addField(characterName, `D20 = ${roll}`)
                 .addField('--------------------------------', '-- Resultaat --')
                 .setFooter(`Participatiepunten: ${character.GetRewardPoints(CampaignManager.GetBattle()?.GetId())}/${character.GetNextRewardPoints()}`);
 
-            if (healing == 0 ) {
+            if (healing == 0) {
                 embed.addField(`${characterName} faalt met healen!`, character.GetHealFailDescription().replaceAll('\\[naam\\]', receiverName).replaceAll('\\[jij\\]', characterName));
             } else {
                 embed.addField(`${characterName} slaagt er in te healen`, character.GetHealDescription().replaceAll('\\[naam\\]', receiverName).replaceAll('\\[jij\\]', characterName).replaceAll('\\[health\\]', healing.toString()));
@@ -318,7 +318,7 @@ export default class CharacterEmbeds {
         return embed;
     }
 
-    public static async GetInspiringEmbed(character:Character, receiver:Character, roll?:number, inspiration:number = 0) {
+    public static async GetInspiringEmbed(character: Character, receiver: Character, roll?: number, inspiration: number = 0) {
         const embed = new MessageEmbed();
         if (inspiration != null) {
             embed.setColor((roll != null && inspiration == 0) ? SettingsConstants.COLORS.BAD : SettingsConstants.COLORS.GOOD)
@@ -335,17 +335,17 @@ export default class CharacterEmbeds {
             .addField(`Charisma van ${characterName}`, character.GetFullModifierStats().charisma)
             .addField('--------------------------------', '-- Roll --')
 
-        if (roll == null)  {
+        if (roll == null) {
             embed.addField(characterName, 'Rollt de D20...')
         } else {
             embed.addField(characterName, `D20 = ${roll}`)
                 .addField('--------------------------------', '-- Resultaat --')
                 .setFooter(`Participatiepunten: ${character.GetRewardPoints(CampaignManager.GetBattle()?.GetId())}/${character.GetNextRewardPoints()}`);
 
-            if (inspiration == 0 ) {
+            if (inspiration == 0) {
                 embed.addField(`${characterName} faalt met inspireren!`, character.GetInspireFailDescription().replaceAll('\\[naam\\]', receiverName).replaceAll('\\[jij\\]', characterName));
             } else {
-                embed.addField(`${characterName} slaagt er in te inspireren`, character.GetInspireDescription().replaceAll('\\[naam\\]', receiverName).replaceAll('\\[jij\\]', characterName).replaceAll('\\[inspiratie\\]',  inspiration.toString()));
+                embed.addField(`${characterName} slaagt er in te inspireren`, character.GetInspireDescription().replaceAll('\\[naam\\]', receiverName).replaceAll('\\[jij\\]', characterName).replaceAll('\\[inspiratie\\]', inspiration.toString()));
             }
 
             embed.addField('--------------------------------', '-- Cooldown(s) --');
@@ -379,7 +379,7 @@ export default class CharacterEmbeds {
         return embed;
     }
 
-    public static async GetProtectionEmbed(character:Character, receiver:Character, roll?:number, protection:number = 0) {
+    public static async GetProtectionEmbed(character: Character, receiver: Character, roll?: number, protection: number = 0) {
         const embed = new MessageEmbed();
         if (protection != null) {
             embed.setColor((roll != null && protection == 0) ? SettingsConstants.COLORS.BAD : SettingsConstants.COLORS.GOOD)
@@ -397,14 +397,14 @@ export default class CharacterEmbeds {
             .addField(`Armor van ${characterName}`, character.GetFullModifierStats().armor)
             .addField('--------------------------------', '-- Roll --')
 
-        if (roll == null)  {
+        if (roll == null) {
             embed.addField(characterName, 'Rollt de D20...')
         } else {
             embed.addField(characterName, `D20 = ${roll}`)
                 .addField('--------------------------------', '-- Resultaat --')
                 .setFooter(`Participatiepunten: ${character.GetRewardPoints(CampaignManager.GetBattle()?.GetId())}/${character.GetNextRewardPoints()}`);
 
-            if (protection == 0 ) {
+            if (protection == 0) {
                 embed.addField(`${characterName} faalt met beschermen!`, character.GetProtectionFailDescription().replaceAll('\\[naam\\]', receiverName).replaceAll('\\[jij\\]', characterName));
             } else {
                 embed.addField(`${characterName} slaagt er in te beschermen`, character.GetProtectionDescription().replaceAll('\\[naam\\]', receiverName).replaceAll('\\[jij\\]', characterName).replaceAll('\\[bescherming\\]', protection.toString()));
@@ -432,8 +432,41 @@ export default class CharacterEmbeds {
         return embed;
     }
 
+    public static async GetChargingEmbed(character: Character, roll?: number, charge: number = 0) {
+        const embed = new MessageEmbed();
+        if (charge != null) {
+            embed.setColor((roll != null && charge == 0) ? SettingsConstants.COLORS.BAD : SettingsConstants.COLORS.GOOD)
+        } else {
+            embed.setColor(SettingsConstants.COLORS.DEFAULT)
+        }
+
+        const characterName = character.GetName();
+
+        embed.setTitle('Charge roll')
+            .setThumbnail(character.GetAvatarUrl())
+            .setDescription(`${character.GetName()}${character.GetEnhancementsString()} rollt voor een charge.\n\n-- Statistieken --`)
+            .addField(`Armor van ${characterName}`, character.GetArmor())
+            .addField('--------------------------------', '-- Roll --')
+
+        if (roll == null) {
+            embed.addField(characterName, 'Rollt de D20...')
+        } else {
+            embed.addField(characterName, `D20 = ${roll}`)
+                .addField('--------------------------------', '-- Resultaat --')
+                .setFooter(`Participatiepunten: ${character.GetRewardPoints(CampaignManager.GetBattle()?.GetId())}/${character.GetNextRewardPoints()}`);
+
+            if (charge == 0) {
+                embed.addField(`${characterName} faalt met chargen!`, character.GetChargeFailDescription().replaceAll('\\[jij\\]', characterName));
+            } else {
+                embed.addField(`${characterName} slaagt er in te beschermen`, character.GetChargeDescription().replaceAll('\\[jij\\]', characterName).replaceAll('\\[charge\\]', charge.toString()));
+            }
+        }
+
+        return embed;
+    }
+
     public static async GetLowestHealthEmbed() {
-        const list:any = await Character.GET_LOW_HEALTH_LIST();
+        const list: any = await Character.GET_LOW_HEALTH_LIST();
         const embed = new MessageEmbed()
             .setTitle('Deze characters hebben healing nodig!');
 
@@ -449,7 +482,7 @@ export default class CharacterEmbeds {
     }
 
     public static async GetTopXPEmbed() {
-        const list:any = await Character.GET_TOP_XP_LIST();
+        const list: any = await Character.GET_TOP_XP_LIST();
         const embed = new MessageEmbed()
             .setTitle(`Top ${list.length} meeste xp`);
 
@@ -457,7 +490,7 @@ export default class CharacterEmbeds {
 
         for (let i = 0; i < list.length; i++) {
             const item = list[i];
-            listString += `${i+1}. ${item.xp} - ${item.name} (${item.discord_name})\n`;
+            listString += `${i + 1}. ${item.xp} - ${item.name} (${item.discord_name})\n`;
         }
 
         embed.setDescription(listString);
@@ -466,7 +499,7 @@ export default class CharacterEmbeds {
     }
 
     public static async GetTopRewardPointsEmbed() {
-        const list:any = await Character.GET_TOP_REWARD_POINTS_LIST();
+        const list: any = await Character.GET_TOP_REWARD_POINTS_LIST();
         const embed = new MessageEmbed()
             .setTitle(`Top ${list.length} meeste participatiepunten`);
 
@@ -474,7 +507,7 @@ export default class CharacterEmbeds {
 
         for (let i = 0; i < list.length; i++) {
             const item = list[i];
-            listString += `${i+1}. ${item.reward_points_total} - ${item.name} (${item.discord_name})\n`;
+            listString += `${i + 1}. ${item.reward_points_total} - ${item.name} (${item.discord_name})\n`;
         }
 
         embed.setDescription(listString);
@@ -483,7 +516,7 @@ export default class CharacterEmbeds {
     }
 
     public static async GetTopRegeneratedEmbed() {
-        const list:any = await Character.GET_TOP_REGENERATED_LIST();
+        const list: any = await Character.GET_TOP_REGENERATED_LIST();
         const embed = new MessageEmbed()
             .setTitle(`Top ${list.length} meeste health regenerated`);
 
@@ -491,7 +524,7 @@ export default class CharacterEmbeds {
 
         for (let i = 0; i < list.length; i++) {
             const item = list[i];
-            listString += `${i+1}. ${item.regenerated} - ${item.name} (${item.discord_name})\n`;
+            listString += `${i + 1}. ${item.regenerated} - ${item.name} (${item.discord_name})\n`;
         }
 
         embed.setDescription(listString);
@@ -500,7 +533,7 @@ export default class CharacterEmbeds {
     }
 
     public static async GetTopSleptEmbed() {
-        const list:any = await Character.GET_TOP_SLEPT_LIST();
+        const list: any = await Character.GET_TOP_SLEPT_LIST();
         const embed = new MessageEmbed()
             .setTitle(`Top ${list.length} meeste keren geslapen`);
 
@@ -508,7 +541,7 @@ export default class CharacterEmbeds {
 
         for (let i = 0; i < list.length; i++) {
             const item = list[i];
-            listString += `${i+1}. ${item.slept} - ${item.name} (${item.discord_name})\n`;
+            listString += `${i + 1}. ${item.slept} - ${item.name} (${item.discord_name})\n`;
         }
 
         embed.setDescription(listString);
@@ -516,8 +549,8 @@ export default class CharacterEmbeds {
         return embed;
     }
 
-    public static async GetTopFightsEmbed(topListType:TopListType, battleId?:string) {
-        const list:any = await Attack.GET_TOP_BATTLES_LIST(undefined, battleId);
+    public static async GetTopFightsEmbed(topListType: TopListType, battleId?: string) {
+        const list: any = await Attack.GET_TOP_BATTLES_LIST(undefined, battleId);
         const embed = new MessageEmbed()
             .setTitle(`Top ${list.length} aanvallen${topListType == TopListType.Current ? ' van dit gevecht' : topListType == TopListType.Previous ? ' van het vorige gevecht' : ''}`);
 
@@ -525,7 +558,7 @@ export default class CharacterEmbeds {
 
         for (let i = 0; i < list.length; i++) {
             const item = list[i];
-            listString += `${i+1}. ${item.cnt} - ${item.name} (${item.discord_name})\n`;
+            listString += `${i + 1}. ${item.cnt} - ${item.name} (${item.discord_name})\n`;
         }
 
         embed.setDescription(listString);
@@ -533,8 +566,8 @@ export default class CharacterEmbeds {
         return embed;
     }
 
-    public static async GetTopFightsWonEmbed(topListType:TopListType, battleId?:string) {
-        const list:any = await Attack.GET_TOP_BATTLES_LIST(true, battleId);
+    public static async GetTopFightsWonEmbed(topListType: TopListType, battleId?: string) {
+        const list: any = await Attack.GET_TOP_BATTLES_LIST(true, battleId);
         const embed = new MessageEmbed()
             .setTitle(`Top ${list.length} meeste gewonnen aanvallen${topListType == TopListType.Current ? ' in dit gevecht' : topListType == TopListType.Previous ? ' in het vorige gevecht' : ''}`);
 
@@ -542,7 +575,7 @@ export default class CharacterEmbeds {
 
         for (let i = 0; i < list.length; i++) {
             const item = list[i];
-            listString += `${i+1}. ${item.cnt} - ${item.name} (${item.discord_name})\n`;
+            listString += `${i + 1}. ${item.cnt} - ${item.name} (${item.discord_name})\n`;
         }
 
         embed.setDescription(listString);
@@ -550,8 +583,8 @@ export default class CharacterEmbeds {
         return embed;
     }
 
-    public static async GetTopFightsLostEmbed(topListType:TopListType, battleId?:string) {
-        const list:any = await Attack.GET_TOP_BATTLES_LIST(false, battleId);
+    public static async GetTopFightsLostEmbed(topListType: TopListType, battleId?: string) {
+        const list: any = await Attack.GET_TOP_BATTLES_LIST(false, battleId);
         const embed = new MessageEmbed()
             .setTitle(`Top ${list.length} meeste verloren aanvallen${topListType == TopListType.Current ? ' in dit gevecht' : topListType == TopListType.Previous ? ' in het vorige gevecht' : ''}`);
 
@@ -559,7 +592,7 @@ export default class CharacterEmbeds {
 
         for (let i = 0; i < list.length; i++) {
             const item = list[i];
-            listString += `${i+1}. ${item.cnt} - ${item.name} (${item.discord_name})\n`;
+            listString += `${i + 1}. ${item.cnt} - ${item.name} (${item.discord_name})\n`;
         }
 
         embed.setDescription(listString);
@@ -567,11 +600,11 @@ export default class CharacterEmbeds {
         return embed;
     }
 
-    public static async GetTopWinRatioEmbed(topListType:TopListType, battleId?:string) {
-        const listWon:any = await Attack.GET_TOP_BATTLES_LIST(true, battleId);
-        const listLost:any = await Attack.GET_TOP_BATTLES_LIST(false, battleId);
+    public static async GetTopWinRatioEmbed(topListType: TopListType, battleId?: string) {
+        const listWon: any = await Attack.GET_TOP_BATTLES_LIST(true, battleId);
+        const listLost: any = await Attack.GET_TOP_BATTLES_LIST(false, battleId);
 
-        const listRatio:any = {};
+        const listRatio: any = {};
         for (const loss of listLost) {
             listRatio[loss.id] = { name: loss.name, discordName: loss.discord_name, amount: loss.cnt, ratio: 0 };
         }
@@ -582,7 +615,7 @@ export default class CharacterEmbeds {
             } else {
                 const item = listRatio[victory.id];
                 item.amount += victory.cnt;
-                item.ratio = Math.floor((victory.cnt/item.amount) * 1000)/10;
+                item.ratio = Math.floor((victory.cnt / item.amount) * 1000) / 10;
             }
         }
 
@@ -595,7 +628,7 @@ export default class CharacterEmbeds {
             }
         }
 
-        list.sort((a:any, b:any) => b.ratio - a.ratio);
+        list.sort((a: any, b: any) => b.ratio - a.ratio);
 
         const embed = new MessageEmbed()
             .setTitle(`Top ${list.length} win ratio ${topListType == TopListType.Current ? ' in dit gevecht' : topListType == TopListType.Previous ? ' in het vorige gevecht' : ''}`);
@@ -604,7 +637,7 @@ export default class CharacterEmbeds {
 
         for (let i = 0; i < list.length; i++) {
             const item = list[i];
-            listString += `${i+1}. ${item.ratio}% - ${item.name} (${item.discordName})\n`;
+            listString += `${i + 1}. ${item.ratio}% - ${item.name} (${item.discordName})\n`;
         }
 
         embed.setDescription(listString);
@@ -612,8 +645,8 @@ export default class CharacterEmbeds {
         return embed;
     }
 
-    public static async GetTopDamageDoneEmbed(topListType:TopListType, battleId?:string) {
-        const list:any = await Attack.GET_TOP_DAMAGE_LIST(true, battleId);
+    public static async GetTopDamageDoneEmbed(topListType: TopListType, battleId?: string) {
+        const list: any = await Attack.GET_TOP_DAMAGE_LIST(true, battleId);
         const embed = new MessageEmbed()
             .setTitle(`Top ${list.length} meeste schade gedaan${topListType == TopListType.Current ? ' in dit gevecht' : topListType == TopListType.Previous ? ' in het vorige gevecht' : ''}`);
 
@@ -621,7 +654,7 @@ export default class CharacterEmbeds {
 
         for (let i = 0; i < list.length; i++) {
             const item = list[i];
-            listString += `${i+1}. ${item.sumd} - ${item.name} (${item.discord_name})\n`;
+            listString += `${i + 1}. ${item.sumd} - ${item.name} (${item.discord_name})\n`;
         }
 
         embed.setDescription(listString);
@@ -629,8 +662,8 @@ export default class CharacterEmbeds {
         return embed;
     }
 
-    public static async GetTopDamageReceivedEmbed(topListType:TopListType, battleId?:string) {
-        const list:any = await Attack.GET_TOP_DAMAGE_LIST(false, battleId);
+    public static async GetTopDamageReceivedEmbed(topListType: TopListType, battleId?: string) {
+        const list: any = await Attack.GET_TOP_DAMAGE_LIST(false, battleId);
         const embed = new MessageEmbed()
             .setTitle(`Top ${list.length} meeste schade gekregen${topListType == TopListType.Current ? ' in dit gevecht' : topListType == TopListType.Previous ? ' in het vorige gevecht' : ''}`);
 
@@ -638,7 +671,7 @@ export default class CharacterEmbeds {
 
         for (let i = 0; i < list.length; i++) {
             const item = list[i];
-            listString += `${i+1}. ${item.sumd} - ${item.name} (${item.discord_name})\n`;
+            listString += `${i + 1}. ${item.sumd} - ${item.name} (${item.discord_name})\n`;
         }
 
         embed.setDescription(listString);
@@ -646,8 +679,8 @@ export default class CharacterEmbeds {
         return embed;
     }
 
-    public static async GetTopCritsDoneEmbed(topListType:TopListType, battleId?:string) {
-        const list:any = await Attack.GET_TOP_CRIT_LIST(true, battleId);
+    public static async GetTopCritsDoneEmbed(topListType: TopListType, battleId?: string) {
+        const list: any = await Attack.GET_TOP_CRIT_LIST(true, battleId);
         const embed = new MessageEmbed()
             .setTitle(`Top ${list.length} meeste crits gedaan${topListType == TopListType.Current ? ' in dit gevecht' : topListType == TopListType.Previous ? ' in het vorige gevecht' : ''}`);
 
@@ -655,7 +688,7 @@ export default class CharacterEmbeds {
 
         for (let i = 0; i < list.length; i++) {
             const item = list[i];
-            listString += `${i+1}. ${item.cnt} - ${item.name} (${item.discord_name})\n`;
+            listString += `${i + 1}. ${item.cnt} - ${item.name} (${item.discord_name})\n`;
         }
 
         embed.setDescription(listString);
@@ -663,8 +696,8 @@ export default class CharacterEmbeds {
         return embed;
     }
 
-    public static async GetTopCritsReceivedEmbed(topListType:TopListType, battleId?:string) {
-        const list:any = await Attack.GET_TOP_CRIT_LIST(false, battleId);
+    public static async GetTopCritsReceivedEmbed(topListType: TopListType, battleId?: string) {
+        const list: any = await Attack.GET_TOP_CRIT_LIST(false, battleId);
         const embed = new MessageEmbed()
             .setTitle(`Top ${list.length} meeste crits gekregen${topListType == TopListType.Current ? ' in dit gevecht' : topListType == TopListType.Previous ? ' in het vorige gevecht' : ''}`);
 
@@ -672,7 +705,7 @@ export default class CharacterEmbeds {
 
         for (let i = 0; i < list.length; i++) {
             const item = list[i];
-            listString += `${i+1}. ${item.cnt} - ${item.name} (${item.discord_name})\n`;
+            listString += `${i + 1}. ${item.cnt} - ${item.name} (${item.discord_name})\n`;
         }
 
         embed.setDescription(listString);
@@ -680,8 +713,8 @@ export default class CharacterEmbeds {
         return embed;
     }
 
-    public static async GetTopHealsDoneEmbed(topListType:TopListType, battleId?:string) {
-        const list:any = await Heal.GET_TOP_HEALS_DONE_LIST(battleId);
+    public static async GetTopHealsDoneEmbed(topListType: TopListType, battleId?: string) {
+        const list: any = await Heal.GET_TOP_HEALS_DONE_LIST(battleId);
         const embed = new MessageEmbed()
             .setTitle(`Top ${list.length} meeste heals gedaan${topListType == TopListType.Current ? ' in dit gevecht' : topListType == TopListType.Previous ? ' in het vorige gevecht' : ''}`);
 
@@ -689,7 +722,7 @@ export default class CharacterEmbeds {
 
         for (let i = 0; i < list.length; i++) {
             const item = list[i];
-            listString += `${i+1}. ${item.cnt} - ${item.name} (${item.discord_name})\n`;
+            listString += `${i + 1}. ${item.cnt} - ${item.name} (${item.discord_name})\n`;
         }
 
         embed.setDescription(listString);
@@ -697,8 +730,8 @@ export default class CharacterEmbeds {
         return embed;
     }
 
-    public static async GetTopHealingDoneEmbed(topListType:TopListType, battleId?:string) {
-        const list:any = await Heal.GET_TOP_HEALING_DONE_LIST(battleId);
+    public static async GetTopHealingDoneEmbed(topListType: TopListType, battleId?: string) {
+        const list: any = await Heal.GET_TOP_HEALING_DONE_LIST(battleId);
         const embed = new MessageEmbed()
             .setTitle(`Top ${list.length} meeste healing gedaan${topListType == TopListType.Current ? ' in dit gevecht' : topListType == TopListType.Previous ? ' in het vorige gevecht' : ''}`);
 
@@ -706,7 +739,7 @@ export default class CharacterEmbeds {
 
         for (let i = 0; i < list.length; i++) {
             const item = list[i];
-            listString += `${i+1}. ${item.sumh} - ${item.name} (${item.discord_name})\n`;
+            listString += `${i + 1}. ${item.sumh} - ${item.name} (${item.discord_name})\n`;
         }
 
         embed.setDescription(listString);
@@ -714,8 +747,8 @@ export default class CharacterEmbeds {
         return embed;
     }
 
-    public static async GetTopHealsReceivedEmbed(topListType:TopListType, battleId?:string) {
-        const list:any = await Heal.GET_TOP_HEALS_RECEIVED_LIST(battleId);
+    public static async GetTopHealsReceivedEmbed(topListType: TopListType, battleId?: string) {
+        const list: any = await Heal.GET_TOP_HEALS_RECEIVED_LIST(battleId);
         const embed = new MessageEmbed()
             .setTitle(`Top ${list.length} meeste heals gekregen${topListType == TopListType.Current ? ' in dit gevecht' : topListType == TopListType.Previous ? ' in het vorige gevecht' : ''}`);
 
@@ -723,7 +756,7 @@ export default class CharacterEmbeds {
 
         for (let i = 0; i < list.length; i++) {
             const item = list[i];
-            listString += `${i+1}. ${item.cnt} - ${item.name} (${item.discord_name})\n`;
+            listString += `${i + 1}. ${item.cnt} - ${item.name} (${item.discord_name})\n`;
         }
 
         embed.setDescription(listString);
@@ -731,8 +764,8 @@ export default class CharacterEmbeds {
         return embed;
     }
 
-    public static async GetTopHealingReceivedEmbed(topListType:TopListType, battleId?:string) {
-        const list:any = await Heal.GET_TOP_HEALING_RECEIVED_LIST(battleId);
+    public static async GetTopHealingReceivedEmbed(topListType: TopListType, battleId?: string) {
+        const list: any = await Heal.GET_TOP_HEALING_RECEIVED_LIST(battleId);
         const embed = new MessageEmbed()
             .setTitle(`Top ${list.length} meeste healing gekregen${topListType == TopListType.Current ? ' in dit gevecht' : topListType == TopListType.Previous ? ' in het vorige gevecht' : ''}`);
 
@@ -740,7 +773,7 @@ export default class CharacterEmbeds {
 
         for (let i = 0; i < list.length; i++) {
             const item = list[i];
-            listString += `${i+1}. ${item.sumh} - ${item.name} (${item.discord_name})\n`;
+            listString += `${i + 1}. ${item.sumh} - ${item.name} (${item.discord_name})\n`;
         }
 
         embed.setDescription(listString);
@@ -748,8 +781,8 @@ export default class CharacterEmbeds {
         return embed;
     }
 
-    public static async GetTopLuckEmbed(topListType:TopListType, battleId?:string, unlucky:boolean = false) {
-        const list:any = await Attack.GET_TOP_MOST_LUCK_LIST(battleId, unlucky);
+    public static async GetTopLuckEmbed(topListType: TopListType, battleId?: string, unlucky: boolean = false) {
+        const list: any = await Attack.GET_TOP_MOST_LUCK_LIST(battleId, unlucky);
         const embed = new MessageEmbed()
             .setTitle(`Top ${list.length} ${unlucky ? 'laagste' : 'hoogste'} gemiddelde rolls vergeleken met het monster${topListType == TopListType.Current ? ' in dit gevecht' : topListType == TopListType.Previous ? ' in het vorige gevecht' : ''}`);
 
@@ -757,7 +790,7 @@ export default class CharacterEmbeds {
 
         for (let i = 0; i < list.length; i++) {
             const item = list[i];
-            listString += `${i+1}. ${Math.floor(parseFloat(item.res)*100)/100} - ${item.name} (${item.discord_name})\n`;
+            listString += `${i + 1}. ${Math.floor(parseFloat(item.res) * 100) / 100} - ${item.name} (${item.discord_name})\n`;
         }
 
         embed.setDescription(listString);
@@ -782,7 +815,7 @@ export default class CharacterEmbeds {
             })
         }
 
-        list.sort((a:any, b:any) => b.cooldown - a.cooldown);
+        list.sort((a: any, b: any) => b.cooldown - a.cooldown);
 
         list.splice(10);
 
@@ -801,7 +834,7 @@ export default class CharacterEmbeds {
     }
 
     public static async GetTopPuzzlesSolvedEmbed() {
-        const list:any = await Puzzle.GET_TOP_SOLVED_LIST();
+        const list: any = await Puzzle.GET_TOP_SOLVED_LIST();
         const embed = new MessageEmbed()
             .setTitle(`Top ${list.length} meeste puzzels opgelost`);
 
@@ -809,7 +842,7 @@ export default class CharacterEmbeds {
 
         for (let i = 0; i < list.length; i++) {
             const item = list[i];
-            listString += `${i+1}. ${item.cnt} - ${item.name} (${item.discord_name})\n`;
+            listString += `${i + 1}. ${item.cnt} - ${item.name} (${item.discord_name})\n`;
         }
 
         embed.setDescription(listString);
@@ -817,8 +850,8 @@ export default class CharacterEmbeds {
         return embed;
     }
 
-    public static async GetTopFastestPuzzlesSolvedEmbed(all:boolean) {
-        const list:any = await Puzzle.GET_TOP_FASTEST_SOLVED_LIST();
+    public static async GetTopFastestPuzzlesSolvedEmbed(all: boolean) {
+        const list: any = await Puzzle.GET_TOP_FASTEST_SOLVED_LIST();
         const amount = list.length;
         const embed = new MessageEmbed()
 
@@ -826,12 +859,12 @@ export default class CharacterEmbeds {
 
         for (let i = 0; i < list.length; i++) {
             const item = list[i];
-            item.duration = Math.ceil((item.solving_date.getTime() - item.creation_date.getTime())/1000);
+            item.duration = Math.ceil((item.solving_date.getTime() - item.creation_date.getTime()) / 1000);
         }
 
-        list.sort((a:any, b:any) => a.duration - b.duration);
+        list.sort((a: any, b: any) => a.duration - b.duration);
 
-        const seenNames:any = {};
+        const seenNames: any = {};
 
         var count = 0;
         for (let i = 0; i < amount; i++) {
@@ -844,7 +877,7 @@ export default class CharacterEmbeds {
 
             seenNames[item.name + item.discord_name] = true;
 
-            listString += `${i+1}. ${Utils.GetSecondsInMinutesAndSeconds(item.duration)} - ${item.name} (${item.discord_name})\n`;
+            listString += `${i + 1}. ${Utils.GetSecondsInMinutesAndSeconds(item.duration)} - ${item.name} (${item.discord_name})\n`;
 
             if (count == 25) {
                 break;
@@ -859,7 +892,7 @@ export default class CharacterEmbeds {
     }
 
     public static async GetTopUniqueCards() {
-        const list:any = await Character.GET_TOP_CARD_LIST();
+        const list: any = await Character.GET_TOP_CARD_LIST();
         const embed = new MessageEmbed()
             .setTitle(`Top ${list.length} meeste unieke kaarten in bezit`);
 
@@ -867,7 +900,7 @@ export default class CharacterEmbeds {
 
         for (let i = 0; i < list.length; i++) {
             const item = list[i];
-            listString += `${i+1}. ${item.cnt} - ${item.name} (${item.discord_name})\n`;
+            listString += `${i + 1}. ${item.cnt} - ${item.name} (${item.discord_name})\n`;
         }
 
         embed.setDescription(listString);
@@ -875,9 +908,9 @@ export default class CharacterEmbeds {
         return embed;
     }
 
-    public static async GetTopInspiresDone(topListType:TopListType, battleId?:string) {
+    public static async GetTopInspiresDone(topListType: TopListType, battleId?: string) {
 
-        const listInspires:any = await Inspire.GET_TOP_INSPIRES_DONE_LIST(battleId);
+        const listInspires: any = await Inspire.GET_TOP_INSPIRES_DONE_LIST(battleId);
 
         if (topListType == TopListType.All) {
             const listLogs = await Log.GET_TOP_ALL_INSPIRES_DONE();
@@ -891,7 +924,7 @@ export default class CharacterEmbeds {
             }
         }
 
-        listInspires.sort((a:any, b:any) => b.cnt - a.cnt);
+        listInspires.sort((a: any, b: any) => b.cnt - a.cnt);
 
         const embed = new MessageEmbed()
             .setTitle(`Top ${listInspires.length} meeste inspires gedaan${topListType == TopListType.Current ? ' in dit gevecht' : topListType == TopListType.Previous ? ' in het vorige gevecht' : ''}`);
@@ -900,7 +933,7 @@ export default class CharacterEmbeds {
 
         for (let i = 0; i < listInspires.length; i++) {
             const item = listInspires[i];
-            listString += `${i+1}. ${item.cnt} - ${item.name} (${item.discord_name})\n`;
+            listString += `${i + 1}. ${item.cnt} - ${item.name} (${item.discord_name})\n`;
         }
 
         embed.setDescription(listString);
@@ -908,9 +941,9 @@ export default class CharacterEmbeds {
         return embed;
     }
 
-    public static async GetTopInspiresReceived(topListType:TopListType, battleId?:string) {
+    public static async GetTopInspiresReceived(topListType: TopListType, battleId?: string) {
 
-        const listInspires:any = await Inspire.GET_TOP_INSPIRES_RECEIVED_LIST(battleId);
+        const listInspires: any = await Inspire.GET_TOP_INSPIRES_RECEIVED_LIST(battleId);
 
         if (topListType == TopListType.All) {
             const listLogs = await Log.GET_TOP_ALL_INSPIRES_GET();
@@ -924,7 +957,7 @@ export default class CharacterEmbeds {
             }
         }
 
-        listInspires.sort((a:any, b:any) => b.cnt - a.cnt);
+        listInspires.sort((a: any, b: any) => b.cnt - a.cnt);
 
         const embed = new MessageEmbed()
             .setTitle(`Top ${listInspires.length} meeste inspires gekregen${topListType == TopListType.Current ? ' in dit gevecht' : topListType == TopListType.Previous ? ' in het vorige gevecht' : ''}`);
@@ -933,7 +966,7 @@ export default class CharacterEmbeds {
 
         for (let i = 0; i < listInspires.length; i++) {
             const item = listInspires[i];
-            listString += `${i+1}. ${item.cnt} - ${item.name} (${item.discord_name})\n`;
+            listString += `${i + 1}. ${item.cnt} - ${item.name} (${item.discord_name})\n`;
         }
 
         embed.setDescription(listString);
@@ -941,8 +974,8 @@ export default class CharacterEmbeds {
         return embed;
     }
 
-    public static async GetTopInspirationDoneEmbed(topListType:TopListType, battleId?:string) {
-        const list:any = await Inspire.GET_TOP_INSPIRATION_DONE_LIST(battleId);
+    public static async GetTopInspirationDoneEmbed(topListType: TopListType, battleId?: string) {
+        const list: any = await Inspire.GET_TOP_INSPIRATION_DONE_LIST(battleId);
         const embed = new MessageEmbed()
             .setTitle(`Top ${list.length} meeste inspiratie gedaan${topListType == TopListType.Current ? ' in dit gevecht' : topListType == TopListType.Previous ? ' in het vorige gevecht' : ''}`);
 
@@ -950,7 +983,7 @@ export default class CharacterEmbeds {
 
         for (let i = 0; i < list.length; i++) {
             const item = list[i];
-            listString += `${i+1}. ${item.sumi} - ${item.name} (${item.discord_name})\n`;
+            listString += `${i + 1}. ${item.sumi} - ${item.name} (${item.discord_name})\n`;
         }
 
         embed.setDescription(listString);
@@ -958,8 +991,8 @@ export default class CharacterEmbeds {
         return embed;
     }
 
-    public static async GetTopInspirationReceivedEmbed(topListType:TopListType, battleId?:string) {
-        const list:any = await Inspire.GET_TOP_INSPIRATION_RECEIVED_LIST(battleId);
+    public static async GetTopInspirationReceivedEmbed(topListType: TopListType, battleId?: string) {
+        const list: any = await Inspire.GET_TOP_INSPIRATION_RECEIVED_LIST(battleId);
         const embed = new MessageEmbed()
             .setTitle(`Top ${list.length} meeste inspiratie gekregen${topListType == TopListType.Current ? ' in dit gevecht' : topListType == TopListType.Previous ? ' in het vorige gevecht' : ''}`);
 
@@ -967,7 +1000,7 @@ export default class CharacterEmbeds {
 
         for (let i = 0; i < list.length; i++) {
             const item = list[i];
-            listString += `${i+1}. ${item.sumi} - ${item.name} (${item.discord_name})\n`;
+            listString += `${i + 1}. ${item.sumi} - ${item.name} (${item.discord_name})\n`;
         }
 
         embed.setDescription(listString);
@@ -975,8 +1008,8 @@ export default class CharacterEmbeds {
         return embed;
     }
 
-    public static async GetTopEnchantmentsDoneEmbed(topListType:TopListType, battleId?:string) {
-        const list:any = await Enchantment.GET_TOP_ENCHANTMENTS_DONE_LIST(battleId);
+    public static async GetTopEnchantmentsDoneEmbed(topListType: TopListType, battleId?: string) {
+        const list: any = await Enchantment.GET_TOP_ENCHANTMENTS_DONE_LIST(battleId);
         const embed = new MessageEmbed()
             .setTitle(`Top ${list.length} meeste enchantments gedaan${topListType == TopListType.Current ? ' in dit gevecht' : topListType == TopListType.Previous ? ' in het vorige gevecht' : ''}`);
 
@@ -984,7 +1017,7 @@ export default class CharacterEmbeds {
 
         for (let i = 0; i < list.length; i++) {
             const item = list[i];
-            listString += `${i+1}. ${item.cnt} - ${item.name} (${item.discord_name})\n`;
+            listString += `${i + 1}. ${item.cnt} - ${item.name} (${item.discord_name})\n`;
         }
 
         embed.setDescription(listString);
@@ -992,8 +1025,8 @@ export default class CharacterEmbeds {
         return embed;
     }
 
-    public static async GetTopEnchantmentsReceivedEmbed(topListType:TopListType, battleId?:string) {
-        const list:any = await Enchantment.GET_TOP_ENCHANTMENTS_RECEIVED_LIST(battleId);
+    public static async GetTopEnchantmentsReceivedEmbed(topListType: TopListType, battleId?: string) {
+        const list: any = await Enchantment.GET_TOP_ENCHANTMENTS_RECEIVED_LIST(battleId);
         const embed = new MessageEmbed()
             .setTitle(`Top ${list.length} meeste enchantments gekregen${topListType == TopListType.Current ? ' in dit gevecht' : topListType == TopListType.Previous ? ' in het vorige gevecht' : ''}`);
 
@@ -1001,7 +1034,7 @@ export default class CharacterEmbeds {
 
         for (let i = 0; i < list.length; i++) {
             const item = list[i];
-            listString += `${i+1}. ${item.cnt} - ${item.name} (${item.discord_name})\n`;
+            listString += `${i + 1}. ${item.cnt} - ${item.name} (${item.discord_name})\n`;
         }
 
         embed.setDescription(listString);
@@ -1009,8 +1042,8 @@ export default class CharacterEmbeds {
         return embed;
     }
 
-    public static async GetTopPerceptionsDoneEmbed(topListType:TopListType, battleId?:string) {
-        const list:any = await Perception.GET_TOP_PERCEPTIONS_DONE_LIST(battleId);
+    public static async GetTopPerceptionsDoneEmbed(topListType: TopListType, battleId?: string) {
+        const list: any = await Perception.GET_TOP_PERCEPTIONS_DONE_LIST(battleId);
         const embed = new MessageEmbed()
             .setTitle(`Top ${list.length} meeste perception checks gedaan${topListType == TopListType.Current ? ' in dit gevecht' : topListType == TopListType.Previous ? ' in het vorige gevecht' : ''}`);
 
@@ -1018,7 +1051,7 @@ export default class CharacterEmbeds {
 
         for (let i = 0; i < list.length; i++) {
             const item = list[i];
-            listString += `${i+1}. ${item.cnt} - ${item.name} (${item.discord_name})\n`;
+            listString += `${i + 1}. ${item.cnt} - ${item.name} (${item.discord_name})\n`;
         }
 
         embed.setDescription(listString);
@@ -1026,8 +1059,8 @@ export default class CharacterEmbeds {
         return embed;
     }
 
-    public static async GetTopPerceptionsReceivedEmbed(topListType:TopListType, battleId?:string) {
-        const list:any = await Perception.GET_TOP_PERCEPTIONS_RECEIVED_LIST(battleId);
+    public static async GetTopPerceptionsReceivedEmbed(topListType: TopListType, battleId?: string) {
+        const list: any = await Perception.GET_TOP_PERCEPTIONS_RECEIVED_LIST(battleId);
         const embed = new MessageEmbed()
             .setTitle(`Top ${list.length} meeste perception checks gekregen${topListType == TopListType.Current ? ' in dit gevecht' : topListType == TopListType.Previous ? ' in het vorige gevecht' : ''}`);
 
@@ -1035,7 +1068,7 @@ export default class CharacterEmbeds {
 
         for (let i = 0; i < list.length; i++) {
             const item = list[i];
-            listString += `${i+1}. ${item.cnt} - ${item.name} (${item.discord_name})\n`;
+            listString += `${i + 1}. ${item.cnt} - ${item.name} (${item.discord_name})\n`;
         }
 
         embed.setDescription(listString);
@@ -1043,8 +1076,8 @@ export default class CharacterEmbeds {
         return embed;
     }
 
-    public static async GetTopReinforcementsDoneEmbed(topListType:TopListType, battleId?:string) {
-        const list:any = await Reinforcement.GET_TOP_REINFORCEMENTS_DONE_LIST(battleId);
+    public static async GetTopReinforcementsDoneEmbed(topListType: TopListType, battleId?: string) {
+        const list: any = await Reinforcement.GET_TOP_REINFORCEMENTS_DONE_LIST(battleId);
         const embed = new MessageEmbed()
             .setTitle(`Top ${list.length} meeste reinforcements gedaan${topListType == TopListType.Current ? ' in dit gevecht' : topListType == TopListType.Previous ? ' in het vorige gevecht' : ''}`);
 
@@ -1052,7 +1085,7 @@ export default class CharacterEmbeds {
 
         for (let i = 0; i < list.length; i++) {
             const item = list[i];
-            listString += `${i+1}. ${item.cnt} - ${item.name} (${item.discord_name})\n`;
+            listString += `${i + 1}. ${item.cnt} - ${item.name} (${item.discord_name})\n`;
         }
 
         embed.setDescription(listString);
@@ -1060,8 +1093,8 @@ export default class CharacterEmbeds {
         return embed;
     }
 
-    public static async GetTopReinforcementsReceivedEmbed(topListType:TopListType, battleId?:string) {
-        const list:any = await Reinforcement.GET_TOP_REINFORCEMENTS_RECEIVED_LIST(battleId);
+    public static async GetTopReinforcementsReceivedEmbed(topListType: TopListType, battleId?: string) {
+        const list: any = await Reinforcement.GET_TOP_REINFORCEMENTS_RECEIVED_LIST(battleId);
         const embed = new MessageEmbed()
             .setTitle(`Top ${list.length} meeste reinforcements gekregen${topListType == TopListType.Current ? ' in dit gevecht' : topListType == TopListType.Previous ? ' in het vorige gevecht' : ''}`);
 
@@ -1069,7 +1102,7 @@ export default class CharacterEmbeds {
 
         for (let i = 0; i < list.length; i++) {
             const item = list[i];
-            listString += `${i+1}. ${item.cnt} - ${item.name} (${item.discord_name})\n`;
+            listString += `${i + 1}. ${item.cnt} - ${item.name} (${item.discord_name})\n`;
         }
 
         embed.setDescription(listString);
@@ -1087,7 +1120,7 @@ export default class CharacterEmbeds {
 
         for (let i = 0; i < list.length; i++) {
             const item = list[i];
-            listString += `${i+1}. ${item.cnt} - ${item.discord_name}\n`;
+            listString += `${i + 1}. ${item.cnt} - ${item.discord_name}\n`;
         }
 
         embed.setDescription(listString);
@@ -1105,7 +1138,7 @@ export default class CharacterEmbeds {
 
         for (let i = 0; i < list.length; i++) {
             const item = list[i];
-            listString += `${i+1}. ${item.cnt} - ${item.discord_name}\n`;
+            listString += `${i + 1}. ${item.cnt} - ${item.discord_name}\n`;
         }
 
         embed.setDescription(listString);
@@ -1124,7 +1157,7 @@ Als je zeker weet dat je wilt stoppen met dit character, gebruik dan het command
         return embed;
     }
 
-    public static GetStoryEmbed(text:string, imageUrl:string, thumbnail?:string) {
+    public static GetStoryEmbed(text: string, imageUrl: string, thumbnail?: string) {
         const embed = new MessageEmbed()
             .setColor(SettingsConstants.COLORS.DEFAULT)
             .setTitle('Verhaal')
@@ -1138,7 +1171,7 @@ Als je zeker weet dat je wilt stoppen met dit character, gebruik dan het command
         return embed;
     }
 
-    private static AddEquipmentToEmbed(embed:MessageEmbed, equipment:Array<Card>) {
+    private static AddEquipmentToEmbed(embed: MessageEmbed, equipment: Array<Card>) {
         if (equipment.length == 0) {
             embed.addField('Leeg', 'Voeg equipment toe met `;equip [kaart]`.');
         }
@@ -1148,7 +1181,7 @@ Als je zeker weet dat je wilt stoppen met dit character, gebruik dan het command
         }
     }
 
-    private static async AddCharacterHistoryToEmbed(embed:MessageEmbed, character:Character) {
+    private static async AddCharacterHistoryToEmbed(embed: MessageEmbed, character: Character) {
         const victories = await character.GetVictories();
         const losses = await character.GetLosses();
 
