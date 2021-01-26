@@ -61,6 +61,7 @@ export default class AttackModel extends Model {
                 reinforced: character.IsReinforced(),
                 protection: character.GetProtection(),
                 charge: character.GetCharge(),
+                blessing: character.GetBlessing(),
             })
 
         return attack;
