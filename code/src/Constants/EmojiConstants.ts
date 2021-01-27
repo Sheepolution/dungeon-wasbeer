@@ -49,7 +49,7 @@ export default class EmojiConstants {
     }
 
     public static readonly DNW_STATES = {
-        INSPIRED: '🎵',
+        INSPIRED: '✨',
         ENCHANTED: '🎲',
         REINFORCED: '⚔️',
         PROTECTED: '🛡️',
