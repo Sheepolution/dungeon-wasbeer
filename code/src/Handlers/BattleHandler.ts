@@ -80,13 +80,28 @@ export default class BattleHandler {
             return;
         }
 
+        if (character.IsInspiring()) {
+            MessageService.ReplyMessage(messageInfo, 'Je kan niet vechten want je bent momenteel aan het inspireren.', false);
+            return;
+        }
+
         if (character.IsBeingInspired()) {
             MessageService.ReplyMessage(messageInfo, 'Je kan niet vechten want je wordt momenteel geïnspireerd.', false);
             return;
         }
 
+        if (character.IsProtecting()) {
+            MessageService.ReplyMessage(messageInfo, 'Je kan niet vechten want je bent momenteel aan het beschermen.', false);
+            return;
+        }
+
         if (character.IsBeingProtected()) {
             MessageService.ReplyMessage(messageInfo, 'Je kan niet vechten want je wordt momenteel beschermd.', false);
+            return;
+        }
+
+        if (character.IsPraying()) {
+            MessageService.ReplyMessage(messageInfo, 'Je kan niet vechten want je bent momenteel aan het bidden.', false);
             return;
         }
 
