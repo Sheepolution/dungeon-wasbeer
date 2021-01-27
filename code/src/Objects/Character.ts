@@ -1301,6 +1301,7 @@ export default class Character {
 
         if (this.charge > 0) {
             this.fullModifierStats.strength += this.charge;
+            this.fullModifierStats.armor -= this.charge;
         }
 
         if (this.blessing > 0) {
