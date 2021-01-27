@@ -338,6 +338,10 @@ export default class CharacterHandler {
             return;
         }
 
+        if (character.IsPraying()) {
+            return;
+        }
+
         if (character.IsBeingHealed()) {
             MessageService.ReplyMessage(messageInfo, 'Je kan niet healen want je wordt momenteel zelf geheald.', false);
             return;
@@ -854,6 +858,10 @@ export default class CharacterHandler {
         }
 
         if (character.IsPraying()) {
+            return;
+        }
+
+        if (character.IsHealing()) {
             return;
         }
 

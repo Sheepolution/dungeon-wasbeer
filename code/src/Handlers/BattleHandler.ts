@@ -103,11 +103,16 @@ export default class BattleHandler {
                 return;
             }
 
+            if (character.IsProtecting()) {
+                return;
+            }
+
             const chargeCooldown = await character.GetChargeCooldown();
             if (chargeCooldown > 0) {
                 MessageService.ReplyMessage(messageInfo, `Je hebt nog ${Utils.GetSecondsInMinutesAndSeconds(chargeCooldown)} cooldown voordat je weer mag chargen.`);
                 return;
             }
+
         }
 
         if (!fromWaitlist) {
