@@ -233,15 +233,6 @@ export default class CharacterEmbeds {
             }
         }
 
-        if (character.CanPray()) {
-            const prayCooldown = await character.GetProtectCooldown();
-            if (prayCooldown > 0) {
-                embed.addField('Pray', `🕒 ${Utils.GetSecondsInMinutesAndSeconds(prayCooldown)}`, true)
-            } else {
-                embed.addField('Pray', 'Klaar om te bidden!', true);
-            }
-        }
-
         return embed;
     }
 
