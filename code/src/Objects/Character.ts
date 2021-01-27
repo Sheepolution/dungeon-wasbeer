@@ -867,7 +867,17 @@ export default class Character {
             return 0;
         }
 
-        return Math.floor((roll / 10) * this.fullModifierStats.armor - this.protection);
+        if (this.protection > 0) {
+            const oldProtection = this.protection;
+            this.protection = 0;
+            this.CalculateFullModifierStats();
+            const protection = Math.floor((roll / 20) * (this.fullModifierStats.armor - this.protection));
+            this.protection = oldProtection;
+            this.CalculateFullModifierStats();
+            return protection;
+        }
+
+        return Math.floor((roll / 20) * this.fullModifierStats.armor);
     }
 
     public GetChargeBasedOnRoll(roll: number) {
@@ -875,7 +885,19 @@ export default class Character {
             return 0;
         }
 
-        return Math.floor((roll / 20) * this.fullModifierStats.armor - this.protection);
+        if (this.protection > 0 || this.inspiration > 0) {
+            const oldProtection = this.protection;
+            const oldInspiration = this.inspiration;
+            this.protection = 0;
+            this.CalculateFullModifierStats();
+            const charge = Math.floor((roll / 20) * (this.fullModifierStats.armor - this.protection));
+            this.protection = oldProtection;
+            this.inspiration = oldInspiration;
+            this.CalculateFullModifierStats();
+            return charge;
+        }
+
+        return Math.floor((roll / 20) * this.fullModifierStats.armor);
     }
 
     public GetBlessingBasedOnRoll(roll: number) {
