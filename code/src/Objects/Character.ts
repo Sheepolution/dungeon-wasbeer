@@ -871,13 +871,13 @@ export default class Character {
             const oldProtection = this.protection;
             this.protection = 0;
             this.CalculateFullModifierStats();
-            const protection = Math.floor((roll / 20) * (this.fullModifierStats.armor - this.protection));
+            const protection = Math.floor((roll / 10) * (this.fullModifierStats.armor - this.protection));
             this.protection = oldProtection;
             this.CalculateFullModifierStats();
             return protection;
         }
 
-        return Math.floor((roll / 20) * this.fullModifierStats.armor);
+        return Math.floor((roll / 10) * this.fullModifierStats.armor);
     }
 
     public GetChargeBasedOnRoll(roll: number) {
