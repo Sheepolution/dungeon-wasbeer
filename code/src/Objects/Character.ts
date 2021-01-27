@@ -1293,8 +1293,10 @@ export default class Character {
             this.fullModifierStats = CharacterService.GetMultipliedModifierStats(this.fullModifierStats, emptyModifierStats);
         }
 
+        const max = CharacterService.GetMaxModifierStats(this.classType);
+
         if (this.protection > 0) {
-            this.fullModifierStats.armor = this.fullModifierStats.armor + this.protection;
+            this.fullModifierStats.armor = Math.min(this.fullModifierStats.armor + this.protection, max.armor);
         }
 
         if (this.charge > 0) {
@@ -1308,7 +1310,6 @@ export default class Character {
             this.fullModifierStats.armor += buff;
         }
 
-        const max = CharacterService.GetMaxModifierStats(this.classType);
         this.fullModifierStats.armor = Math.min(Math.max(0, this.fullModifierStats.armor), max.armor);
         this.fullModifierStats.attack = Math.min(Math.max(0, this.fullModifierStats.attack), max.attack);
         this.fullModifierStats.charisma = Math.min(Math.max(0, this.fullModifierStats.charisma), max.charisma);
