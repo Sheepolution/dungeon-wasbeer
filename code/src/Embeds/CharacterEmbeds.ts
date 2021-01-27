@@ -56,7 +56,7 @@ export default class CharacterEmbeds {
         }
 
         if (character.IsInspired()) {
-            embed.addField('Inspiratie', character.GetInspiration(), true);
+            embed.addField('Inspiratie', `${character.GetInspiration()}%`, true);
         }
 
         if (character.IsProtected()) {
@@ -151,7 +151,7 @@ export default class CharacterEmbeds {
         }
 
         if (character.IsInspired()) {
-            embed.addField('Inspiratie', character.GetInspiration(), true);
+            embed.addField('Inspiratie', `${character.GetInspiration()}%`, true);
         }
 
         if (character.IsProtected()) {
