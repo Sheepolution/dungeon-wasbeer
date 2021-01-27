@@ -889,6 +889,7 @@ export default class Character {
             const oldProtection = this.protection;
             const oldInspiration = this.inspiration;
             this.protection = 0;
+            this.inspiration = 0;
             this.CalculateFullModifierStats();
             const charge = Math.floor((roll / 20) * (this.fullModifierStats.armor - this.protection));
             this.protection = oldProtection;
