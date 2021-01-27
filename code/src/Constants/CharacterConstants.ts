@@ -56,10 +56,10 @@ export default class CharacterConstants {
 
     public static readonly CLASS_BASE_STATS = {
         BASE: { armor: 5, dexterity: 5, wisdom: 10, health: 200, regeneration: 3, strength: 10, spell: 8, attack: 5, charisma: 10 },
-        MAX: { armor: 75, dexterity: 20, wisdom: 50, health: 1000, regeneration: 15, strength: 50, spell: 50, attack: 50, charisma: 50 },
+        MAX: { armor: 90, dexterity: 20, wisdom: 50, health: 1000, regeneration: 15, strength: 50, spell: 50, attack: 50, charisma: 50 },
         BARD: { armor: 2, dexterity: 2, wisdom: 0, health: 200, regeneration: 4, strength: 0, spell: 13, attack: 2, charisma: 10 },
         CLERIC: { armor: 5, dexterity: 7, wisdom: 10, health: 200, regeneration: 3, strength: 0, spell: 5, attack: 3, charisma: 0 },
-        WIZARD: { armor: 0, dexterity: 0, wisdom: 0, health: 220, regeneration: 3, strength: 0, spell: 18, attack: 2, charisma: 0 },
+        WIZARD: { armor: 0, dexterity: 0, wisdom: 0, health: 250, regeneration: 3, strength: 0, spell: 18, attack: 2, charisma: 0 },
         PALADIN: { armor: 10, dexterity: 5, wisdom: 5, health: 200, regeneration: 3, strength: 10, spell: 0, attack: 5, charisma: 0 },
         FIGHTER: { armor: 5, dexterity: 0, wisdom: 0, health: 180, regeneration: 1, strength: 13, spell: 0, attack: 7, charisma: 0 },
         RANGER: { armor: 5, dexterity: 8, wisdom: 0, health: 200, regeneration: 3, strength: 8, spell: 0, attack: 8, charisma: 0 },
