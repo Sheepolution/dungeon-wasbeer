@@ -778,7 +778,7 @@ export default class Character {
     }
 
     public async GetPrayCooldown() {
-        return await Redis.ttl(Character.protectCooldownPrefix + this.GetId());
+        return await Redis.ttl(Character.healingCooldownPrefix + this.GetId());
     }
 
     public async SetPrayCooldown() {

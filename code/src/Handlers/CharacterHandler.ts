@@ -873,7 +873,7 @@ export default class CharacterHandler {
             return;
         }
 
-        const cooldown = await character.GetProtectCooldown();
+        const cooldown = await character.GetPrayCooldown();
         if (cooldown > 0) {
             MessageService.ReplyMessage(messageInfo, `Je hebt nog ${Utils.GetSecondsInMinutesAndSeconds(cooldown)} cooldown voordat je weer mag protecten.`);
             return;
