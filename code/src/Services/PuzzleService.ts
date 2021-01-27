@@ -6,7 +6,7 @@ import PuzzleConstants from '../Constants/PuzzleConstants';
 export default class PuzzleService {
 
     public static GetPuzzleAndSolution() {
-        const puzzleAndSolution:any = {};
+        const puzzleAndSolution: any = {};
 
         const sudoku = Sudoku.GetSudokuStrings();
         const puzzle = sudoku[0].split('');
@@ -47,7 +47,7 @@ export default class PuzzleService {
     }
 
     public static GetChestPuzzleAndSolution() {
-        const puzzleAndSolution:any = {};
+        const puzzleAndSolution: any = {};
 
         var puzzleString = `1. Hoe heet het 5e monster waar jullie tegen hebben gevochten?
 
@@ -90,23 +90,23 @@ Cloud Giant`
         return [PuzzleType.Gate, PuzzleType.Merchant, PuzzleType.Tavern, PuzzleType.Village].randomChoice();
     }
 
-    public static GetPuzzleIntro(puzzle:Puzzle) {
+    public static GetPuzzleIntro(puzzle: Puzzle) {
         return this.GetPuzzleDescriptionsByType(puzzle.GetPuzzleType()).INTRO;
     }
 
-    public static GetPuzzleOutro(puzzle:Puzzle) {
+    public static GetPuzzleOutro(puzzle: Puzzle) {
         return this.GetPuzzleDescriptionsByType(puzzle.GetPuzzleType()).OUTRO;
     }
 
-    public static GetPuzzleImage(puzzle:Puzzle) {
+    public static GetPuzzleImage(puzzle: Puzzle) {
         return this.GetPuzzleDescriptionsByType(puzzle.GetPuzzleType()).IMAGE;
     }
 
-    public static GetPuzzleWrong(puzzle:Puzzle) {
+    public static GetPuzzleWrong(puzzle: Puzzle) {
         return this.GetPuzzleDescriptionsByType(puzzle.GetPuzzleType()).WRONG;
     }
 
-    private static GetPuzzleDescriptionsByType(puzzleType:PuzzleType) {
+    private static GetPuzzleDescriptionsByType(puzzleType: PuzzleType) {
         switch (puzzleType) {
             case PuzzleType.Gate:
                 return PuzzleConstants.DESCRIPTIONS.GATE;

@@ -1,4 +1,4 @@
 export default interface IObjectModifyResult {
-    object:any;
-    result:boolean;
+    object: any;
+    result: boolean;
 }

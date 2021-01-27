@@ -32,12 +32,12 @@ export default class CampaignModel extends Model {
         }
     }
 
-    public static async New(sessionType:SessionType, sessionId:string) {
+    public static async New(sessionType: SessionType, sessionId: string) {
         const campaignId = Utils.UUID();
 
         const campaign = await CampaignModel.query()
             .insert({
-                id:campaignId,
+                id: campaignId,
                 active: true,
                 session_type: sessionType,
                 session_id: sessionId,

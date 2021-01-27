@@ -8,7 +8,7 @@ export default class LogXPModel extends Model {
         return 'logs_xp';
     }
 
-    public static async New(battleId:string, characterId:string, xp:number, dateString:string, trx:any) {
+    public static async New(battleId: string, characterId: string, xp: number, dateString: string, trx: any) {
         const logXPId = Utils.UUID();
 
         const log = await LogXPModel.query()

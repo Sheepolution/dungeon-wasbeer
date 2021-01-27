@@ -13,10 +13,10 @@ import LogService from '../Services/LogService';
 
 export default class TradeHandler {
 
-    private static trades:Array<ITradeInfo> = new Array<ITradeInfo>();
+    private static trades: Array<ITradeInfo> = new Array<ITradeInfo>();
     private static readonly tradeInstructions = 'Zeg beiden `;accepteer` als je de ruil wilt accepteren. Zeg `;annuleer` als je de ruil wilt annuleren.';
 
-    public static async OnCommand(messageInfo:IMessageInfo, player:Player, command:string, content:string) {
+    public static async OnCommand(messageInfo: IMessageInfo, player: Player, command: string, content: string) {
         switch (command) {
             case 'ruil':
             case 'ruilen':
@@ -38,7 +38,7 @@ export default class TradeHandler {
         return true;
     }
 
-    private static async OnTrade(messageInfo:IMessageInfo, player:Player, args:string) {
+    private static async OnTrade(messageInfo: IMessageInfo, player: Player, args: string) {
         var match = args.match(/<@!?(\d+)>\s+(.+?)\s+>\s+(.+)/);
         if (match == null) {
             MessageService.ReplyMessage(messageInfo, 'Ik begrijp je niet helemaal. Zorg dat je het formaat aanhoudt:\n`;ruil @mention jouw kaart > hun kaart`', false);
@@ -110,7 +110,7 @@ export default class TradeHandler {
         this.StartTrade(messageInfo, player, otherPlayer, yourCard, theirCard);
     }
 
-    private static AcceptTrade(messageInfo:IMessageInfo, player:Player) {
+    private static AcceptTrade(messageInfo: IMessageInfo, player: Player) {
         const tradeInfo = this.FindExistingTrade(player);
         if (tradeInfo == null) {
             this.SendTradeNotFound(messageInfo, true);
@@ -136,7 +136,7 @@ export default class TradeHandler {
         }
     }
 
-    private static CancelTrade(messageInfo:IMessageInfo, player:Player) {
+    private static CancelTrade(messageInfo: IMessageInfo, player: Player) {
         const tradeInfo = this.FindExistingTrade(player);
         if (tradeInfo == null) {
             this.SendTradeNotFound(messageInfo, false)
@@ -147,8 +147,8 @@ export default class TradeHandler {
         MessageService.ReplyMessage(messageInfo, 'De ruil is geannuleerd.');
     }
 
-    private static StartTrade(messageInfo:IMessageInfo, player:Player, otherPlayer:Player, yourCard:PlayerCard, theirCard:PlayerCard) {
-        const tradeInfo:ITradeInfo = {
+    private static StartTrade(messageInfo: IMessageInfo, player: Player, otherPlayer: Player, yourCard: PlayerCard, theirCard: PlayerCard) {
+        const tradeInfo: ITradeInfo = {
             trader: player,
             with: otherPlayer,
             yourCard: yourCard,
@@ -164,7 +164,7 @@ export default class TradeHandler {
         MessageService.ReplyEmbed(messageInfo, CardEmbeds.GetTradeEmbed(tradeInfo), `${tradeInfo.with.GetMention()}, wil jij jouw '${tradeInfo.theirCard.GetCard().GetName()}' ruilen voor de '${tradeInfo.yourCard.GetCard().GetName()}' van ${tradeInfo.trader.GetMention()}? ${this.tradeInstructions}`)
     }
 
-    private static async CompleteTrade(messageInfo:IMessageInfo, tradeInfo:ITradeInfo) {
+    private static async CompleteTrade(messageInfo: IMessageInfo, tradeInfo: ITradeInfo) {
         const you = tradeInfo.trader;
         const they = tradeInfo.with;
         const yourCard = tradeInfo.yourCard;
@@ -199,11 +199,11 @@ export default class TradeHandler {
         LogService.Log(tradeInfo.trader, trade.id, LogType.Trade, `${tradeInfo.trader.GetDiscordName()} heeft de kaart '${tradeInfo.yourCard.GetCard().GetName()}' geruild met ${tradeInfo.with.GetDiscordName()} voor de kaart '${tradeInfo.theirCard.GetCard().GetName()}'.`);
     }
 
-    private static FindExistingTrade(player:Player) {
+    private static FindExistingTrade(player: Player) {
         return this.trades.find(t => (t.trader == player || t.with == player));
     }
 
-    private static RemoveTrade(tradeInfo:ITradeInfo) {
+    private static RemoveTrade(tradeInfo: ITradeInfo) {
         tradeInfo.yourCard.StopUsingInTrade();
         tradeInfo.theirCard.StopUsingInTrade();
 
@@ -211,7 +211,7 @@ export default class TradeHandler {
         this.trades.splice(index, 1);
     }
 
-    private static async SendTradeNotFound(messageInfo:IMessageInfo, accept:boolean) {
+    private static async SendTradeNotFound(messageInfo: IMessageInfo, accept: boolean) {
         MessageService.ReplyMessage(messageInfo, 'Wat loop je nou allemaal te ' + (accept ? 'accepteren' : 'annuleren') + '? Je bent helemaal niet aan het ruilen!', false)
     }
 }

@@ -14,29 +14,29 @@ import ReactionManager from './ReactionManager';
 
 export default class BotManager {
 
-    private static cardChannel:TextChannel;
-    private static dndChannel:TextChannel;
-    private static artChannel:TextChannel;
-    private static spoilersChannel:TextChannel;
-    private static chatChannel:TextChannel;
-    private static logChannel:TextChannel;
-    private static locked:boolean;
+    private static cardChannel: TextChannel;
+    private static dndChannel: TextChannel;
+    private static artChannel: TextChannel;
+    private static spoilersChannel: TextChannel;
+    private static chatChannel: TextChannel;
+    private static logChannel: TextChannel;
+    private static locked: boolean;
 
     public static async OnReady() {
         console.log('Dungeon Wasbeer: Connected');
         ConfigurationManager.BuildConfigurationList();
-        BotManager.cardChannel = <TextChannel> await DiscordService.FindChannelById(SettingsConstants.CARD_CHANNEL_ID);
-        BotManager.dndChannel = <TextChannel> await DiscordService.FindChannelById(SettingsConstants.DND_CHANNEL_ID);
-        BotManager.artChannel = <TextChannel> await DiscordService.FindChannelById(SettingsConstants.ART_CHANNEL_ID);
-        BotManager.spoilersChannel = <TextChannel> await DiscordService.FindChannelById(SettingsConstants.SPOILERS_CHANNEL_ID);
-        BotManager.chatChannel = <TextChannel> await DiscordService.FindChannelById(SettingsConstants.CHAT_CHANNEL_ID);
-        BotManager.logChannel = <TextChannel> await DiscordService.FindChannelById(SettingsConstants.LOG_CHANNEL_ID);
+        BotManager.cardChannel = <TextChannel>await DiscordService.FindChannelById(SettingsConstants.CARD_CHANNEL_ID);
+        BotManager.dndChannel = <TextChannel>await DiscordService.FindChannelById(SettingsConstants.DND_CHANNEL_ID);
+        BotManager.artChannel = <TextChannel>await DiscordService.FindChannelById(SettingsConstants.ART_CHANNEL_ID);
+        BotManager.spoilersChannel = <TextChannel>await DiscordService.FindChannelById(SettingsConstants.SPOILERS_CHANNEL_ID);
+        BotManager.chatChannel = <TextChannel>await DiscordService.FindChannelById(SettingsConstants.CHAT_CHANNEL_ID);
+        BotManager.logChannel = <TextChannel>await DiscordService.FindChannelById(SettingsConstants.LOG_CHANNEL_ID);
         await CardManager.BuildCardList();
         await MonsterManager.BuildMonsterList();
         await CampaignManager.ContinueSession();
     }
 
-    public static async OnMessage(message:Message) {
+    public static async OnMessage(message: Message) {
         if (message.guild == null) {
             return;
         }
@@ -45,7 +45,7 @@ export default class BotManager {
             return;
         }
 
-        const messageInfo:IMessageInfo = DiscordUtils.ParseMessageToInfo(message, message.member);
+        const messageInfo: IMessageInfo = DiscordUtils.ParseMessageToInfo(message, message.member);
 
         var player = await PlayerManager.GetOrCreatePlayer(messageInfo);
         var content = message.content.trim();
@@ -70,7 +70,7 @@ export default class BotManager {
         }
     }
 
-    public static async OnReaction(reaction:MessageReaction, user:User) {
+    public static async OnReaction(reaction: MessageReaction, user: User) {
         if (user.id == SettingsConstants.BOT_ID) {
             return;
         }

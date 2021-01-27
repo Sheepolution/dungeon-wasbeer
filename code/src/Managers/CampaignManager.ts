@@ -25,8 +25,8 @@ const { transaction } = require('objection');
 
 export default class CampaignManager {
 
-    private static campaignObject:Campaign;
-    private static previousBattle:Campaign;
+    private static campaignObject: Campaign;
+    private static previousBattle: Campaign;
 
     public static async ContinueSession() {
         var campaign = new Campaign();
@@ -38,7 +38,7 @@ export default class CampaignManager {
         this.campaignObject = campaign;
     }
 
-    public static async StartNewSession(lastSessionType?:SessionType) {
+    public static async StartNewSession(lastSessionType?: SessionType) {
         var campaign = new Campaign();
 
         if (lastSessionType == SessionType.Battle) {
@@ -83,11 +83,11 @@ export default class CampaignManager {
         }
     }
 
-    public static async SendNewPuzzleMessage(puzzle:Puzzle) {
+    public static async SendNewPuzzleMessage(puzzle: Puzzle) {
         MessageService.SendMessageToDNDChannel(PuzzleService.GetPuzzleIntro(puzzle), PuzzleEmbeds.GetSudokuEmbed(puzzle));
     }
 
-    public static async SendNewBattleMessage(monster:Monster) {
+    public static async SendNewBattleMessage(monster: Monster) {
         MessageService.SendMessageToDNDChannel(`Jullie vervolgen jullie reis ${[
             'in het bos',
             'door de bergen',
@@ -100,7 +100,7 @@ export default class CampaignManager {
             'door een uitgestrekte vlakte',
             'door een woestijnlandschap'
         ].randomChoice()}. Plots komen jullie een ${monster.GetName()} tegen! Vecht tegen het monster met \`;vecht\`.`,
-        MonsterEmbeds.GetMonsterEmbed(monster));
+            MonsterEmbeds.GetMonsterEmbed(monster));
     }
 
     public static GetBattle() {
@@ -139,14 +139,14 @@ export default class CampaignManager {
         await this.StartNewSession(battle != null ? SessionType.Battle : SessionType.Puzzle)
     }
 
-    private static async GiveXPToBattlers(battle:Battle) {
+    private static async GiveXPToBattlers(battle: Battle) {
         const attackData = await Attack.FIND_TOTAL_DAMAGE_GIVEN_IN_BATTLE_FOR_ALL_CHARACTERS(battle);
         const healData = await Heal.FIND_TOTAL_HEALED_OTHERS_IN_BATTLE_FOR_ALL_CHARACTERS(battle);
         const inspireData = await Inspire.FIND_TOTAL_INSPIRED_OTHERS_IN_BATTLE_FOR_ALL_CHARACTERS(battle);
         const enchantmentData = await Enchantment.FIND_TOTAL_ENCHANTED_OTHERS_IN_BATTLE_FOR_ALL_CHARACTERS(battle);
         const perceptionData = await Perception.FIND_TOTAL_PERCEPT_OTHERS_IN_BATTLE_FOR_ALL_CHARACTERS(battle);
         const reinforcementData = await Reinforcement.FIND_TOTAL_REINFORCEMENTS_FOR_OTHERS_IN_BATTLE_FOR_ALL_CHARACTERS(battle);
-        const data:any = {};
+        const data: any = {};
 
         for (const row of attackData) {
             const xp = parseInt(row.sum);
@@ -154,7 +154,7 @@ export default class CampaignManager {
         }
 
         for (const row of healData) {
-            const xp = Math.floor(parseInt(row.sum)/2);
+            const xp = Math.floor(parseInt(row.sum) / 2);
             if (data[row.character_id]) {
                 data[row.character_id] += xp;
             } else {
@@ -163,7 +163,7 @@ export default class CampaignManager {
         }
 
         for (const row of inspireData) {
-            const xp = Math.floor(parseInt(row.sum)/2);
+            const xp = Math.floor(parseInt(row.sum) / 2);
             if (data[row.character_id]) {
                 data[row.character_id] += xp;
             } else {
@@ -199,14 +199,14 @@ export default class CampaignManager {
         }
 
         for (const characterId in data) {
-            data[characterId] = Math.min(Math.floor(battle.GetMaxMonsterHealth()/10), data[characterId]);
+            data[characterId] = Math.min(Math.floor(battle.GetMaxMonsterHealth() / 10), data[characterId]);
         }
 
         const characters = PlayerManager.GetAllCachedCharacters();
         const battleId = battle.GetId();
         const nowString = Utils.GetNowString();
 
-        await transaction(CharacterModel.knex(), async (trx:any) => {
+        await transaction(CharacterModel.knex(), async (trx: any) => {
             for (const character of characters) {
                 const charId = character.GetId();
                 const xp = data[charId];
@@ -224,7 +224,7 @@ export default class CampaignManager {
                 await LogService.LogXP(battleId, characterId, data[characterId], nowString, trx);
                 await Character.RESTORE_HEALTH(characterId, trx);
             }
-        }).catch((error:any) => {
+        }).catch((error: any) => {
             console.log(error);
         })
     }

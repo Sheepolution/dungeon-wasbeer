@@ -12,11 +12,11 @@ import { CardFilterType } from '../Enums/CardFilterType';
 
 export default class CardEmbeds {
 
-    public static GetCardEmbed(card:Card, amount:number = 1) {
+    public static GetCardEmbed(card: Card, amount: number = 1) {
         const embed = new MessageEmbed()
             .setColor(SettingsConstants.COLORS.DEFAULT)
             .setAuthor(card.GetCategory(), CardService.GetIconByCategory(card.GetCategory()))
-            .setTitle(card.GetName() + (amount == 1 ? '' : ' (x'+ amount + ')'))
+            .setTitle(card.GetName() + (amount == 1 ? '' : ' (x' + amount + ')'))
             .setDescription(card.GetDescription())
             .setFooter(`Seizoen ${card.GetSeason()}`)
             .setImage(card.GetImageUrl())
@@ -29,7 +29,7 @@ export default class CardEmbeds {
         const modifierClass = card.GetModifierClass();
 
         if (modifiers.length > 0) {
-            embed.addField('Modifiers', CardService.ParseModifierArrayToEmbedString(modifiers),  true)
+            embed.addField('Modifiers', CardService.ParseModifierArrayToEmbedString(modifiers), true)
         }
 
         if (modifierClass) {
@@ -39,8 +39,8 @@ export default class CardEmbeds {
         return embed;
     }
 
-    public static GetCardStatsEmbed(cards:any) {
-        const stats:any = {};
+    public static GetCardStatsEmbed(cards: any) {
+        const stats: any = {};
         for (const card of cards) {
             if (stats[card.category] == null) {
                 stats[card.category] = [0, 0, 0, 0, 0];
@@ -63,7 +63,7 @@ export default class CardEmbeds {
         return embed;
     }
 
-    public static GetPlayerCardListEmbed(playerCards:Array<PlayerCard>, player:Player, page?:number, otherPlayer?:Player, filterType?:CardFilterType, filterValue?:string) {
+    public static GetPlayerCardListEmbed(playerCards: Array<PlayerCard>, player: Player, page?: number, otherPlayer?: Player, filterType?: CardFilterType, filterValue?: string) {
         const cardsAmount = CardManager.GetAmountOfNormalCards();
         const embed = new MessageEmbed()
             .setColor(SettingsConstants.COLORS.DEFAULT);
@@ -81,7 +81,7 @@ export default class CardEmbeds {
         embed.setTitle(title);
 
         var split = SettingsConstants.CARD_AMOUNT_SPLIT_PAGES;
-        var pages = Math.ceil(playerCards.length/split);
+        var pages = Math.ceil(playerCards.length / split);
 
         if (page != null) {
             if (page == 0) {
@@ -97,7 +97,7 @@ export default class CardEmbeds {
             }
         }
 
-        var start = page == null ? 0 : (page-1) * split;
+        var start = page == null ? 0 : (page - 1) * split;
         var end = page == null ? playerCards.length : Math.min(playerCards.length, page * split);
 
         if (page != null) {
@@ -113,7 +113,7 @@ export default class CardEmbeds {
             }
             const card = playerCard.GetCard();
             const amount = playerCard.GetAmount();
-            list += EmojiConstants.STARS[card.GetRank()] + CardService.GetIconEmojiByCategory(card.GetCategory()) + ( playerCard.IsEquipped() ? ' ✅' : '') + ' ' + card.GetName() + (amount == 1 ? '' : ' (x' + amount + ')') + CardService.ParseCardModifersToEmbedString(card) + '\n';
+            list += EmojiConstants.STARS[card.GetRank()] + CardService.GetIconEmojiByCategory(card.GetCategory()) + (playerCard.IsEquipped() ? ' ✅' : '') + ' ' + card.GetName() + (amount == 1 ? '' : ' (x' + amount + ')') + CardService.ParseCardModifersToEmbedString(card) + '\n';
         }
 
         const seasons = [];
@@ -145,7 +145,7 @@ export default class CardEmbeds {
         return embed;
     }
 
-    public static GetPlayerCardOwnerListEmbed(card:Card, ownerList:Array<any>, page?:number) {
+    public static GetPlayerCardOwnerListEmbed(card: Card, ownerList: Array<any>, page?: number) {
         const embed = new MessageEmbed()
             .setColor(SettingsConstants.COLORS.DEFAULT);
 
@@ -155,7 +155,7 @@ export default class CardEmbeds {
         embed.setAuthor(category, CardService.GetIconByCategory(category));
 
         var split = SettingsConstants.CARD_AMOUNT_SPLIT_PAGES;
-        var pages = Math.ceil(ownerList.length/split);
+        var pages = Math.ceil(ownerList.length / split);
 
         if (page != null) {
             if (page == 0) {
@@ -171,7 +171,7 @@ export default class CardEmbeds {
             }
         }
 
-        var start = page == null ? 0 : (page-1) * split;
+        var start = page == null ? 0 : (page - 1) * split;
         var end = page == null ? ownerList.length : Math.min(ownerList.length, page * split);
 
         if (page != null) {
@@ -193,13 +193,13 @@ export default class CardEmbeds {
         const classType = card.GetModifierClass();
         const modifiers = card.GetModifiers();
         const season = card.GetSeason();
-        embed.setDescription(`${EmojiConstants.STARS[card.GetRank()]} Seizoen ${season > 0 ? season : '???' }\n${classType == null ? '' : `${CharacterService.GetClassIconEmoji(classType)} `}${modifiers.length > 0 ? `${CardService.ParseModifierArrayToEmbedString(modifiers)}\n` : ''}\n**Eigenaren**\n${list}`);
+        embed.setDescription(`${EmojiConstants.STARS[card.GetRank()]} Seizoen ${season > 0 ? season : '???'}\n${classType == null ? '' : `${CharacterService.GetClassIconEmoji(classType)} `}${modifiers.length > 0 ? `${CardService.ParseModifierArrayToEmbedString(modifiers)}\n` : ''}\n**Eigenaren**\n${list}`);
         embed.setThumbnail(card.GetImageUrl());
 
         return embed;
     }
 
-    public static GetTradeEmbed(tradeInfo:ITradeInfo) {
+    public static GetTradeEmbed(tradeInfo: ITradeInfo) {
         const embed = new MessageEmbed()
             .setColor(SettingsConstants.COLORS.DEFAULT)
             .setImage(tradeInfo.yourCard.GetCard().GetImageUrl())

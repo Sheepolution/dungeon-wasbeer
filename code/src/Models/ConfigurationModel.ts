@@ -8,7 +8,7 @@ export default class ConfigurationModel extends Model {
         return 'configurations';
     }
 
-    public static async New(name:string, value:any) {
+    public static async New(name: string, value: any) {
         const configurationId = Utils.UUID();
 
         const configuration = await ConfigurationModel.query()

@@ -10,7 +10,7 @@ export default class TradeModel extends Model {
         return 'trades';
     }
 
-    public static async New(trader:Player, other:Player, traderCard:Card, otherCard:Card) {
+    public static async New(trader: Player, other: Player, traderCard: Card, otherCard: Card) {
         const tradeId = Utils.UUID();
 
         const trade = await TradeModel.query()

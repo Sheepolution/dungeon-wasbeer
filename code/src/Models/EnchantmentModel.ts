@@ -39,7 +39,7 @@ export default class EnchantmentModel extends Model {
         },
     }
 
-    public static async New(battle:Battle, character:Character, receiver:Character) {
+    public static async New(battle: Battle, character: Character, receiver: Character) {
         const enchantmentId = Utils.UUID();
 
         const enchantment = await EnchantmentModel.query()

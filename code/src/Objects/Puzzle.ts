@@ -5,16 +5,16 @@ import PuzzleModel from '../Models/PuzzleModel';
 
 export default class Puzzle {
 
-    protected id:string;
-    private active:boolean;
-    private content:string;
-    private solution:string;
-    private type:PuzzleType;
-    private creationDate:Date;
-    private solvingDate?:Date;
-    private solver?:Character;
+    protected id: string;
+    private active: boolean;
+    private content: string;
+    private solution: string;
+    private type: PuzzleType;
+    private creationDate: Date;
+    private solvingDate?: Date;
+    private solver?: Character;
 
-    public static async FIND_SOLVED_BY_CHARACTER(character:Character) {
+    public static async FIND_SOLVED_BY_CHARACTER(character: Character) {
         const puzzles = await PuzzleModel.query().where('solver_id', character.GetId()).count('id');
         return puzzles[0].count || 0;
     }
@@ -41,24 +41,24 @@ export default class Puzzle {
         return list;
     }
 
-    public async GET(id:string) {
-        const model:PuzzleModel = await PuzzleModel.query().findById(id);
+    public async GET(id: string) {
+        const model: PuzzleModel = await PuzzleModel.query().findById(id);
         await this.ApplyModel(model);
     }
 
-    public async POST(content:string, solution:string, puzzleType:PuzzleType) {
+    public async POST(content: string, solution: string, puzzleType: PuzzleType) {
         const model = await PuzzleModel.New(content, solution, puzzleType);
         await this.ApplyModel(model);
         return this;
     }
 
-    public async UPDATE(data:any, trx?:any) {
+    public async UPDATE(data: any, trx?: any) {
         await PuzzleModel.query(trx)
             .findById(this.id)
             .patch(data);
     }
 
-    public async ApplyModel(model:PuzzleModel) {
+    public async ApplyModel(model: PuzzleModel) {
         this.id = model.id;
         this.active = model.active;
         this.content = model.content;
@@ -89,7 +89,7 @@ export default class Puzzle {
         return this.solver != null;
     }
 
-    public async Solve(character:Character) {
+    public async Solve(character: Character) {
         this.solver = character;
         this.solvingDate = Utils.GetNow();
         this.active = false;

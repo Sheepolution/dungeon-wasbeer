@@ -39,7 +39,7 @@ export default class InspireModel extends Model {
         },
     }
 
-    public static async New(battle:Battle, character:Character, receiver:Character, characterCharisma:number, roll:number, finalInspiration:number) {
+    public static async New(battle: Battle, character: Character, receiver: Character, characterCharisma: number, roll: number, finalInspiration: number) {
         const inspireId = Utils.UUID();
 
         const inspire = await InspireModel.query()

@@ -12,7 +12,7 @@ export default class SudokuHandler {
     private static readonly sudokuPrefix = `${RedisConstants.REDIS_KEY}${RedisConstants.SUDOKU_KEY}`;
     private static readonly sudokuCooldownPrefix = `${RedisConstants.REDIS_KEY}${RedisConstants.SUDOKU_COOLDOWN_KEY}`;
 
-    public static async OnCommand(messageInfo:IMessageInfo, command:string, content:string) {
+    public static async OnCommand(messageInfo: IMessageInfo, command: string, content: string) {
         switch (command) {
             case 'sudoku':
             case 's':
@@ -31,7 +31,7 @@ export default class SudokuHandler {
         return true;
     }
 
-    public static async OnSudoku(messageInfo:IMessageInfo) {
+    public static async OnSudoku(messageInfo: IMessageInfo) {
         const cooldownKey = `${this.sudokuCooldownPrefix}${messageInfo.member.id}`;
         const cooldown = await Redis.ttl(cooldownKey);
         if (cooldown > 0) {
@@ -51,7 +51,7 @@ export default class SudokuHandler {
         MessageService.ReplyMessage(messageInfo, `Start de tijd! Moeilijkheidsgraad: ${count - 44}`, undefined, false, PuzzleEmbeds.GetTrainingSudokuEmbed(sudoku.puzzle));
     }
 
-    public static async OnSolve(messageInfo:IMessageInfo, solved:string) {
+    public static async OnSolve(messageInfo: IMessageInfo, solved: string) {
         const key = `${this.sudokuPrefix}${messageInfo.member.id}`;
         const data = await Redis.hgetall(key);
         if (data == null || data.solution == null || data.solution == '') {
@@ -60,7 +60,7 @@ export default class SudokuHandler {
 
         if (data.solution == solved) {
             const diff = Utils.GetNow().getTime() - data.start;
-            MessageService.ReplyMessage(messageInfo, `Correct! Je hebt de sudoku opgelost in ${Utils.GetSecondsInMinutesAndSeconds(Math.floor(diff/1000))}.`);
+            MessageService.ReplyMessage(messageInfo, `Correct! Je hebt de sudoku opgelost in ${Utils.GetSecondsInMinutesAndSeconds(Math.floor(diff / 1000))}.`);
             Redis.del(key);
         } else {
             messageInfo.message?.react(EmojiConstants.STATUS.BAD);

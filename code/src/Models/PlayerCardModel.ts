@@ -20,14 +20,14 @@ export default class PlayerCardModel extends Model {
         }
     }
 
-    public static async New(cardId:string, playerId:string, amount:number = 1, trx?:any) {
+    public static async New(cardId: string, playerId: string, amount: number = 1, trx?: any) {
         const playerCardId = Utils.UUID();
 
         const playerCard = await PlayerCardModel.query(trx)
             .insert({
-                id:playerCardId,
-                player_id:playerId,
-                card_id:cardId,
+                id: playerCardId,
+                player_id: playerId,
+                card_id: cardId,
                 amount: amount,
                 equipped: 0
             })

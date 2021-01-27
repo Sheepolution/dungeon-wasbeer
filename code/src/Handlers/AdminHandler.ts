@@ -24,7 +24,7 @@ import DiscordService from '../Services/DiscordService';
 
 export default class AdminHandler {
 
-    public static async OnCommand(messageInfo:IMessageInfo, player:Player, command:string, args:Array<string>, content:string) {
+    public static async OnCommand(messageInfo: IMessageInfo, player: Player, command: string, args: Array<string>, content: string) {
         switch (command) {
             case 'restart-the-bot':
                 this.RestartTheBot(messageInfo, player);
@@ -100,7 +100,7 @@ export default class AdminHandler {
         return true;
     }
 
-    private static async RestartTheBot(messageInfo:IMessageInfo, player:Player) {
+    private static async RestartTheBot(messageInfo: IMessageInfo, player: Player) {
         if (SettingsConstants.CAN_RESTART_BOT_IDS.includes(messageInfo.message?.author.id || '')) {
             try {
                 await LogService.Log(player, player.GetId(), LogType.BotRestarted, `${player.GetDiscordName()} heeft de bot opnieuw laten opstarten.`);
@@ -115,30 +115,30 @@ export default class AdminHandler {
         }
     }
 
-    private static async ResetAllCache(messageInfo:IMessageInfo) {
+    private static async ResetAllCache(messageInfo: IMessageInfo) {
         await BotManager.ResetAllCache();
         MessageService.ReplyMessage(messageInfo, 'Alle cache is gereset.', true);
     }
 
-    private static async SayMessageCard(messageInfo:IMessageInfo, message:string, player:Player) {
+    private static async SayMessageCard(messageInfo: IMessageInfo, message: string, player: Player) {
         await MessageService.SendMessageToCardChannel(message);
         MessageService.ReplyMessage(messageInfo, 'Ik heb het gezegd.', true, true);
         LogService.Log(player, player.GetId(), LogType.SayMessage, `${player.GetDiscordName()} zegt het bericht '${message}' in het kaarten-kanaal.`);
     }
 
-    private static async SayMessageDND(messageInfo:IMessageInfo, message:string, player:Player) {
+    private static async SayMessageDND(messageInfo: IMessageInfo, message: string, player: Player) {
         await MessageService.SendMessageToDNDChannel(message);
         MessageService.ReplyMessage(messageInfo, 'Ik heb het gezegd.', true, true);
         LogService.Log(player, player.GetId(), LogType.SayMessage, `${player.GetDiscordName()} zegt het bericht '${message}' in het D&D-kanaal.`);
     }
 
-    private static async SayMessageChat(messageInfo:IMessageInfo, message:string, player:Player) {
+    private static async SayMessageChat(messageInfo: IMessageInfo, message: string, player: Player) {
         await MessageService.SendMessageToChatChannel(message);
         MessageService.ReplyMessage(messageInfo, 'Ik heb het gezegd.', true, true);
         LogService.Log(player, player.GetId(), LogType.SayMessage, `${player.GetDiscordName()} zegt het bericht '${message}' in het chat-kanaal.`);
     }
 
-    private static async GiveCard(messageInfo:IMessageInfo, receiverId:string, args:Array<string>, player:Player) {
+    private static async GiveCard(messageInfo: IMessageInfo, receiverId: string, args: Array<string>, player: Player) {
         if (messageInfo.message == null) {
             return;
         }
@@ -192,7 +192,7 @@ export default class AdminHandler {
 
     // CARDS ////////////////
 
-    private static async AddNewCard(messageInfo:IMessageInfo, player:Player, args:any) {
+    private static async AddNewCard(messageInfo: IMessageInfo, player: Player, args: any) {
         if (args == null) {
             MessageService.ReplyAssignedArgumentsParseError(messageInfo);
             return;
@@ -243,7 +243,7 @@ export default class AdminHandler {
         }
     }
 
-    private static async EditCard(messageInfo:IMessageInfo, args:any) {
+    private static async EditCard(messageInfo: IMessageInfo, args: any) {
         if (args == null) {
             MessageService.ReplyAssignedArgumentsParseError(messageInfo);
             return;
@@ -294,7 +294,7 @@ export default class AdminHandler {
         }
     }
 
-    private static async SendCard(messageInfo:IMessageInfo, name:string) {
+    private static async SendCard(messageInfo: IMessageInfo, name: string) {
         if (name == null) {
             this.SendRandomCard(messageInfo);
             return;
@@ -309,26 +309,26 @@ export default class AdminHandler {
         this.SendCardEmbed(messageInfo, card);
     }
 
-    private static async SendCardStats(messageInfo:IMessageInfo) {
-        const cards:any = await Card.GET_ALL();
+    private static async SendCardStats(messageInfo: IMessageInfo) {
+        const cards: any = await Card.GET_ALL();
         MessageService.ReplyEmbed(messageInfo, CardEmbeds.GetCardStatsEmbed(cards));
     }
 
-    private static async SendRandomCard(messageInfo:IMessageInfo) {
-        const cardModels:CardModel = await Card.GET_ALL();
+    private static async SendRandomCard(messageInfo: IMessageInfo) {
+        const cardModels: CardModel = await Card.GET_ALL();
         var cardModel = cardModels.randomChoice();
         var card = new Card();
         card.ApplyModel(cardModel);
         this.SendCardEmbed(messageInfo, card);
     }
 
-    private static async SendCardEmbed(messageInfo:IMessageInfo, card:Card) {
+    private static async SendCardEmbed(messageInfo: IMessageInfo, card: Card) {
         MessageService.ReplyEmbed(messageInfo, CardEmbeds.GetCardEmbed(card));
     }
 
     // MONSTERS ////////////////
 
-    private static async AddNewMonster(messageInfo:IMessageInfo, player:Player, args:any) {
+    private static async AddNewMonster(messageInfo: IMessageInfo, player: Player, args: any) {
         if (args == null) {
             MessageService.ReplyAssignedArgumentsParseError(messageInfo);
             return;
@@ -364,7 +364,7 @@ export default class AdminHandler {
         }
     }
 
-    private static async EditMonster(messageInfo:IMessageInfo, args:any) {
+    private static async EditMonster(messageInfo: IMessageInfo, args: any) {
         if (args == null) {
             MessageService.ReplyAssignedArgumentsParseError(messageInfo);
             return;
@@ -398,7 +398,7 @@ export default class AdminHandler {
         }
     }
 
-    private static async SendMonster(messageInfo:IMessageInfo, name:string) {
+    private static async SendMonster(messageInfo: IMessageInfo, name: string) {
         if (name == null) {
             this.SendRandomMonster(messageInfo);
             return;
@@ -413,15 +413,15 @@ export default class AdminHandler {
         this.SendMonsterEmbed(messageInfo, monster);
     }
 
-    private static async SendRandomMonster(messageInfo:IMessageInfo) {
-        const monsterModels:MonsterModel = await Monster.GET_ALL();
+    private static async SendRandomMonster(messageInfo: IMessageInfo) {
+        const monsterModels: MonsterModel = await Monster.GET_ALL();
         var monsterModel = monsterModels.randomChoice();
         var monster = new Monster();
         monster.ApplyModel(monsterModel);
         this.SendMonsterEmbed(messageInfo, monster);
     }
 
-    private static async SendMonsterEmbed(messageInfo:IMessageInfo, monster:Monster) {
+    private static async SendMonsterEmbed(messageInfo: IMessageInfo, monster: Monster) {
         MessageService.ReplyEmbed(messageInfo, MonsterEmbeds.GetMonsterEmbed(monster));
     }
 }

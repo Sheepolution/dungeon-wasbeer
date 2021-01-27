@@ -9,13 +9,13 @@ import Player from '../Objects/Player';
 import PlayerCard from '../Objects/PlayerCard';
 import PlayerManager from '../Managers/PlayerManager';
 import { LogType } from '../Enums/LogType';
-import { ShoeConfigShate, ShoeConfigShate as ShoeConfigState } from '../Enums/ShoeConfigState';
 import { ShoeState } from '../Enums/ShoeState';
 import { Utils } from '../Utils/Utils';
+import { ShoeConfigState } from '../Enums/ShoeConfigState';
 
 export default class ShoeHandler {
 
-    public static async OnCommand(messageInfo:IMessageInfo, player:Player, command:string) {
+    public static async OnCommand(messageInfo: IMessageInfo, player: Player, command: string) {
         switch (command) {
             // case 'zet':
             // case 'zetten':
@@ -38,7 +38,7 @@ export default class ShoeHandler {
         return true;
     }
 
-    private static async OnSettingShoe(messageInfo:IMessageInfo, player:Player) {
+    private static async OnSettingShoe(messageInfo: IMessageInfo, player: Player) {
         const sintConfig = ConfigurationManager.GetConfigurationByName('sinterklaas_state');
         if (sintConfig?.Is('Off')) {
             return;
@@ -65,7 +65,7 @@ export default class ShoeHandler {
 
         if (hour >= 18 || hour < 1) {
             if (!shoeConfig?.Is(ShoeConfigState.Night)) {
-                shoeConfig?.SetValue(ShoeConfigShate.Night);
+                shoeConfig?.SetValue(ShoeConfigState.Night);
             }
             await player.SetShoeState(ShoeState.Set);
             await LogService.Log(player, player.GetId(), LogType.ShoeEmptied, `${player.GetDiscordName()} heeft hun schoentje geleegd.`);
@@ -77,7 +77,7 @@ export default class ShoeHandler {
         }
     }
 
-    private static async OnEmptyingShoe(messageInfo:IMessageInfo, player:Player) {
+    private static async OnEmptyingShoe(messageInfo: IMessageInfo, player: Player) {
         const sintConfig = ConfigurationManager.GetConfigurationByName('sinterklaas_state');
         if (sintConfig?.Is('Off')) {
             return;
@@ -92,10 +92,10 @@ export default class ShoeHandler {
         if (hour >= 8 || hour < 1) {
             if (hour >= 8 && hour < 18) {
                 if (shoeConfig?.Is(ShoeConfigState.Night)) {
-                    await shoeConfig?.SetValue(ShoeConfigShate.Day);
+                    await shoeConfig?.SetValue(ShoeConfigState.Day);
                     await Player.UPDATE_SHOES();
                     PlayerManager.ResetPlayerCache();
-                    player = <Player> await PlayerManager.GetPlayerById(player.GetId());
+                    player = <Player>await PlayerManager.GetPlayerById(player.GetId());
                     shoeState = player.GetShoeState();
                 }
             }

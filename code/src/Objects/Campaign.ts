@@ -6,16 +6,16 @@ import { Utils } from '../Utils/Utils';
 
 export default class Campaign {
 
-    protected id:string;
-    private active:boolean;
-    private sessionType:SessionType;
-    private battle:Battle;
-    private puzzle:Puzzle;
-    private startDate:Date;
-    private endDate:Date;
+    protected id: string;
+    private active: boolean;
+    private sessionType: SessionType;
+    private battle: Battle;
+    private puzzle: Puzzle;
+    private startDate: Date;
+    private endDate: Date;
 
-    public async GET(id:string) {
-        const model:CampaignModel = await CampaignModel.query().findById(id);
+    public async GET(id: string) {
+        const model: CampaignModel = await CampaignModel.query().findById(id);
         await this.ApplyModel(model);
     }
 
@@ -31,19 +31,19 @@ export default class Campaign {
         return false;
     }
 
-    public async POST(sessionType:SessionType, sessionId:string) {
+    public async POST(sessionType: SessionType, sessionId: string) {
         const model = await CampaignModel.New(sessionType, sessionId);
         await this.ApplyModel(model);
         return this;
     }
 
-    public async UPDATE(data:any, trx?:any) {
+    public async UPDATE(data: any, trx?: any) {
         await CampaignModel.query(trx)
             .findById(this.id)
             .patch(data);
     }
 
-    public async ApplyModel(model:CampaignModel) {
+    public async ApplyModel(model: CampaignModel) {
         this.id = model.id;
         this.active = model.active;
         this.sessionType = await model.GetSessionType();

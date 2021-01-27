@@ -22,7 +22,7 @@ import CardService from '../Services/CardService';
 
 export default class PlayerCardHandler {
 
-    public static async OnCommand(messageInfo:IMessageInfo, player:Player, command:string, args:Array<string>, content:string) {
+    public static async OnCommand(messageInfo: IMessageInfo, player: Player, command: string, args: Array<string>, content: string) {
         switch (command) {
             case 'graaf':
             case 'graven':
@@ -102,7 +102,7 @@ export default class PlayerCardHandler {
         return true;
     }
 
-    public static async OnReaction(obj:any, reaction:MessageReaction) {
+    public static async OnReaction(obj: any, reaction: MessageReaction) {
         if (reaction.emoji.name == '⬅️') {
             obj.values.page -= 1;
         } else if (reaction.emoji.name == '➡️') {
@@ -117,7 +117,7 @@ export default class PlayerCardHandler {
         }
     }
 
-    private static async Dig(messageInfo:IMessageInfo, player:Player) {
+    private static async Dig(messageInfo: IMessageInfo, player: Player) {
         if (await player.HasDigWaitCooldown()) {
             MessageService.ReplyMessage(messageInfo, 'Je hebt nog geen uur geleden gegraven. Eventjes wachten voordat je weer op zoek gaat naar een kaartstukje.');
             return;
@@ -200,7 +200,7 @@ export default class PlayerCardHandler {
         }
     }
 
-    private static async SendPlayerCard(messageInfo:IMessageInfo, player:Player, cardName:string) {
+    private static async SendPlayerCard(messageInfo: IMessageInfo, player: Player, cardName: string) {
         if (cardName == null) {
             MessageService.ReplyMissingCardName(messageInfo);
             return;
@@ -215,7 +215,7 @@ export default class PlayerCardHandler {
         MessageService.ReplyEmbed(messageInfo, CardEmbeds.GetCardEmbed(playerCard.GetCard(), playerCard.GetAmount()));
     }
 
-    private static async SendPlayerCardList(messageInfo:IMessageInfo, player:Player, sorting?:SortingType, filterType?:string, filterValue?:string, other?:string, lesserGreater?:string) {
+    private static async SendPlayerCardList(messageInfo: IMessageInfo, player: Player, sorting?: SortingType, filterType?: string, filterValue?: string, other?: string, lesserGreater?: string) {
 
         var otherPlayer;
         var requester = player;
@@ -234,7 +234,7 @@ export default class PlayerCardHandler {
 
             if (other != null) {
                 if (lesserGreater != null) {
-                    if (! (lesserGreater == '<' || lesserGreater == '>')) {
+                    if (!(lesserGreater == '<' || lesserGreater == '>')) {
                         lesserGreater = undefined;
                     }
                 }
@@ -270,11 +270,11 @@ export default class PlayerCardHandler {
             await message.react('⬅️')
             await Utils.Sleep(.5)
             await message.react('➡️')
-            ReactionManager.AddMessage(message, ReactionMessageType.PlayerCardList, messageInfo, {page: 1, requester: requester, player: player, sorting: sorting, filterType: cardFilter, filterValue: filterValue, otherPlayer: otherPlayer, lesserGreater: lesserGreater});
+            ReactionManager.AddMessage(message, ReactionMessageType.PlayerCardList, messageInfo, { page: 1, requester: requester, player: player, sorting: sorting, filterType: cardFilter, filterValue: filterValue, otherPlayer: otherPlayer, lesserGreater: lesserGreater });
         }
     }
 
-    private static async SendPlayerCardOwnersList(messageInfo:IMessageInfo, player:Player, searchKey:string) {
+    private static async SendPlayerCardOwnersList(messageInfo: IMessageInfo, player: Player, searchKey: string) {
         if (searchKey == null || searchKey.length == 0) {
             MessageService.ReplyMessage(messageInfo, 'Geef de naam van de kaart mee waarvan je de eigenaren wilt zien', false, true);
             return;
@@ -286,8 +286,8 @@ export default class PlayerCardHandler {
             return;
         }
 
-        var finalCard:Card|null = null;
-        var finalOwnerList:any = null;
+        var finalCard: Card | null = null;
+        var finalOwnerList: any = null;
 
         for (const card of cards) {
             const cardName = card.GetName();
@@ -308,7 +308,7 @@ export default class PlayerCardHandler {
 
         const page = finalOwnerList.length > SettingsConstants.CARD_AMOUNT_SPLIT_PAGES ? 1 : undefined;
 
-        finalOwnerList.sort((a:any, b:any) => b.amount - a.amount);
+        finalOwnerList.sort((a: any, b: any) => b.amount - a.amount);
 
         const message = await MessageService.ReplyEmbed(messageInfo, CardEmbeds.GetPlayerCardOwnerListEmbed(finalCard, finalOwnerList, page));
 
@@ -320,12 +320,12 @@ export default class PlayerCardHandler {
             await message.react('⬅️')
             await Utils.Sleep(.5)
             await message.react('➡️')
-            ReactionManager.AddMessage(message, ReactionMessageType.PlayerCardList, messageInfo, {page: 1, card: finalCard, ownerList: finalOwnerList});
+            ReactionManager.AddMessage(message, ReactionMessageType.PlayerCardList, messageInfo, { page: 1, card: finalCard, ownerList: finalOwnerList });
         }
 
     }
 
-    private static async SendCardNotFound(messageInfo:IMessageInfo, name:string) {
+    private static async SendCardNotFound(messageInfo: IMessageInfo, name: string) {
         MessageService.ReplyMessage(messageInfo, `Ik heb geen kaart kunnen vinden met de naam ${name}`, false, true);
     }
 }

@@ -11,12 +11,12 @@ export default class FocusHandler {
 
     private static readonly focusPuzzlePrefix = RedisConstants.REDIS_KEY + RedisConstants.FOCUS_PUZZLE_KEY;
 
-    public static async OnCommand(messageInfo:IMessageInfo, command:string ) {
+    public static async OnCommand(messageInfo: IMessageInfo, command: string) {
         switch (command) {
             case 'kantoor':
             case 'concentreren':
             case 'focus':
-                this.OnFocus(messageInfo );
+                this.OnFocus(messageInfo);
                 break;
             default:
                 return false;
@@ -25,7 +25,7 @@ export default class FocusHandler {
         return true;
     }
 
-    public static async OnFocusCommand(messageInfo:IMessageInfo, command:string, content:string) {
+    public static async OnFocusCommand(messageInfo: IMessageInfo, command: string, content: string) {
         switch (command) {
             case 'antwoord':
             case 'antwoorden':
@@ -40,7 +40,7 @@ export default class FocusHandler {
         return true;
     }
 
-    private static async OnFocus(messageInfo:IMessageInfo) {
+    private static async OnFocus(messageInfo: IMessageInfo) {
         const puzzle = PuzzleService.GetPuzzleAndSolution();
         const message = await MessageService.SendMessageToDM(messageInfo, '', PuzzleEmbeds.GetFocusSudokuEmbed(puzzle.puzzle));
 
@@ -56,7 +56,7 @@ export default class FocusHandler {
         messageInfo.member.roles.add(SettingsConstants.FOCUS_ROLE_ID);
     }
 
-    private static async OnSolution(messageInfo:IMessageInfo, solved:string) {
+    private static async OnSolution(messageInfo: IMessageInfo, solved: string) {
         const solution = await Redis.get(`${this.focusPuzzlePrefix}${messageInfo.member.id}`);
         if (!solution || solution == '' || solution == solved) {
             await messageInfo.member.roles.remove(SettingsConstants.FOCUS_ROLE_ID);

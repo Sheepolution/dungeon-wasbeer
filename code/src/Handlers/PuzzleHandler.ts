@@ -13,7 +13,7 @@ import LogService from '../Services/LogService';
 
 export default class PuzzleHandler {
 
-    public static async OnCommand(messageInfo:IMessageInfo, player:Player, command:string, content:string) {
+    public static async OnCommand(messageInfo: IMessageInfo, player: Player, command: string, content: string) {
         switch (command) {
             case 'puzzel':
                 this.SendPuzzleInfo(messageInfo);
@@ -30,7 +30,7 @@ export default class PuzzleHandler {
         return true;
     }
 
-    private static async SendPuzzleInfo(messageInfo:IMessageInfo) {
+    private static async SendPuzzleInfo(messageInfo: IMessageInfo) {
         const puzzle = CampaignManager.GetPuzzle();
         if (puzzle == null) {
             this.ReplyNoPuzzle(messageInfo);
@@ -39,7 +39,7 @@ export default class PuzzleHandler {
         return await MessageService.ReplyEmbed(messageInfo, PuzzleEmbeds.GetSudokuEmbed(puzzle));
     }
 
-    private static async SolvePuzzle(messageInfo:IMessageInfo, player:Player, content:string) {
+    private static async SolvePuzzle(messageInfo: IMessageInfo, player: Player, content: string) {
         const character = PlayerManager.GetCharacterFromPlayer(messageInfo, player);
         if (character == null) { return; }
 
@@ -64,7 +64,7 @@ export default class PuzzleHandler {
         LogService.Log(player, puzzle.GetId(), LogType.PuzzleWrong, `${player.GetDiscordName()} geeft het foute antwoord op een puzzel.`);
     }
 
-    private static async OnSolvingPuzzle(messageInfo:IMessageInfo, puzzle:Puzzle, character:Character) {
+    private static async OnSolvingPuzzle(messageInfo: IMessageInfo, puzzle: Puzzle, character: Character) {
         await puzzle.Solve(character);
         await MessageService.ReplyMessage(messageInfo, PuzzleService.GetPuzzleOutro(puzzle), true, true, PuzzleEmbeds.GetPuzzleSolvedEmbed(puzzle));
         await Utils.Sleep(2)
@@ -72,7 +72,7 @@ export default class PuzzleHandler {
         LogService.Log(character.GetPlayer(), puzzle.GetId(), LogType.PuzzleSolved, `${character.GetPlayer().GetDiscordName()} lost een puzzel op.`);
     }
 
-    private static async ReplyNoPuzzle(messageInfo:IMessageInfo) {
+    private static async ReplyNoPuzzle(messageInfo: IMessageInfo) {
         MessageService.ReplyMessage(messageInfo, 'Er is geen puzzel op het moment.', false);
     }
 }

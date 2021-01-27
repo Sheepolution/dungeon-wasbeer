@@ -13,28 +13,28 @@ export default class Player {
     private static readonly digCooldownPrefix = RedisConstants.REDIS_KEY + RedisConstants.DIG_COOLDOWN_KEY;
     private static readonly digCooldownWaitPrefix = RedisConstants.REDIS_KEY + RedisConstants.DIG_COOLDOWN_WAIT_KEY;
 
-    protected id:string;
-    private discordId:string;
-    private messagePoints:number;
-    private playerCards:Array<PlayerCard>;
-    private cardPieces:number;
-    private lastActiveDate:string;
-    private discordName:string;
-    private character?:Character;
-    private shoeState:ShoeState;
+    protected id: string;
+    private discordId: string;
+    private messagePoints: number;
+    private playerCards: Array<PlayerCard>;
+    private cardPieces: number;
+    private lastActiveDate: string;
+    private discordName: string;
+    private character?: Character;
+    private shoeState: ShoeState;
 
     public static async UPDATE_SHOES() {
         await PlayerModel.query()
             .whereNot('shoe_state', ShoeState.Set)
-            .patch({shoe_state: ShoeState.Empty});
+            .patch({ shoe_state: ShoeState.Empty });
 
         await PlayerModel.query()
             .where('shoe_state', ShoeState.Set)
-            .patch({shoe_state: ShoeState.Filled});
+            .patch({ shoe_state: ShoeState.Filled });
     }
 
-    public async GET(id:string, isUuid?:boolean) {
-        var models:PlayerModel;
+    public async GET(id: string, isUuid?: boolean) {
+        var models: PlayerModel;
 
         if (isUuid) {
             models = await PlayerModel.query().findById(id);
@@ -54,19 +54,19 @@ export default class Player {
         return true;
     }
 
-    public async POST(discordId:string, discordDisplayName:string) {
+    public async POST(discordId: string, discordDisplayName: string) {
         const model = await PlayerModel.New(discordId, discordDisplayName);
         await this.ApplyModel(model);
         return this;
     }
 
-    public async UPDATE(data:any) {
+    public async UPDATE(data: any) {
         await PlayerModel.query()
             .findById(this.id)
             .patch(data);
     }
 
-    public async ApplyModel(model:PlayerModel) {
+    public async ApplyModel(model: PlayerModel) {
         this.id = model.id;
         this.discordId = model.discord_id;
         this.discordName = model.discord_name;
@@ -99,13 +99,13 @@ export default class Player {
 
     public UpdateLastActive() {
         this.lastActiveDate = Utils.GetNowString();
-        this.UPDATE({active_date: this.lastActiveDate})
+        this.UPDATE({ active_date: this.lastActiveDate })
     }
 
-    public UpdateDiscordName(discordDisplayName:string) {
+    public UpdateDiscordName(discordDisplayName: string) {
         if (this.discordName == discordDisplayName) { return; }
         this.discordName = discordDisplayName;
-        this.UPDATE({discord_name: discordDisplayName});
+        this.UPDATE({ discord_name: discordDisplayName });
     }
 
     public GetCards() {
@@ -116,12 +116,12 @@ export default class Player {
         return this.shoeState;
     }
 
-    public async SetShoeState(shoeState:ShoeState) {
+    public async SetShoeState(shoeState: ShoeState) {
         this.shoeState = shoeState;
         await this.UPDATE({ shoe_state: this.shoeState });
     }
 
-    public FindCard(name:string) {
+    public FindCard(name: string) {
         const cards = this.playerCards.filter(c => c.GetCard().GetName().toLowerCase().includes(name.toLowerCase()));
         if (cards.length == 0) {
             return;
@@ -132,7 +132,7 @@ export default class Player {
         return cards[0];
     }
 
-    public RemoveCard(playerCard:PlayerCard) {
+    public RemoveCard(playerCard: PlayerCard) {
         for (let i = 0; i < this.playerCards.length; i++) {
             if (this.playerCards[i] == playerCard) {
                 this.playerCards.splice(i, 1);
@@ -141,7 +141,7 @@ export default class Player {
         }
     }
 
-    public GiveCard(playerCard:PlayerCard) {
+    public GiveCard(playerCard: PlayerCard) {
         this.playerCards.push(playerCard);
     }
 
@@ -172,33 +172,33 @@ export default class Player {
 
     public async AddCardPiece() {
         this.cardPieces += 1;
-        this.UPDATE({card_pieces: this.cardPieces});
+        this.UPDATE({ card_pieces: this.cardPieces });
     }
 
     public async TakeCardPiece() {
         if (this.cardPieces > 0) {
             this.cardPieces -= 1;
-            this.UPDATE({card_pieces: this.cardPieces});
+            this.UPDATE({ card_pieces: this.cardPieces });
         }
     }
 
     public async TakeAllCardPieces() {
         if (this.cardPieces > 0) {
             this.cardPieces = 0;
-            this.UPDATE({card_pieces: this.cardPieces});
+            this.UPDATE({ card_pieces: this.cardPieces });
         }
     }
 
     public AddMessagePoint() {
         this.messagePoints += 1;
-        this.UPDATE({message_points: this.messagePoints});
+        this.UPDATE({ message_points: this.messagePoints });
     }
 
     public GetMessagePoints() {
         return this.messagePoints;
     }
 
-    public async CreateCharacter(classType:ClassType) {
+    public async CreateCharacter(classType: ClassType) {
         const character = new Character(this);
         await character.POST(classType);
 

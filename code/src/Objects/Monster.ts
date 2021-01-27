@@ -2,34 +2,34 @@ import MonsterModel from '../Models/MonsterModel';
 import { AttackType } from '../Enums/AttackType';
 
 export default class Monster {
-    protected id:string;
-    private name:string;
-    private description:string;
-    private level:number;
-    private category:string;
-    private type:AttackType;
-    private health:number;
-    private strength:number;
-    private attack:number;
-    private attackDescription:string;
-    private attackCritDescription:string;
-    private imageUrl:string;
-    private creatorId:string;
-    private creationDate:string;
-    private number:number;
+    protected id: string;
+    private name: string;
+    private description: string;
+    private level: number;
+    private category: string;
+    private type: AttackType;
+    private health: number;
+    private strength: number;
+    private attack: number;
+    private attackDescription: string;
+    private attackCritDescription: string;
+    private imageUrl: string;
+    private creatorId: string;
+    private creationDate: string;
+    private number: number;
 
     public static async GET_ALL() {
         const models = await MonsterModel.query();
         return models;
     }
 
-    public async GET(id:string) {
-        const model:MonsterModel = await MonsterModel.query().findById(id);
+    public async GET(id: string) {
+        const model: MonsterModel = await MonsterModel.query().findById(id);
         await this.ApplyModel(model);
     }
 
-    public async FIND_BY_NAME(name:string) {
-        const models:MonsterModel = await MonsterModel.query().where('name', name);
+    public async FIND_BY_NAME(name: string) {
+        const models: MonsterModel = await MonsterModel.query().where('name', name);
 
         if (models.length == 0) {
             return false;
@@ -39,19 +39,19 @@ export default class Monster {
         return true;
     }
 
-    public async POST(name:string, description:string, level:number, category:string, type:AttackType, health:number, strength:number, attack:number, attackDescription:string, attackCritDescription:string, imageUrl:string, creatorId:string, number:number) {
+    public async POST(name: string, description: string, level: number, category: string, type: AttackType, health: number, strength: number, attack: number, attackDescription: string, attackCritDescription: string, imageUrl: string, creatorId: string, number: number) {
         const model = await MonsterModel.New(name, description, level, category, type.toString(), health, strength, attack, attackDescription, attackCritDescription, imageUrl, creatorId, number);
         await this.ApplyModel(model);
         return this;
     }
 
-    public async UPDATE(data:any, trx?:any) {
+    public async UPDATE(data: any, trx?: any) {
         await MonsterModel.query(trx)
             .findById(this.id)
             .patch(data);
     }
 
-    public async ApplyModel(model:MonsterModel) {
+    public async ApplyModel(model: MonsterModel) {
         this.id = model.id;
         this.name = model.name;
         this.description = model.description;
@@ -69,7 +69,7 @@ export default class Monster {
         this.number = model.number;
     }
 
-    public async EditMonster(name:string = this.name, description:string = this.description, level:number = this.level, category:string = this.category, type:AttackType = this.type, health:number = this.health, strength:number = this.strength, attack:number = this.attack, attackDescription:string = this.attackDescription, attackCritDescription:string = this.attackCritDescription, imageUrl:string = this.imageUrl) {
+    public async EditMonster(name: string = this.name, description: string = this.description, level: number = this.level, category: string = this.category, type: AttackType = this.type, health: number = this.health, strength: number = this.strength, attack: number = this.attack, attackDescription: string = this.attackDescription, attackCritDescription: string = this.attackCritDescription, imageUrl: string = this.imageUrl) {
         this.name = name;
         this.description = description;
         this.level = level;
@@ -133,7 +133,7 @@ export default class Monster {
         return this.attack;
     }
 
-    public SetAttackRoll(attack:number) {
+    public SetAttackRoll(attack: number) {
         this.attack = attack;
     }
 
@@ -145,11 +145,11 @@ export default class Monster {
         return this.attackCritDescription;
     }
 
-    public GetAttackStrength(crit?:boolean) {
+    public GetAttackStrength(crit?: boolean) {
         return this.strength * (crit ? 2 : 1);
     }
 
-    public SetAttackStrength(strength:number) {
+    public SetAttackStrength(strength: number) {
         this.strength = strength;
     }
 

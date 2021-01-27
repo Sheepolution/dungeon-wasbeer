@@ -1,4 +1,4 @@
-export enum ShoeConfigShate {
+export enum ShoeConfigState {
     Day = 'Day',
     Night = 'Night',
 }

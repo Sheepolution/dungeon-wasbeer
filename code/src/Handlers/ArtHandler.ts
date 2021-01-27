@@ -6,7 +6,7 @@ import { Utils } from '../Utils/Utils';
 import { MessageReaction, TextChannel } from 'discord.js';
 
 export default class ArtHandler {
-    public static async OnReaction(obj:any, reaction:MessageReaction) {
+    public static async OnReaction(obj: any, reaction: MessageReaction) {
         if (reaction.emoji.name == '📌') {
             obj.messageInfo.message.reactions.removeAll();
             await Utils.Sleep(Utils.Random(2, 10));
@@ -16,7 +16,7 @@ export default class ArtHandler {
         }
     }
 
-    public static async AddPinReaction(messageInfo:IMessageInfo) {
+    public static async AddPinReaction(messageInfo: IMessageInfo) {
         if (messageInfo.message == null) {
             return;
         }
@@ -26,7 +26,7 @@ export default class ArtHandler {
         ReactionManager.AddMessage(messageInfo?.message, ReactionMessageType.ArtPin, messageInfo, null, 1);
     }
 
-    public static async PinArt(messageInfo:IMessageInfo) {
+    public static async PinArt(messageInfo: IMessageInfo) {
         const pinned = await (<TextChannel>messageInfo.channel).messages.fetchPinned(true);
         const pinnedArray = pinned.array();
         if (pinnedArray.length >= 50) {
@@ -39,7 +39,7 @@ export default class ArtHandler {
         await messageInfo.message?.pin();
     }
 
-    public static async SayMessage(messageInfo:IMessageInfo) {
+    public static async SayMessage(messageInfo: IMessageInfo) {
         var messages = [
             'Wooow! Die is echt héél goed {1}!',
             'Nice {1}! Echt heel mooi!!',

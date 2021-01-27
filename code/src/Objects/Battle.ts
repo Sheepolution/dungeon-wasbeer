@@ -4,41 +4,41 @@ import { Utils } from '../Utils/Utils';
 
 export default class Battle {
 
-    protected id:string;
-    private active:boolean;
-    private monster:Monster;
-    private monsterHealth:number;
-    private startDate:Date;
-    private endDate:Date;
+    protected id: string;
+    private active: boolean;
+    private monster: Monster;
+    private monsterHealth: number;
+    private startDate: Date;
+    private endDate: Date;
 
     public static async GET_COUNT() {
         const battles = await BattleModel.query().count('id');
         return battles[0].count || 0;
     }
 
-    public async GET(id:string) {
-        const model:BattleModel = await BattleModel.query().findById(id);
+    public async GET(id: string) {
+        const model: BattleModel = await BattleModel.query().findById(id);
         await this.ApplyModel(model);
     }
 
     public async GET_LATEST() {
-        const model:BattleModel = await BattleModel.query().orderBy('start_date', 'desc').first();
+        const model: BattleModel = await BattleModel.query().orderBy('start_date', 'desc').first();
         await this.ApplyModel(model);
     }
 
-    public async POST(monster:Monster) {
+    public async POST(monster: Monster) {
         const model = await BattleModel.New(monster);
         await this.ApplyModel(model);
         return this;
     }
 
-    public async UPDATE(data:any, trx?:any) {
+    public async UPDATE(data: any, trx?: any) {
         await BattleModel.query(trx)
             .findById(this.id)
             .patch(data);
     }
 
-    public async ApplyModel(model:BattleModel) {
+    public async ApplyModel(model: BattleModel) {
         this.id = model.id;
         this.active = model.active;
         this.monster = await model.GetMonster();
@@ -63,7 +63,7 @@ export default class Battle {
         return this.monsterHealth;
     }
 
-    public GetMonsterAttackStrength(crit?:boolean) {
+    public GetMonsterAttackStrength(crit?: boolean) {
         var strength = this.monster.GetAttackStrength();
         if (this.monster.GetId() == '7e476ee1-c32a-426b-b278-a03d6f85f164') {
             var missing = Math.ceil(this.monster.GetHealth() / 1000) - Math.ceil(this.monsterHealth / 1000);
@@ -118,9 +118,9 @@ export default class Battle {
         return this.endDate;
     }
 
-    public async DealDamageToMonster(damage:number) {
+    public async DealDamageToMonster(damage: number) {
         this.monsterHealth = Math.max(0, this.monsterHealth - damage);
-        await this.UPDATE({monster_health: this.monsterHealth})
+        await this.UPDATE({ monster_health: this.monsterHealth })
         return damage;
     }
 
@@ -128,9 +128,9 @@ export default class Battle {
         return this.monsterHealth <= 0;
     }
 
-    public async HealMonster(amount:number) {
+    public async HealMonster(amount: number) {
         this.monsterHealth = Math.min(this.monster.GetHealth(), this.monsterHealth + amount);
-        await this.UPDATE({monster_health: this.monsterHealth})
+        await this.UPDATE({ monster_health: this.monsterHealth })
     }
 
     public async Complete() {

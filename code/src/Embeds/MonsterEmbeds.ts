@@ -4,9 +4,9 @@ import { MessageEmbed } from 'discord.js';
 
 export default class MonsterEmbeds {
 
-    public static GetMonsterEmbed(monster:Monster) {
-        var attackStrength:string|number = monster.GetAttackStrength();
-        var attackRoll:string|number = monster.GetAttackRoll();
+    public static GetMonsterEmbed(monster: Monster) {
+        var attackStrength: string | number = monster.GetAttackStrength();
+        var attackRoll: string | number = monster.GetAttackRoll();
 
         const monsterId = monster.GetId();
 

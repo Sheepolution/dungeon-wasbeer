@@ -2,23 +2,23 @@ import ConfigurationModel from '../Models/ConfigurationModel';
 
 export default class Configuration {
 
-    protected id:string;
-    private name:string;
-    private value:string;
-    private editDate:Date;
+    protected id: string;
+    private name: string;
+    private value: string;
+    private editDate: Date;
 
     public static async GET_ALL() {
-        const models:ConfigurationModel = await ConfigurationModel.query();
+        const models: ConfigurationModel = await ConfigurationModel.query();
         return models;
     }
 
-    public async GET(id:string) {
-        const model:ConfigurationModel = await ConfigurationModel.query().findById(id);
+    public async GET(id: string) {
+        const model: ConfigurationModel = await ConfigurationModel.query().findById(id);
         await this.ApplyModel(model);
     }
 
-    public async FIND_BY_NAME(name:string) {
-        const models:ConfigurationModel = await ConfigurationModel.query().where({name: name});
+    public async FIND_BY_NAME(name: string) {
+        const models: ConfigurationModel = await ConfigurationModel.query().where({ name: name });
 
         if (models.length == 0) {
             return false;
@@ -28,13 +28,13 @@ export default class Configuration {
         return true;
     }
 
-    public async UPDATE(data:any, trx?:any) {
+    public async UPDATE(data: any, trx?: any) {
         await ConfigurationModel.query(trx)
             .findById(this.id)
             .patch(data);
     }
 
-    public async ApplyModel(model:ConfigurationModel) {
+    public async ApplyModel(model: ConfigurationModel) {
         this.id = model.id;
         this.name = model.name;
         this.value = model.value;
@@ -53,7 +53,7 @@ export default class Configuration {
         return this.value
     }
 
-    public Is(value:string) {
+    public Is(value: string) {
         return this.value == value;
     }
 
@@ -65,7 +65,7 @@ export default class Configuration {
         return parseInt(this.value);
     }
 
-    public async SetValue(value:any) {
+    public async SetValue(value: any) {
         this.value = value;
         await this.UPDATE({
             value: this.value

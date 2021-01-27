@@ -9,7 +9,7 @@ import CardManager from '../Managers/CardManager';
 
 export default class CardService {
 
-    public static ParseModifierStringToArray(modifierString?:string) {
+    public static ParseModifierStringToArray(modifierString?: string) {
         if (modifierString == null) {
             return null;
         }
@@ -33,7 +33,7 @@ export default class CardService {
         return parsedModifiers;
     }
 
-    public static ParseModifierArrayToDataString(modifierArray?:Array<ICardModifier>) {
+    public static ParseModifierArrayToDataString(modifierArray?: Array<ICardModifier>) {
         if (modifierArray == null || modifierArray.length == 0) {
             return undefined;
         }
@@ -50,7 +50,7 @@ export default class CardService {
         return modifierString
     }
 
-    public static ParseCardModifersToEmbedString(card:Card) {
+    public static ParseCardModifersToEmbedString(card: Card) {
         const modifierArray = card.GetModifiers();
         if (modifierArray == null || modifierArray.length == 0) {
             return ''
@@ -73,7 +73,7 @@ export default class CardService {
         return modifierString
     }
 
-    public static ParseModifierArrayToEmbedString(modifierArray?:Array<ICardModifier>) {
+    public static ParseModifierArrayToEmbedString(modifierArray?: Array<ICardModifier>) {
         if (modifierArray == null || modifierArray.length == 0) {
             return ''
         }
@@ -90,7 +90,7 @@ export default class CardService {
         return modifierString
     }
 
-    public static GetIconByCategory(category:string) {
+    public static GetIconByCategory(category: string) {
         switch (category) {
             case 'Chonky':
                 return ImageConstants.ICONS.CHONKY;
@@ -137,7 +137,7 @@ export default class CardService {
         }
     }
 
-    public static GetIconEmojiByCategory(category:string) {
+    public static GetIconEmojiByCategory(category: string) {
         switch (category) {
             case 'Chonky':
                 return EmojiConstants.CARD_CATEGORIES.CHONKY;
@@ -184,7 +184,7 @@ export default class CardService {
         }
     }
 
-    public static FindCards(name:string) {
+    public static FindCards(name: string) {
         const cards = CardManager.GetCardList().filter(c => c.GetName().toLowerCase().includes(name.toLowerCase()));
         if (cards.length == 0) {
             return;
@@ -195,7 +195,7 @@ export default class CardService {
         return cards;
     }
 
-    public static GetFilterType(filterType:string) {
+    public static GetFilterType(filterType: string) {
         switch (filterType.toLowerCase()) {
             case 'categorie':
             case 'category':

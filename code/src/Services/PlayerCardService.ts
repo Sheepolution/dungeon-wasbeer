@@ -6,7 +6,7 @@ import CardService from './CardService';
 
 export default class PlayerCardService {
 
-    public static GetPlayerCardList(player:Player, sortingType?:SortingType, otherPlayer?:Player, filterType?:CardFilterType, filterValue?:string):Array<PlayerCard> {
+    public static GetPlayerCardList(player: Player, sortingType?: SortingType, otherPlayer?: Player, filterType?: CardFilterType, filterValue?: string): Array<PlayerCard> {
 
         var playerCards = player.GetCards();
 
@@ -48,19 +48,19 @@ export default class PlayerCardService {
         if (sortingType != null) {
             switch (sortingType) {
                 case SortingType.Category:
-                    playerCards.sort((a:PlayerCard, b:PlayerCard) => a.GetCard().GetCategory() > b.GetCard().GetCategory() ? 1 : -1);
+                    playerCards.sort((a: PlayerCard, b: PlayerCard) => a.GetCard().GetCategory() > b.GetCard().GetCategory() ? 1 : -1);
                     break;
                 case SortingType.Rank:
-                    playerCards.sort((a:PlayerCard, b:PlayerCard) => a.GetCard().GetRank() - b.GetCard().GetRank());
+                    playerCards.sort((a: PlayerCard, b: PlayerCard) => a.GetCard().GetRank() - b.GetCard().GetRank());
                     break;
                 case SortingType.Name:
-                    playerCards.sort((a:PlayerCard, b:PlayerCard) => a.GetCard().GetName() > b.GetCard().GetName() ? 1 : -1);
+                    playerCards.sort((a: PlayerCard, b: PlayerCard) => a.GetCard().GetName() > b.GetCard().GetName() ? 1 : -1);
                     break;
                 case SortingType.Class:
-                    playerCards.sort((a:PlayerCard, b:PlayerCard) => (a.GetCard().GetModifierClass() || '') > (b.GetCard().GetModifierClass() || '') ? -1 : 1);
+                    playerCards.sort((a: PlayerCard, b: PlayerCard) => (a.GetCard().GetModifierClass() || '') > (b.GetCard().GetModifierClass() || '') ? -1 : 1);
                     break;
                 case SortingType.Buff:
-                    playerCards.sort((a:PlayerCard, b:PlayerCard) => {
+                    playerCards.sort((a: PlayerCard, b: PlayerCard) => {
                         const am = a.GetCard().GetModifiers();
                         const bm = b.GetCard().GetModifiers();
                         if (am == null || am.length == 0) { return 1; }
@@ -69,10 +69,10 @@ export default class PlayerCardService {
                     });
                     break;
                 case SortingType.Amount:
-                    playerCards.sort((a:PlayerCard, b:PlayerCard) => b.GetAmount() - a.GetAmount());
+                    playerCards.sort((a: PlayerCard, b: PlayerCard) => b.GetAmount() - a.GetAmount());
                     break;
                 case SortingType.Season:
-                    playerCards.sort((a:PlayerCard, b:PlayerCard) => b.GetCard().GetSeason() - a.GetCard().GetSeason());
+                    playerCards.sort((a: PlayerCard, b: PlayerCard) => b.GetCard().GetSeason() - a.GetCard().GetSeason());
                     break;
 
             }

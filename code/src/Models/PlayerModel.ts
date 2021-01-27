@@ -33,12 +33,12 @@ export default class PlayerModel extends Model {
         },
     }
 
-    public static async New(discordId:string, discordDisplayName:string) {
+    public static async New(discordId: string, discordDisplayName: string) {
         const playerId = Utils.UUID();
 
         const player = await PlayerModel.query()
             .insert({
-                id:playerId,
+                id: playerId,
                 discord_id: discordId,
                 active: true,
                 card_pieces: 0,
@@ -51,12 +51,12 @@ export default class PlayerModel extends Model {
         return player;
     }
 
-    public async GetPlayerCards(player:Player) {
+    public async GetPlayerCards(player: Player) {
         const playerCardModels = await this.$relatedQuery('player_cards');
         const playerCardsRet = new Array<PlayerCard>();
 
         for (let i = 0; i < playerCardModels.length; i++) {
-            const playerCard:PlayerCard = new PlayerCard(player);
+            const playerCard: PlayerCard = new PlayerCard(player);
             await playerCard.ApplyModel(playerCardModels[i])
             playerCardsRet.push(playerCard)
         }
@@ -64,7 +64,7 @@ export default class PlayerModel extends Model {
         return playerCardsRet;
     }
 
-    public async GetCharacter(player:Player) {
+    public async GetCharacter(player: Player) {
         if (this.character_id == null) {
             return undefined;
         }

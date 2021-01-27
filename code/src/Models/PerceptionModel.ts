@@ -39,7 +39,7 @@ export default class PerceptionsModel extends Model {
         },
     }
 
-    public static async New(battle:Battle, character:Character, receiver:Character, oldCooldown:number, newCooldown:number) {
+    public static async New(battle: Battle, character: Character, receiver: Character, oldCooldown: number, newCooldown: number) {
         const perceptionId = Utils.UUID();
 
         const perception = await PerceptionsModel.query()

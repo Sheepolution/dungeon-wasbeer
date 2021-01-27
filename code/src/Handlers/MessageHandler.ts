@@ -18,7 +18,7 @@ export default class MessageHandler {
     private static readonly messagePointTimeoutPrefix = RedisConstants.REDIS_KEY + RedisConstants.MESSAGE_POINT_TIMEOUT_KEY;
     private static readonly characterUpdateTimeoutPrefix = RedisConstants.REDIS_KEY + RedisConstants.CHARACTER_UPDATE_TIMEOUT_KEY;
 
-    public static async OnMessage(messageInfo:IMessageInfo, player:Player) {
+    public static async OnMessage(messageInfo: IMessageInfo, player: Player) {
         if (messageInfo.member == null) {
             return;
         }
@@ -92,7 +92,7 @@ export default class MessageHandler {
 
         var pointRewardIndex = 0;
 
-        for (const value of  SettingsConstants.CARD_AMOUNT_REWARD_REACH_INCREASE) {
+        for (const value of SettingsConstants.CARD_AMOUNT_REWARD_REACH_INCREASE) {
             if (value > cardAmount) {
                 break;
             }
@@ -123,7 +123,7 @@ export default class MessageHandler {
         Redis.set(MessageHandler.messagePointTimeoutPrefix + memberId, '1', 'EX', Utils.GetMinutesInSeconds(SettingsConstants.MESSAGE_POINT_TIMEOUT_MINUTES));
     }
 
-    public static OnBegging(messageInfo:IMessageInfo, player:Player) {
+    public static OnBegging(messageInfo: IMessageInfo, player: Player) {
         const playerCards = player.GetCards();
         if (playerCards.length == 0) {
             return;
@@ -139,7 +139,7 @@ export default class MessageHandler {
         }
     }
 
-    private static OnPostingArt(messageInfo:IMessageInfo) {
+    private static OnPostingArt(messageInfo: IMessageInfo) {
         const attachment = messageInfo.message?.attachments.first();
         if (attachment == null || !['.png', 'jpeg', '.jpg'].includes(attachment.name?.toLowerCase().slice(-4) || '')) {
             return;

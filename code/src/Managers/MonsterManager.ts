@@ -5,12 +5,12 @@ import Battle from '../Objects/Battle';
 
 export default class MonsterManager {
 
-    private static monsterList:Array<Monster>;
+    private static monsterList: Array<Monster>;
 
     public static async BuildMonsterList() {
         const monsterList = new Array<Monster>();
 
-        const monsterModels:any = await Monster.GET_ALL();
+        const monsterModels: any = await Monster.GET_ALL();
         for (const monsterModel of monsterModels) {
             const monster = new Monster();
             await monster.ApplyModel(monsterModel);
@@ -20,9 +20,9 @@ export default class MonsterManager {
         this.monsterList = monsterList;
     }
 
-    public static async AddNewMonster(name:string, description:string, level:number, category:string, type:AttackType, health:number, strength:number, attack:number, attackDescription:string, attackCritDescription:string, imageUrl:string, creatorId:string) {
+    public static async AddNewMonster(name: string, description: string, level: number, category: string, type: AttackType, health: number, strength: number, attack: number, attackDescription: string, attackCritDescription: string, imageUrl: string, creatorId: string) {
         const monster = new Monster();
-        const objectModifyResult:IObjectModifyResult = { object: monster, result: false };
+        const objectModifyResult: IObjectModifyResult = { object: monster, result: false };
 
         if (await monster.FIND_BY_NAME(name)) {
             return objectModifyResult;
@@ -36,9 +36,9 @@ export default class MonsterManager {
 
     }
 
-    public static async EditMonster(originalName:string, name?:string, description?:string, level?:number, category?:string, type?:AttackType, health?:number, strength?:number, attack?:number, attackDescription?:string, attackCritDescription?:string, imageUrl?:string) {
+    public static async EditMonster(originalName: string, name?: string, description?: string, level?: number, category?: string, type?: AttackType, health?: number, strength?: number, attack?: number, attackDescription?: string, attackCritDescription?: string, imageUrl?: string) {
         const monster = new Monster();
-        const monsterModifyResult:IObjectModifyResult = { object: monster, result: false };
+        const monsterModifyResult: IObjectModifyResult = { object: monster, result: false };
 
         if (!await monster.FIND_BY_NAME(originalName)) {
             return monsterModifyResult;
@@ -50,16 +50,16 @@ export default class MonsterManager {
         return monsterModifyResult;
     }
 
-    public static GetMonsterByNumber(n:number) {
+    public static GetMonsterByNumber(n: number) {
         return this.monsterList.find(m => m.GetNumber() == n);
     }
 
-    public static async GetRandomMonster(previousMonster?:Monster) {
+    public static async GetRandomMonster(previousMonster?: Monster) {
         const count = await Battle.GET_COUNT();
         if (count > 100 && (count + 1) % 100 == 0) {
-            return <Monster> this.monsterList.find(m => m.GetId() == '20110b21-0a15-48f8-83a9-b4f804235355');
+            return <Monster>this.monsterList.find(m => m.GetId() == '20110b21-0a15-48f8-83a9-b4f804235355');
         }
-        var monster:Monster = new Monster();
+        var monster: Monster = new Monster();
         do {
             monster = this.monsterList.randomChoice();
         } while ((previousMonster != null && monster.GetId() == previousMonster.GetId()) || monster.GetId() == '20110b21-0a15-48f8-83a9-b4f804235355');

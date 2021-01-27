@@ -10,7 +10,7 @@ export default class LogModel extends Model {
         return 'logs';
     }
 
-    public static async New(player:Player, subjectId:string, logType:LogType, description:string) {
+    public static async New(player: Player, subjectId: string, logType: LogType, description: string) {
         const logId = Utils.UUID();
 
         const log = await LogModel.query()

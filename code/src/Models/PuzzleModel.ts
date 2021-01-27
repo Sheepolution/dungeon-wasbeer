@@ -21,12 +21,12 @@ export default class PuzzleModel extends Model {
         }
     }
 
-    public static async New(content:string, solution:string, type:PuzzleType) {
+    public static async New(content: string, solution: string, type: PuzzleType) {
         const puzzleId = Utils.UUID();
 
         const battle = await PuzzleModel.query()
             .insert({
-                id:puzzleId,
+                id: puzzleId,
                 active: true,
                 content: content,
                 solution: solution,

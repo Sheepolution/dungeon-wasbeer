@@ -12,14 +12,14 @@ export default class CharacterModel extends Model {
         return 'characters';
     }
 
-    public static async New(player:Player, classType:ClassType) {
+    public static async New(player: Player, classType: ClassType) {
         const characterId = Utils.UUID();
 
         const stats = CharacterService.GetClassModifierStats(classType)
 
         const character = await CharacterModel.query()
             .insert({
-                id:characterId,
+                id: characterId,
                 player_id: player.GetId(),
                 status: CharacterStatus.Active,
                 class: classType,

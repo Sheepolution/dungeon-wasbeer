@@ -10,12 +10,12 @@ export default class CardModel extends Model {
         return 'cards';
     }
 
-    public static async New(name:string, description:string, rank:number, category:string, imageUrl:string, creatorId:string, modifiers?:Array<ICardModifier>, modifierClass?:ClassType, trx?:any) {
+    public static async New(name: string, description: string, rank: number, category: string, imageUrl: string, creatorId: string, modifiers?: Array<ICardModifier>, modifierClass?: ClassType, trx?: any) {
         const cardId = Utils.UUID();
 
         const card = await CardModel.query(trx)
             .insert({
-                id:cardId,
+                id: cardId,
                 name: name,
                 description: description,
                 category: category,

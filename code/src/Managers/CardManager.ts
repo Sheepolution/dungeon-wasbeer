@@ -13,14 +13,14 @@ import PlayerManager from './PlayerManager';
 
 export default class CardManager {
 
-    private static cardList:Array<Card>;
+    private static cardList: Array<Card>;
 
-    private static legendaryCardsAmount:number;
+    private static legendaryCardsAmount: number;
 
     public static async BuildCardList() {
         const cardList = new Array<Card>();
 
-        const cardModels:any = await Card.GET_ALL();
+        const cardModels: any = await Card.GET_ALL();
         for (const cardModel of cardModels) {
             const card = new Card();
             await card.ApplyModel(cardModel);
@@ -40,10 +40,10 @@ export default class CardManager {
         return this.cardList.length - this.legendaryCardsAmount;
     }
 
-    public static async GivePlayerCard(player:Player) {
+    public static async GivePlayerCard(player: Player) {
         const card = await this.GetRandomCard();
         const playerCards = player.GetCards();
-        const cardModifyResult:IObjectModifyResult = { object: card, result: false };
+        const cardModifyResult: IObjectModifyResult = { object: card, result: false };
 
         //TODO: Generalize this
         const existingPlayerCard = playerCards.find(x => x.GetCard().GetId() == card.GetId());
@@ -63,16 +63,16 @@ export default class CardManager {
         return cardModifyResult;
     }
 
-    public static async OnCardMessage(cardMessage:Message, playerCard:PlayerCard) {
+    public static async OnCardMessage(cardMessage: Message, playerCard: PlayerCard) {
         cardMessage.react(EmojiConstants.STATUS.GOOD);
-        ReactionManager.AddMessage(cardMessage, ReactionMessageType.PlayerCardGet, undefined, {cardId: playerCard.GetCard().GetId()});
+        ReactionManager.AddMessage(cardMessage, ReactionMessageType.PlayerCardGet, undefined, { cardId: playerCard.GetCard().GetId() });
     }
 
-    public static async OnReaction(obj:any, reaction:MessageReaction, user:User) {
+    public static async OnReaction(obj: any, reaction: MessageReaction, user: User) {
         if (reaction.emoji.toString() == EmojiConstants.STATUS.GOOD) {
-            var player:Player = await PlayerManager.GetPlayer(user.id);
+            var player: Player = await PlayerManager.GetPlayer(user.id);
             if (player != null) {
-                var playerCards:Array<PlayerCard> = player.GetCards();
+                var playerCards: Array<PlayerCard> = player.GetCards();
                 if (!playerCards.find((c => c.GetCard().GetId() == obj.values.cardId))) {
                     reaction.users.remove(user.id);
                 }
@@ -80,9 +80,9 @@ export default class CardManager {
         }
     }
 
-    public static async AddNewCard(name:string, description:string, rank:number, category:string, url:string, creatorId:string, modifiers?:Array<ICardModifier>, modifierClass?:ClassType) {
+    public static async AddNewCard(name: string, description: string, rank: number, category: string, url: string, creatorId: string, modifiers?: Array<ICardModifier>, modifierClass?: ClassType) {
         const card = new Card();
-        const cardModifyResult:IObjectModifyResult = { object: card, result: false };
+        const cardModifyResult: IObjectModifyResult = { object: card, result: false };
 
         if (await card.FIND_BY_NAME(name)) {
             return cardModifyResult;
@@ -94,9 +94,9 @@ export default class CardManager {
         return cardModifyResult;
     }
 
-    public static async EditCard(originalName:string, name?:string, description?:string, rank?:number, category?:string, modifiers?:Array<ICardModifier>, modifierClass?:ClassType, imageUrl?:string) {
+    public static async EditCard(originalName: string, name?: string, description?: string, rank?: number, category?: string, modifiers?: Array<ICardModifier>, modifierClass?: ClassType, imageUrl?: string) {
         const card = new Card();
-        const cardModifyResult:IObjectModifyResult = { object: card, result: false };
+        const cardModifyResult: IObjectModifyResult = { object: card, result: false };
 
         if (!await card.FIND_BY_NAME(originalName)) {
             return cardModifyResult;

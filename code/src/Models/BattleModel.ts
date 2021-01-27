@@ -21,12 +21,12 @@ export default class BattleModel extends Model {
         },
     }
 
-    public static async New(monster:Monster) {
+    public static async New(monster: Monster) {
         const battleId = Utils.UUID();
 
         const battle = await BattleModel.query()
             .insert({
-                id:battleId,
+                id: battleId,
                 active: true,
                 monster_id: monster.GetId(),
                 monster_health: monster.GetHealth(),

@@ -8,19 +8,19 @@ import ArtHandler from '../Handlers/ArtHandler';
 
 export default class ReactionManager {
 
-    private static messages:any = {};
+    private static messages: any = {};
 
-    public static AddMessage(message:Message, reactionMessageType:ReactionMessageType, messageInfo?:IMessageInfo, values?:any, duration:number = 5) {
+    public static AddMessage(message: Message, reactionMessageType: ReactionMessageType, messageInfo?: IMessageInfo, values?: any, duration: number = 5) {
         const id = message.id;
         const timeout = setTimeout(() => {
             message.reactions.removeAll();
             delete ReactionManager.messages[id];
         }, Utils.GetMinutesInMiliSeconds(duration));
 
-        ReactionManager.messages[id] = {message:message, messageInfo: messageInfo, reactionMessageType: reactionMessageType, timeout: timeout, values: values, duration: duration};
+        ReactionManager.messages[id] = { message: message, messageInfo: messageInfo, reactionMessageType: reactionMessageType, timeout: timeout, values: values, duration: duration };
     }
 
-    public static OnReaction(reaction:MessageReaction, user:User) {
+    public static OnReaction(reaction: MessageReaction, user: User) {
         const obj = ReactionManager.messages[reaction.message.id];
         if (obj == null) {
             return;

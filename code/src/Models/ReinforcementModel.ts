@@ -31,7 +31,7 @@ export default class ReinforcementsModel extends Model {
         }
     }
 
-    public static async New(battle:Battle, character:Character, receiver:Character) {
+    public static async New(battle: Battle, character: Character, receiver: Character) {
         const reinforcementId = Utils.UUID();
 
         const reinforcement = await ReinforcementsModel.query()

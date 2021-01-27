@@ -3,18 +3,18 @@ import Player from './Player';
 import PlayerCardModel from '../Models/PlayerCardModel';
 
 export default class PlayerCard {
-    protected id:string;
-    private card:Card;
-    private amount:number;
-    private equipped:number;
-    private player:Player;
-    private isUsedInTrade:boolean;
+    protected id: string;
+    private card: Card;
+    private amount: number;
+    private equipped: number;
+    private player: Player;
+    private isUsedInTrade: boolean;
 
-    constructor(player:Player) {
+    constructor(player: Player) {
         this.player = player;
     }
 
-    public static async GET_OWNERS_OF_CARD(name:string) {
+    public static async GET_OWNERS_OF_CARD(name: string) {
         const list = await PlayerCardModel.query()
             .join('players', 'players.id', '=', 'player_cards.player_id')
             .join('cards', 'cards.id', '=', 'player_cards.card_id')
@@ -25,12 +25,12 @@ export default class PlayerCard {
         return list;
     }
 
-    public async GET(id:string) {
-        const model:PlayerCardModel = await PlayerCardModel.query().findById(id);
+    public async GET(id: string) {
+        const model: PlayerCardModel = await PlayerCardModel.query().findById(id);
         await this.ApplyModel(model);
     }
 
-    public async POST(cardId:string, playerId:string) {
+    public async POST(cardId: string, playerId: string) {
         const model = await PlayerCardModel.New(cardId, playerId);
         await this.ApplyModel(model);
         return this;
@@ -40,13 +40,13 @@ export default class PlayerCard {
         await PlayerCardModel.query().deleteById(this.id);
     }
 
-    public async UPDATE(data:any, trx?:any) {
+    public async UPDATE(data: any, trx?: any) {
         await PlayerCardModel.query(trx)
             .findById(this.id)
             .patch(data);
     }
 
-    public async ApplyModel(model:PlayerCardModel) {
+    public async ApplyModel(model: PlayerCardModel) {
         this.id = model.id;
         this.card = await model.GetCard();
         this.amount = model.amount;
@@ -107,8 +107,8 @@ export default class PlayerCard {
         return this.isUsedInTrade;
     }
 
-    public async SetEquipped(equipped:boolean) {
+    public async SetEquipped(equipped: boolean) {
         this.equipped = equipped ? 1 : 0;
-        await this.UPDATE({equipped: this.equipped});
+        await this.UPDATE({ equipped: this.equipped });
     }
 }

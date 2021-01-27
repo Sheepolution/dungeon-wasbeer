@@ -4,7 +4,7 @@ import MessageService from '../Services/MessageService';
 
 export default class SpoilersHandler {
 
-    public static async OnCommand(messageInfo:IMessageInfo, command:string, content:string) {
+    public static async OnCommand(messageInfo: IMessageInfo, command: string, content: string) {
         switch (command) {
             case 'spoilers':
             case 'spoiler':
@@ -17,7 +17,7 @@ export default class SpoilersHandler {
         return true;
     }
 
-    private static async OnSpoilers(messageInfo:IMessageInfo, content:string) {
+    private static async OnSpoilers(messageInfo: IMessageInfo, content: string) {
         var name = '-kanaal';
         if (content != null && content.trim().length > 0) {
             name = `-${content.toLowerCase().replaceAll(' ', '-')}`;

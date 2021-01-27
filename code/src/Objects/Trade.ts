@@ -4,14 +4,14 @@ import TradeModel from '../Models/TradeModel';
 
 export default class Trade {
 
-    protected id:string;
-    private trader:Player;
-    private other:Player;
-    private traderCard:Card;
-    private otherCard:Card;
-    private tradeDate:Date;
+    protected id: string;
+    private trader: Player;
+    private other: Player;
+    private traderCard: Card;
+    private otherCard: Card;
+    private tradeDate: Date;
 
-    public static async STATIC_POST(trader:Player, other:Player, traderCard:Card, otherCard:Card) {
+    public static async STATIC_POST(trader: Player, other: Player, traderCard: Card, otherCard: Card) {
         return await TradeModel.New(trader, other, traderCard, otherCard);
     }
 

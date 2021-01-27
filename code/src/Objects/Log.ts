@@ -6,14 +6,14 @@ import Battle from './Battle';
 
 export default class Log {
 
-    protected id:string;
+    protected id: string;
 
-    public static async STATIC_POST(player:Player, subjectId:string, logType:LogType, description:string) {
+    public static async STATIC_POST(player: Player, subjectId: string, logType: LogType, description: string) {
         await LogModel.New(player, subjectId, logType, description);
     }
 
-    public static async FIND_TOTAL_INSPIRES_BY_CHARACTER(character:Character) {
-        const inspires = await LogModel.query().where({player_id: character.GetPlayer().GetId(), type:LogType.Inspire}).count('id');
+    public static async FIND_TOTAL_INSPIRES_BY_CHARACTER(character: Character) {
+        const inspires = await LogModel.query().where({ player_id: character.GetPlayer().GetId(), type: LogType.Inspire }).count('id');
         return inspires[0].count || 0;
     }
 
@@ -44,7 +44,7 @@ export default class Log {
         return list;
     }
 
-    public static async GET_TOP_INSPIRES_DONE(battleId?:string) {
+    public static async GET_TOP_INSPIRES_DONE(battleId?: string) {
         const list = await LogModel.query()
             .where('type', 'Inspire')
             .join('players', 'players.id', '=', 'logs.player_id')
@@ -60,7 +60,7 @@ export default class Log {
         return list;
     }
 
-    public static async GET_TOP_INSPIRES_GET(battleId?:string) {
+    public static async GET_TOP_INSPIRES_GET(battleId?: string) {
         const list = await LogModel.query()
             .where('type', 'Inspire')
             .join('characters', 'characters.id', '=', 'logs.subject_id')
@@ -103,7 +103,7 @@ export default class Log {
         return list;
     }
 
-    public static async FIND_TOTAL_INSPIRED_OTHERS_IN_BATTLE_FOR_ALL_CHARACTERS(battle:Battle) {
+    public static async FIND_TOTAL_INSPIRED_OTHERS_IN_BATTLE_FOR_ALL_CHARACTERS(battle: Battle) {
         const knex = LogModel.knex();
         var totalInspired = await knex.raw(`select mc.id as id, count(mc.id) as cnt from logs l
             join players p on p.id = l.player_id

@@ -13,11 +13,11 @@ import LogService from '../Services/LogService';
 
 export default class PlayerManager {
 
-    private static players:any = {};
-    private static cacheRefreshInterval:any = setInterval(() => { PlayerManager.ProcessPlayerCache() }, Utils.GetMinutesInMiliSeconds(5));
+    private static players: any = {};
+    private static cacheRefreshInterval: any = setInterval(() => { PlayerManager.ProcessPlayerCache() }, Utils.GetMinutesInMiliSeconds(5));
     private static readonly classNames = Object.keys(ClassType);
 
-    public static async GetOrCreatePlayer(messageInfo:IMessageInfo) {
+    public static async GetOrCreatePlayer(messageInfo: IMessageInfo) {
         var player = await this.GetPlayer(messageInfo.member.id, messageInfo.member.displayName);
         if (player == null) {
             player = await this.CreateNewPlayer(messageInfo);
@@ -38,8 +38,8 @@ export default class PlayerManager {
         this.players = {};
     }
 
-    public static async GetPlayerById(playerId:string) {
-        const cachedPlayer:any = Object.values(this.players).find((e:any) => e.player.GetId() == playerId);
+    public static async GetPlayerById(playerId: string) {
+        const cachedPlayer: any = Object.values(this.players).find((e: any) => e.player.GetId() == playerId);
         if (cachedPlayer) {
             return cachedPlayer.player;
         }
@@ -49,7 +49,7 @@ export default class PlayerManager {
         return player;
     }
 
-    public static async GetPlayer(discordId:string, discordDisplayName?:string) {
+    public static async GetPlayer(discordId: string, discordDisplayName?: string) {
         // Check for cache
         var player = this.GetCachedPlayer(discordId);
         if (player) {
@@ -61,7 +61,7 @@ export default class PlayerManager {
         player = new Player();
         const success = await player.GET(discordId);
 
-        if (success){
+        if (success) {
             this.CachePlayer(discordId, player);
             if (discordDisplayName) {
                 player.UpdateDiscordName(discordDisplayName);
@@ -72,7 +72,7 @@ export default class PlayerManager {
         return null;
     }
 
-    public static GetCharacterFromPlayer(messageInfo:IMessageInfo, player:Player) {
+    public static GetCharacterFromPlayer(messageInfo: IMessageInfo, player: Player) {
         const character = player.GetCharacter();
         if (character == null) {
             MessageService.ReplyMessage(messageInfo, `Je hebt nog geen character aangemaakt. Kies een van de volgende classes met \`;class\`:\n${this.classNames.join(', ')}`, false);
@@ -82,7 +82,7 @@ export default class PlayerManager {
         return character;
     }
 
-    public static GetCachePlayerCharacterByCharacterId(characterId:string) {
+    public static GetCachePlayerCharacterByCharacterId(characterId: string) {
         for (const player of this.players) {
             const character = player.GetCharacter();
             if (character != null) {
@@ -108,7 +108,7 @@ export default class PlayerManager {
         return characters;
     }
 
-    private static async CreateNewPlayer(messageInfo:IMessageInfo) {
+    private static async CreateNewPlayer(messageInfo: IMessageInfo) {
         const discordId = messageInfo.member.id;
         const player = new Player();
         await player.POST(discordId, messageInfo.member.displayName);
@@ -117,11 +117,11 @@ export default class PlayerManager {
         return player;
     }
 
-    private static CachePlayer(discordId:string, player:Player) {
-        this.players[discordId] = {time: 60, player: player}
+    private static CachePlayer(discordId: string, player: Player) {
+        this.players[discordId] = { time: 60, player: player }
     }
 
-    private static GetCachedPlayer(discordId:string) {
+    private static GetCachedPlayer(discordId: string) {
         const data = this.players[discordId];
         if (data) {
             return data.player;

@@ -16,7 +16,7 @@ import SudokuHandler from './SudokuHandler';
 
 export default class CommandHandler {
 
-    public static async OnCommand(messageInfo:IMessageInfo, player:Player, content:string) {
+    public static async OnCommand(messageInfo: IMessageInfo, player: Player, content: string) {
         const words = content.split(' ');
         const command = words[0].substr(SettingsConstants.PREFIX.length).toLowerCase();
         words.shift();
@@ -78,7 +78,7 @@ export default class CommandHandler {
         }
     }
 
-    public static async HandleNormalMessage(messageInfo:IMessageInfo, player:Player) {
+    public static async HandleNormalMessage(messageInfo: IMessageInfo, player: Player) {
         MessageHandler.OnMessage(messageInfo, player);
     }
 }

@@ -4,9 +4,9 @@ import { Utils } from '../Utils/Utils';
 
 export default class DiscordService {
 
-    private static client:Client;
+    private static client: Client;
 
-    public static SetClient(client:Client) {
+    public static SetClient(client: Client) {
         if (this.client != null) {
             throw new Error('Client can only be set once.');
         }
@@ -14,7 +14,7 @@ export default class DiscordService {
         this.client = client;
     }
 
-    public static async FindMember(searchKey:string, guild:Guild) {
+    public static async FindMember(searchKey: string, guild: Guild) {
         // TODO: Research how fetching with query works. Does it work for both displayName and username?
         // For now we just fetch all.
         const foundMember = await this.FindMemberById(searchKey, guild);
@@ -30,7 +30,7 @@ export default class DiscordService {
         });
     }
 
-    public static async FindMemberById(searchKey:string, guild:Guild) {
+    public static async FindMemberById(searchKey: string, guild: Guild) {
         const id = DiscordUtils.GetMemberId(searchKey);
         if (id) {
             const foundMember = guild.members.cache.get(id) || guild.members.fetch(id);
@@ -40,7 +40,7 @@ export default class DiscordService {
         }
     }
 
-    public static FindChannel(channelId:string, guild?:Guild) {
+    public static FindChannel(channelId: string, guild?: Guild) {
         var channel = this.FindChannelById(channelId, guild);
 
         if (channel == null && guild != null) {
@@ -50,7 +50,7 @@ export default class DiscordService {
         return undefined;
     }
 
-    public static async FindChannelById(searchKey:string, guild?:Guild) {
+    public static async FindChannelById(searchKey: string, guild?: Guild) {
         const id = DiscordUtils.GetChannelId(searchKey);
         if (id) {
             var foundChannel;
@@ -70,24 +70,24 @@ export default class DiscordService {
         }
     }
 
-    public static async FindMessageById(messageId:string, channel:TextChannel) {
+    public static async FindMessageById(messageId: string, channel: TextChannel) {
         return await channel.messages.fetch(messageId);
     }
 
-    public static async FindUserById(userId:string) {
+    public static async FindUserById(userId: string) {
         return this.client.users.cache.get(userId) || await this.client.users.fetch(userId);
     }
 
-    public static FindGuild(guildId:string) {
+    public static FindGuild(guildId: string) {
         return this.client.guilds.cache.get(guildId);
     }
 
-    public static IsMemberAdmin(member:GuildMember) {
+    public static IsMemberAdmin(member: GuildMember) {
         return member.hasPermission('ADMINISTRATOR');
     }
 
-    public static async SendEmbed(channel:Channel, embed:MessageEmbed, content?:string) {
-        const textChannel:TextChannel = <TextChannel>channel;
+    public static async SendEmbed(channel: Channel, embed: MessageEmbed, content?: string) {
+        const textChannel: TextChannel = <TextChannel>channel;
         try {
             return await (content ? textChannel.send(content, embed) : textChannel.send(embed));
         } catch (error) {
@@ -113,7 +113,7 @@ export default class DiscordService {
         }
     }
 
-    public static async ReplyMessage(textChannel:TextChannel, member:GuildMember, message:string, embed?:MessageEmbed, attachments?: Array<MessageAttachment>) {
+    public static async ReplyMessage(textChannel: TextChannel, member: GuildMember, message: string, embed?: MessageEmbed, attachments?: Array<MessageAttachment>) {
         const reply = `<@${member.user}> ${message}`;
 
         if (embed) {
@@ -127,7 +127,7 @@ export default class DiscordService {
         }
     }
 
-    public static GetMessageAttachment(data:any, name:string) {
+    public static GetMessageAttachment(data: any, name: string) {
         return new MessageAttachment(data, name);
     }
 }
