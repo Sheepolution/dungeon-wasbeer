@@ -224,6 +224,24 @@ export default class CharacterEmbeds {
             }
         }
 
+        if (character.CanProtect()) {
+            const protectCooldown = await character.GetProtectCooldown();
+            if (protectCooldown > 0) {
+                embed.addField('Protection', `🕒 ${Utils.GetSecondsInMinutesAndSeconds(protectCooldown)}`, true)
+            } else {
+                embed.addField('Protection', 'Klaar om te protecten!', true);
+            }
+        }
+
+        if (character.CanPray()) {
+            const prayCooldown = await character.GetProtectCooldown();
+            if (prayCooldown > 0) {
+                embed.addField('Pray', `🕒 ${Utils.GetSecondsInMinutesAndSeconds(prayCooldown)}`, true)
+            } else {
+                embed.addField('Pray', 'Klaar om te bidden!', true);
+            }
+        }
+
         return embed;
     }
 
@@ -516,6 +534,15 @@ export default class CharacterEmbeds {
                 embed.addField(`${characterName} faalt met bidden!`, character.GetPrayFailDescription().replaceAll('\\[jij\\]', characterName));
             } else {
                 embed.addField(`${characterName} slaagt er in te bidden`, character.GetPrayDescription().replaceAll('\\[jij\\]', characterName).replaceAll('\\[blessing\\]', (blessing || 0).toString()));
+            }
+
+            if (character.CanHeal()) {
+                const healingCooldown = await character.GetHealingCooldown();
+                if (healingCooldown > 0) {
+                    embed.addField('Healen', `🕒 ${Utils.GetSecondsInMinutesAndSeconds(healingCooldown)}`, true)
+                } else {
+                    embed.addField('Healen', 'Klaar om te healen!', true);
+                }
             }
         }
 
