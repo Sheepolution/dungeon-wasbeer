@@ -113,6 +113,7 @@ export default class CharacterHandler {
                 break;
             case 'pray':
             case 'bid':
+            case 'bless':
                 this.OnPray(messageInfo, player);
                 break;
             case 'enchant':
