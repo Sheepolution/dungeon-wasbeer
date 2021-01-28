@@ -731,7 +731,11 @@ export default class Character {
     }
 
     public GetMaxBattleCooldown() {
-        return CharacterConstants.BASE_COOLDOWN_DURATION - this.fullModifierStats.dexterity + (this.charge ? 5 : 0);
+        return CharacterConstants.BASE_COOLDOWN_DURATION - this.fullModifierStats.dexterity + this.GetHealthDexterityPenalty() + (this.charge ? 5 : 0);
+    }
+
+    public GetHealthDexterityPenalty() {
+        return Math.floor(CharacterConstants.HEALTH_DEXTERITY_PENALTY_MAX * (1 - (this.currentHealth / this.maxHealth)));
     }
 
     public async GetBattleCooldown() {
@@ -1320,16 +1324,6 @@ export default class Character {
             this.UPDATE({
                 max_health: this.maxHealth
             });
-        }
-
-        this.currentHealth = Math.min(this.maxHealth, this.currentHealth);
-
-        if (this.currentHealth < this.maxHealth / 2) {
-            const healthMissing = ((1 - this.currentHealth / (this.maxHealth / 2))) / 2;
-            this.fullModifierStats.spell -= Math.floor(this.cardModifierStats.spell * healthMissing);
-            this.fullModifierStats.strength -= Math.floor(this.cardModifierStats.strength * healthMissing);
-            this.fullModifierStats.attack -= Math.floor(this.cardModifierStats.attack * healthMissing);
-            this.fullModifierStats.dexterity -= Math.floor(this.cardModifierStats.dexterity * healthMissing);
         }
     }
 
