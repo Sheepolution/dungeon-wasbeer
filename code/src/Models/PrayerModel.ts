@@ -39,7 +39,7 @@ export default class PrayerModel extends Model {
                 id: prayerId,
                 battle_id: battle.GetId(),
                 character_id: character.GetId(),
-                character_armor: characterHealing,
+                character_healing: characterHealing,
                 roll: roll,
                 final_blessing: finalBlessing,
                 pray_date: Utils.GetNowString(),
