@@ -303,7 +303,7 @@ export default class BattleHandler {
         await this.UpdateChargeEmbed(message, character, roll, charge);
         await character.SetChargeCooldown();
         await character.SetBattleCooldown();
-
+        character.SetIsCharging(false);
         this.SaveCharge(character, oldArmor, roll, charge);
     }
 
