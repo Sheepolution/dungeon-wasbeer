@@ -151,7 +151,7 @@ export default class BattleHandler {
         character.SetInBattle(true);
         BattleHandler.inBattle = true;
 
-        if (charge) {
+        if (charge || character.IsCharging()) {
             await this.OnCharge(messageInfo, character);
             await Utils.Sleep(2);
         } else {
