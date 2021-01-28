@@ -489,7 +489,6 @@ export default class BattleHandler {
         await character.StopBeingInspired();
         await character.StopBeingEnchanted();
         await character.StopBeingReinforced();
-        await character.StopBeingProtected();
         await character.StopBeingCharged();
         await character.StopBeingBlessed();
     }
