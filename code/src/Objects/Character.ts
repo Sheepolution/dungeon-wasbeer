@@ -498,6 +498,15 @@ export default class Character {
     }
 
     public async ReceiveDamage(damage: number) {
+        if (this.protection > 0) {
+            this.protection -= damage;
+            if (this.protection < 0) {
+                damage = -this.protection
+            } else {
+                return 0;
+            }
+        }
+
         const damageAfterArmor = this.CalculateDamageWithArmor(damage);
         this.currentHealth = Math.max(0, this.currentHealth - damageAfterArmor);
         await this.UPDATE({ health: this.currentHealth })
@@ -867,17 +876,7 @@ export default class Character {
             return 0;
         }
 
-        if (this.protection > 0) {
-            const oldProtection = this.protection;
-            this.protection = 0;
-            this.CalculateFullModifierStats();
-            const protection = Math.floor((roll / 10) * (this.fullModifierStats.armor - this.protection));
-            this.protection = oldProtection;
-            this.CalculateFullModifierStats();
-            return protection;
-        }
-
-        return Math.floor((roll / 10) * this.fullModifierStats.armor);
+        return Math.floor((roll / 20) * this.fullModifierStats.armor);
     }
 
     public GetChargeBasedOnRoll(roll: number) {
@@ -885,16 +884,13 @@ export default class Character {
             return 0;
         }
 
-        if (this.protection > 0 || this.inspiration > 0) {
-            const oldProtection = this.protection;
+        if (this.inspiration > 0) {
             const oldInspiration = this.inspiration;
-            this.protection = 0;
             this.inspiration = 0;
-            this.CalculateFullModifierStats();
-            const charge = Math.floor((roll / 20) * (this.fullModifierStats.armor - this.protection));
-            this.protection = oldProtection;
+            this.UpdateFullModifierStats();
+            const charge = Math.floor((roll / 20) * (this.fullModifierStats.armor));
             this.inspiration = oldInspiration;
-            this.CalculateFullModifierStats();
+            this.UpdateFullModifierStats();
             return charge;
         }
 
@@ -1295,10 +1291,6 @@ export default class Character {
         }
 
         const max = CharacterService.GetMaxModifierStats(this.classType);
-
-        if (this.protection > 0) {
-            this.fullModifierStats.armor = Math.min(this.fullModifierStats.armor + this.protection, max.armor);
-        }
 
         if (this.charge > 0) {
             this.fullModifierStats.strength += this.charge;

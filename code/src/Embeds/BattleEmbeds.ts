@@ -55,7 +55,7 @@ export default class BattleEmbeds {
             .setThumbnail(playerWon ? character.GetAvatarUrl() : battle.GetMonsterImageUrl())
             .setTitle(`${characterName}${character.GetEnhancementsString()} VS ${monsterName}`)
             .setDescription('-- Statistieken --')
-            .addField(characterName, `Health: ${character.GetCurrentHealth()}/${character.GetMaxHealth()}\n${character.GetAttackName()}: ${characterStrength}\nAttack: ${characterAttack}\nArmor: ${character.GetArmor()}`, true)
+            .addField(characterName, `Health: ${character.GetCurrentHealth() + character.GetProtection()}/${character.GetMaxHealth()}\n${character.GetAttackName()}: ${characterStrength}\nAttack: ${characterAttack}\nArmor: ${character.GetArmor()}`, true)
             .addField(monsterName, `Health: ${battle.GetCurrentMonsterHealth()}/${battle.GetMaxMonsterHealth()}\nStrength: ${monsterStrength}\nAttack: ${monsterAttack}`, true)
             .addField('--------------------------------', '-- Rolls --');
 
