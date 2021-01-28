@@ -502,14 +502,16 @@ export default class Character {
             this.protection -= damage;
             if (this.protection < 0) {
                 damage = -this.protection
+                this.protection = 0;
             } else {
+                await this.UPDATE({ protection: this.protection })
                 return 0;
             }
         }
 
         const damageAfterArmor = this.CalculateDamageWithArmor(damage);
         this.currentHealth = Math.max(0, this.currentHealth - damageAfterArmor);
-        await this.UPDATE({ health: this.currentHealth })
+        await this.UPDATE({ health: this.currentHealth, protection: this.protection })
         this.UpdateFullModifierStats();
         return damageAfterArmor;
     }
