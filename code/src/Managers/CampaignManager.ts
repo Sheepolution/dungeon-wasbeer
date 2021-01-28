@@ -21,6 +21,7 @@ import Enchantment from '../Objects/Enchantment';
 import Perception from '../Objects/Perception';
 import Reinforcement from '../Objects/Reinforcement';
 import Inspire from '../Objects/Inspire';
+import Protect from '../Objects/Protection';
 const { transaction } = require('objection');
 
 export default class CampaignManager {
@@ -146,6 +147,7 @@ export default class CampaignManager {
         const enchantmentData = await Enchantment.FIND_TOTAL_ENCHANTED_OTHERS_IN_BATTLE_FOR_ALL_CHARACTERS(battle);
         const perceptionData = await Perception.FIND_TOTAL_PERCEPT_OTHERS_IN_BATTLE_FOR_ALL_CHARACTERS(battle);
         const reinforcementData = await Reinforcement.FIND_TOTAL_REINFORCEMENTS_FOR_OTHERS_IN_BATTLE_FOR_ALL_CHARACTERS(battle);
+        const protectionData = await Protect.FIND_TOTAL_PROTECTED_OTHERS_IN_BATTLE_FOR_ALL_CHARACTERS(battle)
         const data: any = {};
 
         for (const row of attackData) {
@@ -191,6 +193,15 @@ export default class CampaignManager {
 
         for (const row of reinforcementData) {
             const xp = parseInt(row.cnt) * 10;
+            if (data[row.character_id]) {
+                data[row.character_id] += xp;
+            } else {
+                data[row.character_id] = xp;
+            }
+        }
+
+        for (const row of protectionData) {
+            const xp = Math.floor(parseInt(row.sum) / 3);
             if (data[row.character_id]) {
                 data[row.character_id] += xp;
             } else {
