@@ -1325,6 +1325,11 @@ export default class Character {
                 max_health: this.maxHealth
             });
         }
+
+        if (this.currentHealth > this.maxHealth) {
+            this.currentHealth = this.maxHealth;
+            this.UPDATE({ health: this.currentHealth })
+        }
     }
 
     private async OnLevelUp(trx?: any) {
