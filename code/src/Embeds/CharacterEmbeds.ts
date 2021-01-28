@@ -18,6 +18,7 @@ import Perception from '../Objects/Perception';
 import Reinforcement from '../Objects/Reinforcement';
 import { Redis } from '../Providers/Redis';
 import RedisConstants from '../Constants/RedisConstants';
+import EmojiConstants from '../Constants/EmojiConstants';
 
 export default class CharacterEmbeds {
 
@@ -548,7 +549,7 @@ export default class CharacterEmbeds {
         var listString = '';
 
         for (const item of list) {
-            listString += `Health: ${Math.ceil(item.percentage)}% (${item.health}/${item.max_health}) - ${item.name} (${item.discord_name})\n`;
+            listString += `Health: ${Math.ceil(item.percentage)}% (${item.health}/${item.max_health}) - ${item.name} (${item.discord_name}) ${item.protection > 0 ? EmojiConstants.DNW_STATES.PROTECTED : ''}\n`;
         }
 
         embed.setDescription(listString);
