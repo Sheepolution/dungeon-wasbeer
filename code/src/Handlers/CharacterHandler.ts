@@ -902,7 +902,7 @@ export default class CharacterHandler {
         await character.BecomeBlessed(blessing);
         await this.UpdatePrayingEmbed(message, character, roll, blessing);
 
-        character.SetIsProtecting(false);
+        character.SetIsPraying(false);
 
         this.SavePrayer(character, character.GetFullModifierStats().wisdom, roll, blessing);
     }
