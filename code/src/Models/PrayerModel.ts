@@ -31,7 +31,7 @@ export default class PrayerModel extends Model {
         }
     }
 
-    public static async New(battle: Battle, character: Character, characterHealing: number, roll: number, finalBlessing: number) {
+    public static async New(battle: Battle, character: Character, characterWisdom: number, roll: number, finalBlessing: number) {
         const prayerId = Utils.UUID();
 
         const prayer = await PrayerModel.query()
@@ -39,7 +39,7 @@ export default class PrayerModel extends Model {
                 id: prayerId,
                 battle_id: battle.GetId(),
                 character_id: character.GetId(),
-                character_healing: characterHealing,
+                character_wisdom: characterWisdom,
                 roll: roll,
                 final_blessing: finalBlessing,
                 pray_date: Utils.GetNowString(),
