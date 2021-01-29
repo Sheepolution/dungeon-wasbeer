@@ -121,7 +121,7 @@ export default class CardManager {
             rank += 1;
         }
 
-        const card = CardManager.cardList.filter(c => c.GetRank() == rank).randomChoice();
+        const card = CardManager.cardList.filter(c => c.GetRank() == rank && c.GetCategory() != 'Exclusief').randomChoice();
 
         return card;
     }
