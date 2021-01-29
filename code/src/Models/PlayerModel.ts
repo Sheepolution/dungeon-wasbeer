@@ -5,6 +5,7 @@ import { Utils } from '../Utils/Utils';
 import CharacterModel from './CharacterModel';
 import Character from '../Objects/Character';
 import { ShoeState } from '../Enums/ShoeState';
+import CardManager from '../Managers/CardManager';
 
 const { Model } = require('objection');
 
@@ -49,6 +50,11 @@ export default class PlayerModel extends Model {
             })
 
         return player;
+    }
+
+    public static async GetAll() {
+        const playerModels = await PlayerModel.query();
+        return playerModels;
     }
 
     public async GetPlayerCards(player: Player) {

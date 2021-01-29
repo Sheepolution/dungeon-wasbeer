@@ -136,6 +136,10 @@ export default class Card {
         return this.imageUrl;
     }
 
+    public IsExclusive() {
+        return this.category == 'Exclusief';
+    }
+
     private CalculateModifierStats() {
         const modifierStats = CharacterService.GetEmptyModifierStats();
         for (const modifier of this.modifiers) {

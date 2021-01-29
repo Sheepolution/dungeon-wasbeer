@@ -21,6 +21,7 @@ import LogService from '../Services/LogService';
 import PlayerCard from '../Objects/PlayerCard';
 import PlayerManager from '../Managers/PlayerManager';
 import DiscordService from '../Services/DiscordService';
+import PlayerModel from '../Models/PlayerModel';
 
 export default class AdminHandler {
 

@@ -134,6 +134,8 @@ export default class CardService {
                 return ImageConstants.ICONS.DNW;
             case 'Kunst':
                 return ImageConstants.ICONS.ART;
+            case 'Exclusief':
+                return ImageConstants.ICONS.EXCLUSIVE;
         }
     }
 
@@ -181,6 +183,8 @@ export default class CardService {
                 return EmojiConstants.CARD_CATEGORIES.DNW;
             case 'Kunst':
                 return EmojiConstants.CARD_CATEGORIES.ART;
+            case 'Exclusief':
+                return EmojiConstants.CARD_CATEGORIES.EXCLUSIVE;
         }
     }
 

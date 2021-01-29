@@ -16,6 +16,7 @@ export default class CardManager {
     private static cardList: Array<Card>;
 
     private static legendaryCardsAmount: number;
+    private static exclusiveCardsAmount: number;
 
     public static async BuildCardList() {
         const cardList = new Array<Card>();
@@ -30,6 +31,7 @@ export default class CardManager {
         this.cardList = cardList;
 
         this.legendaryCardsAmount = this.cardList.filter(c => c.GetRank() == 6).length;
+        this.exclusiveCardsAmount = this.cardList.filter(c => c.GetCategory() == 'Exclusief').length;
     }
 
     public static GetCardList() {
@@ -37,7 +39,7 @@ export default class CardManager {
     }
 
     public static GetAmountOfNormalCards() {
-        return this.cardList.length - this.legendaryCardsAmount;
+        return this.cardList.length - this.legendaryCardsAmount - this.exclusiveCardsAmount;
     }
 
     public static async GivePlayerCard(player: Player) {

@@ -22,6 +22,7 @@ export default class ImageConstants {
         ALBINO: 'https://cdn.discordapp.com/attachments/694331679204180029/783754648539365376/AlbinoSmall.png',
         DNW: 'https://cdn.discordapp.com/attachments/694331679204180029/783754515928317992/DnW.png',
         ART: 'https://cdn.discordapp.com/attachments/694331679204180029/783751086715830362/Kunstsmall.png',
+        EXCLUSIVE: 'https://cdn.discordapp.com/attachments/694331679204180029/804800987851391056/exclusief.png',
     }
 
     public static readonly SOLVED = 'https://cdn.discordapp.com/attachments/694331679204180029/708732190485118986/solved.gif';

@@ -32,6 +32,7 @@ export default class EmojiConstants {
         ALBINO: '<:albino:784174386486968320>',
         DNW: '<:dnw:784174386293768263>',
         ART: '<:kunst:784174386571509763>',
+        EXCLUSIVE: '<:exclusief:804802089754296350>',
     }
 
     public static readonly STATUS = {

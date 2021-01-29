@@ -97,6 +97,16 @@ export default class TradeHandler {
             return;
         }
 
+        if (yourCard.GetCard().IsExclusive()) {
+            MessageService.ReplyMessage(messageInfo, `Deze kaart is exclusief en kan daarom niet geruild worden.`, false);
+            return;
+        }
+
+        if (theirCard.GetCard().IsExclusive()) {
+            MessageService.ReplyMessage(messageInfo, `De kaart van ${otherPlayer.GetDiscordName()}, '${theirCard.GetCard().GetName()}', is exclusief en dus kan deze niet geruild worden.`, false);
+            return;
+        }
+
         if (!yourCard.CanBeTraded()) {
             MessageService.ReplyMessage(messageInfo, `Jouw kaart '${yourCard.GetCard().GetName()}' zit in je equipment en dus je kan deze niet ruilen.`, false);
             return;

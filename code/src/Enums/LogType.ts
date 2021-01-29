@@ -8,6 +8,7 @@ export enum LogType {
     CardReceivedReward = 'CardReceivedReward',
     CardReceivedGiven = 'CardReceivedGiven',
     CardReceivedShoe = 'CardReceivedShoe',
+    CardReceivedExclusive = 'CardReceivedExclusive',
     CardTaken = 'CardTaken',
     Trade = 'Trade',
     CharacterCreated = 'CharacterCreated',
