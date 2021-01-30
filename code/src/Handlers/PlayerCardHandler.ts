@@ -95,6 +95,9 @@ export default class PlayerCardHandler {
             case 'kaartene':
                 this.SendPlayerCardOwnersList(messageInfo, player, content);
                 break;
+            case 'tetris-guy':
+                this.GiveTetrisCard(messageInfo, player, args[0]);
+                break;
             default:
                 return false;
         }
@@ -198,6 +201,57 @@ export default class PlayerCardHandler {
             message.edit(`${baseText} maar verliest al je kaartstukjes tijdens het zoeken!\nNu heb je er 0 van de ${needed}!`);
             LogService.Log(player, player.GetId(), LogType.PieceLost, `${player.GetDiscordName()} heeft gegraven en alle kaartstukjes verloren.`);
         }
+    }
+
+    private static async GiveTetrisCard(messageInfo: IMessageInfo, player: Player, mention: string) {
+        const discordId = player.GetDiscordId();
+        var isNeill = false;
+        if (discordId == SettingsConstants.TETRIS_GUYS.NEILL) {
+            isNeill = true;
+        } else if (discordId != SettingsConstants.TETRIS_GUYS.RUBEN) {
+            return;
+        }
+
+        if (mention == null) {
+            MessageService.ReplyMessage(messageInfo, 'Wie geef je de Tetris Guy kaart? Mention deze persoon.');
+            return;
+        }
+
+        const receiverId = DiscordUtils.GetMemberId(mention);
+        if (receiverId == null) {
+            MessageService.ReplyMessage(messageInfo, 'Wie geef je de Tetris Guy kaart? Mention deze persoon.');
+            return;
+        }
+
+        const receiver = await PlayerManager.GetPlayer(receiverId);
+        if (receiver == null) {
+            MessageService.ReplyMessage(messageInfo, 'Ik kan deze persoon niet vinden.');
+            return;
+        }
+
+        CardManager.GivePlayerCard(player)
+
+        const cards = CardManager.GetCardList().filter(c => isNeill ? c.GetId() == 'bb919b33-b93d-4c11-bdb1-fdffe05fddc8' : c.GetId() == '307bbb74-8b8f-48d9-942d-92cb69f56464');
+        if (cards.length == 0) {
+            return;
+        }
+
+        const card = cards[0];
+
+        const playerCards = receiver.GetCards();
+
+        const existingPlayerCard = playerCards.find((x: PlayerCard) => x.GetCard().GetId() == card.GetId());
+        if (existingPlayerCard != null) {
+            MessageService.ReplyMessage(messageInfo, `Deze persoon heeft jouw kaart al ${isNeill ? 'Neill' : 'Ruben'}.`);
+            return;
+        }
+
+        const newPlayerCard = new PlayerCard(receiver);
+        await newPlayerCard.POST(card.GetId(), receiver.GetId());
+
+        receiver.GiveCard(newPlayerCard);
+
+        MessageService.ReplyMessage(messageInfo, `Wow! ${receiver.GetDiscordName()} heeft nu een exclusieve Tetris kaart! ${isNeill ? 'Crazy!' : 'Nice!'}`);
     }
 
     private static async SendPlayerCard(messageInfo: IMessageInfo, player: Player, cardName: string) {

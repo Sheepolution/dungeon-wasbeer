@@ -35,6 +35,11 @@ export default class SettingsConstants {
         '484313248032882708',
     ];
 
+    public static readonly TETRIS_GUYS = {
+        NEILL: '100595585718943744',
+        RUBEN: '331576018726813697',
+    }
+
     public static readonly MESSAGE_POINT_TIMEOUT_MINUTES = 15;
     public static readonly CHARACTER_POINT_TIMEOUT_MINUTES = 5;
 
