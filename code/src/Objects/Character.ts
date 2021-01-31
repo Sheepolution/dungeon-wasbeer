@@ -1095,6 +1095,34 @@ export default class Character {
         })
     }
 
+    public async UpdateChargeDescription(description: string) {
+        this.chargeDescription = description;
+        await this.UPDATE({
+            charge_description: this.chargeDescription
+        })
+    }
+
+    public async UpdateChargeFailDescription(description: string) {
+        this.chargeFailDescription = description;
+        await this.UPDATE({
+            charge_fail_description: this.chargeFailDescription
+        })
+    }
+
+    public async UpdatePrayDescription(description: string) {
+        this.prayDescription = description;
+        await this.UPDATE({
+            pray_description: this.prayDescription
+        })
+    }
+
+    public async UpdatePrayFailDescription(description: string) {
+        this.prayFailDescription = description;
+        await this.UPDATE({
+            pray_fail_description: this.prayFailDescription
+        })
+    }
+
     public async UpdateEnchantmentDescription(description: string) {
         this.enchantmentDescription = description;
         await this.UPDATE({

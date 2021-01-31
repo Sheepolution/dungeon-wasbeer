@@ -169,6 +169,18 @@ export default class CharacterHandler {
             case 'ifb':
                 this.EditInspireFailDescription(messageInfo, player, content);
                 break;
+            case 'protect-beschrijving':
+            case 'pb':
+                this.EditProtectionDescription(messageInfo, player, content);
+                break;
+            case 'protect-faal-beschrijving':
+            case 'pfb':
+                this.EditProtectionFailDescription(messageInfo, player, content);
+                break;
+            case 'inspire-faal-beschrijving':
+            case 'ifb':
+                this.EditInspireFailDescription(messageInfo, player, content);
+                break;
             case 'enchantment-beschrijving':
             case 'eb':
                 this.EditEnchantmentDescription(messageInfo, player, content);
@@ -180,6 +192,22 @@ export default class CharacterHandler {
             case 'reinforcement-beschrijving':
             case 'rb':
                 this.EditReinforcementDescription(messageInfo, player, content);
+                break;
+            case 'charge-beschrijving':
+            case 'cb':
+                this.EditChargeDescription(messageInfo, player, content);
+                break;
+            case 'charge-faal-beschrijving':
+            case 'cfb':
+                this.EditChargeFailDescription(messageInfo, player, content);
+                break;
+            case 'bid-beschrijving':
+            case 'bb':
+                this.EditPrayDescription(messageInfo, player, content);
+                break;
+            case 'bid-faal-beschrijving':
+            case 'bfb':
+                this.EditPrayFailDescription(messageInfo, player, content);
                 break;
             case 'reset':
                 this.OnReset(messageInfo, player);
@@ -1184,6 +1212,46 @@ export default class CharacterHandler {
         MessageService.ReplyMessage(messageInfo, 'Je inspire faal beschrijving is aangepast.');
     }
 
+    private static async EditProtectionDescription(messageInfo: IMessageInfo, player: Player, description: string) {
+        const character = PlayerManager.GetCharacterFromPlayer(messageInfo, player);
+        if (character == null) {
+            return;
+        }
+
+        if (!character.CanProtect()) {
+            MessageService.ReplyMessage(messageInfo, 'Je character kan helemaal niet protecten!', false);
+            return;
+        }
+
+        if (description.length > 250) {
+            MessageService.ReplyMessage(messageInfo, 'De beschrijving van je protection mag niet langer zijn dan 250 tekens.', false);
+            return;
+        }
+
+        await character.UpdateProtectionDescription(description);
+        MessageService.ReplyMessage(messageInfo, 'Je protection beschrijving is aangepast.');
+    }
+
+    private static async EditProtectionFailDescription(messageInfo: IMessageInfo, player: Player, description: string) {
+        const character = PlayerManager.GetCharacterFromPlayer(messageInfo, player);
+        if (character == null) {
+            return;
+        }
+
+        if (!character.CanProtect()) {
+            MessageService.ReplyMessage(messageInfo, 'Je character kan helemaal niet protecten!', false);
+            return;
+        }
+
+        if (description.length > 250) {
+            MessageService.ReplyMessage(messageInfo, 'De beschrijving van je protection faal mag niet langer zijn dan 250 tekens.', false);
+            return;
+        }
+
+        await character.UpdateProtectionFailDescription(description);
+        MessageService.ReplyMessage(messageInfo, 'Je protection faal beschrijving is aangepast.');
+    }
+
     private static async EditEnchantmentDescription(messageInfo: IMessageInfo, player: Player, description: string) {
         const character = PlayerManager.GetCharacterFromPlayer(messageInfo, player);
         if (character == null) {
@@ -1243,6 +1311,88 @@ export default class CharacterHandler {
         await character.UpdateReinforcementDescription(description);
         MessageService.ReplyMessage(messageInfo, 'Je reinforcement beschrijving is aangepast.');
     }
+
+    private static async EditChargeDescription(messageInfo: IMessageInfo, player: Player, description: string) {
+        const character = PlayerManager.GetCharacterFromPlayer(messageInfo, player);
+        if (character == null) {
+            return;
+        }
+
+        if (!character.CanCharge()) {
+            MessageService.ReplyMessage(messageInfo, 'Je character kan helemaal niet chargen!', false);
+            return;
+        }
+
+        if (description.length > 250) {
+            MessageService.ReplyMessage(messageInfo, 'De beschrijving van je charge mag niet langer zijn dan 250 tekens.', false);
+            return;
+        }
+
+        await character.UpdateChargeDescription(description);
+        MessageService.ReplyMessage(messageInfo, 'Je charge beschrijving is aangepast.');
+    }
+
+    private static async EditChargeFailDescription(messageInfo: IMessageInfo, player: Player, description: string) {
+        const character = PlayerManager.GetCharacterFromPlayer(messageInfo, player);
+        if (character == null) {
+            return;
+        }
+
+        if (!character.CanCharge()) {
+            MessageService.ReplyMessage(messageInfo, 'Je character kan helemaal niet chargen!', false);
+            return;
+        }
+
+        if (description.length > 250) {
+            MessageService.ReplyMessage(messageInfo, 'De beschrijving van je charge faal mag niet langer zijn dan 250 tekens.', false);
+            return;
+        }
+
+        await character.UpdateChargeFailDescription(description);
+        MessageService.ReplyMessage(messageInfo, 'Je charge faal beschrijving is aangepast.');
+    }
+
+
+    private static async EditPrayDescription(messageInfo: IMessageInfo, player: Player, description: string) {
+        const character = PlayerManager.GetCharacterFromPlayer(messageInfo, player);
+        if (character == null) {
+            return;
+        }
+
+        if (!character.CanPray()) {
+            MessageService.ReplyMessage(messageInfo, 'Je character kan helemaal niet bidden!', false);
+            return;
+        }
+
+        if (description.length > 250) {
+            MessageService.ReplyMessage(messageInfo, 'De beschrijving van je pray mag niet langer zijn dan 250 tekens.', false);
+            return;
+        }
+
+        await character.UpdatePrayDescription(description);
+        MessageService.ReplyMessage(messageInfo, 'Je bid beschrijving is aangepast.');
+    }
+
+    private static async EditPrayFailDescription(messageInfo: IMessageInfo, player: Player, description: string) {
+        const character = PlayerManager.GetCharacterFromPlayer(messageInfo, player);
+        if (character == null) {
+            return;
+        }
+
+        if (!character.CanPray()) {
+            MessageService.ReplyMessage(messageInfo, 'Je character kan helemaal niet bidden!', false);
+            return;
+        }
+
+        if (description.length > 250) {
+            MessageService.ReplyMessage(messageInfo, 'De beschrijving van je pray faal mag niet langer zijn dan 250 tekens.', false);
+            return;
+        }
+
+        await character.UpdatePrayFailDescription(description);
+        MessageService.ReplyMessage(messageInfo, 'Je pray faal beschrijving is aangepast.');
+    }
+
 
     private static async OnReset(messageInfo: IMessageInfo, player: Player) {
         const character = PlayerManager.GetCharacterFromPlayer(messageInfo, player);
