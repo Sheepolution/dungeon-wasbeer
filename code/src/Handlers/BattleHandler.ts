@@ -301,7 +301,7 @@ export default class BattleHandler {
         const oldArmor = character.GetFullModifierStats().armor;
         await character.BecomeCharged(charge);
         await this.UpdateChargeEmbed(message, character, roll, charge);
-        await character.SetChargeCooldown();
+        await character.SetChargeCooldown(roll);
         await character.SetBattleCooldown();
         character.SetIsCharging(false);
         this.SaveCharge(character, oldArmor, roll, charge);

@@ -788,8 +788,8 @@ export default class Character {
         return await Redis.ttl(Character.protectCooldownPrefix + this.GetId());
     }
 
-    public async SetChargeCooldown() {
-        await Redis.set(Character.protectCooldownPrefix + this.GetId(), '1', 'EX', Utils.GetMinutesInSeconds(this.GetMaxChargeCooldown()));
+    public async SetChargeCooldown(roll: number) {
+        await Redis.set(Character.protectCooldownPrefix + this.GetId(), '1', 'EX', Utils.GetMinutesInSeconds(Math.floor(this.GetMaxChargeCooldown() * (roll / 20))));
     }
 
     public async GetPrayCooldown() {
