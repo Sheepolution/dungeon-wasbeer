@@ -4,7 +4,7 @@ package-lock.json
 lib
 .env
 .VSCodeCounter
-images
+media
 docs
 data
 logs
