@@ -894,13 +894,13 @@ export default class Character {
             const oldInspiration = this.inspiration;
             this.inspiration = 0;
             this.UpdateFullModifierStats();
-            const charge = Math.floor((roll / 20) * (this.fullModifierStats.armor));
+            const charge = Math.floor((roll / 20) * (this.fullModifierStats.armor / 2));
             this.inspiration = oldInspiration;
             this.UpdateFullModifierStats();
             return charge;
         }
 
-        return Math.floor((roll / 20) * this.fullModifierStats.armor);
+        return Math.floor((roll / 20) * this.fullModifierStats.armor / 2);
     }
 
     public GetBlessingBasedOnRoll(roll: number) {
@@ -1299,8 +1299,8 @@ export default class Character {
         const max = CharacterService.GetMaxModifierStats(this.classType);
 
         if (this.charge > 0) {
-            this.fullModifierStats.strength += this.charge;
-            this.fullModifierStats.armor -= this.charge;
+            this.fullModifierStats.strength += Math.ceil(this.charge / 2);
+            this.fullModifierStats.attack += Math.ceil(this.charge / 2);
         }
 
         if (this.blessing > 0) {
