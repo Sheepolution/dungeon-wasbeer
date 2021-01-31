@@ -65,7 +65,7 @@ export default class Protect {
         return list;
     }
 
-    public static async GET_TOP_PROTECTION_RECEIVED_LIST(battleId?: string) {
+    public static async GET_TOP_PROTECTIONS_RECEIVED_LIST(battleId?: string) {
         var whereObj: any = {};
         if (battleId != null) {
             whereObj.battle_id = battleId;
@@ -84,7 +84,7 @@ export default class Protect {
         return list;
     }
 
-    public static async GET_TOP_INSPIRATION_RECEIVED_LIST(battleId?: string) {
+    public static async GET_TOP_PROTECTION_RECEIVED_LIST(battleId?: string) {
         var whereObj: any = {};
         if (battleId != null) {
             whereObj.battle_id = battleId;
@@ -102,6 +102,7 @@ export default class Protect {
 
         return list;
     }
+
 
     public static async STATIC_POST(battle: Battle, character: Character, receiver: Character, characterCharisma: number, roll: number, finalProtection: number) {
         return await ProtectModel.New(battle, character, receiver, characterCharisma, roll, finalProtection);

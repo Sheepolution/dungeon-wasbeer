@@ -1643,6 +1643,43 @@ export default class CharacterHandler {
             case 'inspiratie gedaan':
                 MessageService.ReplyEmbed(messageInfo, await CharacterEmbeds.GetTopInspirationDoneEmbed(topListType, battleId));
                 break;
+            case 'protects gekregen':
+            case 'protects ontvangen':
+            case 'protects received':
+            case 'protects get':
+            case 'protections gekregen':
+            case 'protections ontvangen':
+            case 'protections received':
+            case 'protections get':
+                MessageService.ReplyEmbed(messageInfo, await CharacterEmbeds.GetTopProtectsReceived(topListType, battleId));
+                break;
+            case 'protection gekregen':
+            case 'protection ontvangen':
+            case 'protection received':
+            case 'protection get':
+            case 'bescherming gekregen':
+            case 'bescherming ontvangen':
+                MessageService.ReplyEmbed(messageInfo, await CharacterEmbeds.GetTopProtectionReceivedEmbed(topListType, battleId));
+                break;
+            case 'protects':
+            case 'protects done':
+            case 'protects gegeven':
+            case 'protects gedaan':
+            case 'protections':
+            case 'protections done':
+            case 'protections gegeven':
+            case 'protections gedaan':
+                MessageService.ReplyEmbed(messageInfo, await CharacterEmbeds.GetTopProtectsDone(topListType, battleId));
+                break;
+            case 'protection':
+            case 'protection done':
+            case 'protection gegeven':
+            case 'protection gedaan':
+            case 'bescherming':
+            case 'bescherming gegeven':
+            case 'bescherming gedaan':
+                MessageService.ReplyEmbed(messageInfo, await CharacterEmbeds.GetTopProtectionDoneEmbed(topListType, battleId));
+                break;
             case 'enchants gekregen':
             case 'enchants ontvangen':
             case 'enchants received':
