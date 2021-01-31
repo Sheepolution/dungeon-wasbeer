@@ -113,7 +113,7 @@ export default class CharacterConstants {
     public static readonly INSPIRE_FAIL_MESSAGE = '"[jij] speelt een hoop valse noten en wordt gevraagd te stoppen. Dit was alles behalve inspirerend."';
     public static readonly PROTECTION_MESSAGE = `"[jij] gaat voor [naam] staan met een schild, wat een [bescherming] armor boost geeft tot na het volgende gevecht." ${EmojiConstants.DNW_STATES.PROTECTED}`;
     public static readonly PROTECTION_FAIL_MESSAGE = '"[jij] rent naar [naam] voor bescherming, maar struikelt onderweg en heeft moeite overeind komen in het harnas."';
-    public static readonly CHARGE_MESSAGE = `"[jij] doet voor de aanval zoveel mogelijk armor uit. Het verschil in gewicht zorgt voor [charge] meer strength. Ten aanval!" ${EmojiConstants.DNW_STATES.CHARGED}`;
+    public static readonly CHARGE_MESSAGE = `"[jij] doet voor de aanval zoveel mogelijk armor uit. Het verschil van [charge] kilo in gewicht zorgt voor meer strength en attack. Ten aanval!" ${EmojiConstants.DNW_STATES.CHARGED}`;
     public static readonly CHARGE_FAIL_MESSAGE = '"[jij] probeert het harnas los te maken, maar lukt het maar niet om dat knoopje op de rug los te maken. Nouja, dan maar niet."';
     public static readonly PRAY_MESSAGE = `"[jij] gaat op de knieën zitten en bidt naar de hemel. Uit het niets schijnt er een zonnestraal op [jij], die een blessing krijgt van [blessing]." ${EmojiConstants.DNW_STATES.BLESSED}`;
     public static readonly PRAY_FAIL_MESSAGE = '"[jij] probeert te bidden, maar er gebeurt niks. Komt het misschien door die vunzige gedachten van laatst?"';
