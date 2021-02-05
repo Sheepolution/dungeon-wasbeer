@@ -229,8 +229,6 @@ export default class PlayerCardHandler {
             return;
         }
 
-        CardManager.GivePlayerCard(player)
-
         const cards = CardManager.GetCardList().filter(c => isNeill ? c.GetId() == 'bb919b33-b93d-4c11-bdb1-fdffe05fddc8' : c.GetId() == '307bbb74-8b8f-48d9-942d-92cb69f56464');
         if (cards.length == 0) {
             return;
