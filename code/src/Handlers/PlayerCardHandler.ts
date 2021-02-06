@@ -268,7 +268,7 @@ export default class PlayerCardHandler {
         }
 
         const amount = playerCard.GetAmount();
-        if (amount <= SettingsConstants.CARD_EXCHANGE_AMOUNT) {
+        if (amount < SettingsConstants.CARD_EXCHANGE_AMOUNT) {
             MessageService.ReplyMessage(messageInfo, `Je hebt de kaart '${playerCard.GetCard().GetName()}' maar ${amount} keer. Je moet een kaart minimaal ${SettingsConstants.CARD_EXCHANGE_AMOUNT} keer hebben om deze in te ruilen voor een nieuwe kaart.`);
             return;
         }
