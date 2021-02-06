@@ -75,6 +75,19 @@ export default class PlayerCard {
         return true;
     }
 
+    public async RemoveAmount(amount: number) {
+        this.amount -= amount;
+
+        if (this.amount > 0) {
+            await this.UPDATE({ amount: this.amount });
+            return false;
+        }
+
+        await this.DELETE();
+        this.player.RemoveCard(this);
+        return true;
+    }
+
     public GetCard() {
         return this.card;
     }

@@ -24,14 +24,17 @@ export default class PlayerCardHandler {
 
     public static async OnCommand(messageInfo: IMessageInfo, player: Player, command: string, args: Array<string>, content: string) {
         switch (command) {
+            case 'exchange':
+            case 'inruilen':
+                this.ExchangeCard(messageInfo, player, content);
+                break;
             case 'graaf':
             case 'graven':
             case 'dig':
                 this.Dig(messageInfo, player);
                 break;
-
             case 'kaart':
-                this.SendPlayerCard(messageInfo, player, args[0]);
+                this.SendPlayerCard(messageInfo, player, content);
                 break;
             case 'lijst':
             case 'kaarten':
@@ -250,6 +253,44 @@ export default class PlayerCardHandler {
         receiver.GiveCard(newPlayerCard);
 
         MessageService.ReplyMessage(messageInfo, `Wow! ${receiver.GetDiscordName()} heeft nu een exclusieve Tetris kaart! ${isNeill ? 'Crazy!' : 'Nice!'}`);
+    }
+
+    private static async ExchangeCard(messageInfo: IMessageInfo, player: Player, cardName: string) {
+        if (cardName == null) {
+            MessageService.ReplyMissingCardName(messageInfo);
+            return;
+        }
+
+        const playerCard = player.FindCard(cardName);
+        if (playerCard == null) {
+            MessageService.ReplyNotOwningCard(messageInfo, cardName);
+            return;
+        }
+
+        const amount = playerCard.GetAmount();
+        if (amount <= SettingsConstants.CARD_EXCHANGE_AMOUNT) {
+            MessageService.ReplyMessage(messageInfo, `Je hebt de kaart '${playerCard.GetCard().GetName()}' maar ${amount} keer. Je moet een kaart minimaal ${SettingsConstants.CARD_EXCHANGE_AMOUNT} keer hebben om deze in te ruilen voor een nieuwe kaart.`);
+            return;
+        }
+
+        await playerCard.RemoveAmount(SettingsConstants.CARD_EXCHANGE_AMOUNT - 1);
+
+        const cardModifyResult = await CardManager.GivePlayerCard(player);
+        const newCard = <PlayerCard>cardModifyResult.object;
+        messageInfo.channel = BotManager.GetCardChannel();
+        if (cardModifyResult.result) {
+            var cardMessage = await MessageService.ReplyMessage(messageInfo, `Je ruilt ${SettingsConstants.CARD_EXCHANGE_AMOUNT - 1} van je kaarten in, en daarvoor krijg je een nieuwe kaart!`, undefined, true, CardEmbeds.GetCardEmbed(newCard.GetCard(), newCard.GetAmount()));
+            if (cardMessage != null) {
+                CardManager.OnCardMessage(cardMessage, newCard);
+                LogService.Log(player, newCard.GetCardId(), LogType.CardReceivedExchange, `${player.GetDiscordName()} heeft de kaart '${newCard.GetCard().GetName()}' gekregen voor het inruilen van dubbele kaarten.`);
+            }
+        } else {
+            var cardMessage = await MessageService.ReplyMessage(messageInfo, `Je ruilt ${SettingsConstants.CARD_EXCHANGE_AMOUNT - 1} van je kaarten in, en daarvoor krijg je een extra kaart!`, undefined, true, CardEmbeds.GetCardEmbed(newCard.GetCard(), newCard.GetAmount()));
+            if (cardMessage != null) {
+                CardManager.OnCardMessage(cardMessage, newCard);
+                LogService.Log(player, newCard.GetCardId(), LogType.CardReceivedExchange, `${player.GetDiscordName()} heeft de kaart '${newCard.GetCard().GetName()}' gekregen voor het inruilen van dubbele kaarten, en heeft daar nu ${newCard.GetAmount()} van.`);
+            }
+        }
     }
 
     private static async SendPlayerCard(messageInfo: IMessageInfo, player: Player, cardName: string) {
