@@ -211,12 +211,23 @@ export default class BattleHandler {
         if (character.IsEnchanted()) {
             const secondRoll2 = Utils.Dice(playerAttackRoll);
             var lowestRoll = 0;
-            if (secondRoll2 < roll2) {
-                lowestRoll = secondRoll2;
+
+            if (monsterId == '57ea9222-d3d5-4f26-96a7-07c7415d3873') {
+                if (secondRoll2 > roll2) {
+                    lowestRoll = secondRoll2;
+                } else {
+                    lowestRoll = roll2;
+                    roll2 = secondRoll2;
+                }
             } else {
-                lowestRoll = roll2;
-                roll2 = secondRoll2;
+                if (secondRoll2 < roll2) {
+                    lowestRoll = secondRoll2;
+                } else {
+                    lowestRoll = roll2;
+                    roll2 = secondRoll2;
+                }
             }
+
             if (lowestRoll != roll2) {
                 await this.UpdateBattleEmbed(message, battle, character, roll1, lowestRoll);
                 await Utils.Sleep(1.5);
