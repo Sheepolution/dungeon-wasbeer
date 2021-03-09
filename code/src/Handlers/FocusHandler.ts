@@ -27,6 +27,7 @@ export default class FocusHandler {
 
     public static async OnFocusCommand(messageInfo: IMessageInfo, command: string, content: string) {
         switch (command) {
+            case 'a':
             case 'antwoord':
             case 'antwoorden':
             case 'solved':
@@ -58,7 +59,7 @@ export default class FocusHandler {
 
     private static async OnSolution(messageInfo: IMessageInfo, solved: string) {
         const solution = await Redis.get(`${this.focusPuzzlePrefix}${messageInfo.member.id}`);
-        if (!solution || solution == '' || solution == solved) {
+        if (!solution || solution == '' || solution.trim() == solved) {
             await messageInfo.member.roles.remove(SettingsConstants.FOCUS_ROLE_ID);
             await Redis.del(`${this.focusPuzzlePrefix}${messageInfo.member.id}`);
         } else {
