@@ -163,7 +163,7 @@ export default class BattleHandler {
 
         if (monsterId == 'fedbc712-557b-414e-ac05-0f283682cb1a') {
             const stats = character.GetFullModifierStatsWithoutInspire();
-            monster.SetAttackStrength(stats.strength);
+            monster.SetAttackStrength(character.IsSorcerer() ? stats.spell : stats.strength);
             monster.SetAttackRoll(stats.attack);
         } else if (monsterId == '50a3d80c-80b9-49a9-9411-0953d12422b1') {
             monster.SetAttackStrength(Utils.Random(5, 30, true));
