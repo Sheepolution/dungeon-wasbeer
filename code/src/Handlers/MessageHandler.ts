@@ -141,7 +141,7 @@ export default class MessageHandler {
 
     private static OnPostingArt(messageInfo: IMessageInfo) {
         const attachment = messageInfo.message?.attachments.first();
-        if (attachment == null || !['.png', 'jpeg', '.jpg'].includes(attachment.name?.toLowerCase().slice(-4) || '')) {
+        if (attachment == null || !['.png', 'jpeg', '.jpg', '.gif', '.mp4', '.mp3'].includes(attachment.name?.toLowerCase().slice(-4) || '')) {
             return;
         }
 
