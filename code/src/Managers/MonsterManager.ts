@@ -55,8 +55,8 @@ export default class MonsterManager {
     }
 
     public static async GetRandomMonster(previousMonster?: Monster) {
-        const count = await Battle.GET_COUNT();
-        if (count > 100 && (count + 1) % 100 == 0) {
+        const count = parseInt(await Battle.GET_COUNT());
+        if (count == 201 || (count > 100 && (count + 1) % 100 == 0)) {
             return <Monster>this.monsterList.find(m => m.GetId() == '20110b21-0a15-48f8-83a9-b4f804235355');
         }
         var monster: Monster = new Monster();
