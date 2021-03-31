@@ -118,6 +118,11 @@ export default class MessageHandler {
                     LogService.Log(player, playerCard.GetCardId(), LogType.CardReceived, `${player.GetDiscordName()} heeft de kaart '${playerCard.GetCard().GetName()}' gekregen, en heeft daar nu ${playerCard.GetAmount()} van.`);
                 }
             }
+        } else {
+            if (Utils.Chance(1)) {
+                messageInfo.channel = BotManager.GetCardChannel();
+                MessageService.ReplyMessage(messageInfo, 'Je hebt een nieuwe kaart!', undefined, true, CardEmbeds.GetFakeCardEmbed(messageInfo));
+            }
         }
 
         Redis.set(MessageHandler.messagePointTimeoutPrefix + memberId, '1', 'EX', Utils.GetMinutesInSeconds(SettingsConstants.MESSAGE_POINT_TIMEOUT_MINUTES));

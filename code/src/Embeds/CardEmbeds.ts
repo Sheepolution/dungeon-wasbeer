@@ -9,6 +9,7 @@ import CharacterService from '../Services/CharacterService';
 import CardManager from '../Managers/CardManager';
 import PlayerCard from '../Objects/PlayerCard';
 import { CardFilterType } from '../Enums/CardFilterType';
+import IMessageInfo from '../Interfaces/IMessageInfo';
 
 export default class CardEmbeds {
 
@@ -35,6 +36,22 @@ export default class CardEmbeds {
         if (modifierClass) {
             embed.addField('Class', `${CharacterService.GetClassIconEmoji(modifierClass)} ${modifierClass.toString()}`, true);
         }
+
+        return embed;
+    }
+
+    public static GetFakeCardEmbed(messageInfo: IMessageInfo) {
+        const embed = new MessageEmbed()
+            .setColor(SettingsConstants.COLORS.DEFAULT)
+            .setAuthor('Exclusief', CardService.GetIconByCategory('Exclusief'))
+            .setTitle(messageInfo.member.displayName)
+            .setDescription(['Dit is een topgozer!', 'Held.', 'Ja daar is ie dan!', 'Droomgozer', 'Misschien wel mijn favoriete persoon'].randomChoice())
+            .setFooter('Seizoen 4')
+            .setImage(messageInfo.member.user.displayAvatarURL())
+            .addField('Level', ':star:'.repeat(5));
+
+        const season = 4;
+        embed.setFooter(`Seizoen ${season > 0 ? season : '???'}`);
 
         return embed;
     }
