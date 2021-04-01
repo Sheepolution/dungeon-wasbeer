@@ -39,11 +39,11 @@ export default class BattleEmbeds {
         const monster = battle.GetMonster();
 
         const characterName = character.GetName();
-        const characterAttack = character.GetAttackRoll() * 1000;
-        const characterStrength = character.GetAttackStrength() * 1000;
+        const characterAttack = character.GetAttackRoll();
+        const characterStrength = character.GetAttackStrength();
         const monsterName = monster.GetName();
-        const monsterAttack = battle.GetMonsterAttackRoll() * 1000;
-        var monsterStrength: string | number = battle.GetMonsterAttackStrength() * 1000;
+        const monsterAttack = battle.GetMonsterAttackRoll();
+        var monsterStrength: string | number = battle.GetMonsterAttackStrength();
 
         if (monster.GetId() == 'e6e3aa15-b39b-40aa-a113-6b5add2994c4') {
             monsterStrength = '???';
@@ -60,8 +60,6 @@ export default class BattleEmbeds {
             .addField('--------------------------------', '-- Rolls --');
 
         if (roll1 != null && roll2 != null) {
-            roll1 *= 1000;
-            roll2 *= 1000;
             var message;
 
             if (roll1 > 0) {
@@ -75,8 +73,6 @@ export default class BattleEmbeds {
             embed.addField(characterName, message += `\nTotaal = ${roll1 + roll2}`, true);
 
             if (roll3 != null && roll4 != null) {
-                roll3 *= 1000;
-                roll4 *= 1000;
                 message = '';
                 if (roll3 > 0) {
                     message = `D20 = ${roll3}`;
@@ -92,7 +88,6 @@ export default class BattleEmbeds {
                     embed.addField(monsterName, 'Geen rolls.', true);
                 }
             } else if (roll3 != null) {
-                roll3 *= 1000;
                 message = `D20 = ${roll3}`;
                 if (monsterAttack > 1) {
                     message += `\nRolt de D${monsterAttack}...`;
@@ -102,7 +97,6 @@ export default class BattleEmbeds {
                 embed.addField(monsterName, 'Rolt de D20...', true);
             }
         } else if (roll1 != null) {
-            roll1 *= 1000;
             message = `D20 = ${roll1}`;
             if (characterAttack > 1) {
                 message += `\nRolt de D${characterAttack}...`;
@@ -117,7 +111,6 @@ export default class BattleEmbeds {
             embed.setFooter(`Participatiepunten: ${character.GetRewardPoints(battle.GetId())}/${character.GetNextRewardPoints()}`);
 
             embed.addField('--------------------------------', '-- Resultaat --');
-            damage = (damage || 0) * 1000;
             if (playerWon) {
                 var attackDescription = character.GetAttackDescription(crit);
                 if (!attackDescription.includes('[damage]')) {
