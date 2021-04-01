@@ -119,7 +119,7 @@ export default class MessageHandler {
                 }
             }
         } else {
-            if (Utils.Chance(1)) {
+            if (Utils.Chance(10)) {
                 messageInfo.channel = BotManager.GetCardChannel();
                 MessageService.ReplyMessage(messageInfo, 'Je hebt een nieuwe kaart!', undefined, true, CardEmbeds.GetFakeCardEmbed(messageInfo));
             }
