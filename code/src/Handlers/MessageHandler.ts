@@ -119,10 +119,8 @@ export default class MessageHandler {
                 }
             }
         } else {
-            if (Utils.Chance(10)) {
-                messageInfo.channel = BotManager.GetCardChannel();
-                MessageService.ReplyMessage(messageInfo, 'Je hebt een nieuwe kaart!', undefined, true, CardEmbeds.GetFakeCardEmbed(messageInfo));
-            }
+            messageInfo.channel = BotManager.GetCardChannel();
+            MessageService.ReplyMessage(messageInfo, 'Je hebt een nieuwe kaart!', undefined, true, CardEmbeds.GetFakeCardEmbed(messageInfo));
         }
 
         Redis.set(MessageHandler.messagePointTimeoutPrefix + memberId, '1', 'EX', Utils.GetMinutesInSeconds(SettingsConstants.MESSAGE_POINT_TIMEOUT_MINUTES));
