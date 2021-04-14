@@ -23,15 +23,6 @@ export default class MessageHandler {
             return;
         }
 
-        if (messageInfo.message?.channel.id == SettingsConstants.ART_CHANNEL_ID) {
-            this.OnPostingArt(messageInfo);
-        }
-
-        if (messageInfo.message?.channel.id == SettingsConstants.FOCUS_CHANNEL_ID) {
-            await messageInfo.message.delete().catch();
-            return;
-        }
-
         const content = messageInfo.message?.content;
 
         if (content) {
@@ -57,7 +48,7 @@ export default class MessageHandler {
             if (contentLower.startsWith('even een punt pakken')) {
                 for (let i = 0; i < 5; i++) {
                     this.OnBegging(messageInfo, player);
-                    await Utils.Sleep(5)
+                    await Utils.Sleep(5);
                 }
                 return;
             }

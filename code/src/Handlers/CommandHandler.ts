@@ -7,12 +7,8 @@ import TradeHandler from './TradeHandler';
 import SettingsConstants from '../Constants/SettingsConstants';
 import BattleHandler from './BattleHandler';
 import CharacterHandler from './CharacterHandler';
-import PuzzleHandler from './PuzzleHandler';
 import ShoeHandler from './ShoeHandler';
 import BotManager from '../Managers/BotManager';
-import SpoilersHandler from './SpoilersHandler';
-import FocusHandler from './FocusHandler';
-import SudokuHandler from './SudokuHandler';
 
 export default class CommandHandler {
 
@@ -52,33 +48,15 @@ export default class CommandHandler {
                 return;
             } else if (await PlayerCardHandler.OnCommand(messageInfo, player, command, args, content)) {
                 return;
-            } else if (await CharacterHandler.OnCommand(messageInfo, player, command, args, content)) {
+            } else if (CharacterHandler.OnCommand(messageInfo, player, command, args, content)) {
                 return;
             } else if (await BattleHandler.OnCommand(messageInfo, player, command)) {
-                return;
-            } else if (await PuzzleHandler.OnCommand(messageInfo, player, command, content)) {
-                return;
-            }
-        } else if (messageInfo.channel.id == SettingsConstants.SPOILERS_CHANNEL_ID) {
-            if (await SpoilersHandler.OnCommand(messageInfo, command, content)) {
-                return;
-            }
-        } else if (messageInfo.channel.id == SettingsConstants.CHAT_CHANNEL_ID) {
-            if (await FocusHandler.OnCommand(messageInfo, command)) {
-                return;
-            }
-        } else if (messageInfo.channel.id == SettingsConstants.FOCUS_CHANNEL_ID) {
-            if (await FocusHandler.OnFocusCommand(messageInfo, command, content)) {
-                return;
-            }
-        } else if (messageInfo.channel.id == SettingsConstants.SUDOKU_CHANNEL_ID) {
-            if (await SudokuHandler.OnCommand(messageInfo, command, content)) {
                 return;
             }
         }
     }
 
-    public static async HandleNormalMessage(messageInfo: IMessageInfo, player: Player) {
+    public static HandleNormalMessage(messageInfo: IMessageInfo, player: Player) {
         MessageHandler.OnMessage(messageInfo, player);
     }
 }
