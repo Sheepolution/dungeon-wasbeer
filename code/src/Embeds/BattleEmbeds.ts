@@ -30,7 +30,7 @@ export default class BattleEmbeds {
             .addField('Level', monster.GetLevelString())
             .addField('Health', `${battle.GetCurrentMonsterHealth()}/${monster.GetHealth()}`, true)
             .addField('Strength', attackStrength, true)
-            .addField('Attack', attackRoll, true)
+            .addField('Attack', attackRoll, true);
 
         return embed;
     }
@@ -114,14 +114,14 @@ export default class BattleEmbeds {
             if (playerWon) {
                 var attackDescription = character.GetAttackDescription(crit);
                 if (!attackDescription.includes('[damage]')) {
-                    attackDescription += '\nJe doet [damage] damage op de [monster].'
+                    attackDescription += '\nJe doet [damage] damage op de [monster].';
                 }
                 embed.addField(`${characterName} wint${crit ? ' met een crit' : ''}!`, attackDescription.replaceAll('\\[damage\\]', damage?.toString() || '').replaceAll('\\[monster\\]', monsterName || ''));
-                embed.setColor(SettingsConstants.COLORS.GOOD)
+                embed.setColor(SettingsConstants.COLORS.GOOD);
             } else {
                 var attackDescription = crit ? battle.GetMonsterAttackCritDescription() : battle.GetMonsterAttackDescription();
                 if (!attackDescription.includes('[damage]')) {
-                    attackDescription += '\nHij doet [damage] damage.'
+                    attackDescription += '\nHij doet [damage] damage.';
                 }
 
                 if (monster.GetId() == '7e476ee1-c32a-426b-b278-a03d6f85f164') {
@@ -131,14 +131,14 @@ export default class BattleEmbeds {
                 }
 
                 embed.addField(`De ${monsterName} wint${crit ? ' met een crit' : ''}!`, attackDescription.replaceAll('\\[damage\\]', damage?.toString() || ''));
-                embed.setColor(SettingsConstants.COLORS.BAD)
+                embed.setColor(SettingsConstants.COLORS.BAD);
             }
 
             embed.addField('--------------------------------', '-- Cooldown(s) --');
 
             const battleCooldown = await character.GetBattleCooldown();
             if (battleCooldown > 0) {
-                embed.addField('Vechten', `🕒 ${Utils.GetSecondsInMinutesAndSeconds(battleCooldown)}`, true)
+                embed.addField('Vechten', `🕒 ${Utils.GetSecondsInMinutesAndSeconds(battleCooldown)}`, true);
             } else {
                 embed.addField('Vechten', 'Klaar om te vechten!', true);
             }
@@ -146,7 +146,7 @@ export default class BattleEmbeds {
             if (character.CanHeal()) {
                 const healingCooldown = await character.GetHealingCooldown();
                 if (healingCooldown > 0) {
-                    embed.addField('Healen', `🕒 ${Utils.GetSecondsInMinutesAndSeconds(healingCooldown)}`, true)
+                    embed.addField('Healen', `🕒 ${Utils.GetSecondsInMinutesAndSeconds(healingCooldown)}`, true);
                 } else {
                     embed.addField('Healen', 'Klaar om te healen!', true);
                 }
@@ -155,7 +155,7 @@ export default class BattleEmbeds {
             if (character.CanInspire()) {
                 const inspiringCooldown = await character.GetInspireCooldown();
                 if (inspiringCooldown > 0) {
-                    embed.addField('Inspireren', `🕒 ${Utils.GetSecondsInMinutesAndSeconds(inspiringCooldown)}`, true)
+                    embed.addField('Inspireren', `🕒 ${Utils.GetSecondsInMinutesAndSeconds(inspiringCooldown)}`, true);
                 } else {
                     embed.addField('Inspireren', 'Klaar om een mooi lied te spelen!', true);
                 }
@@ -164,7 +164,7 @@ export default class BattleEmbeds {
             if (character.CanEnchant()) {
                 const enchantingCooldown = await character.GetEnchantmentCooldown();
                 if (enchantingCooldown > 0) {
-                    embed.addField('Enchantment', `🕒 ${Utils.GetSecondsInMinutesAndSeconds(enchantingCooldown)}`, true)
+                    embed.addField('Enchantment', `🕒 ${Utils.GetSecondsInMinutesAndSeconds(enchantingCooldown)}`, true);
                 } else {
                     embed.addField('Enchantment', 'Klaar voor een enchantment!', true);
                 }
@@ -173,7 +173,7 @@ export default class BattleEmbeds {
             if (character.CanPercept()) {
                 const perceptingCooldown = await character.GetPerceptionCooldown();
                 if (perceptingCooldown > 0) {
-                    embed.addField('Perception check', `🕒 ${Utils.GetSecondsInMinutesAndSeconds(perceptingCooldown)}`, true)
+                    embed.addField('Perception check', `🕒 ${Utils.GetSecondsInMinutesAndSeconds(perceptingCooldown)}`, true);
                 } else {
                     embed.addField('Perception check', 'Klaar voor een perception check!', true);
                 }
@@ -182,7 +182,7 @@ export default class BattleEmbeds {
             if (character.CanReinforce()) {
                 const reinforcementCooldown = await character.GetReinforcementCooldown();
                 if (reinforcementCooldown > 0) {
-                    embed.addField('Reinforcement', `🕒 ${Utils.GetSecondsInMinutesAndSeconds(reinforcementCooldown)}`, true)
+                    embed.addField('Reinforcement', `🕒 ${Utils.GetSecondsInMinutesAndSeconds(reinforcementCooldown)}`, true);
                 } else {
                     embed.addField('Reinforcement', 'Klaar om te reinforcen!', true);
                 }
@@ -191,7 +191,7 @@ export default class BattleEmbeds {
             if (character.CanProtect()) {
                 const protectCooldown = await character.GetProtectCooldown();
                 if (protectCooldown > 0) {
-                    embed.addField('Protection', `🕒 ${Utils.GetSecondsInMinutesAndSeconds(protectCooldown)}`, true)
+                    embed.addField('Protection', `🕒 ${Utils.GetSecondsInMinutesAndSeconds(protectCooldown)}`, true);
                 } else {
                     embed.addField('Protection', 'Klaar om te protecten!', true);
                 }

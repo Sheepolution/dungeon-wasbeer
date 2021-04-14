@@ -24,13 +24,13 @@ export default class CardEmbeds {
             .addField('Level', card.GetRankString());
 
         const season = card.GetSeason();
-        embed.setFooter(`Seizoen ${season > 0 ? season : '???'}`)
+        embed.setFooter(`Seizoen ${season > 0 ? season : '???'}`);
 
         const modifiers = card.GetModifiers();
         const modifierClass = card.GetModifierClass();
 
         if (modifiers.length > 0) {
-            embed.addField('Modifiers', CardService.ParseModifierArrayToEmbedString(modifiers), true)
+            embed.addField('Modifiers', CardService.ParseModifierArrayToEmbedString(modifiers), true);
         }
 
         if (modifierClass) {
@@ -68,7 +68,7 @@ export default class CardEmbeds {
 
         const embed = new MessageEmbed()
             .setTitle('Card statistics')
-            .setDescription('Total: ' + cards.length + '\nRank 1/2/3/4/5')
+            .setDescription('Total: ' + cards.length + '\nRank 1/2/3/4/5');
 
         for (const key in stats) {
             if ({}.hasOwnProperty.call(stats, key)) {
@@ -136,7 +136,7 @@ export default class CardEmbeds {
         const seasons = [];
 
         for (const playerCard of playerCards) {
-            var cardSeason = playerCard.GetCard().GetSeason()
+            var cardSeason = playerCard.GetCard().GetSeason();
             if (cardSeason <= 0) {
                 continue;
             }

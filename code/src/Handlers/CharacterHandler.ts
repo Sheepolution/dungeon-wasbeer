@@ -32,7 +32,7 @@ export default class CharacterHandler {
     private static readonly classNames = Object.keys(ClassType);
     private static readonly resetConfirmTimerPrefix = RedisConstants.REDIS_KEY + RedisConstants.RESET_CONFIRM_TIMER_KEY;
 
-    public static async OnCommand(messageInfo: IMessageInfo, player: Player, command: string, args: Array<string>, content: string) {
+    public static OnCommand(messageInfo: IMessageInfo, player: Player, command: string, args: Array<string>, content: string) {
         if (command == 'class') {
             this.CreateCharacter(messageInfo, player, args[0]);
             return;
@@ -170,16 +170,12 @@ export default class CharacterHandler {
                 this.EditInspireFailDescription(messageInfo, player, content);
                 break;
             case 'protect-beschrijving':
-            case 'pb':
+            case 'prb':
                 this.EditProtectionDescription(messageInfo, player, content);
                 break;
             case 'protect-faal-beschrijving':
             case 'pfb':
                 this.EditProtectionFailDescription(messageInfo, player, content);
-                break;
-            case 'inspire-faal-beschrijving':
-            case 'ifb':
-                this.EditInspireFailDescription(messageInfo, player, content);
                 break;
             case 'enchantment-beschrijving':
             case 'eb':
@@ -985,19 +981,19 @@ export default class CharacterHandler {
     }
 
     private static async SendHealingEmbed(messageInfo: IMessageInfo, character: Character, receiver: Character) {
-        return await MessageService.ReplyEmbed(messageInfo, await CharacterEmbeds.GetHealingEmbed(character, receiver))
+        return await MessageService.ReplyEmbed(messageInfo, await CharacterEmbeds.GetHealingEmbed(character, receiver));
     }
 
     private static async SendInspiringEmbed(messageInfo: IMessageInfo, character: Character, receiver: Character) {
-        return await MessageService.ReplyEmbed(messageInfo, await CharacterEmbeds.GetInspiringEmbed(character, receiver))
+        return await MessageService.ReplyEmbed(messageInfo, await CharacterEmbeds.GetInspiringEmbed(character, receiver));
     }
 
     private static async SendProtectionEmbed(messageInfo: IMessageInfo, character: Character, receiver: Character) {
-        return await MessageService.ReplyEmbed(messageInfo, await CharacterEmbeds.GetProtectionEmbed(character, receiver))
+        return await MessageService.ReplyEmbed(messageInfo, await CharacterEmbeds.GetProtectionEmbed(character, receiver));
     }
 
     private static async SendPrayingEmbed(messageInfo: IMessageInfo, character: Character) {
-        return await MessageService.ReplyEmbed(messageInfo, await CharacterEmbeds.GetPrayingEmbed(character))
+        return await MessageService.ReplyEmbed(messageInfo, await CharacterEmbeds.GetPrayingEmbed(character));
     }
 
     private static async UpdateHealingEmbed(message: Message, character: Character, receiver: Character, roll: number, healing: number) {
@@ -1352,7 +1348,6 @@ export default class CharacterHandler {
         MessageService.ReplyMessage(messageInfo, 'Je charge faal beschrijving is aangepast.');
     }
 
-
     private static async EditPrayDescription(messageInfo: IMessageInfo, player: Player, description: string) {
         const character = PlayerManager.GetCharacterFromPlayer(messageInfo, player);
         if (character == null) {
@@ -1393,8 +1388,7 @@ export default class CharacterHandler {
         MessageService.ReplyMessage(messageInfo, 'Je pray faal beschrijving is aangepast.');
     }
 
-
-    private static async OnReset(messageInfo: IMessageInfo, player: Player) {
+    private static OnReset(messageInfo: IMessageInfo, player: Player) {
         const character = PlayerManager.GetCharacterFromPlayer(messageInfo, player);
         if (character == null) {
             return;
@@ -1416,7 +1410,7 @@ export default class CharacterHandler {
             return;
         }
 
-        await character.Stop()
+        await character.Stop();
 
         MessageService.ReplyMessage(messageInfo, 'Je character heeft de party verlaten.\nJe kan een nieuw character maken met `;class [class]`', true);
         LogService.Log(character.GetPlayer(), character.GetId(), LogType.CharacterStop, `${character.GetName()} is gestopt.`);
@@ -1524,7 +1518,7 @@ export default class CharacterHandler {
             } else if (topListType == TopListType.Previous) {
                 const battle = CampaignManager.GetPreviousBattle();
                 if (battle == null) {
-                    MessageService.ReplyMessage(messageInfo, 'Dat vorige gevecht? Ja sorry maar dat ben ik allemaal weer vergeten. Sorry!', false)
+                    MessageService.ReplyMessage(messageInfo, 'Dat vorige gevecht? Ja sorry maar dat ben ik allemaal weer vergeten. Sorry!', false);
                     return;
                 }
                 battleId = battle.GetId();
@@ -1822,7 +1816,7 @@ export default class CharacterHandler {
         const higherWidth = avatar.width > avatar.height;
         const factor = higherWidth ? 200 / avatar.width : 200 / avatar.height;
         const width = avatar.width * factor;
-        const height = avatar.height * factor
+        const height = avatar.height * factor;
         ctx.drawImage(avatar, 25 + (200 - width) / 2, 25 + (200 - height) / 2, width, height);
 
         var done = false;
@@ -1839,13 +1833,13 @@ export default class CharacterHandler {
                 const higherWidth = cardImage.width > cardImage.height;
                 const factor = higherWidth ? 125 / cardImage.width : 125 / cardImage.height;
                 const width = cardImage.width * factor;
-                const height = cardImage.height * factor
+                const height = cardImage.height * factor;
                 ctx.fillStyle = '#24120D';
                 ctx.strokeStyle = '#693427';
                 ctx.strokeWidth = 2;
                 ctx.fillRect(25 + j * 130, 250 + i * 130, 125, 125);
                 ctx.strokeRect(25 + j * 130, 250 + i * 130, 125, 125);
-                ctx.drawImage(cardImage, 25 + j * 130 + (125 - width) / 2, 250 + i * 130 + (125 - height) / 2, width, height); j
+                ctx.drawImage(cardImage, 25 + j * 130 + (125 - width) / 2, 250 + i * 130 + (125 - height) / 2, width, height); j;
             }
 
             if (done) {
@@ -1864,7 +1858,7 @@ export default class CharacterHandler {
         MessageService.ReplyMessage(messageInfo, '', undefined, undefined, undefined, [attachment]);
     }
 
-    private static async SendEquipment(messageInfo: IMessageInfo, player: Player) {
+    private static SendEquipment(messageInfo: IMessageInfo, player: Player) {
         const character = PlayerManager.GetCharacterFromPlayer(messageInfo, player);
         if (character == null) {
             return;
@@ -1872,11 +1866,11 @@ export default class CharacterHandler {
         MessageService.ReplyEmbed(messageInfo, CharacterEmbeds.GetEquipmentEmbed(character));
     }
 
-    private static async SendUnknownClassName(messageInfo: IMessageInfo) {
+    private static SendUnknownClassName(messageInfo: IMessageInfo) {
         MessageService.ReplyMessage(messageInfo, `Kies een van de volgende classes:\n${this.classNames.join(', ')}`, false);
     }
 
-    private static async ReplyNotFullHealth(messageInfo: IMessageInfo, character: Character) {
+    private static ReplyNotFullHealth(messageInfo: IMessageInfo, character: Character) {
         MessageService.ReplyMessage(messageInfo, `Je mag dit alleen doen wanneer je full health bent.\nHealth: ${character.GetCurrentHealth()}/${character.GetMaxHealth()}`, false);
     }
 }

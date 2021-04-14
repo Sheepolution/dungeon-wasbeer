@@ -66,11 +66,11 @@ export default class BotManager {
                 return;
             }
 
-            MessageHandler.OnMessage(messageInfo, player)
+            MessageHandler.OnMessage(messageInfo, player);
         }
     }
 
-    public static async OnReaction(reaction: MessageReaction, user: User) {
+    public static OnReaction(reaction: MessageReaction, user: User) {
         if (user.id == SettingsConstants.BOT_ID) {
             return;
         }
@@ -78,7 +78,7 @@ export default class BotManager {
         ReactionManager.OnReaction(reaction, user);
     }
 
-    public static async ResetAllCache() {
+    public static ResetAllCache() {
         PlayerManager.ResetPlayerCache();
         CardManager.BuildCardList();
         MonsterManager.BuildMonsterList();
