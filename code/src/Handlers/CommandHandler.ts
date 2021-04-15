@@ -7,6 +7,7 @@ import TradeHandler from './TradeHandler';
 import SettingsConstants from '../Constants/SettingsConstants';
 import BattleHandler from './BattleHandler';
 import CharacterHandler from './CharacterHandler';
+import PuzzleHandler from './PuzzleHandler';
 import ShoeHandler from './ShoeHandler';
 import BotManager from '../Managers/BotManager';
 
