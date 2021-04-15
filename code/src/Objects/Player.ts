@@ -202,12 +202,35 @@ export default class Player {
         const character = new Character(this);
         await character.POST(classType);
 
+        const oldCharacter = this.GetCharacter();
+        if (oldCharacter != null) {
+            return character;
+        }
+
         this.character = character;
         await this.UPDATE({
             character_id: character.GetId()
         });
 
         return character;
+    }
+
+    public async SwitchToCharacter(character: Character) {
+        this.character = character;
+        const cards = this.GetCards();
+        const equippedCards = cards.filter(c => c.IsEquipped());
+        for (const equippedCard of equippedCards) {
+            await equippedCard.SetEquipped(false);
+        }
+
+        const equipmentIds = character.GetEquipmentIds();
+
+        this.character.RemoveAllEquipment();
+
+        const toEquipCards = this.playerCards.filter(pc => equipmentIds.includes(pc.GetCardId()));
+        for (const card of toEquipCards) {
+            await character.Equip(card);
+        }
     }
 
     public async RemoveCharacter() {

@@ -24,6 +24,7 @@ import Reinforcement from '../Objects/Reinforcement';
 import DiscordService from '../Services/DiscordService';
 import Protection from '../Objects/Protection';
 import Prayer from '../Objects/Prayer';
+import Attack from '../Objects/Attack';
 
 const Canvas = require('canvas');
 
@@ -36,6 +37,8 @@ export default class CharacterHandler {
         if (command == 'class') {
             this.CreateCharacter(messageInfo, player, args[0]);
             return;
+        } else if (command == 'switch') {
+            this.SwitchCharacter(messageInfo, player);
         }
 
         switch (command) {
@@ -222,10 +225,13 @@ export default class CharacterHandler {
     }
 
     private static async CreateCharacter(messageInfo: IMessageInfo, player: Player, className: string) {
-        const character = player.GetCharacter();
-        if (character != null) {
-            MessageService.ReplyMessage(messageInfo, `Je hebt al een character genaamd ${character.GetName()}. Je kan een nieuw character aanmaken wanneer deze overlijdt, of wanneer je opnieuw begint met \`;reset\`.`, false);
-            return;
+        const characterModels = await Character.GET_BY_PLAYER_ID(player.GetId());
+
+        for (const characterModel of characterModels) {
+            if (characterModel.xp < CharacterConstants.XP_PER_LEVEL[19]) {
+                MessageService.ReplyMessage(messageInfo, `Je hebt al een character genaamd ${characterModel.name} Je kan een nieuw character aanmaken wanneer deze overlijdt, of wanneer je opnieuw begint met \`;reset\`.`, false);
+                return;
+            }
         }
 
         if (className == null) {
@@ -244,6 +250,50 @@ export default class CharacterHandler {
         const newCharacter = await player.CreateCharacter(classType);
         MessageService.ReplyMessage(messageInfo, 'Je character is aangemaakt!', undefined, true, CharacterEmbeds.GetNewCharacterEmbed(newCharacter));
         LogService.Log(player, newCharacter.GetId(), LogType.CharacterCreated, `${player.GetDiscordName()} heeft een nieuw character aangemaakt van de class ${classType}.`);
+    }
+
+    private static async SwitchCharacter(messageInfo: IMessageInfo, player: Player) {
+        const characterModels = await Character.GET_BY_PLAYER_ID(player.GetId());
+
+        if (characterModels.length <= 1) {
+            MessageService.ReplyMessage(messageInfo, 'Je hebt niet meerdere characters, dus je kan niet switchen.', false, true);
+            return;
+        }
+
+        const character = player.GetCharacter();
+
+        if (character == null) {
+            return;
+        }
+
+        const battle = CampaignManager.GetBattle();
+
+        var next = 0;
+
+        if (battle != null) {
+            const count = await Attack.FIND_ATTACKS_BY_CHARACTER(character, battle.GetId());
+            if (count > 0) {
+                MessageService.ReplyMessage(messageInfo, 'Je hebt al aangevallen met dit character dus je mag niet meer switchen.', false, true);
+                return;
+            }
+        }
+
+        for (let i = 0; i < characterModels.length; i++) {
+            const characterModel = characterModels[i];
+            if (character.GetId() == characterModel.id) {
+                next = i + 1;
+                if (next == characterModels.length) {
+                    next = 0;
+                }
+                break;
+            }
+        }
+
+        const toCharacter = new Character();
+        await toCharacter.GET(characterModels[next].id);
+
+        await player.SwitchToCharacter(toCharacter);
+        MessageService.ReplyMessage(messageInfo, `Je bent geswitched naar ${toCharacter.GetName()}`, undefined, true, await CharacterEmbeds.GetCharacterInfoEmbed(toCharacter));
     }
 
     private static async Equip(messageInfo: IMessageInfo, player: Player, cardName: string) {

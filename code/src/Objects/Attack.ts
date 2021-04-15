@@ -15,6 +15,11 @@ export default class Attack {
     private damage: number;
     private healthAfter: number;
 
+    public static async FIND_ATTACKS_BY_CHARACTER(character: Character, battleId: string) {
+        const attacks = await AttackModel.query().where({ character_id: character.GetId(), battle_id: battleId }).count('id');
+        return attacks[0].count || 0;
+    }
+
     public static async FIND_VICTORIES_BY_CHARACTER(character: Character) {
         const victories = await AttackModel.query().where({ character_id: character.GetId(), victory: 1 }).count('id');
         return victories[0].count || 0;

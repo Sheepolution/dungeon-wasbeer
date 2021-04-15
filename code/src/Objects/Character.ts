@@ -49,6 +49,7 @@ export default class Character {
     private maxHealth: number;
     private name: string;
     private equipment: Array<Card>;
+    private equipmentIds: Array<string>;
     private bornDate: Date;
     private deathDate?: Date;
     private rewardDate?: Date;
@@ -95,6 +96,11 @@ export default class Character {
         if (player) {
             this.player = player;
         }
+    }
+
+    public static async GET_BY_PLAYER_ID(playerId: string) {
+        const list = await CharacterModel.query().where({ player_id: playerId, status: CharacterStatus.Active }).orderBy('born_date');
+        return list;
     }
 
     public static async INCREASE_XP(amount: any, id: string, trx?: any) {
@@ -200,6 +206,7 @@ export default class Character {
         this.name = model.name;
         this.currentHealth = model.health;
         this.equipment = this.player.GetCards().filter(pc => pc.IsEquipped()).map(c => c.GetCard());
+        this.equipmentIds = model.equipment.split(',') || [];
         this.inspiration = model.inspiration;
         this.protection = model.protection;
         this.charge = 0;
@@ -937,6 +944,10 @@ export default class Character {
         return this.equipment;
     }
 
+    public GetEquipmentIds() {
+        return this.equipmentIds || [];
+    }
+
     public HasEquipmentSpace() {
         return this.equipment.length < this.GetTotalEquipmentSpace();
     }
@@ -964,6 +975,17 @@ export default class Character {
         this.UPDATE({
             health: this.currentHealth,
             equipment: this.equipment.map(c => c.GetId()).join(','),
+        });
+    }
+
+    public async RemoveAllEquipment() {
+        this.equipment = [];
+        this.equipmentIds = [];
+
+        this.UpdateFullModifierStats();
+
+        await this.UPDATE({
+            equipment: '',
         });
     }
 
