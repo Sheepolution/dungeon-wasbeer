@@ -34,7 +34,7 @@ export default class Configuration {
             .patch(data);
     }
 
-    public async ApplyModel(model: ConfigurationModel) {
+    public ApplyModel(model: ConfigurationModel) {
         this.id = model.id;
         this.name = model.name;
         this.value = model.value;
@@ -50,7 +50,7 @@ export default class Configuration {
     }
 
     public GetValue() {
-        return this.value
+        return this.value;
     }
 
     public Is(value: string) {
@@ -69,6 +69,6 @@ export default class Configuration {
         this.value = value;
         await this.UPDATE({
             value: this.value
-        })
+        });
     }
 }

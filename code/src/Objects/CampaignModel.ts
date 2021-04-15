@@ -30,7 +30,7 @@ export default class CampaignModel extends Model {
                 to: 'puzzles.id',
             }
         }
-    }
+    };
 
     public static async New(sessionType: SessionType, sessionId: string) {
         const campaignId = Utils.UUID();
@@ -43,7 +43,7 @@ export default class CampaignModel extends Model {
                 session_id: sessionId,
                 start_date: Utils.GetNowString(),
                 end_date: null,
-            })
+            });
 
         return campaign;
     }

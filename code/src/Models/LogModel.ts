@@ -21,7 +21,7 @@ export default class LogModel extends Model {
                 type: logType,
                 description: description,
                 log_date: Utils.GetNowString(),
-            })
+            });
 
         return log;
     }

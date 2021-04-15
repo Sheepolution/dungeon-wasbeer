@@ -12,7 +12,7 @@ export default class Reinforcement {
     }
 
     public static async FIND_REINFORCEMENTS_RECEIVED_BY_CHARACTER(character: Character) {
-        const totalPerceptions = await ReinforcementModel.query().where({ receiver_id: character.GetId() }).count('id')
+        const totalPerceptions = await ReinforcementModel.query().where({ receiver_id: character.GetId() }).count('id');
         return totalPerceptions[0].count || 0;
     }
 
@@ -69,7 +69,7 @@ export default class Reinforcement {
             .patch(data);
     }
 
-    public async ApplyModel(model: ReinforcementModel) {
+    public ApplyModel(model: ReinforcementModel) {
         this.id = model.id;
     }
 

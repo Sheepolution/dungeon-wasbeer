@@ -13,7 +13,7 @@ import LogService from '../Services/LogService';
 
 export default class PuzzleHandler {
 
-    public static async OnCommand(messageInfo: IMessageInfo, player: Player, command: string, content: string) {
+    public static OnCommand(messageInfo: IMessageInfo, player: Player, command: string, content: string) {
         switch (command) {
             case 'puzzel':
                 this.SendPuzzleInfo(messageInfo);
@@ -54,7 +54,7 @@ export default class PuzzleHandler {
             return;
         }
 
-        const solution = puzzle.GetSolution().replaceAll('\n', '')
+        const solution = puzzle.GetSolution().replaceAll('\n', '');
         if (solution == content.trim().replaceAll('\n', '')) {
             await this.OnSolvingPuzzle(messageInfo, puzzle, character);
             return;
@@ -67,12 +67,12 @@ export default class PuzzleHandler {
     private static async OnSolvingPuzzle(messageInfo: IMessageInfo, puzzle: Puzzle, character: Character) {
         await puzzle.Solve(character);
         await MessageService.ReplyMessage(messageInfo, PuzzleService.GetPuzzleOutro(puzzle), true, true, PuzzleEmbeds.GetPuzzleSolvedEmbed(puzzle));
-        await Utils.Sleep(2)
-        await CampaignManager.OnCompletingSession()
+        await Utils.Sleep(2);
+        await CampaignManager.OnCompletingSession();
         LogService.Log(character.GetPlayer(), puzzle.GetId(), LogType.PuzzleSolved, `${character.GetPlayer().GetDiscordName()} lost een puzzel op.`);
     }
 
-    private static async ReplyNoPuzzle(messageInfo: IMessageInfo) {
+    private static ReplyNoPuzzle(messageInfo: IMessageInfo) {
         MessageService.ReplyMessage(messageInfo, 'Er is geen puzzel op het moment.', false);
     }
 }

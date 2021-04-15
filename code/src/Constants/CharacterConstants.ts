@@ -13,14 +13,14 @@ export default class CharacterConstants {
         6, 6, 7, 7, 9,
         9, 10, 10, 11, 11,
         12, 12, 13, 13, 15,
-    ]
+    ];
 
     public static readonly HEALTH_ADDITION_PER_LEVEL = [
         0, 25, 50, 75, 100,
         125, 150, 175, 200, 225,
         250, 275, 300, 325, 350,
         350, 375, 400, 425, 500,
-    ]
+    ];
 
     public static readonly XP_PER_LEVEL = [
         0, 50, 150, 450,
@@ -28,7 +28,7 @@ export default class CharacterConstants {
         8000, 11000, 14500, 16500,
         22000, 29000, 37500, 47000,
         57000, 68000, 82000, 100000
-    ]
+    ];
 
     public static readonly CHARACTER_DIED = 'https://media.discordapp.net/attachments/694331679204180029/703293328552362014/unknown.png';
 
@@ -43,7 +43,7 @@ export default class CharacterConstants {
         PALADIN: 'https://media.discordapp.net/attachments/694331679204180029/706120168862121994/PaladinWasbeer.png',
         FIGHTER: 'https://media.discordapp.net/attachments/694331679204180029/706146775828004884/FighterWasbeer.png',
         RANGER: 'https://media.discordapp.net/attachments/694331679204180029/706131465150267452/RangerWasbeer2.png',
-    }
+    };
 
     public static readonly ICON_IMAGE = {
         BARD: 'https://media.discordapp.net/attachments/694331679204180029/708768518551633930/BardIcon.png',
@@ -52,7 +52,7 @@ export default class CharacterConstants {
         PALADIN: 'https://media.discordapp.net/attachments/694331679204180029/708776075877941278/PaladinIcon.png',
         FIGHTER: 'https://media.discordapp.net/attachments/694331679204180029/708768574516232333/FighterIcon.png',
         RANGER: 'https://media.discordapp.net/attachments/694331679204180029/708768639108513822/RangerIcon.png',
-    }
+    };
 
     public static readonly CLASS_BASE_STATS = {
         BASE: { armor: 5, dexterity: 5, wisdom: 10, health: 200, regeneration: 3, strength: 10, spell: 8, attack: 5, charisma: 10 },
@@ -84,7 +84,7 @@ export default class CharacterConstants {
         RANGER: [
             '"Een wasbeer met een arendsoog. Je spant de boog en schiet je pijl op de [monster] af. De pijl raakt de [monster] voor [damage] damage."',
         ]
-    }
+    };
 
     public static readonly CLASS_ATTACK_CRIT_MESSAGES = {
         BARD: [
@@ -105,7 +105,7 @@ export default class CharacterConstants {
         RANGER: [
             '"Je ziet dat de [monster] op je af wilt komen en terwijl je ziet dat deze aanstalte maakt, gaat voor jou alles in slow motion te werken. In een fractie van een seconde heb je je boog al gespannen staan en op de [monster] gericht. Met een vlotte beweging zoeft de pijl met een flinke snelheid op de [monster] af en doorboort deze voor [damage] damage!"',
         ]
-    }
+    };
 
     public static readonly HEAL_MESSAGE = '"[jij] healt [naam] en krijgt daardoor [health] health terug."';
     public static readonly HEAL_FAIL_MESSAGE = '"[jij] healt per ongeluk een steen. Er gebeurt weinig."';

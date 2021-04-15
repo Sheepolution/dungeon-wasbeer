@@ -26,7 +26,7 @@ export default class CardModel extends Model {
                 active: false,
                 modifiers: CardService.ParseModifierArrayToDataString(modifiers),
                 modifier_class: modifierClass,
-            })
+            });
 
         return card;
     }

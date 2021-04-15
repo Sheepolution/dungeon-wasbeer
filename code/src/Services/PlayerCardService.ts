@@ -34,7 +34,7 @@ export default class PlayerCardService {
                     playerCards = playerCards.filter(c => {
                         const classType = c.GetCard().GetModifierClass();
                         if (classType != null) {
-                            return classType.toString().toLowerCase().includes(filterValue || '')
+                            return classType.toString().toLowerCase().includes(filterValue || '');
                         }
                         return false;
                     });

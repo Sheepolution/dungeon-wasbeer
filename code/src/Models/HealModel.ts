@@ -37,7 +37,7 @@ export default class HealModel extends Model {
                 to: 'characters.id',
             }
         },
-    }
+    };
 
     public static async New(battle: Battle, character: Character, receiver: Character, receiverHealth: number, characterWisdom: number, roll: number, finalHealing: number) {
         const healId = Utils.UUID();
@@ -53,7 +53,7 @@ export default class HealModel extends Model {
                 roll: roll,
                 final_healing: finalHealing,
                 heal_date: Utils.GetNowString(),
-            })
+            });
 
         return heal;
     }

@@ -37,7 +37,7 @@ export default class EnchantmentModel extends Model {
                 to: 'characters.id',
             }
         },
-    }
+    };
 
     public static async New(battle: Battle, character: Character, receiver: Character) {
         const enchantmentId = Utils.UUID();
@@ -49,7 +49,7 @@ export default class EnchantmentModel extends Model {
                 character_id: character.GetId(),
                 receiver_id: receiver.GetId(),
                 enchantment_date: Utils.GetNowString(),
-            })
+            });
 
         return enchantment;
     }

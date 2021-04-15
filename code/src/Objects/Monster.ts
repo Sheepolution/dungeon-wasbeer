@@ -51,7 +51,7 @@ export default class Monster {
             .patch(data);
     }
 
-    public async ApplyModel(model: MonsterModel) {
+    public ApplyModel(model: MonsterModel) {
         this.id = model.id;
         this.name = model.name;
         this.description = model.description;
@@ -69,7 +69,7 @@ export default class Monster {
         this.number = model.number;
     }
 
-    public async EditMonster(name: string = this.name, description: string = this.description, level: number = this.level, category: string = this.category, type: AttackType = this.type, health: number = this.health, strength: number = this.strength, attack: number = this.attack, attackDescription: string = this.attackDescription, attackCritDescription: string = this.attackCritDescription, imageUrl: string = this.imageUrl) {
+    public EditMonster(name: string = this.name, description: string = this.description, level: number = this.level, category: string = this.category, type: AttackType = this.type, health: number = this.health, strength: number = this.strength, attack: number = this.attack, attackDescription: string = this.attackDescription, attackCritDescription: string = this.attackCritDescription, imageUrl: string = this.imageUrl) {
         this.name = name;
         this.description = description;
         this.level = level;
@@ -94,7 +94,7 @@ export default class Monster {
             attack_description: this.attackDescription,
             attack_crit_description: this.attackCritDescription,
             image_url: this.imageUrl,
-        })
+        });
     }
 
     public GetId() {

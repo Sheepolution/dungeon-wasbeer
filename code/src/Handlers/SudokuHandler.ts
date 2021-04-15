@@ -12,7 +12,7 @@ export default class SudokuHandler {
     private static readonly sudokuPrefix = `${RedisConstants.REDIS_KEY}${RedisConstants.SUDOKU_KEY}`;
     private static readonly sudokuCooldownPrefix = `${RedisConstants.REDIS_KEY}${RedisConstants.SUDOKU_COOLDOWN_KEY}`;
 
-    public static async OnCommand(messageInfo: IMessageInfo, command: string, content: string) {
+    public static OnCommand(messageInfo: IMessageInfo, command: string, content: string) {
         switch (command) {
             case 'sudoku':
             case 's':

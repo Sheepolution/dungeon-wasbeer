@@ -22,7 +22,7 @@ import CardService from '../Services/CardService';
 
 export default class PlayerCardHandler {
 
-    public static async OnCommand(messageInfo: IMessageInfo, player: Player, command: string, args: Array<string>, content: string) {
+    public static OnCommand(messageInfo: IMessageInfo, player: Player, command: string, args: Array<string>, content: string) {
         switch (command) {
             case 'exchange':
             case 'inruilen':
@@ -161,7 +161,7 @@ export default class PlayerCardHandler {
             return;
         }
 
-        baseText = `<@${player.GetDiscordId()}> ${baseText}`
+        baseText = `<@${player.GetDiscordId()}> ${baseText}`;
 
         await Utils.Sleep(Utils.Random(2, 6));
 
@@ -293,7 +293,7 @@ export default class PlayerCardHandler {
         }
     }
 
-    private static async SendPlayerCard(messageInfo: IMessageInfo, player: Player, cardName: string) {
+    private static SendPlayerCard(messageInfo: IMessageInfo, player: Player, cardName: string) {
         if (cardName == null) {
             MessageService.ReplyMissingCardName(messageInfo);
             return;
@@ -318,7 +318,7 @@ export default class PlayerCardHandler {
             var id = DiscordUtils.GetMemberId(filterType);
             if (id != null) {
                 other = filterType;
-                lesserGreater = filterValue
+                lesserGreater = filterValue;
                 filterType = undefined;
                 filterValue = undefined;
             } else {
@@ -340,7 +340,7 @@ export default class PlayerCardHandler {
                             player = otherPlayer;
                             otherPlayer = undefined;
                         } else if (lesserGreater == '>') {
-                            player = otherPlayer
+                            player = otherPlayer;
                             otherPlayer = requester;
                         }
                     }
@@ -360,9 +360,9 @@ export default class PlayerCardHandler {
         }
 
         if (page == 1) {
-            await message.react('⬅️')
-            await Utils.Sleep(.5)
-            await message.react('➡️')
+            await message.react('⬅️');
+            await Utils.Sleep(.5);
+            await message.react('➡️');
             ReactionManager.AddMessage(message, ReactionMessageType.PlayerCardList, messageInfo, { page: 1, requester: requester, player: player, sorting: sorting, filterType: cardFilter, filterValue: filterValue, otherPlayer: otherPlayer, lesserGreater: lesserGreater });
         }
     }
@@ -410,15 +410,15 @@ export default class PlayerCardHandler {
         }
 
         if (page == 1) {
-            await message.react('⬅️')
-            await Utils.Sleep(.5)
-            await message.react('➡️')
+            await message.react('⬅️');
+            await Utils.Sleep(.5);
+            await message.react('➡️');
             ReactionManager.AddMessage(message, ReactionMessageType.PlayerCardList, messageInfo, { page: 1, card: finalCard, ownerList: finalOwnerList });
         }
 
     }
 
-    private static async SendCardNotFound(messageInfo: IMessageInfo, name: string) {
+    private static SendCardNotFound(messageInfo: IMessageInfo, name: string) {
         MessageService.ReplyMessage(messageInfo, `Ik heb geen kaart kunnen vinden met de naam ${name}`, false, true);
     }
 }

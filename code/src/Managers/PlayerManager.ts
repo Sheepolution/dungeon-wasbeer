@@ -14,7 +14,7 @@ import LogService from '../Services/LogService';
 export default class PlayerManager {
 
     private static players: any = {};
-    private static cacheRefreshInterval: any = setInterval(() => { PlayerManager.ProcessPlayerCache() }, Utils.GetMinutesInMiliSeconds(5));
+    private static cacheRefreshInterval: any = setInterval(() => { PlayerManager.ProcessPlayerCache(); }, Utils.GetMinutesInMiliSeconds(5));
     private static readonly classNames = Object.keys(ClassType);
 
     public static async GetOrCreatePlayer(messageInfo: IMessageInfo) {
@@ -112,13 +112,13 @@ export default class PlayerManager {
         const discordId = messageInfo.member.id;
         const player = new Player();
         await player.POST(discordId, messageInfo.member.displayName);
-        this.CachePlayer(discordId, player)
+        this.CachePlayer(discordId, player);
         LogService.Log(player, player.GetId(), LogType.NewPlayer, `${player.GetDiscordName()} is een nieuwe speler.`);
         return player;
     }
 
     private static CachePlayer(discordId: string, player: Player) {
-        this.players[discordId] = { time: 60, player: player }
+        this.players[discordId] = { time: 60, player: player };
     }
 
     private static GetCachedPlayer(discordId: string) {

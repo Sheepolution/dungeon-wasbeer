@@ -27,7 +27,7 @@ export default class CardService {
                 return;
             }
 
-            parsedModifiers.push({ modifier: modifier, value: parseInt(match[2]) })
+            parsedModifiers.push({ modifier: modifier, value: parseInt(match[2]) });
         }
 
         return parsedModifiers;
@@ -47,13 +47,13 @@ export default class CardService {
             }
         }
 
-        return modifierString
+        return modifierString;
     }
 
     public static ParseCardModifersToEmbedString(card: Card) {
         const modifierArray = card.GetModifiers();
         if (modifierArray == null || modifierArray.length == 0) {
-            return ''
+            return '';
         }
 
         var modifierString = ' | ';
@@ -70,12 +70,12 @@ export default class CardService {
             modifierString += ' | ' + `${CharacterService.GetClassIconEmoji(modifierClass)} ${modifierClass.toString()}`;
         }
 
-        return modifierString
+        return modifierString;
     }
 
     public static ParseModifierArrayToEmbedString(modifierArray?: Array<ICardModifier>) {
         if (modifierArray == null || modifierArray.length == 0) {
-            return ''
+            return '';
         }
 
         var modifierString = '';
@@ -87,7 +87,7 @@ export default class CardService {
             }
         }
 
-        return modifierString
+        return modifierString;
     }
 
     public static GetIconByCategory(category: string) {

@@ -78,7 +78,7 @@ Owlbear
 Beholder
 Nightmare
 Cyclops
-Cloud Giant`
+Cloud Giant`;
 
         puzzleAndSolution.puzzle = puzzleString;
         puzzleAndSolution.solution = solutionString;

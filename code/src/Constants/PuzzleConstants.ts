@@ -30,5 +30,5 @@ export default class PuzzleConstants {
             OUTRO: 'Je draait de schijven naar jouw oplossing. Het klopt! Het slot gaat open!',
             WRONG: 'Je draait de schijven naar jouw oplossing, maar wanneer je aan het slot trekt gebeurt er weinig. Blijkbaar was dat klopt er iets niet...',
         },
-    }
+    };
 }

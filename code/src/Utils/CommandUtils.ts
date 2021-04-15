@@ -1,6 +1,6 @@
 export default class CommandUtils {
 
-    public static GetCommaArgs(content:string) {
+    public static GetCommaArgs(content: string) {
         const commaArgs = content.split(',');
         for (let i = 0; i < commaArgs.length; i++) {
             commaArgs[i] = commaArgs[i].trim();
@@ -8,8 +8,8 @@ export default class CommandUtils {
         return commaArgs;
     }
 
-    public static GetNumberedArguments(content:string) {
-        const obj:any = {};
+    public static GetNumberedArguments(content: string) {
+        const obj: any = {};
         var success = false;
 
         const commaArgs = content.split(',');
@@ -43,8 +43,8 @@ export default class CommandUtils {
     }
 
     // TODO: DRY???
-    public static GetSingleNumberedArgument(content:string) {
-        const obj:any = {};
+    public static GetSingleNumberedArgument(content: string) {
+        const obj: any = {};
 
         const commaArgs = content.split(',');
         var arg = commaArgs[0].trim();
@@ -74,8 +74,8 @@ export default class CommandUtils {
         return obj;
     }
 
-    public static GetAssignedArguments(content:string) {
-        const obj:any = {};
+    public static GetAssignedArguments(content: string) {
+        const obj: any = {};
         var assignedArgs = (' ' + content).split(' -').slice(1);
 
         for (let i = 0; i < assignedArgs.length; i++) {
@@ -94,7 +94,7 @@ export default class CommandUtils {
         return obj;
     }
 
-    public static ValidateArguments(args:any) {
+    public static ValidateArguments(args: any) {
         for (let i = 0; i < args.length; i++) {
             const arg = args[i];
             const val = arg.value;

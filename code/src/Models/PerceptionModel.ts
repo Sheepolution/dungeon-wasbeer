@@ -37,7 +37,7 @@ export default class PerceptionsModel extends Model {
                 to: 'characters.id',
             }
         },
-    }
+    };
 
     public static async New(battle: Battle, character: Character, receiver: Character, oldCooldown: number, newCooldown: number) {
         const perceptionId = Utils.UUID();
@@ -51,7 +51,7 @@ export default class PerceptionsModel extends Model {
                 old_cooldown: oldCooldown,
                 new_cooldown: newCooldown,
                 perception_date: Utils.GetNowString(),
-            })
+            });
 
         return perception;
     }

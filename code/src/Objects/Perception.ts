@@ -10,7 +10,7 @@ export default class Perception {
     }
 
     public static async FIND_PERCEPTIONS_RECEIVED_BY_CHARACTER(character: Character) {
-        const totalPerceptions = await PerceptionModel.query().where({ receiver_id: character.GetId() }).count('id')
+        const totalPerceptions = await PerceptionModel.query().where({ receiver_id: character.GetId() }).count('id');
         return totalPerceptions[0].count || 0;
     }
 

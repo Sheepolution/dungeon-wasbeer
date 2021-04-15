@@ -37,7 +37,7 @@ export default class InspireModel extends Model {
                 to: 'characters.id',
             }
         },
-    }
+    };
 
     public static async New(battle: Battle, character: Character, receiver: Character, characterCharisma: number, roll: number, finalInspiration: number) {
         const inspireId = Utils.UUID();
@@ -52,7 +52,7 @@ export default class InspireModel extends Model {
                 roll: roll,
                 final_inspiration: finalInspiration,
                 inspire_date: Utils.GetNowString(),
-            })
+            });
 
         return inspire;
     }

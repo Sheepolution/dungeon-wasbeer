@@ -47,7 +47,7 @@ export default class Attack {
                 model.where({ roll_character_base: 1 })
                     .orWhere({ roll_character_base: 20 })
                     .orWhere({ roll_monster_base: 1 })
-                    .orWhere({ roll_monster_base: 20 })
+                    .orWhere({ roll_monster_base: 20 });
             }).count('id');
 
         return totalCritsDone[0].count || 0;
@@ -60,7 +60,7 @@ export default class Attack {
                 model.where({ roll_character_base: 1 })
                     .orWhere({ roll_character_base: 20 })
                     .orWhere({ roll_monster_base: 1 })
-                    .orWhere({ roll_monster_base: 20 })
+                    .orWhere({ roll_monster_base: 20 });
             }).count('id');
 
         return totalCritsTaken[0].count || 0;
@@ -128,7 +128,7 @@ export default class Attack {
                 model.where({ roll_character_base: 1 })
                     .orWhere({ roll_character_base: 20 })
                     .orWhere({ roll_monster_base: 1 })
-                    .orWhere({ roll_monster_base: 20 })
+                    .orWhere({ roll_monster_base: 20 });
             })
             .groupBy('characters.name', 'players.discord_name')
             .select('name', 'discord_name')

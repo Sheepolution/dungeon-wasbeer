@@ -19,7 +19,7 @@ export default class BattleModel extends Model {
                 to: 'monsters.id',
             }
         },
-    }
+    };
 
     public static async New(monster: Monster) {
         const battleId = Utils.UUID();
@@ -31,7 +31,7 @@ export default class BattleModel extends Model {
                 monster_id: monster.GetId(),
                 monster_health: monster.GetHealth(),
                 start_date: Utils.GetNowString(),
-            })
+            });
 
         return battle;
     }

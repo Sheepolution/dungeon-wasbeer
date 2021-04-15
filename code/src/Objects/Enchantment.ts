@@ -10,7 +10,7 @@ export default class Enchantment {
     }
 
     public static async FIND_ENCHANTMENTS_RECEIVED_BY_CHARACTER(character: Character) {
-        const totalEnchantments = await EnchantmentModel.query().where({ receiver_id: character.GetId() }).count('id')
+        const totalEnchantments = await EnchantmentModel.query().where({ receiver_id: character.GetId() }).count('id');
         return totalEnchantments[0].count || 0;
     }
 

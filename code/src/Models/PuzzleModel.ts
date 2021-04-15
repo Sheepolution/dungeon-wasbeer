@@ -19,7 +19,7 @@ export default class PuzzleModel extends Model {
                 to: 'characters.id',
             }
         }
-    }
+    };
 
     public static async New(content: string, solution: string, type: PuzzleType) {
         const puzzleId = Utils.UUID();
@@ -34,7 +34,7 @@ export default class PuzzleModel extends Model {
                 creation_date: Utils.GetNowString(),
                 solving_date: null,
                 solver_id: null,
-            })
+            });
 
         return battle;
     }

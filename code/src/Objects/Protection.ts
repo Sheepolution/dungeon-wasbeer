@@ -18,7 +18,7 @@ export default class Protect {
     }
 
     public static async FIND_PROTECTIONS_RECEIVED_BY_CHARACTER(character: Character) {
-        const totalProtectd = await ProtectModel.query().where({ receiver_id: character.GetId() }).count('id')
+        const totalProtectd = await ProtectModel.query().where({ receiver_id: character.GetId() }).count('id');
         return totalProtectd[0].count || 0;
     }
 
@@ -102,7 +102,6 @@ export default class Protect {
 
         return list;
     }
-
 
     public static async STATIC_POST(battle: Battle, character: Character, receiver: Character, characterCharisma: number, roll: number, finalProtection: number) {
         return await ProtectModel.New(battle, character, receiver, characterCharisma, roll, finalProtection);

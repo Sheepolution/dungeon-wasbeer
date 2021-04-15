@@ -18,7 +18,7 @@ export default class LogXPModel extends Model {
                 character_id: characterId,
                 xp: xp,
                 log_date: dateString,
-            }, trx)
+            }, trx);
 
         return log;
     }

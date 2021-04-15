@@ -27,7 +27,7 @@ export default class MonsterModel extends Model {
                 creator_id: creatorId,
                 creation_date: Utils.GetNowString(),
                 number: number,
-            })
+            });
 
         return card;
     }

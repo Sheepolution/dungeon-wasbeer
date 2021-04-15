@@ -15,7 +15,7 @@ export default class CharacterModel extends Model {
     public static async New(player: Player, classType: ClassType) {
         const characterId = Utils.UUID();
 
-        const stats = CharacterService.GetClassModifierStats(classType)
+        const stats = CharacterService.GetClassModifierStats(classType);
 
         const character = await CharacterModel.query()
             .insert({
@@ -40,7 +40,7 @@ export default class CharacterModel extends Model {
                 protection: 0,
                 charge: 0,
                 blessing: 0,
-            })
+            });
 
         return character;
     }

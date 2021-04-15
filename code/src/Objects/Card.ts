@@ -11,7 +11,7 @@ export default class Card {
     private name: string;
     private description: string;
     private rank: number;
-    private category: string
+    private category: string;
     private modifiers: Array<ICardModifier>;
     private modifierClass: ClassType;
     private modifierStats: IModifierStats;
@@ -21,7 +21,7 @@ export default class Card {
     private creationDate: string;
 
     public static async GET_ALL() {
-        const models = await CardModel.query().where({ active: true })
+        const models = await CardModel.query().where({ active: true });
         return models;
     }
 
@@ -53,7 +53,7 @@ export default class Card {
             .patch(data);
     }
 
-    public async ApplyModel(model: CardModel) {
+    public ApplyModel(model: CardModel) {
         this.id = model.id;
         this.name = model.name;
         this.description = model.description;
@@ -68,7 +68,7 @@ export default class Card {
         this.season = model.season;
     }
 
-    public async EditCard(name: string = this.name, description: string = this.description, rank: number = this.rank, category: string = this.category, modifiers: Array<ICardModifier> = this.modifiers, modifierClass: ClassType = this.modifierClass, imageUrl: string = this.imageUrl) {
+    public EditCard(name: string = this.name, description: string = this.description, rank: number = this.rank, category: string = this.category, modifiers: Array<ICardModifier> = this.modifiers, modifierClass: ClassType = this.modifierClass, imageUrl: string = this.imageUrl) {
         this.name = name;
         this.description = description;
         this.rank = rank;
@@ -85,7 +85,7 @@ export default class Card {
             modifiers: CardService.ParseModifierArrayToDataString(this.modifiers),
             modifier_class: this.modifierClass?.toString(),
             image_url: this.imageUrl,
-        })
+        });
     }
 
     public GetId() {

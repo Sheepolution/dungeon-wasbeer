@@ -29,20 +29,20 @@ export default class Discord {
     public static Init() {
         this.client = new Client();
 
-        DiscordService.SetClient(this.client)
+        DiscordService.SetClient(this.client);
 
-        this.client.on('ready', async () => { await Discord.EventReady() });
-        this.client.on('message', async (message) => { await Discord.EventMessage(message) });
-        this.client.on('messageReactionAdd', async (reaction, user) => { await Discord.EventReactionAdd(reaction, <User>user) });
-        this.client.on('messageReactionRemove', async (reaction, user) => { await Discord.EventReactionRemove(reaction, <User>user) });
+        this.client.on('ready', async () => { await Discord.EventReady(); });
+        this.client.on('message', async (message) => { await Discord.EventMessage(message); });
+        this.client.on('messageReactionAdd', async (reaction, user) => { await Discord.EventReactionAdd(reaction, <User>user); });
+        this.client.on('messageReactionRemove', async (reaction, user) => { await Discord.EventReactionRemove(reaction, <User>user); });
         this.client.login(process.env.TOKEN);
     }
 
-    private static async EventReady() {
+    private static EventReady() {
         this.eventReadyCallback();
     }
 
-    private static async EventMessage(message: Message) {
+    private static EventMessage(message: Message) {
         if (message.author.bot) {
             return;
         }
@@ -54,7 +54,7 @@ export default class Discord {
         this.eventMessageCallback(message);
     }
 
-    private static async EventReactionAdd(reaction: MessageReaction, user: User) {
+    private static EventReactionAdd(reaction: MessageReaction, user: User) {
         if (user.bot) {
             return;
         }
@@ -62,7 +62,7 @@ export default class Discord {
         this.eventReactionAddCallback(reaction, user);
     }
 
-    private static async EventReactionRemove(reaction: MessageReaction, user: User) {
+    private static EventReactionRemove(reaction: MessageReaction, user: User) {
         if (user.bot) {
             return;
         }

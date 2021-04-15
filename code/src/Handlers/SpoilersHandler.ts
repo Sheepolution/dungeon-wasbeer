@@ -4,7 +4,7 @@ import MessageService from '../Services/MessageService';
 
 export default class SpoilersHandler {
 
-    public static async OnCommand(messageInfo: IMessageInfo, command: string, content: string) {
+    public static OnCommand(messageInfo: IMessageInfo, command: string, content: string) {
         switch (command) {
             case 'spoilers':
             case 'spoiler':
@@ -17,16 +17,16 @@ export default class SpoilersHandler {
         return true;
     }
 
-    private static async OnSpoilers(messageInfo: IMessageInfo, content: string) {
+    private static OnSpoilers(messageInfo: IMessageInfo, content: string) {
         var name = '-kanaal';
         if (content != null && content.trim().length > 0) {
             name = `-${content.toLowerCase().replaceAll(' ', '-')}`;
             name = name.slice(0, 100);
         }
 
-        const channel = BotManager.GetSpoilersChannel()
+        const channel = BotManager.GetSpoilersChannel();
         const oldChannelName = channel.name.substr(8);
-        const warning = `⚠️ Ho! Uitkijken! Als je nog verder omhoog scrollt krijg je spoilers te zien voor '${oldChannelName}'! ⚠️`
+        const warning = `⚠️ Ho! Uitkijken! Als je nog verder omhoog scrollt krijg je spoilers te zien voor '${oldChannelName}'! ⚠️`;
 
         var text = '';
 

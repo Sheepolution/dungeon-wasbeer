@@ -4,11 +4,11 @@ import RegexConstants from '../Constants/RegexConstants';
 
 export default class DiscordUtils {
 
-    public static IsId(id:string) {
+    public static IsId(id: string) {
         return id.match(RegexConstants.DISCORD_ID) != null;
     }
 
-    public static GetMemberId(id:string) {
+    public static GetMemberId(id: string) {
         if (this.IsId(id)) { return id; }
 
         var match = id.match(RegexConstants.MENTION);
@@ -20,7 +20,7 @@ export default class DiscordUtils {
         return null;
     }
 
-    public static GetChannelId(id:string) {
+    public static GetChannelId(id: string) {
         if (this.IsId(id)) { return id; }
 
         var match = id.match(RegexConstants.CHANNEL);
@@ -32,8 +32,8 @@ export default class DiscordUtils {
         return null;
     }
 
-    public static ParseMessageToInfo(message:Message, member:GuildMember) {
-        const info:IMessageInfo = {
+    public static ParseMessageToInfo(message: Message, member: GuildMember) {
+        const info: IMessageInfo = {
             member: member,
             channel: message.channel,
             message: message,
@@ -42,7 +42,7 @@ export default class DiscordUtils {
         return info;
     }
 
-    public static ParseChannelMentionsToIds(channels:Array<string>) {
+    public static ParseChannelMentionsToIds(channels: Array<string>) {
         const ret = new Array<string>();
 
         for (let i = 0; i < channels.length; i++) {

@@ -193,7 +193,7 @@ export default class Character {
     public async ApplyModel(model: CharacterModel) {
         this.id = model.id;
         this.player = this.player || await PlayerManager.GetPlayerById(model.player_id);
-        this.status = model.GetStatus()
+        this.status = model.GetStatus();
         this.classType = model.GetClassType();
         this.xp = model.xp;
         this.level = model.level;
@@ -233,7 +233,7 @@ export default class Character {
         this.deathDate = model.death_date ? new Date(model.death_date) : undefined;
         this.isSorcerer = this.classType == ClassType.Bard || this.classType == ClassType.Cleric || this.classType == ClassType.Wizard;
         this.UpdateFullModifierStats();
-        await this.CheckLevelUp()
+        await this.CheckLevelUp();
     }
 
     public GetId() {
@@ -331,7 +331,7 @@ export default class Character {
         await this.UPDATE({
             death_date: Utils.GetNowString(),
             status: this.status,
-        })
+        });
 
         await this.player.RemoveCharacter();
 
@@ -349,7 +349,7 @@ export default class Character {
         this.status = CharacterStatus.Stopped;
         await this.UPDATE({
             status: this.status,
-        })
+        });
 
         await this.player.RemoveCharacter();
 
@@ -501,17 +501,17 @@ export default class Character {
         if (this.protection > 0) {
             this.protection -= damage;
             if (this.protection < 0) {
-                damage = -this.protection
+                damage = -this.protection;
                 this.protection = 0;
             } else {
-                await this.UPDATE({ protection: this.protection })
+                await this.UPDATE({ protection: this.protection });
                 return 0;
             }
         }
 
         const damageAfterArmor = this.CalculateDamageWithArmor(damage);
         this.currentHealth = Math.max(0, this.currentHealth - damageAfterArmor);
-        await this.UPDATE({ health: this.currentHealth, protection: this.protection })
+        await this.UPDATE({ health: this.currentHealth, protection: this.protection });
         this.UpdateFullModifierStats();
         return damageAfterArmor;
     }
@@ -553,7 +553,7 @@ export default class Character {
         this.UpdateFullModifierStats();
         await this.UPDATE({
             inspiration: this.inspiration
-        })
+        });
     }
 
     public async StopBeingInspired() {
@@ -565,7 +565,7 @@ export default class Character {
         this.UpdateFullModifierStats();
         await this.UPDATE({
             inspiration: this.inspiration
-        })
+        });
     }
 
     public GetInspiration() {
@@ -585,7 +585,7 @@ export default class Character {
         this.UpdateFullModifierStats();
         await this.UPDATE({
             protection: this.protection
-        })
+        });
     }
 
     public async StopBeingProtected() {
@@ -597,7 +597,7 @@ export default class Character {
         this.UpdateFullModifierStats();
         await this.UPDATE({
             protection: this.protection
-        })
+        });
     }
 
     public GetProtection() {
@@ -612,12 +612,12 @@ export default class Character {
         return CharacterConstants.BASE_COOLDOWN_DURATION - this.fullModifierStats.dexterity;
     }
 
-    public async BecomeCharged(amount: number) {
+    public BecomeCharged(amount: number) {
         this.charge = amount;
         this.UpdateFullModifierStats();
     }
 
-    public async StopBeingCharged() {
+    public StopBeingCharged() {
         if (this.charge == 0) {
             return;
         }
@@ -643,7 +643,7 @@ export default class Character {
         this.UpdateFullModifierStats();
         await this.UPDATE({
             blessing: this.blessing
-        })
+        });
     }
 
     public async StopBeingBlessed() {
@@ -655,7 +655,7 @@ export default class Character {
         this.UpdateFullModifierStats();
         await this.UPDATE({
             blessing: this.blessing
-        })
+        });
     }
 
     public GetBlessing() {
@@ -675,7 +675,7 @@ export default class Character {
         this.UpdateFullModifierStats();
         await this.UPDATE({
             enchanted: this.enchanted
-        })
+        });
     }
 
     public async StopBeingEnchanted() {
@@ -687,7 +687,7 @@ export default class Character {
         this.UpdateFullModifierStats();
         await this.UPDATE({
             enchanted: this.enchanted
-        })
+        });
     }
 
     public IsEnchanted() {
@@ -696,7 +696,7 @@ export default class Character {
 
     public async OnPerception() {
         const battleCooldown = await this.GetBattleCooldown();
-        const newCooldown = Math.floor(battleCooldown / 2)
+        const newCooldown = Math.floor(battleCooldown / 2);
         await Redis.expire(Character.battleCooldownPrefix + this.GetId(), newCooldown);
         return newCooldown;
     }
@@ -706,7 +706,7 @@ export default class Character {
         this.UpdateFullModifierStats();
         await this.UPDATE({
             reinforced: this.reinforced
-        })
+        });
     }
 
     public async StopBeingReinforced() {
@@ -717,7 +717,7 @@ export default class Character {
         this.reinforced = false;
         await this.UPDATE({
             reinforced: this.reinforced
-        })
+        });
     }
 
     public IsReinforced() {
@@ -827,15 +827,15 @@ export default class Character {
     public async IncreaseXP(amount: number, trx?: any, updateData: boolean = true) {
         this.xp += amount;
         if (updateData) {
-            await this.UPDATE({ xp: this.xp }, trx)
+            await this.UPDATE({ xp: this.xp }, trx);
         }
 
         await this.CheckLevelUp(trx);
     }
 
-    public async IncreaseXPFromMessage() {
+    public IncreaseXPFromMessage() {
         this.xp += 1;
-        this.UPDATE({ xp: this.xp })
+        this.UPDATE({ xp: this.xp });
         this.CheckLevelUp();
     }
 
@@ -849,7 +849,7 @@ export default class Character {
         this.level = this.CalculateLevel(oldLevel);
 
         if (this.level != oldLevel) {
-            await this.OnLevelUp(trx)
+            await this.OnLevelUp(trx);
         }
     }
 
@@ -911,20 +911,20 @@ export default class Character {
         return Math.floor((roll / 20) * this.fullModifierStats.wisdom);
     }
 
-    public async GetHealthFromMessage() {
+    public GetHealthFromMessage() {
         if (this.IsFullHealth()) { return false; }
         var healing = Math.min(this.fullModifierStats.regeneration, this.maxHealth - this.currentHealth);
         this.currentHealth += healing;
         this.regenerated += healing;
-        this.UPDATE({ health: this.currentHealth, regenerated: this.regenerated })
+        this.UPDATE({ health: this.currentHealth, regenerated: this.regenerated });
         this.UpdateFullModifierStats();
         return true;
     }
 
-    public async GetHealthFromHealing(amount: number) {
+    public GetHealthFromHealing(amount: number) {
         if (this.IsFullHealth()) { return false; }
         this.currentHealth = Math.min(this.maxHealth, this.currentHealth + amount);
-        this.UPDATE({ health: this.currentHealth })
+        this.UPDATE({ health: this.currentHealth });
         this.UpdateFullModifierStats();
         return true;
     }
@@ -950,7 +950,7 @@ export default class Character {
         this.UPDATE({
             health: this.currentHealth,
             equipment: this.equipment.map(e => e.GetId()).join(','),
-        })
+        });
     }
 
     public async Unequip(playerCard: PlayerCard) {
@@ -964,7 +964,7 @@ export default class Character {
         this.UPDATE({
             health: this.currentHealth,
             equipment: this.equipment.map(c => c.GetId()).join(','),
-        })
+        });
     }
 
     public GetRewardPoints(battleId?: string) {
@@ -1043,124 +1043,124 @@ export default class Character {
         this.attackDescription = description;
         await this.UPDATE({
             attack_description: this.attackDescription
-        })
+        });
     }
 
     public async UpdateAttackCritDescription(description: string) {
         this.attackCritDescription = description;
         await this.UPDATE({
             attack_crit_description: this.attackCritDescription
-        })
+        });
     }
 
     public async UpdateHealDescription(description: string) {
         this.healDescription = description;
         await this.UPDATE({
             heal_description: this.healDescription
-        })
+        });
     }
 
     public async UpdateHealFailDescription(description: string) {
         this.healFailDescription = description;
         await this.UPDATE({
             heal_fail_description: this.healFailDescription
-        })
+        });
     }
 
     public async UpdateInspireDescription(description: string) {
         this.inspireDescription = description;
         await this.UPDATE({
             inspire_description: this.inspireDescription
-        })
+        });
     }
 
     public async UpdateInspireFailDescription(description: string) {
         this.inspireFailDescription = description;
         await this.UPDATE({
             inspire_fail_description: this.inspireFailDescription
-        })
+        });
     }
 
     public async UpdateProtectionDescription(description: string) {
         this.protectionDescription = description;
         await this.UPDATE({
             protection_description: this.protectionDescription
-        })
+        });
     }
 
     public async UpdateProtectionFailDescription(description: string) {
         this.protectionFailDescription = description;
         await this.UPDATE({
             protection_fail_description: this.protectionFailDescription
-        })
+        });
     }
 
     public async UpdateChargeDescription(description: string) {
         this.chargeDescription = description;
         await this.UPDATE({
             charge_description: this.chargeDescription
-        })
+        });
     }
 
     public async UpdateChargeFailDescription(description: string) {
         this.chargeFailDescription = description;
         await this.UPDATE({
             charge_fail_description: this.chargeFailDescription
-        })
+        });
     }
 
     public async UpdatePrayDescription(description: string) {
         this.prayDescription = description;
         await this.UPDATE({
             pray_description: this.prayDescription
-        })
+        });
     }
 
     public async UpdatePrayFailDescription(description: string) {
         this.prayFailDescription = description;
         await this.UPDATE({
             pray_fail_description: this.prayFailDescription
-        })
+        });
     }
 
     public async UpdateEnchantmentDescription(description: string) {
         this.enchantmentDescription = description;
         await this.UPDATE({
             enchantment_description: this.enchantmentDescription
-        })
+        });
     }
 
     public async UpdatePerceptionDescription(description: string) {
         this.perceptionDescription = description;
         await this.UPDATE({
             perception_description: this.perceptionDescription
-        })
+        });
     }
 
     public async UpdateReinforcementDescription(description: string) {
         this.reinforcementDescription = description;
         await this.UPDATE({
             reinforcement_description: this.reinforcementDescription
-        })
+        });
     }
 
-    public async GiveDamagePoints(damagePoints: number, battleId?: string, messageInfo?: IMessageInfo) {
+    public GiveDamagePoints(damagePoints: number, battleId?: string, messageInfo?: IMessageInfo) {
         this.GiveRewardPoints(damagePoints * SettingsConstants.DAMAGE_REWARD_POINTS_MULTIPLIER, battleId, messageInfo);
     }
 
-    public async GiveHealingPoints(healingPoints: number, battleId?: string, messageInfo?: IMessageInfo) {
+    public GiveHealingPoints(healingPoints: number, battleId?: string, messageInfo?: IMessageInfo) {
         this.GiveRewardPoints(healingPoints * SettingsConstants.HEALING_REWARD_POINTS_MULTIPLIER, battleId, messageInfo);
     }
 
-    public async GiveInspirePoints(inspirationPoints: number, battleId?: string, messageInfo?: IMessageInfo) {
+    public GiveInspirePoints(inspirationPoints: number, battleId?: string, messageInfo?: IMessageInfo) {
         this.GiveRewardPoints(inspirationPoints * SettingsConstants.INSPIRE_REWARD_POINTS_MULITPLIER, battleId, messageInfo);
     }
 
-    public async GiveProtectionPoints(protectionPoints: number, battleId?: string, messageInfo?: IMessageInfo) {
+    public GiveProtectionPoints(protectionPoints: number, battleId?: string, messageInfo?: IMessageInfo) {
         this.GiveRewardPoints(protectionPoints * SettingsConstants.PROTECTION_REWARD_POINTS_MULITPLIER, battleId, messageInfo);
     }
 
-    public async GiveAbilityPoints(battleId?: string, messageInfo?: IMessageInfo) {
+    public GiveAbilityPoints(battleId?: string, messageInfo?: IMessageInfo) {
         this.GiveRewardPoints(SettingsConstants.INSPIRE_REWARD_POINTS_MULITPLIER, battleId, messageInfo);
     }
 
@@ -1289,11 +1289,11 @@ export default class Character {
             cardModifierStats = CharacterService.GetSummedUpModifierStats(cardModifierStats, card.GetModifierStats());
         }
 
-        return cardModifierStats
+        return cardModifierStats;
     }
 
     private CalculateFullModifierStats() {
-        return CharacterService.GetSummedUpModifierStats(this.classModifierStats, this.cardModifierStats)
+        return CharacterService.GetSummedUpModifierStats(this.classModifierStats, this.cardModifierStats);
     }
 
     private CalculateLevel(level: number = 1) {
@@ -1358,7 +1358,7 @@ export default class Character {
 
         if (this.currentHealth > this.maxHealth) {
             this.currentHealth = this.maxHealth;
-            this.UPDATE({ health: this.currentHealth })
+            this.UPDATE({ health: this.currentHealth });
         }
     }
 
@@ -1372,7 +1372,7 @@ export default class Character {
         await this.UPDATE({
             health: this.currentHealth,
             level: this.level,
-        }, trx)
+        }, trx);
     }
 
     private HasEnoughPointsForReward() {

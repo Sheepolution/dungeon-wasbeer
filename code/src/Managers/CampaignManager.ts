@@ -62,7 +62,7 @@ export default class CampaignManager {
                     latestBattle = new Battle();
                     await latestBattle.GET_LATEST();
                 }
-                number = latestBattle.GetMonster().GetNumber()
+                number = latestBattle.GetMonster().GetNumber();
             }
 
             if (number == MonsterManager.GetNumberOfMonsters()) {
@@ -84,11 +84,11 @@ export default class CampaignManager {
         }
     }
 
-    public static async SendNewPuzzleMessage(puzzle: Puzzle) {
+    public static SendNewPuzzleMessage(puzzle: Puzzle) {
         MessageService.SendMessageToDNDChannel(PuzzleService.GetPuzzleIntro(puzzle), PuzzleEmbeds.GetSudokuEmbed(puzzle));
     }
 
-    public static async SendNewBattleMessage(monster: Monster) {
+    public static SendNewBattleMessage(monster: Monster) {
         MessageService.SendMessageToDNDChannel(`Jullie vervolgen jullie reis ${[
             'in het bos',
             'door de bergen',
@@ -100,8 +100,7 @@ export default class CampaignManager {
             'door een open veld',
             'door een uitgestrekte vlakte',
             'door een woestijnlandschap'
-        ].randomChoice()}. Plots komen jullie een ${monster.GetName()} tegen! Vecht tegen het monster met \`;vecht\`.`,
-            MonsterEmbeds.GetMonsterEmbed(monster));
+        ].randomChoice()}. Plots komen jullie een ${monster.GetName()} tegen! Vecht tegen het monster met \`;vecht\`.`, MonsterEmbeds.GetMonsterEmbed(monster));
     }
 
     public static GetBattle() {
@@ -137,7 +136,7 @@ export default class CampaignManager {
 
         await this.campaignObject.CompleteSession();
         await Utils.Sleep(5);
-        await this.StartNewSession(battle != null ? SessionType.Battle : SessionType.Puzzle)
+        await this.StartNewSession(battle != null ? SessionType.Battle : SessionType.Puzzle);
     }
 
     private static async GiveXPToBattlers(battle: Battle) {
@@ -147,7 +146,7 @@ export default class CampaignManager {
         const enchantmentData = await Enchantment.FIND_TOTAL_ENCHANTED_OTHERS_IN_BATTLE_FOR_ALL_CHARACTERS(battle);
         const perceptionData = await Perception.FIND_TOTAL_PERCEPT_OTHERS_IN_BATTLE_FOR_ALL_CHARACTERS(battle);
         const reinforcementData = await Reinforcement.FIND_TOTAL_REINFORCEMENTS_FOR_OTHERS_IN_BATTLE_FOR_ALL_CHARACTERS(battle);
-        const protectionData = await Protect.FIND_TOTAL_PROTECTED_OTHERS_IN_BATTLE_FOR_ALL_CHARACTERS(battle)
+        const protectionData = await Protect.FIND_TOTAL_PROTECTED_OTHERS_IN_BATTLE_FOR_ALL_CHARACTERS(battle);
         const data: any = {};
 
         for (const row of attackData) {
@@ -237,6 +236,6 @@ export default class CampaignManager {
             }
         }).catch((error: any) => {
             console.log(error);
-        })
+        });
     }
 }

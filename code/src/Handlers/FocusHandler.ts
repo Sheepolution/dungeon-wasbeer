@@ -11,7 +11,7 @@ export default class FocusHandler {
 
     private static readonly focusPuzzlePrefix = RedisConstants.REDIS_KEY + RedisConstants.FOCUS_PUZZLE_KEY;
 
-    public static async OnCommand(messageInfo: IMessageInfo, command: string) {
+    public static OnCommand(messageInfo: IMessageInfo, command: string) {
         switch (command) {
             case 'kantoor':
             case 'concentreren':
@@ -25,7 +25,7 @@ export default class FocusHandler {
         return true;
     }
 
-    public static async OnFocusCommand(messageInfo: IMessageInfo, command: string, content: string) {
+    public static OnFocusCommand(messageInfo: IMessageInfo, command: string, content: string) {
         switch (command) {
             case 'a':
             case 'antwoord':

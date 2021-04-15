@@ -5,7 +5,6 @@ import { Utils } from '../Utils/Utils';
 import CharacterModel from './CharacterModel';
 import Character from '../Objects/Character';
 import { ShoeState } from '../Enums/ShoeState';
-import CardManager from '../Managers/CardManager';
 
 const { Model } = require('objection');
 
@@ -32,7 +31,7 @@ export default class PlayerModel extends Model {
                 to: 'characters.id',
             }
         },
-    }
+    };
 
     public static async New(discordId: string, discordDisplayName: string) {
         const playerId = Utils.UUID();
@@ -47,7 +46,7 @@ export default class PlayerModel extends Model {
                 discord_name: discordDisplayName,
                 character_id: null,
                 shoe_state: ShoeState.Emptied,
-            })
+            });
 
         return player;
     }
@@ -63,8 +62,8 @@ export default class PlayerModel extends Model {
 
         for (let i = 0; i < playerCardModels.length; i++) {
             const playerCard: PlayerCard = new PlayerCard(player);
-            await playerCard.ApplyModel(playerCardModels[i])
-            playerCardsRet.push(playerCard)
+            await playerCard.ApplyModel(playerCardModels[i]);
+            playerCardsRet.push(playerCard);
         }
 
         return playerCardsRet;

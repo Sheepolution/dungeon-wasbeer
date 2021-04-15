@@ -16,7 +16,7 @@ export default class ArtHandler {
         }
     }
 
-    public static async AddPinReaction(messageInfo: IMessageInfo) {
+    public static AddPinReaction(messageInfo: IMessageInfo) {
         if (messageInfo.message == null) {
             return;
         }
@@ -32,14 +32,14 @@ export default class ArtHandler {
         if (pinnedArray.length >= 50) {
             pinnedArray.sort((a, b) => {
                 return a.createdTimestamp - b.createdTimestamp;
-            })
+            });
             await pinnedArray[0].unpin();
         }
 
         await messageInfo.message?.pin();
     }
 
-    public static async SayMessage(messageInfo: IMessageInfo) {
+    public static SayMessage(messageInfo: IMessageInfo) {
         var messages = [
             'Wooow! Die is echt héél goed {1}!',
             'Nice {1}! Echt heel mooi!!',

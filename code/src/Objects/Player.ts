@@ -86,7 +86,7 @@ export default class Player {
     }
 
     public GetDiscordId() {
-        return this.discordId
+        return this.discordId;
     }
 
     public GetMention() {
@@ -99,7 +99,7 @@ export default class Player {
 
     public UpdateLastActive() {
         this.lastActiveDate = Utils.GetNowString();
-        this.UPDATE({ active_date: this.lastActiveDate })
+        this.UPDATE({ active_date: this.lastActiveDate });
     }
 
     public UpdateDiscordName(discordDisplayName: string) {
@@ -170,19 +170,19 @@ export default class Player {
         return this.cardPieces;
     }
 
-    public async AddCardPiece() {
+    public AddCardPiece() {
         this.cardPieces += 1;
         this.UPDATE({ card_pieces: this.cardPieces });
     }
 
-    public async TakeCardPiece() {
+    public TakeCardPiece() {
         if (this.cardPieces > 0) {
             this.cardPieces -= 1;
             this.UPDATE({ card_pieces: this.cardPieces });
         }
     }
 
-    public async TakeAllCardPieces() {
+    public TakeAllCardPieces() {
         if (this.cardPieces > 0) {
             this.cardPieces = 0;
             this.UPDATE({ card_pieces: this.cardPieces });
@@ -205,7 +205,7 @@ export default class Player {
         this.character = character;
         await this.UPDATE({
             character_id: character.GetId()
-        })
+        });
 
         return character;
     }
@@ -214,7 +214,7 @@ export default class Player {
         this.character = undefined;
         await this.UPDATE({
             character_id: null
-        })
+        });
     }
 
     public GetCharacter() {

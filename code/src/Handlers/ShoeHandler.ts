@@ -15,7 +15,7 @@ import { ShoeConfigState } from '../Enums/ShoeConfigState';
 
 export default class ShoeHandler {
 
-    public static async OnCommand(messageInfo: IMessageInfo, player: Player, command: string) {
+    public static OnCommand(messageInfo: IMessageInfo, player: Player, command: string) {
         switch (command) {
             // case 'zet':
             // case 'zetten':
@@ -113,7 +113,7 @@ export default class ShoeHandler {
 
                 await player.SetShoeState(ShoeState.Emptied);
 
-                const left = sintConfig?.Is('Left')
+                const left = sintConfig?.Is('Left');
                 LogService.Log(player, player.GetId(), LogType.ShoeEmptied, `${player.GetDiscordName()} heeft hun schoentje geleegd.`);
 
                 for (let i = 0; i < (left ? 3 : 1); i++) {
@@ -135,7 +135,7 @@ export default class ShoeHandler {
                         }
                     }
 
-                    await Utils.Sleep(10)
+                    await Utils.Sleep(10);
                 }
             }
         } else if (hour < 8) {

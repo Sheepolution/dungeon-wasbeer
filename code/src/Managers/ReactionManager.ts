@@ -30,7 +30,7 @@ export default class ReactionManager {
             return;
         }
 
-        clearTimeout(obj.timeout)
+        clearTimeout(obj.timeout);
 
         obj.timeout = setTimeout(() => {
             obj.message.reactions.removeAll();

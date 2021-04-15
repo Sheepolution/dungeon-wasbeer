@@ -16,7 +16,7 @@ export default class TradeHandler {
     private static trades: Array<ITradeInfo> = new Array<ITradeInfo>();
     private static readonly tradeInstructions = 'Zeg beiden `;accepteer` als je de ruil wilt accepteren. Zeg `;annuleer` als je de ruil wilt annuleren.';
 
-    public static async OnCommand(messageInfo: IMessageInfo, player: Player, command: string, content: string) {
+    public static OnCommand(messageInfo: IMessageInfo, player: Player, command: string, content: string) {
         switch (command) {
             case 'ruil':
             case 'ruilen':
@@ -98,7 +98,7 @@ export default class TradeHandler {
         }
 
         if (yourCard.GetCard().IsExclusive()) {
-            MessageService.ReplyMessage(messageInfo, `Deze kaart is exclusief en kan daarom niet geruild worden.`, false);
+            MessageService.ReplyMessage(messageInfo, 'Deze kaart is exclusief en kan daarom niet geruild worden.', false);
             return;
         }
 
@@ -134,7 +134,7 @@ export default class TradeHandler {
         }
 
         if (tradeInfo.youAccepted && tradeInfo.theyAccepted) {
-            this.CompleteTrade(messageInfo, tradeInfo)
+            this.CompleteTrade(messageInfo, tradeInfo);
             for (let i = 0; i < this.trades.length; i++) {
                 if (tradeInfo == this.trades[i]) {
                     this.trades.splice(i, 1);
@@ -149,7 +149,7 @@ export default class TradeHandler {
     private static CancelTrade(messageInfo: IMessageInfo, player: Player) {
         const tradeInfo = this.FindExistingTrade(player);
         if (tradeInfo == null) {
-            this.SendTradeNotFound(messageInfo, false)
+            this.SendTradeNotFound(messageInfo, false);
             return;
         }
 
@@ -171,7 +171,7 @@ export default class TradeHandler {
         theirCard.StartUsingInTrade();
 
         this.trades.push(tradeInfo);
-        MessageService.ReplyEmbed(messageInfo, CardEmbeds.GetTradeEmbed(tradeInfo), `${tradeInfo.with.GetMention()}, wil jij jouw '${tradeInfo.theirCard.GetCard().GetName()}' ruilen voor de '${tradeInfo.yourCard.GetCard().GetName()}' van ${tradeInfo.trader.GetMention()}? ${this.tradeInstructions}`)
+        MessageService.ReplyEmbed(messageInfo, CardEmbeds.GetTradeEmbed(tradeInfo), `${tradeInfo.with.GetMention()}, wil jij jouw '${tradeInfo.theirCard.GetCard().GetName()}' ruilen voor de '${tradeInfo.yourCard.GetCard().GetName()}' van ${tradeInfo.trader.GetMention()}? ${this.tradeInstructions}`);
     }
 
     private static async CompleteTrade(messageInfo: IMessageInfo, tradeInfo: ITradeInfo) {
@@ -221,7 +221,7 @@ export default class TradeHandler {
         this.trades.splice(index, 1);
     }
 
-    private static async SendTradeNotFound(messageInfo: IMessageInfo, accept: boolean) {
-        MessageService.ReplyMessage(messageInfo, 'Wat loop je nou allemaal te ' + (accept ? 'accepteren' : 'annuleren') + '? Je bent helemaal niet aan het ruilen!', false)
+    private static SendTradeNotFound(messageInfo: IMessageInfo, accept: boolean) {
+        MessageService.ReplyMessage(messageInfo, 'Wat loop je nou allemaal te ' + (accept ? 'accepteren' : 'annuleren') + '? Je bent helemaal niet aan het ruilen!', false);
     }
 }

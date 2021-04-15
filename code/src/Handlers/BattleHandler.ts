@@ -21,7 +21,7 @@ export default class BattleHandler {
     private static inBattle: boolean = false;
     private static inBattleTimeout: any;
 
-    public static async OnCommand(messageInfo: IMessageInfo, player: Player, command: string) {
+    public static OnCommand(messageInfo: IMessageInfo, player: Player, command: string) {
         switch (command) {
             case 'attack':
             case 'fight':
@@ -193,11 +193,11 @@ export default class BattleHandler {
         await Utils.Sleep(3);
         const roll1 = Utils.Dice(20);
         if (roll1 == 1) {
-            this.OnMonsterCrit(messageInfo, message, battle, character, roll1, undefined, undefined)
-            return
+            this.OnMonsterCrit(messageInfo, message, battle, character, roll1, undefined, undefined);
+            return;
         } else if (roll1 == 20) {
-            this.OnCharacterCrit(messageInfo, message, battle, character, roll1, undefined, undefined)
-            return
+            this.OnCharacterCrit(messageInfo, message, battle, character, roll1, undefined, undefined);
+            return;
         }
 
         const playerAttackRoll = character.GetAttackRoll();
@@ -241,11 +241,11 @@ export default class BattleHandler {
             const roll3 = Utils.Dice(20);
 
             if (roll3 == 20) {
-                this.OnMonsterCrit(messageInfo, message, battle, character, roll1, roll2, roll3)
-                return
+                this.OnMonsterCrit(messageInfo, message, battle, character, roll1, roll2, roll3);
+                return;
             } else if (roll3 == 1) {
-                this.OnCharacterCrit(messageInfo, message, battle, character, roll1, roll2, roll3)
-                return
+                this.OnCharacterCrit(messageInfo, message, battle, character, roll1, roll2, roll3);
+                return;
             }
 
             const monsterAttackRoll = battle.GetMonsterAttackRoll();
@@ -429,7 +429,7 @@ export default class BattleHandler {
 
     private static async OnDefeatingMonster(battle: Battle) {
         await battle.Complete();
-        await MessageService.SendMessageToDNDChannel(`De ${battle.GetMonster().GetName()} is verslagen! Iedereen die heeft meegeholpen in deze strijd heeft XP ontvangen.`)
+        await MessageService.SendMessageToDNDChannel(`De ${battle.GetMonster().GetName()} is verslagen! Iedereen die heeft meegeholpen in deze strijd heeft XP ontvangen.`);
         await CampaignManager.OnCompletingSession();
     }
 
@@ -454,10 +454,10 @@ export default class BattleHandler {
 
         const nextPlayer = await PlayerManager.GetPlayer(nextBattle?.member.id);
         await Utils.Sleep(3);
-        this.OnAttack(<IMessageInfo>nextBattle, nextPlayer, true)
+        this.OnAttack(<IMessageInfo>nextBattle, nextPlayer, true);
     }
 
-    private static async ReplyNoBattle(messageInfo: IMessageInfo) {
+    private static ReplyNoBattle(messageInfo: IMessageInfo) {
         MessageService.ReplyMessage(messageInfo, 'Er is geen monster om tegen te vechten.', false);
     }
 
@@ -476,7 +476,7 @@ export default class BattleHandler {
         return await MessageService.ReplyEmbed(messageInfo, BattleEmbeds.GetBattleInfoEmbed(battle));
     }
 
-    private static async ReplyMonsterDefeated(messageInfo: IMessageInfo) {
+    private static ReplyMonsterDefeated(messageInfo: IMessageInfo) {
         MessageService.ReplyMessage(messageInfo, 'Het monster is al verslagen.', false);
     }
 

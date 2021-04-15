@@ -66,7 +66,7 @@ export default class Puzzle {
         this.type = model.GetPuzzleType();
         this.creationDate = model.creation_date;
         this.solvingDate = model.solving_date ? new Date(model.solving_date) : undefined;
-        this.solver = await model.GetSolver()
+        this.solver = await model.GetSolver();
     }
 
     public GetId() {
@@ -98,6 +98,6 @@ export default class Puzzle {
             active: false,
             solver_id: character.GetId(),
             solving_date: Utils.GetNowString(),
-        })
+        });
     }
 }

@@ -18,7 +18,7 @@ export default class PlayerCardModel extends Model {
                 to: 'cards.id',
             }
         }
-    }
+    };
 
     public static async New(cardId: string, playerId: string, amount: number = 1, trx?: any) {
         const playerCardId = Utils.UUID();
@@ -30,7 +30,7 @@ export default class PlayerCardModel extends Model {
                 card_id: cardId,
                 amount: amount,
                 equipped: 0
-            })
+            });
 
         return playerCard;
     }

@@ -38,7 +38,7 @@ export default class CharacterEmbeds {
 
         embed.addField('Health', `${character.GetCurrentHealth()}/${character.GetMaxHealth()} ${modifiersCards.health > 0 ? `(${character.GetBaseHealth()}+${modifiersCards.health})` : ''}`, true)
             .addField('Regeneration', `${modifiers.regeneration} ${modifiersCards.regeneration > 0 ? `(${modifiersClass.regeneration}+${modifiersCards.regeneration})` : ''}`, true)
-            .addField('Armor', `${modifiers.armor} ${modifiersCards.armor > 0 ? `(${modifiersClass.armor}+${modifiersCards.armor})` : ''}`, true)
+            .addField('Armor', `${modifiers.armor} ${modifiersCards.armor > 0 ? `(${modifiersClass.armor}+${modifiersCards.armor})` : ''}`, true);
 
         if (character.IsSorcerer()) {
             embed.addField('Spell attack', `${modifiers.spell} ${modifiersCards.spell > 0 ? `(${modifiersClass.spell}+${modifiersCards.spell})` : ''}`, true);
@@ -47,7 +47,7 @@ export default class CharacterEmbeds {
         }
 
         embed.addField('Attack', `${modifiers.attack} ${modifiersCards.attack > 0 ? `(${modifiersClass.attack}+${modifiersCards.attack})` : ''}`, true)
-            .addField('Dexterity', `${modifiers.dexterity} ${modifiersCards.dexterity > 0 ? `(${modifiersClass.dexterity}+${modifiersCards.dexterity})` : ''}`, true)
+            .addField('Dexterity', `${modifiers.dexterity} ${modifiersCards.dexterity > 0 ? `(${modifiersClass.dexterity}+${modifiersCards.dexterity})` : ''}`, true);
 
         if (character.CanHeal()) {
             embed.addField('Wisdom', `${modifiers.wisdom} ${modifiersCards.wisdom > 0 ? `(${modifiersClass.wisdom}+${modifiersCards.wisdom})` : ''}`, true);
@@ -70,13 +70,13 @@ export default class CharacterEmbeds {
         }
 
         const equipment = character.GetEquipment();
-        embed.addField('-----------------------------', `Equipment ${equipment.length}/${character.GetTotalEquipmentSpace()}`)
+        embed.addField('-----------------------------', `Equipment ${equipment.length}/${character.GetTotalEquipmentSpace()}`);
         this.AddEquipmentToEmbed(embed, equipment);
 
         embed.addField('-----------------------------', 'Cooldown(s)');
         const battleCooldown = await character.GetBattleCooldown();
         if (battleCooldown > 0) {
-            embed.addField('Vechten', `🕒 ${Utils.GetSecondsInMinutesAndSeconds(battleCooldown)}`, true)
+            embed.addField('Vechten', `🕒 ${Utils.GetSecondsInMinutesAndSeconds(battleCooldown)}`, true);
         } else {
             embed.addField('Vechten', 'Klaar om te vechten!', true);
         }
@@ -84,7 +84,7 @@ export default class CharacterEmbeds {
         if (character.CanHeal()) {
             const healingCooldown = await character.GetHealingCooldown();
             if (healingCooldown > 0) {
-                embed.addField('Healen', `🕒 ${Utils.GetSecondsInMinutesAndSeconds(healingCooldown)}`, true)
+                embed.addField('Healen', `🕒 ${Utils.GetSecondsInMinutesAndSeconds(healingCooldown)}`, true);
             } else {
                 embed.addField('Healen', 'Klaar om te healen!', true);
             }
@@ -93,7 +93,7 @@ export default class CharacterEmbeds {
         if (character.CanInspire()) {
             const inspiringCooldown = await character.GetInspireCooldown();
             if (inspiringCooldown > 0) {
-                embed.addField('Inspireren', `🕒 ${Utils.GetSecondsInMinutesAndSeconds(inspiringCooldown)}`, true)
+                embed.addField('Inspireren', `🕒 ${Utils.GetSecondsInMinutesAndSeconds(inspiringCooldown)}`, true);
             } else {
                 embed.addField('Inspireren', 'Klaar om een mooi lied te spelen!', true);
             }
@@ -102,7 +102,7 @@ export default class CharacterEmbeds {
         return embed;
     }
 
-    public static async GetCharacterDescriptionEmbed(character: Character) {
+    public static GetCharacterDescriptionEmbed(character: Character) {
         const embed = new MessageEmbed()
             .setColor(SettingsConstants.COLORS.DEFAULT)
             .setAuthor(character.GetClassName(), CharacterService.GetClassIconImage(character.GetClass()))
@@ -119,7 +119,7 @@ export default class CharacterEmbeds {
         return embed;
     }
 
-    public static async GetCharacterStatsEmbed(character: Character) {
+    public static GetCharacterStatsEmbed(character: Character) {
         const embed = new MessageEmbed()
             .setColor(SettingsConstants.COLORS.DEFAULT)
             .setAuthor(character.GetClassName(), CharacterService.GetClassIconImage(character.GetClass()))
@@ -133,7 +133,7 @@ export default class CharacterEmbeds {
 
         embed.addField('Health', `${character.GetCurrentHealth()}/${character.GetMaxHealth()} ${modifiersCards.health > 0 ? `(${character.GetBaseHealth()}+${modifiersCards.health})` : ''}`, true)
             .addField('Regeneration', `${modifiers.regeneration} ${modifiersCards.regeneration > 0 ? `(${modifiersClass.regeneration}+${modifiersCards.regeneration})` : ''}`, true)
-            .addField('Armor', `${modifiers.armor} ${modifiersCards.armor > 0 ? `(${modifiersClass.armor}+${modifiersCards.armor})` : ''}`, true)
+            .addField('Armor', `${modifiers.armor} ${modifiersCards.armor > 0 ? `(${modifiersClass.armor}+${modifiersCards.armor})` : ''}`, true);
 
         if (character.IsSorcerer()) {
             embed.addField('Spell attack', `${modifiers.spell} ${modifiersCards.spell > 0 ? `(${modifiersClass.spell}+${modifiersCards.spell})` : ''}`, true);
@@ -142,7 +142,7 @@ export default class CharacterEmbeds {
         }
 
         embed.addField('Attack', `${modifiers.attack} ${modifiersCards.attack > 0 ? `(${modifiersClass.attack}+${modifiersCards.attack})` : ''}`, true)
-            .addField('Dexterity', `${modifiers.dexterity} ${modifiersCards.dexterity > 0 ? `(${modifiersClass.dexterity}+${modifiersCards.dexterity})` : ''}`, true)
+            .addField('Dexterity', `${modifiers.dexterity} ${modifiersCards.dexterity > 0 ? `(${modifiersClass.dexterity}+${modifiersCards.dexterity})` : ''}`, true);
 
         if (character.CanHeal()) {
             embed.addField('Wisdom', `${modifiers.wisdom} ${modifiersCards.wisdom > 0 ? `(${modifiersClass.wisdom}+${modifiersCards.wisdom})` : ''}`, true);
@@ -171,12 +171,12 @@ export default class CharacterEmbeds {
         const embed = new MessageEmbed()
             .setColor(SettingsConstants.COLORS.DEFAULT)
             .setAuthor(character.GetClassName(), CharacterService.GetClassIconImage(character.GetClass()))
-            .setTitle(`${character.GetName()}${character.GetEnhancementsString()}`)
+            .setTitle(`${character.GetName()}${character.GetEnhancementsString()}`);
 
         embed.addField('-----------------------------', 'Cooldown(s)');
         const battleCooldown = await character.GetBattleCooldown();
         if (battleCooldown > 0) {
-            embed.addField('Vechten', `🕒 ${Utils.GetSecondsInMinutesAndSeconds(battleCooldown)}`, true)
+            embed.addField('Vechten', `🕒 ${Utils.GetSecondsInMinutesAndSeconds(battleCooldown)}`, true);
         } else {
             embed.addField('Vechten', 'Klaar om te vechten!', true);
         }
@@ -184,7 +184,7 @@ export default class CharacterEmbeds {
         if (character.CanHeal()) {
             const healingCooldown = await character.GetHealingCooldown();
             if (healingCooldown > 0) {
-                embed.addField('Healen', `🕒 ${Utils.GetSecondsInMinutesAndSeconds(healingCooldown)}`, true)
+                embed.addField('Healen', `🕒 ${Utils.GetSecondsInMinutesAndSeconds(healingCooldown)}`, true);
             } else {
                 embed.addField('Healen', 'Klaar om te healen!', true);
             }
@@ -193,7 +193,7 @@ export default class CharacterEmbeds {
         if (character.CanInspire()) {
             const inspiringCooldown = await character.GetInspireCooldown();
             if (inspiringCooldown > 0) {
-                embed.addField('Inspireren', `🕒 ${Utils.GetSecondsInMinutesAndSeconds(inspiringCooldown)}`, true)
+                embed.addField('Inspireren', `🕒 ${Utils.GetSecondsInMinutesAndSeconds(inspiringCooldown)}`, true);
             } else {
                 embed.addField('Inspireren', 'Klaar om een mooi lied te spelen!', true);
             }
@@ -202,7 +202,7 @@ export default class CharacterEmbeds {
         if (character.CanEnchant()) {
             const enchantingCooldown = await character.GetEnchantmentCooldown();
             if (enchantingCooldown > 0) {
-                embed.addField('Enchantment', `🕒 ${Utils.GetSecondsInMinutesAndSeconds(enchantingCooldown)}`, true)
+                embed.addField('Enchantment', `🕒 ${Utils.GetSecondsInMinutesAndSeconds(enchantingCooldown)}`, true);
             } else {
                 embed.addField('Enchantment', 'Klaar voor een enchantment!', true);
             }
@@ -211,7 +211,7 @@ export default class CharacterEmbeds {
         if (character.CanPercept()) {
             const perceptingCooldown = await character.GetPerceptionCooldown();
             if (perceptingCooldown > 0) {
-                embed.addField('Perception check', `🕒 ${Utils.GetSecondsInMinutesAndSeconds(perceptingCooldown)}`, true)
+                embed.addField('Perception check', `🕒 ${Utils.GetSecondsInMinutesAndSeconds(perceptingCooldown)}`, true);
             } else {
                 embed.addField('Perception check', 'Klaar voor een perception check!', true);
             }
@@ -220,7 +220,7 @@ export default class CharacterEmbeds {
         if (character.CanReinforce()) {
             const reinforcementCooldown = await character.GetReinforcementCooldown();
             if (reinforcementCooldown > 0) {
-                embed.addField('Reinforcement', `🕒 ${Utils.GetSecondsInMinutesAndSeconds(reinforcementCooldown)}`, true)
+                embed.addField('Reinforcement', `🕒 ${Utils.GetSecondsInMinutesAndSeconds(reinforcementCooldown)}`, true);
             } else {
                 embed.addField('Reinforcement', 'Klaar om te reinforcen!', true);
             }
@@ -229,7 +229,7 @@ export default class CharacterEmbeds {
         if (character.CanProtect()) {
             const protectCooldown = await character.GetProtectCooldown();
             if (protectCooldown > 0) {
-                embed.addField('Protection', `🕒 ${Utils.GetSecondsInMinutesAndSeconds(protectCooldown)}`, true)
+                embed.addField('Protection', `🕒 ${Utils.GetSecondsInMinutesAndSeconds(protectCooldown)}`, true);
             } else {
                 embed.addField('Protection', 'Klaar om te protecten!', true);
             }
@@ -253,7 +253,7 @@ export default class CharacterEmbeds {
             .setColor(SettingsConstants.COLORS.DEFAULT)
             .setAuthor(character.GetClassName(), CharacterService.GetClassIconImage(character.GetClass()))
             .setImage(CharacterService.GetClassImage(character.GetClass()))
-            .setTitle(character.GetName())
+            .setTitle(character.GetName());
 
         return embed;
     }
@@ -264,9 +264,9 @@ export default class CharacterEmbeds {
             .setAuthor(character.GetClassName(), CharacterService.GetClassIconImage(character.GetClass()))
             .setTitle(`De geschiedenis van ${character.GetName()}${character.GetEnhancementsString()}`)
             .setImage(character.GetAvatarUrl())
-            .setDescription(`Aangemaakt op ${character.GetBornDateString()}`)
+            .setDescription(`Aangemaakt op ${character.GetBornDateString()}`);
 
-        await this.AddCharacterHistoryToEmbed(embed, character)
+        await this.AddCharacterHistoryToEmbed(embed, character);
 
         return embed;
     }
@@ -278,7 +278,7 @@ export default class CharacterEmbeds {
             .setTitle(`RIP ${character.GetName()}\n${character.GetBornDateString()} - ${character.GetDeathDateString()}`)
             .setDescription('--------------------')
             .addField('Level', character.GetLevel(), true)
-            .addField('XP', character.GetXP(), true)
+            .addField('XP', character.GetXP(), true);
 
         await this.AddCharacterHistoryToEmbed(embed, character);
 
@@ -294,9 +294,9 @@ export default class CharacterEmbeds {
     public static async GetHealingEmbed(character: Character, receiver: Character, roll?: number, healing?: number) {
         const embed = new MessageEmbed();
         if (healing != null) {
-            embed.setColor((roll != null && healing == 0) ? SettingsConstants.COLORS.BAD : SettingsConstants.COLORS.GOOD)
+            embed.setColor((roll != null && healing == 0) ? SettingsConstants.COLORS.BAD : SettingsConstants.COLORS.GOOD);
         } else {
-            embed.setColor(SettingsConstants.COLORS.DEFAULT)
+            embed.setColor(SettingsConstants.COLORS.DEFAULT);
         }
 
         const characterName = character.GetName();
@@ -307,10 +307,10 @@ export default class CharacterEmbeds {
             .setDescription(`${character.GetName()}${character.GetEnhancementsString()} rollt om ${receiver == character ? 'zichzelf' : receiver.GetName()}${receiver.GetEnhancementsString()} te healen.\n\n-- Statistieken --`)
             .addField(`Health van ${receiverName}`, `${receiver.GetCurrentHealth()}/${receiver.GetMaxHealth()}`)
             .addField(`Healing van ${characterName}`, character.GetFullModifierStats().wisdom)
-            .addField('--------------------------------', '-- Roll --')
+            .addField('--------------------------------', '-- Roll --');
 
         if (roll == null) {
-            embed.addField(characterName, 'Rollt de D20...')
+            embed.addField(characterName, 'Rollt de D20...');
         } else {
             embed.addField(characterName, `D20 = ${roll}`)
                 .addField('--------------------------------', '-- Resultaat --')
@@ -326,7 +326,7 @@ export default class CharacterEmbeds {
 
             const battleCooldown = await character.GetBattleCooldown();
             if (battleCooldown > 0) {
-                embed.addField('Vechten', `🕒 ${Utils.GetSecondsInMinutesAndSeconds(battleCooldown)}`, true)
+                embed.addField('Vechten', `🕒 ${Utils.GetSecondsInMinutesAndSeconds(battleCooldown)}`, true);
             } else {
                 embed.addField('Vechten', 'Klaar om te vechten!', true);
             }
@@ -334,7 +334,7 @@ export default class CharacterEmbeds {
             if (character.CanHeal()) {
                 const healingCooldown = await character.GetHealingCooldown();
                 if (healingCooldown > 0) {
-                    embed.addField('Healen', `🕒 ${Utils.GetSecondsInMinutesAndSeconds(healingCooldown)}`, true)
+                    embed.addField('Healen', `🕒 ${Utils.GetSecondsInMinutesAndSeconds(healingCooldown)}`, true);
                 } else {
                     embed.addField('Healen', 'Klaar om te healen!', true);
                 }
@@ -343,7 +343,7 @@ export default class CharacterEmbeds {
             if (character.CanInspire()) {
                 const inspiringCooldown = await character.GetInspireCooldown();
                 if (inspiringCooldown > 0) {
-                    embed.addField('Inspireren', `🕒 ${Utils.GetSecondsInMinutesAndSeconds(inspiringCooldown)}`, true)
+                    embed.addField('Inspireren', `🕒 ${Utils.GetSecondsInMinutesAndSeconds(inspiringCooldown)}`, true);
                 } else {
                     embed.addField('Inspireren', 'Klaar om een mooi lied te spelen!', true);
                 }
@@ -356,9 +356,9 @@ export default class CharacterEmbeds {
     public static async GetInspiringEmbed(character: Character, receiver: Character, roll?: number, inspiration?: number) {
         const embed = new MessageEmbed();
         if (inspiration != null) {
-            embed.setColor((roll != null && inspiration == 0) ? SettingsConstants.COLORS.BAD : SettingsConstants.COLORS.GOOD)
+            embed.setColor((roll != null && inspiration == 0) ? SettingsConstants.COLORS.BAD : SettingsConstants.COLORS.GOOD);
         } else {
-            embed.setColor(SettingsConstants.COLORS.DEFAULT)
+            embed.setColor(SettingsConstants.COLORS.DEFAULT);
         }
 
         const characterName = character.GetName();
@@ -368,10 +368,10 @@ export default class CharacterEmbeds {
             .setThumbnail(character.GetAvatarUrl())
             .setDescription(`${character.GetName()}${character.GetEnhancementsString()} rollt om ${receiver == character ? 'zichzelf' : receiver.GetName()}${receiver.GetEnhancementsString()} te inspireren.\n\n-- Statistieken --`)
             .addField(`Charisma van ${characterName}`, character.GetFullModifierStats().charisma)
-            .addField('--------------------------------', '-- Roll --')
+            .addField('--------------------------------', '-- Roll --');
 
         if (roll == null) {
-            embed.addField(characterName, 'Rollt de D20...')
+            embed.addField(characterName, 'Rollt de D20...');
         } else {
             embed.addField(characterName, `D20 = ${roll}`)
                 .addField('--------------------------------', '-- Resultaat --')
@@ -387,7 +387,7 @@ export default class CharacterEmbeds {
 
             const battleCooldown = await character.GetBattleCooldown();
             if (battleCooldown > 0) {
-                embed.addField('Vechten', `🕒 ${Utils.GetSecondsInMinutesAndSeconds(battleCooldown)}`, true)
+                embed.addField('Vechten', `🕒 ${Utils.GetSecondsInMinutesAndSeconds(battleCooldown)}`, true);
             } else {
                 embed.addField('Vechten', 'Klaar om te vechten!', true);
             }
@@ -395,7 +395,7 @@ export default class CharacterEmbeds {
             if (character.CanHeal()) {
                 const healingCooldown = await character.GetHealingCooldown();
                 if (healingCooldown > 0) {
-                    embed.addField('Healen', `🕒 ${Utils.GetSecondsInMinutesAndSeconds(healingCooldown)}`, true)
+                    embed.addField('Healen', `🕒 ${Utils.GetSecondsInMinutesAndSeconds(healingCooldown)}`, true);
                 } else {
                     embed.addField('Healen', 'Klaar om te healen!', true);
                 }
@@ -404,7 +404,7 @@ export default class CharacterEmbeds {
             if (character.CanInspire()) {
                 const inspiringCooldown = await character.GetInspireCooldown();
                 if (inspiringCooldown > 0) {
-                    embed.addField('Inspireren', `🕒 ${Utils.GetSecondsInMinutesAndSeconds(inspiringCooldown)}`, true)
+                    embed.addField('Inspireren', `🕒 ${Utils.GetSecondsInMinutesAndSeconds(inspiringCooldown)}`, true);
                 } else {
                     embed.addField('Inspireren', 'Klaar om een mooi lied te spelen!', true);
                 }
@@ -417,9 +417,9 @@ export default class CharacterEmbeds {
     public static async GetProtectionEmbed(character: Character, receiver: Character, roll?: number, protection?: number) {
         const embed = new MessageEmbed();
         if (protection != null) {
-            embed.setColor((roll != null && protection == 0) ? SettingsConstants.COLORS.BAD : SettingsConstants.COLORS.GOOD)
+            embed.setColor((roll != null && protection == 0) ? SettingsConstants.COLORS.BAD : SettingsConstants.COLORS.GOOD);
         } else {
-            embed.setColor(SettingsConstants.COLORS.DEFAULT)
+            embed.setColor(SettingsConstants.COLORS.DEFAULT);
         }
 
         const characterName = character.GetName();
@@ -430,10 +430,10 @@ export default class CharacterEmbeds {
             .setDescription(`${character.GetName()}${character.GetEnhancementsString()} rollt om ${receiver == character ? 'zichzelf' : receiver.GetName()}${receiver.GetEnhancementsString()} te beschermen.\n\n-- Statistieken --`)
             .addField(`Armor van ${receiverName}`, receiver.GetArmor())
             .addField(`Armor van ${characterName}`, character.GetFullModifierStats().armor)
-            .addField('--------------------------------', '-- Roll --')
+            .addField('--------------------------------', '-- Roll --');
 
         if (roll == null) {
-            embed.addField(characterName, 'Rollt de D20...')
+            embed.addField(characterName, 'Rollt de D20...');
         } else {
             embed.addField(characterName, `D20 = ${roll}`)
                 .addField('--------------------------------', '-- Resultaat --')
@@ -449,7 +449,7 @@ export default class CharacterEmbeds {
 
             const battleCooldown = await character.GetBattleCooldown();
             if (battleCooldown > 0) {
-                embed.addField('Vechten', `🕒 ${Utils.GetSecondsInMinutesAndSeconds(battleCooldown)}`, true)
+                embed.addField('Vechten', `🕒 ${Utils.GetSecondsInMinutesAndSeconds(battleCooldown)}`, true);
             } else {
                 embed.addField('Vechten', 'Klaar om te vechten!', true);
             }
@@ -457,7 +457,7 @@ export default class CharacterEmbeds {
             if (character.CanProtect()) {
                 const protectingCooldown = await character.GetProtectCooldown();
                 if (protectingCooldown > 0) {
-                    embed.addField('Protecting', `🕒 ${Utils.GetSecondsInMinutesAndSeconds(protectingCooldown)}`, true)
+                    embed.addField('Protecting', `🕒 ${Utils.GetSecondsInMinutesAndSeconds(protectingCooldown)}`, true);
                 } else {
                     embed.addField('Protecting', 'Klaar om iemand te beschermen!', true);
                 }
@@ -467,12 +467,12 @@ export default class CharacterEmbeds {
         return embed;
     }
 
-    public static async GetChargingEmbed(character: Character, roll?: number, charge: number = 0) {
+    public static GetChargingEmbed(character: Character, roll?: number, charge: number = 0) {
         const embed = new MessageEmbed();
         if (charge != null) {
-            embed.setColor((roll != null && charge == 0) ? SettingsConstants.COLORS.BAD : SettingsConstants.COLORS.GOOD)
+            embed.setColor((roll != null && charge == 0) ? SettingsConstants.COLORS.BAD : SettingsConstants.COLORS.GOOD);
         } else {
-            embed.setColor(SettingsConstants.COLORS.DEFAULT)
+            embed.setColor(SettingsConstants.COLORS.DEFAULT);
         }
 
         const characterName = character.GetName();
@@ -481,10 +481,10 @@ export default class CharacterEmbeds {
             .setThumbnail(character.GetAvatarUrl())
             .setDescription(`${character.GetName()}${character.GetEnhancementsString()} rollt voor een charge.\n\n-- Statistieken --`)
             .addField(`Armor van ${characterName}`, character.GetArmor())
-            .addField('--------------------------------', '-- Roll --')
+            .addField('--------------------------------', '-- Roll --');
 
         if (roll == null) {
-            embed.addField(characterName, 'Rollt de D20...')
+            embed.addField(characterName, 'Rollt de D20...');
         } else {
             embed.addField(characterName, `D20 = ${roll}`)
                 .addField('--------------------------------', '-- Resultaat --')
@@ -503,9 +503,9 @@ export default class CharacterEmbeds {
     public static async GetPrayingEmbed(character: Character, roll?: number, blessing?: number) {
         const embed = new MessageEmbed();
         if (blessing != null) {
-            embed.setColor((roll != null && blessing == 0) ? SettingsConstants.COLORS.BAD : SettingsConstants.COLORS.GOOD)
+            embed.setColor((roll != null && blessing == 0) ? SettingsConstants.COLORS.BAD : SettingsConstants.COLORS.GOOD);
         } else {
-            embed.setColor(SettingsConstants.COLORS.DEFAULT)
+            embed.setColor(SettingsConstants.COLORS.DEFAULT);
         }
 
         const characterName = character.GetName();
@@ -514,10 +514,10 @@ export default class CharacterEmbeds {
             .setThumbnail(character.GetAvatarUrl())
             .setDescription(`${character.GetName()}${character.GetEnhancementsString()} rollt voor een blessing.\n\n-- Statistieken --`)
             .addField(`Wisdom van ${characterName}`, character.GetFullModifierStats().wisdom)
-            .addField('--------------------------------', '-- Roll --')
+            .addField('--------------------------------', '-- Roll --');
 
         if (roll == null) {
-            embed.addField(characterName, 'Rollt de D20...')
+            embed.addField(characterName, 'Rollt de D20...');
         } else {
             embed.addField(characterName, `D20 = ${roll}`)
                 .addField('--------------------------------', '-- Resultaat --')
@@ -532,7 +532,7 @@ export default class CharacterEmbeds {
             if (character.CanHeal()) {
                 const healingCooldown = await character.GetHealingCooldown();
                 if (healingCooldown > 0) {
-                    embed.addField('Healen', `🕒 ${Utils.GetSecondsInMinutesAndSeconds(healingCooldown)}`, true)
+                    embed.addField('Healen', `🕒 ${Utils.GetSecondsInMinutesAndSeconds(healingCooldown)}`, true);
                 } else {
                     embed.addField('Healen', 'Klaar om te healen!', true);
                 }
@@ -889,7 +889,7 @@ export default class CharacterEmbeds {
             list.push({
                 cooldown: cooldown,
                 character: character,
-            })
+            });
         }
 
         list.sort((a: any, b: any) => b.cooldown - a.cooldown);
@@ -930,7 +930,7 @@ export default class CharacterEmbeds {
     public static async GetTopFastestPuzzlesSolvedEmbed(all: boolean) {
         const list: any = await Puzzle.GET_TOP_FASTEST_SOLVED_LIST();
         const amount = list.length;
-        const embed = new MessageEmbed()
+        const embed = new MessageEmbed();
 
         var listString = '';
 
@@ -1347,7 +1347,7 @@ Als je zeker weet dat je wilt stoppen met dit character, gebruik dan het command
             .addField('Crits gedaan', await character.GetTotalCritsDone(), true)
             .addField('Crits gekregen', await character.GetTotalCritsTaken(), true)
             .addField('Regenerated', character.GetRegenerated(), true)
-            .addField('Geslapen', character.GetSleepAmount(), true)
+            .addField('Geslapen', character.GetSleepAmount(), true);
 
         if (character.CanHeal()) {
             embed.addField('Heals gedaan', await character.GetTotalHealsDone(), true);
@@ -1355,7 +1355,7 @@ Als je zeker weet dat je wilt stoppen met dit character, gebruik dan het command
         }
 
         embed.addField('Heals gekregen', await character.GetTotalHealsReceived(), true)
-            .addField('Healing gekregen', await character.GetTotalHealingReceived(), true)
+            .addField('Healing gekregen', await character.GetTotalHealingReceived(), true);
 
         if (character.CanInspire()) {
             embed.addField('Geïnspireerd', await character.GetTotalInspiresDone(), true);

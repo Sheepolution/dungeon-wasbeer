@@ -21,7 +21,7 @@ export default class TradeModel extends Model {
                 trader_card_id: traderCard.GetId(),
                 other_card_id: otherCard.GetId(),
                 trade_date: Utils.GetNowString(),
-            })
+            });
 
         return trade;
     }

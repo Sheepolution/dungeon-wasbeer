@@ -33,12 +33,12 @@ export default class EmojiConstants {
         DNW: '<:dnw:784174386293768263>',
         ART: '<:kunst:784174386571509763>',
         EXCLUSIVE: '<:exclusief:804802089754296350>',
-    }
+    };
 
     public static readonly STATUS = {
         GOOD: '✅',
         BAD: '❌',
-    }
+    };
 
     public static readonly CLASSES = {
         BARD: '<:bard:708771356388622346>',
@@ -47,7 +47,7 @@ export default class EmojiConstants {
         PALADIN: '<:paladin:708777095676821597>',
         RANGER: '<:ranger:708771356329902121> ',
         WIZARD: '<:wizard:708771356216524801>',
-    }
+    };
 
     public static readonly DNW_STATES = {
         INSPIRED: '✨',
@@ -56,5 +56,5 @@ export default class EmojiConstants {
         PROTECTED: '🛡️',
         CHARGED: '💪',
         BLESSED: '🙏',
-    }
+    };
 }

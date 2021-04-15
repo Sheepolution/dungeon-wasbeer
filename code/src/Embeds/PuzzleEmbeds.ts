@@ -13,7 +13,7 @@ export default class PuzzleEmbeds {
             .setAuthor('Puzzel', ImageConstants.ICONS.PUZZLE)
             .setTitle('Sudoku')
             .setDescription('Op de stipjes moeten de cijfers 1 tot en met 9 ingevuld worden op zo\'n manier dat in elke horizontale lijn\
- én in elke verticale kolom en in elk van de negen blokjes de cijfers 1 tot en met 9 één keer voorkomen.\nStuur je antwoord op met `;antwoord [oplossing]`.\n\n```\n' + puzzle.GetContent() + '\n```')
+ én in elke verticale kolom en in elk van de negen blokjes de cijfers 1 tot en met 9 één keer voorkomen.\nStuur je antwoord op met `;antwoord [oplossing]`.\n\n```\n' + puzzle.GetContent() + '\n```');
 
         return embed;
     }
@@ -33,7 +33,7 @@ Ancient Gold Dragon
 etc...
 
 Beantwoord de volgende vragen:
-${puzzle.GetContent()}`)
+${puzzle.GetContent()}`);
 
         return embed;
     }
@@ -55,7 +55,7 @@ ${puzzle.GetContent()}`)
             .setTitle('Sudoku')
             .setDescription('Op de stipjes moeten de cijfers 1 tot en met 9 ingevuld worden op zo\'n manier dat in elke horizontale lijn\
  én in elke verticale kolom en in elk van de negen blokjes de cijfers 1 tot en met 9 één keer voorkomen.\nStuur je antwoord op met `;antwoord [oplossing]`\
- in het #kantoorberen kanaal. Als je Sudoku\'s lastig vind kan je natuurlijk gewoon zo\'n sudoku solver gebruiken. Zolang je het maar een beetje stiekem doet!\n\n```\n' + sudoku + '\n```')
+ in het #kantoorberen kanaal. Als je Sudoku\'s lastig vind kan je natuurlijk gewoon zo\'n sudoku solver gebruiken. Zolang je het maar een beetje stiekem doet!\n\n```\n' + sudoku + '\n```');
         return embed;
     }
 
@@ -66,7 +66,7 @@ ${puzzle.GetContent()}`)
             .setTitle('Sudoku')
             .setDescription('Op de stipjes moeten de cijfers 1 tot en met 9 ingevuld worden op zo\'n manier dat in elke horizontale lijn\
  én in elke verticale kolom en in elk van de negen blokjes de cijfers 1 tot en met 9 één keer voorkomen.\nStuur je antwoord op met `;antwoord [oplossing]`\
- in dit kanaal.\n\n```\n' + sudoku + '\n```')
+ in dit kanaal.\n\n```\n' + sudoku + '\n```');
         return embed;
     }
 }

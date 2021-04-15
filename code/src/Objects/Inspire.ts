@@ -18,7 +18,7 @@ export default class Inspire {
     }
 
     public static async FIND_INSPIRES_RECEIVED_BY_CHARACTER(character: Character) {
-        const totalInspired = await InspireModel.query().where({ receiver_id: character.GetId() }).count('id')
+        const totalInspired = await InspireModel.query().where({ receiver_id: character.GetId() }).count('id');
         return totalInspired[0].count || 0;
     }
 

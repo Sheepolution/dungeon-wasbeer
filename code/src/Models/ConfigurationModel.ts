@@ -17,7 +17,7 @@ export default class ConfigurationModel extends Model {
                 name: name,
                 value: value,
                 edit_date: Utils.GetNowString(),
-            })
+            });
 
         return configuration;
     }

@@ -21,11 +21,10 @@ import LogService from '../Services/LogService';
 import PlayerCard from '../Objects/PlayerCard';
 import PlayerManager from '../Managers/PlayerManager';
 import DiscordService from '../Services/DiscordService';
-import PlayerModel from '../Models/PlayerModel';
 
 export default class AdminHandler {
 
-    public static async OnCommand(messageInfo: IMessageInfo, player: Player, command: string, args: Array<string>, content: string) {
+    public static OnCommand(messageInfo: IMessageInfo, player: Player, command: string, args: Array<string>, content: string) {
         switch (command) {
             case 'restart-the-bot':
                 this.RestartTheBot(messageInfo, player);
@@ -89,7 +88,7 @@ export default class AdminHandler {
                 break;
             case 'give-card':
             case 'givecard':
-                this.GiveCard(messageInfo, args[0], args, player)
+                this.GiveCard(messageInfo, args[0], args, player);
                 break;
             case 'lock':
                 BotManager.SetLocked();
@@ -187,8 +186,8 @@ export default class AdminHandler {
         LogService.Log(player, receiver.GetId(), LogType.GiveCard, `${player.GetDiscordName()} geeft aan kaart aan ${receiver.GetDiscordName()} met het bericht '${message}'.`);
     }
 
-    private static async StartCampaign() {
-        CampaignManager.StartNewSession()
+    private static StartCampaign() {
+        CampaignManager.StartNewSession();
     }
 
     // CARDS ////////////////
@@ -223,7 +222,7 @@ export default class AdminHandler {
         if (args.m) {
             modifiers = CardService.ParseModifierStringToArray(args.m);
             if (modifiers == null) {
-                MessageService.ReplyMessage(messageInfo, 'Ik kan de modifiers niet parsen. Zorg dat je het juist formaat aanhoudt:\nattack=2/health=3')
+                MessageService.ReplyMessage(messageInfo, 'Ik kan de modifiers niet parsen. Zorg dat je het juist formaat aanhoudt:\nattack=2/health=3');
                 return;
             }
 
@@ -274,7 +273,7 @@ export default class AdminHandler {
         if (args.m) {
             modifiers = CardService.ParseModifierStringToArray(args.m);
             if (modifiers == null) {
-                MessageService.ReplyMessage(messageInfo, 'Ik kan de modifiers niet parsen. Zorg dat je het juist formaat aanhoudt:\nattack=2/health=3')
+                MessageService.ReplyMessage(messageInfo, 'Ik kan de modifiers niet parsen. Zorg dat je het juist formaat aanhoudt:\nattack=2/health=3');
                 return;
             }
         }
@@ -323,7 +322,7 @@ export default class AdminHandler {
         this.SendCardEmbed(messageInfo, card);
     }
 
-    private static async SendCardEmbed(messageInfo: IMessageInfo, card: Card) {
+    private static SendCardEmbed(messageInfo: IMessageInfo, card: Card) {
         MessageService.ReplyEmbed(messageInfo, CardEmbeds.GetCardEmbed(card));
     }
 
@@ -391,7 +390,7 @@ export default class AdminHandler {
             return;
         }
 
-        const monsterModifyResult = await MonsterManager.EditMonster(args.on, args.n, args.b, args.l, args.c, args.t, args.h, args.s, args.a, args.ab, args.abc)
+        const monsterModifyResult = await MonsterManager.EditMonster(args.on, args.n, args.b, args.l, args.c, args.t, args.h, args.s, args.a, args.ab, args.abc);
         if (monsterModifyResult.result) {
             MessageService.ReplyMessage(messageInfo, 'Het monster is aangepast!', true, true, MonsterEmbeds.GetMonsterEmbed(<Monster>monsterModifyResult.object));
         } else {
@@ -422,7 +421,7 @@ export default class AdminHandler {
         this.SendMonsterEmbed(messageInfo, monster);
     }
 
-    private static async SendMonsterEmbed(messageInfo: IMessageInfo, monster: Monster) {
+    private static SendMonsterEmbed(messageInfo: IMessageInfo, monster: Monster) {
         MessageService.ReplyEmbed(messageInfo, MonsterEmbeds.GetMonsterEmbed(monster));
     }
 }

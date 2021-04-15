@@ -120,7 +120,7 @@ export default class Battle {
 
     public async DealDamageToMonster(damage: number) {
         this.monsterHealth = Math.max(0, this.monsterHealth - damage);
-        await this.UPDATE({ monster_health: this.monsterHealth })
+        await this.UPDATE({ monster_health: this.monsterHealth });
         return damage;
     }
 
@@ -130,7 +130,7 @@ export default class Battle {
 
     public async HealMonster(amount: number) {
         this.monsterHealth = Math.min(this.monster.GetHealth(), this.monsterHealth + amount);
-        await this.UPDATE({ monster_health: this.monsterHealth })
+        await this.UPDATE({ monster_health: this.monsterHealth });
     }
 
     public async Complete() {
@@ -139,6 +139,6 @@ export default class Battle {
         await this.UPDATE({
             active: false,
             end_date: Utils.GetNowString(),
-        })
+        });
     }
 }

@@ -1,4 +1,4 @@
-export enum TopListType  {
+export enum TopListType {
     All,
     Current,
     Previous,

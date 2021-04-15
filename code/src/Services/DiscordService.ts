@@ -99,7 +99,7 @@ export default class DiscordService {
         try {
             const textChannel: TextChannel = <TextChannel>channel;
             if (embed) {
-                return await this.SendEmbed(textChannel, embed, message)
+                return await this.SendEmbed(textChannel, embed, message);
             }
             if (attachments != null) {
                 return await textChannel.send(message, attachments);
@@ -117,7 +117,7 @@ export default class DiscordService {
         const reply = `<@${member.user}> ${message}`;
 
         if (embed) {
-            return await this.SendEmbed(textChannel, embed, reply)
+            return await this.SendEmbed(textChannel, embed, reply);
         }
 
         if (attachments != null) {

@@ -29,7 +29,7 @@ export default class ChargeModel extends Model {
                 to: 'characters.id',
             }
         }
-    }
+    };
 
     public static async New(battle: Battle, character: Character, characterArmor: number, roll: number, finalCharge: number) {
         const chargeId = Utils.UUID();
@@ -43,7 +43,7 @@ export default class ChargeModel extends Model {
                 roll: roll,
                 final_charge: finalCharge,
                 charge_date: Utils.GetNowString(),
-            })
+            });
 
         return protection;
     }

@@ -29,7 +29,7 @@ export default class PrayerModel extends Model {
                 to: 'characters.id',
             }
         }
-    }
+    };
 
     public static async New(battle: Battle, character: Character, characterWisdom: number, roll: number, finalBlessing: number) {
         const prayerId = Utils.UUID();
@@ -43,7 +43,7 @@ export default class PrayerModel extends Model {
                 roll: roll,
                 final_blessing: finalBlessing,
                 pray_date: Utils.GetNowString(),
-            })
+            });
 
         return prayer;
     }

@@ -37,7 +37,7 @@ export default class ProtectionModel extends Model {
                 to: 'characters.id',
             }
         },
-    }
+    };
 
     public static async New(battle: Battle, character: Character, receiver: Character, characterArmor: number, roll: number, finalProtection: number) {
         const protectionId = Utils.UUID();
@@ -52,7 +52,7 @@ export default class ProtectionModel extends Model {
                 roll: roll,
                 final_protection: finalProtection,
                 protection_date: Utils.GetNowString(),
-            })
+            });
 
         return protection;
     }

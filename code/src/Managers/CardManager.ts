@@ -65,7 +65,7 @@ export default class CardManager {
         return cardModifyResult;
     }
 
-    public static async OnCardMessage(cardMessage: Message, playerCard: PlayerCard) {
+    public static OnCardMessage(cardMessage: Message, playerCard: PlayerCard) {
         cardMessage.react(EmojiConstants.STATUS.GOOD);
         ReactionManager.AddMessage(cardMessage, ReactionMessageType.PlayerCardGet, undefined, { cardId: playerCard.GetCard().GetId() });
     }
@@ -110,7 +110,7 @@ export default class CardManager {
         return cardModifyResult;
     }
 
-    private static async GetRandomCard() {
+    private static GetRandomCard() {
         const roll = Math.random() * 100;
         var rank = 1;
 

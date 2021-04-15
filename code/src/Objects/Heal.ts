@@ -26,7 +26,7 @@ export default class Heal {
     }
 
     public static async FIND_HEALS_RECEIVED_BY_CHARACTER(character: Character) {
-        const totalHealed = await HealModel.query().where({ receiver_id: character.GetId() }).count('id')
+        const totalHealed = await HealModel.query().where({ receiver_id: character.GetId() }).count('id');
         return totalHealed[0].count || 0;
     }
 

@@ -24,7 +24,7 @@ export default class Campaign {
         const model = models[0];
 
         if (model) {
-            await this.ApplyModel(model)
+            await this.ApplyModel(model);
             return true;
         }
 
@@ -74,6 +74,6 @@ export default class Campaign {
         await this.UPDATE({
             active: false,
             end_date: Utils.GetNowString(),
-        })
+        });
     }
 }

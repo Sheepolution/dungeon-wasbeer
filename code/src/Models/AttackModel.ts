@@ -29,7 +29,7 @@ export default class AttackModel extends Model {
                 to: 'characters.id',
             }
         }
-    }
+    };
 
     public static async New(battle: Battle, character: Character, messageId: string, rollCharacterBase: number, rollCharacterModifier: number, rollCharacterModifierMax: number, rollMonsterBase: number, rollMonsterModifier: number, rollMonsterModifierMax: number, victory: boolean, damage: number, healthAfter: number) {
         const attackId = Utils.UUID();
@@ -62,7 +62,7 @@ export default class AttackModel extends Model {
                 protection: character.GetProtection(),
                 charge: character.GetCharge(),
                 blessing: character.GetBlessing(),
-            })
+            });
 
         return attack;
     }
