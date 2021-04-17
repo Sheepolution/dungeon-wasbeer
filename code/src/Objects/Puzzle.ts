@@ -100,4 +100,12 @@ export default class Puzzle {
             solving_date: Utils.GetNowString(),
         });
     }
+
+    public GetDuration() {
+        if (this.solvingDate == null) {
+            return 0;
+        }
+
+        return Math.floor((this.solvingDate?.getTime() - this.creationDate.getTime()) / 1000);
+    }
 }

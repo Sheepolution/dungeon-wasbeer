@@ -3,6 +3,7 @@ import Puzzle from '../Objects/Puzzle';
 import ImageConstants from '../Constants/ImageConstants';
 import SettingsConstants from '../Constants/SettingsConstants';
 import PuzzleService from '../Services/PuzzleService';
+import { Utils } from '../Utils/Utils';
 
 export default class PuzzleEmbeds {
 
@@ -43,7 +44,8 @@ ${puzzle.GetContent()}`);
             .setColor(SettingsConstants.COLORS.GOOD)
             .setTitle('Opgelost!')
             .setImage(ImageConstants.SOLVED)
-            .setDescription('Kritisch denken is de sleutel tot succes.' + '\n\n```\n' + puzzle.GetSolution() + '\n```');
+            .setDescription('Kritisch denken is de sleutel tot succes.' + '\n\n```\n' + puzzle.GetSolution() + '\n```')
+            .setFooter(`Tijd: ${Utils.GetSecondsInMinutesAndSeconds(puzzle.GetDuration())}`);
 
         return embed;
     }
