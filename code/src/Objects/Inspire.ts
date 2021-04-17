@@ -124,7 +124,7 @@ export default class Inspire {
         this.character = await model.GetCharacter();
         this.receiver = await model.GetReceiver();
         this.roll = model.roll;
-        this.inspireDate = <Date>Utils.ConvertDateToUtc(model.inspire_date);
+        this.inspireDate = <Date>Utils.GetDateOrNull(model.inspire_date);
     }
 
     public GetId() {

@@ -36,9 +36,6 @@ export module Utils {
 
     export function GetNow() {
         const date = new Date;
-        date.setDate(date.getUTCDate());
-        date.setHours(date.getUTCHours());
-
         return date;
     }
 
@@ -47,19 +44,12 @@ export module Utils {
         return Utils.GetNow().toISOString();
     }
 
-    export function ConvertDateToUtc(date: Date) {
+    export function GetDateOrNull(date: string) {
         if (date == null) {
-            return undefined;
+            return null;
         }
 
-        if (date.getUTCDate == null) {
-            date = new Date(date);
-        }
-
-        date.setDate(date.getUTCDate());
-        date.setHours(date.getUTCHours());
-
-        return date;
+        return new Date(date);
     }
 
     // Boolean to bit - true = 1, false = 0

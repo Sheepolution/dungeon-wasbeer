@@ -74,7 +74,7 @@ export default class Charge {
         this.battle = await model.GetBattle();
         this.character = await model.GetCharacter();
         this.roll = model.roll;
-        this.chargeDate = <Date>Utils.ConvertDateToUtc(model.charge_date);
+        this.chargeDate = <Date>Utils.GetDateOrNull(model.charge_date);
     }
 
     public GetId() {

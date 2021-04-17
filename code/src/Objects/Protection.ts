@@ -124,7 +124,7 @@ export default class Protect {
         this.character = await model.GetCharacter();
         this.receiver = await model.GetReceiver();
         this.roll = model.roll;
-        this.protectDate = <Date>Utils.ConvertDateToUtc(model.protect_date);
+        this.protectDate = <Date>Utils.GetDateOrNull(model.protect_date);
     }
 
     public GetId() {

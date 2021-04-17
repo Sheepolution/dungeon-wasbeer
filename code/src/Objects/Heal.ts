@@ -140,7 +140,7 @@ export default class Heal {
         this.characterWisdom = model.character_wisdom;
         this.roll = model.roll;
         this.finalHealing = model.final_healing;
-        this.healDate = <Date>Utils.ConvertDateToUtc(model.heal_date);
+        this.healDate = <Date>Utils.GetDateOrNull(model.heal_date);
     }
 
     public GetId() {

@@ -74,7 +74,7 @@ export default class Prayer {
         this.battle = await model.GetBattle();
         this.character = await model.GetCharacter();
         this.roll = model.roll;
-        this.prayDate = <Date>Utils.ConvertDateToUtc(model.pray_date);
+        this.prayDate = <Date>Utils.GetDateOrNull(model.pray_date);
     }
 
     public GetId() {
