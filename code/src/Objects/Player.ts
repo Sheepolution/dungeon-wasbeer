@@ -231,6 +231,8 @@ export default class Player {
         for (const card of toEquipCards) {
             await character.Equip(card);
         }
+
+        await this.UPDATE({ character_id: this.character });
     }
 
     public async RemoveCharacter() {
