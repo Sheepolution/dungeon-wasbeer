@@ -232,7 +232,7 @@ export default class Player {
             await character.Equip(card);
         }
 
-        await this.UPDATE({ character_id: this.character });
+        await this.UPDATE({ character_id: this.character.GetId() });
     }
 
     public async RemoveCharacter() {
