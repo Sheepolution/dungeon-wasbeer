@@ -206,7 +206,7 @@ export default class Character {
         this.name = model.name;
         this.currentHealth = model.health;
         this.equipment = this.player.GetCards().filter(pc => pc.IsEquipped()).map(c => c.GetCard());
-        this.equipmentIds = model.equipment.split(',') || [];
+        this.equipmentIds = model.equipment?.split(',') || [];
         this.inspiration = model.inspiration;
         this.protection = model.protection;
         this.charge = 0;
