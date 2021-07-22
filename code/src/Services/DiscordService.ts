@@ -14,10 +14,10 @@ export default class DiscordService {
         this.client = client;
     }
 
-    public static async FindMember(searchKey: string, guild: Guild) {
+    public static async FindMember(searchKey: string, guild: Guild, fuzzy: Boolean = false) {
         // TODO: Research how fetching with query works. Does it work for both displayName and username?
         // For now we just fetch all.
-        const foundMember = await this.FindMemberById(searchKey, guild);
+        var foundMember = await this.FindMemberById(searchKey, guild);
         if (foundMember) {
             return foundMember;
         }
@@ -25,9 +25,21 @@ export default class DiscordService {
         await guild.members.fetch();
 
         const lowerMember = searchKey.toLowerCase();
-        return guild.members.cache.find(member => {
+        foundMember = guild.members.cache.find(member => {
             return member.displayName.toLowerCase() == lowerMember || member.user.username.toLowerCase() == lowerMember;
         });
+
+        if (foundMember) {
+            return foundMember;
+        }
+
+        if (fuzzy) {
+            return guild.members.cache.find(member => {
+                return member.displayName.toLowerCase().includes(lowerMember) || member.user.username.toLowerCase().includes(lowerMember);
+            });
+        }
+
+        return null;
     }
 
     public static async FindMemberById(searchKey: string, guild: Guild) {

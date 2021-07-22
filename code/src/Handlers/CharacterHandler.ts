@@ -430,10 +430,15 @@ export default class CharacterHandler {
 
         var receiver = character;
         if (mention != null) {
-            const receiverId = DiscordUtils.GetMemberId(mention);
+            var receiverId = DiscordUtils.GetMemberId(mention);
             if (receiverId == null) {
-                MessageService.ReplyMessage(messageInfo, 'Als je iemand anders dan jezelf wilt healen moet je die persoon taggen.\n`;heal @persoon`.', false);
-                return;
+                const member = await DiscordService.FindMember(mention, messageInfo.member.guild, true);
+                if (member != null) {
+                    receiverId = member.id;
+                } else {
+                    MessageService.ReplyMessage(messageInfo, 'Als je iemand anders dan jezelf wilt healen moet je die persoon taggen.\n`;heal @persoon`.', false);
+                    return;
+                }
             }
 
             const receiverPlayer = await PlayerManager.GetPlayer(receiverId);
@@ -568,10 +573,15 @@ export default class CharacterHandler {
 
         var receiver = character;
         if (mention != null) {
-            const receiverId = DiscordUtils.GetMemberId(mention);
+            var receiverId = DiscordUtils.GetMemberId(mention);
             if (receiverId == null) {
-                MessageService.ReplyMessage(messageInfo, 'Als je iemand anders dan jezelf wilt inspireren moet je die persoon taggen.\n`;inspireer @persoon`', false);
-                return;
+                const member = await DiscordService.FindMember(mention, messageInfo.member.guild, true);
+                if (member != null) {
+                    receiverId = member.id;
+                } else {
+                    MessageService.ReplyMessage(messageInfo, 'Als je iemand anders dan jezelf wilt inspireren moet je die persoon taggen.\n`;inspireer @persoon`', false);
+                    return;
+                }
             }
 
             const receiverPlayer = await PlayerManager.GetPlayer(receiverId);
@@ -654,10 +664,15 @@ export default class CharacterHandler {
 
         var receiver = character;
         if (mention != null) {
-            const receiverId = DiscordUtils.GetMemberId(mention);
+            var receiverId = DiscordUtils.GetMemberId(mention);
             if (receiverId == null) {
-                MessageService.ReplyMessage(messageInfo, 'Als je iemand anders dan jezelf wilt enchanten moet je die persoon taggen.\n`;enchant @persoon`', false);
-                return;
+                const member = await DiscordService.FindMember(mention, messageInfo.member.guild, true);
+                if (member != null) {
+                    receiverId = member.id;
+                } else {
+                    MessageService.ReplyMessage(messageInfo, 'Als je iemand anders dan jezelf wilt enchanten moet je die persoon taggen.\n`;enchant @persoon`', false);
+                    return;
+                }
             }
 
             const receiverPlayer = await PlayerManager.GetPlayer(receiverId);
@@ -724,10 +739,15 @@ export default class CharacterHandler {
 
         var receiver = character;
         if (mention != null) {
-            const receiverId = DiscordUtils.GetMemberId(mention);
+            var receiverId = DiscordUtils.GetMemberId(mention);
             if (receiverId == null) {
-                MessageService.ReplyMessage(messageInfo, 'Als je iemand anders dan jezelf een perception check wilt geven moet je die persoon taggen.\n`;perception @persoon`', false);
-                return;
+                const member = await DiscordService.FindMember(mention, messageInfo.member.guild, true);
+                if (member != null) {
+                    receiverId = member.id;
+                } else {
+                    MessageService.ReplyMessage(messageInfo, 'Als je iemand anders dan jezelf een perception check wilt geven moet je die persoon taggen.\n`;perception @persoon`', false);
+                    return;
+                }
             }
 
             const receiverPlayer = await PlayerManager.GetPlayer(receiverId);
@@ -800,10 +820,15 @@ export default class CharacterHandler {
 
         var receiver = character;
         if (mention != null) {
-            const receiverId = DiscordUtils.GetMemberId(mention);
+            var receiverId = DiscordUtils.GetMemberId(mention);
             if (receiverId == null) {
-                MessageService.ReplyMessage(messageInfo, 'Als je iemand anders dan jezelf wilt reinforcen moet je die persoon taggen.\n`;reinforce @persoon`', false);
-                return;
+                const member = await DiscordService.FindMember(mention, messageInfo.member.guild, true);
+                if (member != null) {
+                    receiverId = member.id;
+                } else {
+                    MessageService.ReplyMessage(messageInfo, 'Als je iemand anders dan jezelf wilt reinforcen moet je die persoon taggen.\n`;reinforce @persoon`', false);
+                    return;
+                }
             }
 
             const receiverPlayer = await PlayerManager.GetPlayer(receiverId);
@@ -874,10 +899,15 @@ export default class CharacterHandler {
 
         var receiver = character;
         if (mention != null) {
-            const receiverId = DiscordUtils.GetMemberId(mention);
+            var receiverId = DiscordUtils.GetMemberId(mention);
             if (receiverId == null) {
-                MessageService.ReplyMessage(messageInfo, 'Als je iemand anders dan jezelf wilt protecten moet je die persoon taggen.\n`;protect @persoon`', false);
-                return;
+                const member = await DiscordService.FindMember(mention, messageInfo.member.guild, true);
+                if (member != null) {
+                    receiverId = member.id;
+                } else {
+                    MessageService.ReplyMessage(messageInfo, 'Als je iemand anders dan jezelf wilt protecten moet je die persoon taggen.\n`;protect @persoon`', false);
+                    return;
+                }
             }
 
             const receiverPlayer = await PlayerManager.GetPlayer(receiverId);
