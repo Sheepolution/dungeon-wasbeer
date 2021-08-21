@@ -86,6 +86,10 @@ export default class AdminHandler {
             case 'saychat':
                 this.SayMessageChat(messageInfo, content, player);
                 break;
+            case 'say-art':
+            case 'sayart':
+                this.SayMessageArt(messageInfo, content, player);
+                break;
             case 'give-card':
             case 'givecard':
                 this.GiveCard(messageInfo, args[0], args, player);
@@ -136,6 +140,12 @@ export default class AdminHandler {
         await MessageService.SendMessageToChatChannel(message);
         MessageService.ReplyMessage(messageInfo, 'Ik heb het gezegd.', true, true);
         LogService.Log(player, player.GetId(), LogType.SayMessage, `${player.GetDiscordName()} zegt het bericht '${message}' in het chat-kanaal.`);
+    }
+
+    private static async SayMessageArt(messageInfo: IMessageInfo, message: string, player: Player) {
+        await MessageService.SendMessageToArtChannel(message);
+        MessageService.ReplyMessage(messageInfo, 'Ik heb het gezegd.', true, true);
+        LogService.Log(player, player.GetId(), LogType.SayMessage, `${player.GetDiscordName()} zegt het bericht '${message}' in het kunst-kanaal.`);
     }
 
     private static async GiveCard(messageInfo: IMessageInfo, receiverId: string, args: Array<string>, player: Player) {
