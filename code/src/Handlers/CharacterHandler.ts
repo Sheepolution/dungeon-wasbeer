@@ -394,7 +394,7 @@ export default class CharacterHandler {
         }
 
         if (!character.CanHeal()) {
-            MessageService.ReplyMessage(messageInfo, `Alleen clerics en paladins kunnen healen, en jij bent een ${character.GetClassName().toLowerCase()}.`, false);
+            MessageService.ReplyMessage(messageInfo, `Alleen clerics kunnen healen, en jij bent een ${character.GetClassName().toLowerCase()}.`, false);
             return;
         }
 
@@ -988,7 +988,7 @@ export default class CharacterHandler {
 
         const cooldown = await character.GetPrayCooldown();
         if (cooldown > 0) {
-            MessageService.ReplyMessage(messageInfo, `Je hebt nog ${Utils.GetSecondsInMinutesAndSeconds(cooldown)} cooldown voordat je weer mag protecten.`);
+            MessageService.ReplyMessage(messageInfo, `Je hebt nog ${Utils.GetSecondsInMinutesAndSeconds(cooldown)} cooldown voordat je weer mag bidden.`);
             return;
         }
 
