@@ -936,6 +936,13 @@ export default class Character {
         return true;
     }
 
+    public GetHealthFromUnequippedCard(amount: number) {
+        if (this.IsFullHealth()) { return false; }
+        this.currentHealth = Math.min(this.maxHealth, this.currentHealth + amount);
+        this.UPDATE({ health: this.currentHealth });
+        return true;
+    }
+
     public GetTotalEquipmentSpace() {
         return CharacterConstants.EQUIPMENT_SPACE_PER_LEVEL[this.level - 1];
     }
@@ -974,6 +981,25 @@ export default class Character {
 
         this.UPDATE({
             health: this.currentHealth,
+            equipment: this.equipment.map(c => c.GetId()).join(','),
+        });
+    }
+
+    public async ForceUnequip(playerCard: PlayerCard) {
+        await playerCard.SetEquipped(false);
+        const cardId = playerCard.GetCard().GetId();
+        const index = this.equipment.findIndex(c => c.GetId() == cardId);
+        this.equipment.splice(index, 1);
+
+        const card = playerCard.GetCard();
+        const modifierStats = card.GetModifierStats();
+        if (modifierStats.health > 0) {
+            this.GetHealthFromUnequippedCard(modifierStats.health);
+        }
+
+        this.UpdateFullModifierStats();
+
+        this.UPDATE({
             equipment: this.equipment.map(c => c.GetId()).join(','),
         });
     }

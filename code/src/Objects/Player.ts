@@ -109,7 +109,7 @@ export default class Player {
     }
 
     public GetCards() {
-        return this.playerCards;
+        return this.playerCards.filter(c => c.GetAmount() > 0);
     }
 
     public GetShoeState() {

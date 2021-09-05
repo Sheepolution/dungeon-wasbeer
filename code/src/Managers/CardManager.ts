@@ -10,6 +10,7 @@ import EmojiConstants from '../Constants/EmojiConstants';
 import ReactionManager from './ReactionManager';
 import { ReactionMessageType } from '../Enums/ReactionMessageType';
 import PlayerManager from './PlayerManager';
+import Character from '../Objects/Character';
 
 export default class CardManager {
 
@@ -108,6 +109,29 @@ export default class CardManager {
 
         cardModifyResult.result = true;
         return cardModifyResult;
+    }
+
+    public static async TakeEquippedCard(character: Character) {
+        const player = character.GetPlayer();
+        const playerCards = player.GetCards();
+        if (playerCards.length == 0) {
+            return;
+        }
+
+        const equippedCards = playerCards.filter(c => c.IsEquipped());
+
+        if (equippedCards.length == 0) {
+            return false;
+        }
+
+        const playerCard = equippedCards.randomChoice();
+        await playerCard.TakeOne();
+        await character.ForceUnequip(playerCard);
+        return playerCard;
+    }
+
+    public static async ResetTakenCards() {
+        await PlayerCard.ResetTaken();
     }
 
     private static GetRandomCard() {

@@ -7,6 +7,7 @@ export default class PlayerCard {
     private card: Card;
     private amount: number;
     private equipped: number;
+    private taken: number;
     private player: Player;
     private isUsedInTrade: boolean;
 
@@ -23,6 +24,10 @@ export default class PlayerCard {
             .orderBy('player_cards.amount');
 
         return list;
+    }
+
+    public static async ResetTaken() {
+        await PlayerCardModel.query().patch({taken: 0});
     }
 
     public async GET(id: string) {
@@ -51,6 +56,7 @@ export default class PlayerCard {
         this.card = await model.GetCard();
         this.amount = model.amount;
         this.equipped = model.equipped;
+        this.taken = model.taken || 0;
     }
 
     public GetId() {
@@ -88,6 +94,11 @@ export default class PlayerCard {
         return true;
     }
 
+    public async TakeOne() {
+        this.taken += 1;
+        await this.UPDATE({ taken: this.taken });
+    }
+
     public GetCard() {
         return this.card;
     }
@@ -97,7 +108,7 @@ export default class PlayerCard {
     }
 
     public GetAmount() {
-        return this.amount;
+        return this.amount - this.taken;
     }
 
     public CanBeTraded() {

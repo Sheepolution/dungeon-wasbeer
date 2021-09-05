@@ -14,6 +14,7 @@ import { LogType } from '../Enums/LogType';
 import EmojiConstants from '../Constants/EmojiConstants';
 import LogService from '../Services/LogService';
 import Charge from '../Objects/Charge';
+import CardManager from '../Managers/CardManager';
 
 export default class BattleHandler {
 
@@ -372,6 +373,11 @@ export default class BattleHandler {
             monsterAttackStrength = 20 + battle.GetMonsterAttackRoll();
         }
 
+        if (monsterId == '64a667a2-5dee-4d64-beb8-77dc83cee15c') {
+            await CardManager.TakeEquippedCard(character);
+            await CardManager.TakeEquippedCard(character);
+        }
+
         const damage = await this.ResolveAttackResult(messageInfo, message, battle, character, playerWon, playerWon ? playerStrength : monsterAttackStrength, roll1, roll2, roll3, 0);
         await this.UpdateBattleEmbed(message, battle, character, roll1, roll2, roll3, 0, playerWon, damage, true);
         await this.UpdateStates(character);
@@ -413,6 +419,10 @@ export default class BattleHandler {
                 await battle.HealMonster(receivedDamage);
             }
 
+            if (monsterId == '64a667a2-5dee-4d64-beb8-77dc83cee15c') {
+                await CardManager.TakeEquippedCard(character);
+            }
+
             if (character.IsDead()) {
                 this.OnDefeatingCharacter(messageInfo, character);
             } else {
@@ -428,6 +438,11 @@ export default class BattleHandler {
     }
 
     private static async OnDefeatingMonster(battle: Battle) {
+        if (battle.GetMonster().GetId() == '64a667a2-5dee-4d64-beb8-77dc83cee15c') {
+            await CardManager.ResetTakenCards();
+            PlayerManager.ResetPlayerCache();
+        }
+
         await battle.Complete();
         await MessageService.SendMessageToDNDChannel(`De ${battle.GetMonster().GetName()} is verslagen! Iedereen die heeft meegeholpen in deze strijd heeft XP ontvangen.`);
         await CampaignManager.OnCompletingSession();
