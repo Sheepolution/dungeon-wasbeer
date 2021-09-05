@@ -26,8 +26,6 @@ import Protection from '../Objects/Protection';
 import Prayer from '../Objects/Prayer';
 import Attack from '../Objects/Attack';
 
-const Canvas = require('canvas');
-
 export default class CharacterHandler {
 
     private static readonly classNames = Object.keys(ClassType);
@@ -214,9 +212,9 @@ export default class CharacterHandler {
             case 'ikweetzekerdatikwilstoppenmetditcharacter':
                 this.OnResetConfirm(messageInfo, player);
                 break;
-            case 'profile':
-                this.OnProfile(messageInfo, player);
-                break;
+            // case 'profile':
+            //     this.OnProfile(messageInfo, player);
+            //     break;
             default:
                 return false;
         }
@@ -1854,89 +1852,89 @@ export default class CharacterHandler {
         }
     }
 
-    private static async OnProfile(messageInfo: IMessageInfo, player: Player) {
-        const character = PlayerManager.GetCharacterFromPlayer(messageInfo, player);
-        if (character == null) {
-            return;
-        }
+    // private static async OnProfile(messageInfo: IMessageInfo, player: Player) {
+    //     const character = PlayerManager.GetCharacterFromPlayer(messageInfo, player);
+    //     if (character == null) {
+    //         return;
+    //     }
 
-        const applyText = (canvas: any, text: any) => {
-            const ctx = canvas.getContext('2d');
+    //     const applyText = (canvas: any, text: any) => {
+    //         const ctx = canvas.getContext('2d');
 
-            // Declare a base size of the font
-            let fontSize = 70;
+    //         // Declare a base size of the font
+    //         let fontSize = 70;
 
-            do {
-                // Assign the font to the context and decrement it so it can be measured again
-                ctx.font = `${fontSize -= 10}px sans-serif`;
-                // Compare pixel width of the text to the canvas minus the approximate avatar size
-            } while (ctx.measureText(text).width > canvas.width - 300);
+    //         do {
+    //             // Assign the font to the context and decrement it so it can be measured again
+    //             ctx.font = `${fontSize -= 10}px sans-serif`;
+    //             // Compare pixel width of the text to the canvas minus the approximate avatar size
+    //         } while (ctx.measureText(text).width > canvas.width - 300);
 
-            // Return the result to use in the actual canvas
-            return ctx.font;
-        };
+    //         // Return the result to use in the actual canvas
+    //         return ctx.font;
+    //     };
 
-        const equipment = character.GetEquipment();
+    //     const equipment = character.GetEquipment();
 
-        const canvas = Canvas.createCanvas(700, 250 + 133 * Math.ceil(equipment.length / 5));
-        const ctx = canvas.getContext('2d');
+    //     const canvas = Canvas.createCanvas(700, 250 + 133 * Math.ceil(equipment.length / 5));
+    //     const ctx = canvas.getContext('2d');
 
-        // const background = await Canvas.loadImage('./wallpaper.jpg');
-        // ctx.drawImage(background, 0, 0, canvas.width, canvas.height);
+    //     // const background = await Canvas.loadImage('./wallpaper.jpg');
+    //     // ctx.drawImage(background, 0, 0, canvas.width, canvas.height);
 
-        ctx.strokeStyle = '#000000';
-        ctx.fillRect(0, 0, canvas.width, canvas.height);
+    //     ctx.strokeStyle = '#000000';
+    //     ctx.fillRect(0, 0, canvas.width, canvas.height);
 
-        // ctx.beginPath();
-        // ctx.arc(125, 125, 100, 0, Math.PI * 2, true);
-        // ctx.closePath();
-        // ctx.clip();
+    //     // ctx.beginPath();
+    //     // ctx.arc(125, 125, 100, 0, Math.PI * 2, true);
+    //     // ctx.closePath();
+    //     // ctx.clip();
 
-        const avatar = await Canvas.loadImage(character.GetAvatarUrl());
-        const higherWidth = avatar.width > avatar.height;
-        const factor = higherWidth ? 200 / avatar.width : 200 / avatar.height;
-        const width = avatar.width * factor;
-        const height = avatar.height * factor;
-        ctx.drawImage(avatar, 25 + (200 - width) / 2, 25 + (200 - height) / 2, width, height);
+    //     const avatar = await Canvas.loadImage(character.GetAvatarUrl());
+    //     const higherWidth = avatar.width > avatar.height;
+    //     const factor = higherWidth ? 200 / avatar.width : 200 / avatar.height;
+    //     const width = avatar.width * factor;
+    //     const height = avatar.height * factor;
+    //     ctx.drawImage(avatar, 25 + (200 - width) / 2, 25 + (200 - height) / 2, width, height);
 
-        var done = false;
-        for (let i = 0; i < 3; i++) {
-            for (let j = 0; j < 5; j++) {
-                const index = i * 5 + j;
-                if (index > equipment.length - 1) {
-                    done = true;
-                    break;
-                }
+    //     var done = false;
+    //     for (let i = 0; i < 3; i++) {
+    //         for (let j = 0; j < 5; j++) {
+    //             const index = i * 5 + j;
+    //             if (index > equipment.length - 1) {
+    //                 done = true;
+    //                 break;
+    //             }
 
-                const card = equipment[index];
-                const cardImage = await Canvas.loadImage(card.GetImageUrl());
-                const higherWidth = cardImage.width > cardImage.height;
-                const factor = higherWidth ? 125 / cardImage.width : 125 / cardImage.height;
-                const width = cardImage.width * factor;
-                const height = cardImage.height * factor;
-                ctx.fillStyle = '#24120D';
-                ctx.strokeStyle = '#693427';
-                ctx.strokeWidth = 2;
-                ctx.fillRect(25 + j * 130, 250 + i * 130, 125, 125);
-                ctx.strokeRect(25 + j * 130, 250 + i * 130, 125, 125);
-                ctx.drawImage(cardImage, 25 + j * 130 + (125 - width) / 2, 250 + i * 130 + (125 - height) / 2, width, height); j;
-            }
+    //             const card = equipment[index];
+    //             const cardImage = await Canvas.loadImage(card.GetImageUrl());
+    //             const higherWidth = cardImage.width > cardImage.height;
+    //             const factor = higherWidth ? 125 / cardImage.width : 125 / cardImage.height;
+    //             const width = cardImage.width * factor;
+    //             const height = cardImage.height * factor;
+    //             ctx.fillStyle = '#24120D';
+    //             ctx.strokeStyle = '#693427';
+    //             ctx.strokeWidth = 2;
+    //             ctx.fillRect(25 + j * 130, 250 + i * 130, 125, 125);
+    //             ctx.strokeRect(25 + j * 130, 250 + i * 130, 125, 125);
+    //             ctx.drawImage(cardImage, 25 + j * 130 + (125 - width) / 2, 250 + i * 130 + (125 - height) / 2, width, height); j;
+    //         }
 
-            if (done) {
-                break;
-            }
-        }
+    //         if (done) {
+    //             break;
+    //         }
+    //     }
 
-        // Add an exclamation point here and below
-        // ctx.font = applyText(canvas, `${character.GetName()}!`);
-        ctx.font = applyText(canvas, character.GetName());
-        ctx.fillStyle = '#ffffff';
-        ctx.fillText(character.GetName(), canvas.width / 2.5 - 20, 100);
+    //     // Add an exclamation point here and below
+    //     // ctx.font = applyText(canvas, `${character.GetName()}!`);
+    //     ctx.font = applyText(canvas, character.GetName());
+    //     ctx.fillStyle = '#ffffff';
+    //     ctx.fillText(character.GetName(), canvas.width / 2.5 - 20, 100);
 
-        const attachment = DiscordService.GetMessageAttachment(canvas.toBuffer(), 'profile.png');
+    //     const attachment = DiscordService.GetMessageAttachment(canvas.toBuffer(), 'profile.png');
 
-        MessageService.ReplyMessage(messageInfo, '', undefined, undefined, undefined, [attachment]);
-    }
+    //     MessageService.ReplyMessage(messageInfo, '', undefined, undefined, undefined, [attachment]);
+    // }
 
     private static SendEquipment(messageInfo: IMessageInfo, player: Player) {
         const character = PlayerManager.GetCharacterFromPlayer(messageInfo, player);
