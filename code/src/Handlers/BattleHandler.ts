@@ -257,6 +257,14 @@ export default class BattleHandler {
                 roll4 = Utils.Dice(monsterAttackRoll);
             }
 
+            if (monsterId == '3125ae9e-d51b-4cf0-a964-d92cf4f711ac') {
+                const secondRoll4 = Utils.Dice(playerAttackRoll);
+
+                if (secondRoll4 > roll4) {
+                    roll4 = secondRoll4;
+                }
+            }
+
             var playerWon = roll1 + (roll2 || 0) >= roll3 + (roll4 || 0);
             if (monsterId == '57ea9222-d3d5-4f26-96a7-07c7415d3873') {
                 playerWon = !playerWon;
