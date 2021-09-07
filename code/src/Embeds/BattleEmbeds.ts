@@ -3,16 +3,23 @@ import Character from '../Objects/Character';
 import SettingsConstants from '../Constants/SettingsConstants';
 import { Utils } from '../Utils/Utils';
 import { MessageEmbed } from 'discord.js';
+import EmojiConstants from '../Constants/EmojiConstants';
 
 export default class BattleEmbeds {
 
     public static GetBattleInfoEmbed(battle: Battle) {
         const monster = battle.GetMonster();
 
+        var monsterName = monster.GetName();
+
         var attackStrength: string | number = monster.GetAttackStrength();
         var attackRoll: string | number = monster.GetAttackRoll();
 
         const monsterId = monster.GetId();
+
+        if (monster.GetId() == '3125ae9e-d51b-4cf0-a964-d92cf4f711ac') {
+            monsterName = `${monsterName} ${EmojiConstants.DNW_STATES.ENCHANTED}`;
+        }
 
         if (monsterId == 'fedbc712-557b-414e-ac05-0f283682cb1a' || monsterId == '50a3d80c-80b9-49a9-9411-0953d12422b1' || monsterId == 'e6e3aa15-b39b-40aa-a113-6b5add2994c4') {
             attackStrength = '???';
@@ -24,7 +31,7 @@ export default class BattleEmbeds {
         const embed = new MessageEmbed()
             .setColor(SettingsConstants.COLORS.MONSTER)
             .setAuthor(monster.GetCategory(), 'https://cdn.discordapp.com/attachments/694331679204180029/698606955496734781/unknown.png')
-            .setTitle(monster.GetName())
+            .setTitle(monsterName)
             .setDescription(monster.GetDescription())
             .setImage(battle.GetMonsterImageUrl())
             .addField('Level', monster.GetLevelString())
@@ -45,7 +52,9 @@ export default class BattleEmbeds {
         const monsterAttack = battle.GetMonsterAttackRoll();
         var monsterStrength: string | number = battle.GetMonsterAttackStrength();
 
-        if (monster.GetId() == 'e6e3aa15-b39b-40aa-a113-6b5add2994c4') {
+        const monsterId = monster.GetId();
+
+        if (monsterId == 'e6e3aa15-b39b-40aa-a113-6b5add2994c4') {
             monsterStrength = '???';
         }
 
@@ -53,7 +62,7 @@ export default class BattleEmbeds {
             .setColor(SettingsConstants.COLORS.DEFAULT)
             .setAuthor('Aanval')
             .setThumbnail(playerWon ? character.GetAvatarUrl() : battle.GetMonsterImageUrl())
-            .setTitle(`${characterName}${character.GetEnhancementsString()} VS ${monsterName}`)
+            .setTitle(`${characterName}${character.GetEnhancementsString()} VS ${monsterName}${monsterId == '3125ae9e-d51b-4cf0-a964-d92cf4f711ac' ? ` ${EmojiConstants.DNW_STATES.ENCHANTED}` : ''}`)
             .setDescription('-- Statistieken --')
             .addField(characterName, `Health: ${character.GetCurrentHealth() + character.GetProtection()}/${character.GetMaxHealth()}\n${character.GetAttackName()}: ${characterStrength}\nAttack: ${characterAttack}\nArmor: ${character.GetArmor()}`, true)
             .addField(monsterName, `Health: ${battle.GetCurrentMonsterHealth()}/${battle.GetMaxMonsterHealth()}\nStrength: ${monsterStrength}\nAttack: ${monsterAttack}`, true)

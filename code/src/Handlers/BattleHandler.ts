@@ -259,9 +259,18 @@ export default class BattleHandler {
 
             if (monsterId == '3125ae9e-d51b-4cf0-a964-d92cf4f711ac') {
                 const secondRoll4 = Utils.Dice(playerAttackRoll);
+                var lowestRoll = 0;
 
-                if (secondRoll4 > roll4) {
+                if (secondRoll4 < roll4) {
+                    lowestRoll = secondRoll4;
+                } else {
+                    lowestRoll = roll4;
                     roll4 = secondRoll4;
+                }
+
+                if (lowestRoll != roll4) {
+                    await this.UpdateBattleEmbed(message, battle, character, roll1, roll2, roll3, lowestRoll);
+                    await Utils.Sleep(1.5);
                 }
             }
 
@@ -271,6 +280,8 @@ export default class BattleHandler {
             }
 
             if (playerWon && !secondAttack && monsterId == 'fb835c7f-0eea-402f-97a2-e4f9cdd7fc35') {
+                await this.UpdateBattleEmbed(message, battle, character, roll1, roll2, roll3, roll4);
+                await Utils.Sleep(1.5);
                 secondAttack = true;
             } else {
                 var playerStrength = character.GetAttackStrength();
