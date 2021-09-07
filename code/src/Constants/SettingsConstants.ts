@@ -88,4 +88,6 @@ export default class SettingsConstants {
     public static readonly STANDARD_DICE = 20;
 
     public static readonly LORE_MAX_LENGTH = 1500;
+
+    public static readonly MONSTER_PICK_CHANCE = 5;
 }

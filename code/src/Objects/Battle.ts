@@ -16,6 +16,17 @@ export default class Battle {
         return battles[0].count || 0;
     }
 
+    public static async GET_MONSTER_COUNT_LIST() {
+        const knex = BattleModel.knex();
+        const monsters = await knex.raw(`
+            select m.id, count(b.id) c
+            from monsters m left join
+                battles b on b.monster_id = m.id
+            group by m.id
+            order by c`);
+        return monsters.rows;
+    }
+
     public async GET(id: string) {
         const model: BattleModel = await BattleModel.query().findById(id);
         await this.ApplyModel(model);

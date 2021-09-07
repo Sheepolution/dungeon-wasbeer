@@ -2,6 +2,8 @@ import Monster from '../Objects/Monster';
 import IObjectModifyResult from '../Interfaces/IObjectModifyResult';
 import { AttackType } from '../Enums/AttackType';
 import Battle from '../Objects/Battle';
+import { Utils } from '../Utils/Utils';
+import SettingsConstants from '../Constants/SettingsConstants';
 
 export default class MonsterManager {
 
@@ -59,9 +61,17 @@ export default class MonsterManager {
         if (count == 201 || (count > 100 && (count + 1) % 100 == 0)) {
             return <Monster>this.monsterList.find(m => m.GetId() == '20110b21-0a15-48f8-83a9-b4f804235355');
         }
+
+        const monsterCountList = await Battle.GET_MONSTER_COUNT_LIST();
+
         var monster: Monster = new Monster();
         do {
-            monster = this.monsterList.randomChoice();
+            for (const row of monsterCountList) {
+                if (Utils.Chance(SettingsConstants.MONSTER_PICK_CHANCE)) {
+                    monster = <Monster>this.monsterList.find(m => m.GetId() == row.id);
+                    break;
+                }
+            }
         } while ((previousMonster != null && monster.GetId() == previousMonster.GetId()) || monster.GetId() == '20110b21-0a15-48f8-83a9-b4f804235355');
 
         return monster;
