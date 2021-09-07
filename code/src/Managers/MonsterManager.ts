@@ -64,7 +64,7 @@ export default class MonsterManager {
 
         const monsterCountList = await Battle.GET_MONSTER_COUNT_LIST();
 
-        var monster: Monster = new Monster();
+        var monster: Monster | null = null;
         do {
             for (const row of monsterCountList) {
                 if (Utils.Chance(SettingsConstants.MONSTER_PICK_CHANCE)) {
@@ -72,7 +72,7 @@ export default class MonsterManager {
                     break;
                 }
             }
-        } while ((previousMonster != null && monster.GetId() == previousMonster.GetId()) || monster.GetId() == '20110b21-0a15-48f8-83a9-b4f804235355');
+        } while (monster != null && ((previousMonster != null && monster.GetId() == previousMonster.GetId()) || monster.GetId() == '20110b21-0a15-48f8-83a9-b4f804235355'));
 
         return monster;
     }
