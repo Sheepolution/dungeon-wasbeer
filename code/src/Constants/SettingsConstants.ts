@@ -89,5 +89,5 @@ export default class SettingsConstants {
 
     public static readonly LORE_MAX_LENGTH = 1500;
 
-    public static readonly MONSTER_PICK_CHANCE = 5;
+    public static readonly MONSTER_PICK_CHANCE = 10;
 }
