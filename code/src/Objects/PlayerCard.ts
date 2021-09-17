@@ -19,7 +19,7 @@ export default class PlayerCard {
         const list = await PlayerCardModel.query()
             .join('players', 'players.id', '=', 'player_cards.player_id')
             .join('cards', 'cards.id', '=', 'player_cards.card_id')
-            .select('players.discord_name', 'player_cards.amount', 'player_cards.equipped')
+            .select('players.discord_name', 'player_cards.amount', 'player_cards.equipped', 'player_cards.taken')
             .where('cards.name', '=', name)
             .orderBy('player_cards.amount');
 
