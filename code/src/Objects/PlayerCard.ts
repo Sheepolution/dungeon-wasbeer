@@ -21,7 +21,6 @@ export default class PlayerCard {
             .join('cards', 'cards.id', '=', 'player_cards.card_id')
             .select('players.discord_name', 'player_cards.amount', 'player_cards.equipped')
             .where('cards.name', '=', name)
-            .andWhere('player_cards.taken', '!=', '1')
             .orderBy('player_cards.amount');
 
         return list;

@@ -394,6 +394,8 @@ export default class PlayerCardHandler {
             }
         }
 
+        finalOwnerList = finalOwnerList.filter((c: any) => c.taken != 1);
+
         if (finalCard == null) {
             this.SendCardNotFound(messageInfo, searchKey);
             return;

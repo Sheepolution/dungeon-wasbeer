@@ -29,7 +29,8 @@ export default class PlayerCardModel extends Model {
                 player_id: playerId,
                 card_id: cardId,
                 amount: amount,
-                equipped: 0
+                equipped: 0,
+                taken: 0,
             });
 
         return playerCard;
