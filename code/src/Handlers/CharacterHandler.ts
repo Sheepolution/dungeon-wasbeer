@@ -308,6 +308,11 @@ export default class CharacterHandler {
             return;
         }
 
+        if (character.IsInBattle()) {
+            MessageService.ReplyMessage(messageInfo, 'Je kan je equipment niet aanpassen want je zit momenteel in een gevecht.', false);
+            return;
+        }
+
         if (cardName == null) {
             MessageService.ReplyMissingCardName(messageInfo);
             return;
