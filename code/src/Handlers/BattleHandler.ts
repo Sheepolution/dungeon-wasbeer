@@ -258,7 +258,7 @@ export default class BattleHandler {
             }
 
             if (monsterId == '3125ae9e-d51b-4cf0-a964-d92cf4f711ac') {
-                const secondRoll4 = Utils.Dice(playerAttackRoll);
+                const secondRoll4 = Utils.Dice(monsterAttackRoll);
                 var lowestRoll = 0;
 
                 if (secondRoll4 < roll4) {
