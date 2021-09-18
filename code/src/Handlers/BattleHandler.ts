@@ -192,7 +192,15 @@ export default class BattleHandler {
         }
 
         await Utils.Sleep(3);
-        const roll1 = Utils.Dice(20);
+
+        var roll1 = Utils.Dice(20);
+
+        if (monsterId == 'a647e1bb-cbf6-48a3-9a4d-3d619fd3a619') {
+            while (roll1 == 1 || roll1 == 20) {
+                roll1 = Utils.Dice(20);
+            }
+        }
+
         if (roll1 == 1) {
             this.OnMonsterCrit(messageInfo, message, battle, character, roll1, undefined, undefined);
             return;
@@ -239,7 +247,13 @@ export default class BattleHandler {
             await this.UpdateBattleEmbed(message, battle, character, roll1, roll2);
             await Utils.Sleep(3);
 
-            const roll3 = Utils.Dice(20);
+            var roll3 = Utils.Dice(20);
+
+            if (monsterId == 'a647e1bb-cbf6-48a3-9a4d-3d619fd3a619') {
+                while (roll3 == 1 || roll3 == 20) {
+                    roll3 = Utils.Dice(20);
+                }
+            }
 
             if (roll3 == 20) {
                 this.OnMonsterCrit(messageInfo, message, battle, character, roll1, roll2, roll3);
