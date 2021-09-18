@@ -368,7 +368,6 @@ export default class BattleHandler {
 
         if (monsterId == '64a667a2-5dee-4d64-beb8-77dc83cee15c') {
             await CardManager.GiveBackTakenCard(character);
-            await CardManager.GiveBackTakenCard(character);
         }
 
         const damage = await this.ResolveAttackResult(messageInfo, message, battle, character, playerWon, playerWon ? character.GetAttackStrength(true) : battle.GetMonsterAttackStrength(true), roll1, roll2, roll3, 0);
@@ -399,7 +398,6 @@ export default class BattleHandler {
         }
 
         if (monsterId == '64a667a2-5dee-4d64-beb8-77dc83cee15c') {
-            await CardManager.TakeEquippedCard(character);
             await CardManager.TakeEquippedCard(character);
         }
 
