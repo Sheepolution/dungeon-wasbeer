@@ -360,9 +360,15 @@ export default class BattleHandler {
     }
 
     private static async OnCharacterCrit(messageInfo: IMessageInfo, message: Message, battle: Battle, character: Character, roll1: number, roll2: number = 0, roll3: number = 0) {
+        const monsterId = battle.GetMonster().GetId();
         var playerWon = true;
-        if (battle.GetMonster().GetId() == '57ea9222-d3d5-4f26-96a7-07c7415d3873') {
+        if (monsterId == '57ea9222-d3d5-4f26-96a7-07c7415d3873') {
             playerWon = false;
+        }
+
+        if (monsterId == '64a667a2-5dee-4d64-beb8-77dc83cee15c') {
+            await CardManager.GiveBackTakenCard(character);
+            await CardManager.GiveBackTakenCard(character);
         }
 
         const damage = await this.ResolveAttackResult(messageInfo, message, battle, character, playerWon, playerWon ? character.GetAttackStrength(true) : battle.GetMonsterAttackStrength(true), roll1, roll2, roll3, 0);
@@ -416,6 +422,10 @@ export default class BattleHandler {
 
             character.SetInBattle(false);
             character.GiveDamagePoints(receivedDamage, battle.GetId(), messageInfo);
+
+            if (monsterId == '64a667a2-5dee-4d64-beb8-77dc83cee15c') {
+                await CardManager.GiveBackTakenCard(character);
+            }
 
             if (battle.IsMonsterDead()) {
                 BattleHandler.inBattle = false;

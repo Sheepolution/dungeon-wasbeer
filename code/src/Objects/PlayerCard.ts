@@ -99,6 +99,12 @@ export default class PlayerCard {
         await this.UPDATE({ taken: this.taken });
     }
 
+    public async GiveOneBack() {
+        this.taken -= 1;
+        this.taken = Math.max(0, this.taken);
+        await this.UPDATE({ taken: this.taken });
+    }
+
     public GetCard() {
         return this.card;
     }
@@ -109,6 +115,10 @@ export default class PlayerCard {
 
     public GetAmount() {
         return this.amount - this.taken;
+    }
+
+    public GetTaken() {
+        return this.taken;
     }
 
     public CanBeTraded() {

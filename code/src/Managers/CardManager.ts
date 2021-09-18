@@ -130,6 +130,18 @@ export default class CardManager {
         return playerCard;
     }
 
+    public static async GiveBackTakenCard(character: Character) {
+        const player = character.GetPlayer();
+        const playerCards = player.GetTakenCards();
+        if (playerCards.length == 0) {
+            return;
+        }
+
+        const playerCard = playerCards.randomChoice();
+        await playerCard.GiveOneBack();
+        return playerCard;
+    }
+
     public static async ResetTakenCards() {
         await PlayerCard.ResetTaken();
     }
