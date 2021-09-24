@@ -959,16 +959,16 @@ export default class Character {
         return this.equipment.length < this.GetTotalEquipmentSpace();
     }
 
-    public async Equip(playerCard: PlayerCard) {
+    public async Equip(playerCard: PlayerCard, trx?: any) {
         await playerCard.SetEquipped(true);
         this.equipment.push(playerCard.GetCard());
         this.UpdateFullModifierStats();
         this.currentHealth = this.GetMaxHealth();
 
-        this.UPDATE({
+        await this.UPDATE({
             health: this.currentHealth,
             equipment: this.equipment.map(e => e.GetId()).join(','),
-        });
+        }, trx);
     }
 
     public async Unequip(playerCard: PlayerCard) {
@@ -979,7 +979,7 @@ export default class Character {
         this.UpdateFullModifierStats();
         this.currentHealth = this.GetMaxHealth();
 
-        this.UPDATE({
+        await this.UPDATE({
             health: this.currentHealth,
             equipment: this.equipment.map(c => c.GetId()).join(','),
         });

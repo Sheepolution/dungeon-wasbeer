@@ -25,6 +25,9 @@ import DiscordService from '../Services/DiscordService';
 import Protection from '../Objects/Protection';
 import Prayer from '../Objects/Prayer';
 import Attack from '../Objects/Attack';
+import Equipment from '../Objects/Equipment';
+import CharacterModel from '../Models/CharacterModel';
+import { transaction } from 'objection';
 
 export default class CharacterHandler {
 
@@ -81,6 +84,12 @@ export default class CharacterHandler {
                 break;
             case 'unequip':
                 this.Unequip(messageInfo, player, content);
+                break;
+            case 'save':
+                this.SaveEquipment(messageInfo, player, content);
+                break;
+            case 'restore':
+                this.RestoreEquipment(messageInfo, player, content);
                 break;
             case 'heal':
             case 'genees':
@@ -388,6 +397,71 @@ export default class CharacterHandler {
 
         await character.Unequip(playerCard);
         MessageService.ReplyMessage(messageInfo, `De kaart '${realCardName}' is uit je equipment gehaald.`, true, true, CharacterEmbeds.GetEquipmentEmbed(character));
+    }
+
+    private static async SaveEquipment(messageInfo: IMessageInfo, player: Player, name: string) {
+        const character = PlayerManager.GetCharacterFromPlayer(messageInfo, player);
+        if (character == null) {
+            return;
+        }
+
+        if (name == null || name == '') {
+            MessageService.ReplyMessage(messageInfo, 'Sla je huidige equipment op met `;save [name]`.');
+            return;
+        }
+
+        if (name.length > 100) {
+            MessageService.ReplyMessage(messageInfo, `De naam mag niet langer zijn dan 100 tekens, en jouw gegeven naam is ${name.length} tekens.`, false, true);
+            return;
+        }
+
+        name = name.toLowerCase();
+
+        const equipment = new Equipment();
+
+        if (await equipment.FIND_BY_NAME(player.GetId(), name)) {
+            await equipment.SetCardIds(character.GetEquipmentIds());
+            MessageService.ReplyMessage(messageInfo, 'De opgeslagen equipment is geupdate.', true, true);
+            return;
+        }
+
+        await equipment.POST(player.GetId(), name, character.GetEquipmentIds());
+        MessageService.ReplyMessage(messageInfo, `Je huidige equipment is nu opgeslagen als '${name}'.`, true, true);
+    }
+
+    private static async RestoreEquipment(messageInfo: IMessageInfo, player: Player, name: string) {
+        const character = PlayerManager.GetCharacterFromPlayer(messageInfo, player);
+        if (character == null) {
+            return;
+        }
+
+        if (name == null || name == '') {
+            MessageService.ReplyMessage(messageInfo, 'Sla je huidige equipment op met `;save [name]`.');
+            return;
+        }
+
+        const equipment = new Equipment();
+
+        if (!await equipment.FIND_BY_NAME(player.GetId(), name.toLowerCase())) {
+            MessageService.ReplyMessage(messageInfo, 'Je hebt geen opgeslagen equipment met deze naam.', false, true);
+            return;
+        }
+
+        const equipmentIds = equipment.GetCardIds();
+
+        character.RemoveAllEquipment();
+
+        const toEquipCards = player.GetCards().filter(pc => equipmentIds.includes(pc.GetCardId()));
+
+        await transaction(CharacterModel.knex(), async (trx: any) => {
+            for (const card of toEquipCards) {
+                await character.Equip(card, trx);
+            }
+        }).catch((error: any) => {
+            console.log(error);
+        });
+
+        MessageService.ReplyMessage(messageInfo, 'Je equipment is aangepast.', true, true);
     }
 
     private static async OnHeal(messageInfo: IMessageInfo, player: Player, mention: string) {

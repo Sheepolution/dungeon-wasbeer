@@ -7,6 +7,8 @@ import { Redis } from '../Providers/Redis';
 import RedisConstants from '../Constants/RedisConstants';
 import SettingsConstants from '../Constants/SettingsConstants';
 import { ShoeState } from '../Enums/ShoeState';
+import CharacterModel from '../Models/CharacterModel';
+import { transaction } from 'objection';
 
 export default class Player {
 
@@ -232,9 +234,11 @@ export default class Player {
         this.character.RemoveAllEquipment();
 
         const toEquipCards = this.playerCards.filter(pc => equipmentIds.includes(pc.GetCardId()));
-        for (const card of toEquipCards) {
-            await character.Equip(card);
-        }
+        await transaction(CharacterModel.knex(), async (trx: any) => {
+            for (const card of toEquipCards) {
+                await character.Equip(card, trx);
+            }
+        });
 
         await this.UPDATE({ character_id: this.character.GetId() });
     }
