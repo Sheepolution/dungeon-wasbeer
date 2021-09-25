@@ -967,9 +967,11 @@ export default class Character {
         this.UpdateFullModifierStats();
         this.currentHealth = this.GetMaxHealth();
 
+        this.equipmentIds = this.equipment.map(c => c.GetId());
+
         await this.UPDATE({
             health: this.currentHealth,
-            equipment: this.equipment.map(e => e.GetId()).join(','),
+            equipment: this.equipmentIds.join(','),
         }, trx);
     }
 
@@ -981,9 +983,11 @@ export default class Character {
         this.UpdateFullModifierStats();
         this.currentHealth = this.GetMaxHealth();
 
+        this.equipmentIds = this.equipment.map(c => c.GetId());
+
         await this.UPDATE({
             health: this.currentHealth,
-            equipment: this.equipment.map(c => c.GetId()).join(','),
+            equipment: this.equipmentIds.join(','),
         });
     }
 
@@ -1001,8 +1005,10 @@ export default class Character {
 
         this.UpdateFullModifierStats();
 
+        this.equipmentIds = this.equipment.map(c => c.GetId());
+
         this.UPDATE({
-            equipment: this.equipment.map(c => c.GetId()).join(','),
+            equipment: this.equipmentIds.join(','),
         });
     }
 
