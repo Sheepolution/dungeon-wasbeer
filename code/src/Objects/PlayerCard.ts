@@ -27,7 +27,7 @@ export default class PlayerCard {
     }
 
     public static async ResetTaken() {
-        await PlayerCardModel.query().patch({taken: 0});
+        await PlayerCardModel.query().patch({ taken: 0 });
     }
 
     public async GET(id: string) {
@@ -141,8 +141,8 @@ export default class PlayerCard {
         return this.isUsedInTrade;
     }
 
-    public async SetEquipped(equipped: boolean) {
+    public async SetEquipped(equipped: boolean, trx?: any) {
         this.equipped = equipped ? 1 : 0;
-        await this.UPDATE({ equipped: this.equipped });
+        await this.UPDATE({ equipped: this.equipped }, trx);
     }
 }

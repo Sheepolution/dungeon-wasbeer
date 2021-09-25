@@ -25,6 +25,8 @@ import { Redis } from '../Providers/Redis';
 import { Utils } from '../Utils/Utils';
 import EmojiConstants from '../Constants/EmojiConstants';
 import Inspire from './Inspire';
+import { transaction } from 'objection';
+import CardModel from '../Models/CardModel';
 
 export default class Character {
 
@@ -1004,7 +1006,19 @@ export default class Character {
         });
     }
 
-    public async RemoveAllEquipment() {
+    public async RemoveAllEquipment(updateCards?: boolean) {
+        if (updateCards) {
+            await transaction(CardModel.knex(), async (trx: any) => {
+                const playerCards = this.player.GetCards();
+                for (const card of this.equipment) {
+                    const playerCard = playerCards.find(pc => pc.GetCardId() == card.GetId());
+                    if (playerCard != null) {
+                        await playerCard.SetEquipped(false, trx);
+                    }
+                }
+            });
+        }
+
         this.equipment = [];
         this.equipmentIds = [];
 
@@ -1013,6 +1027,7 @@ export default class Character {
         await this.UPDATE({
             equipment: '',
         });
+
     }
 
     public GetRewardPoints(battleId?: string) {

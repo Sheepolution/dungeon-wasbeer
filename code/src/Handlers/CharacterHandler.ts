@@ -454,7 +454,7 @@ export default class CharacterHandler {
 
         const equipmentIds = equipment.GetCardIds();
 
-        character.RemoveAllEquipment();
+        await character.RemoveAllEquipment();
 
         const toEquipCards = player.GetCards().filter(pc => equipmentIds.includes(pc.GetCardId()));
 
