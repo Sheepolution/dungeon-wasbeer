@@ -435,6 +435,11 @@ export default class CharacterHandler {
             return;
         }
 
+        if (!character.IsFullHealth()) {
+            this.ReplyNotFullHealth(messageInfo, character);
+            return;
+        }
+
         if (name == null || name == '') {
             MessageService.ReplyMessage(messageInfo, 'Sla je huidige equipment op met `;save [name]`.');
             return;
