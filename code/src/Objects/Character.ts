@@ -26,7 +26,7 @@ import { Utils } from '../Utils/Utils';
 import EmojiConstants from '../Constants/EmojiConstants';
 import Inspire from './Inspire';
 import { transaction } from 'objection';
-import CardModel from '../Models/CardModel';
+import PlayerCardModel from '../Models/PlayerCardModel';
 
 export default class Character {
 
@@ -1014,7 +1014,7 @@ export default class Character {
 
     public async RemoveAllEquipment(updateCards?: boolean) {
         if (updateCards) {
-            await transaction(CardModel.knex(), async (trx: any) => {
+            await transaction(PlayerCardModel.knex(), async (trx: any) => {
                 const playerCards = this.player.GetCards();
                 for (const card of this.equipment) {
                     const playerCard = playerCards.find(pc => pc.GetCardId() == card.GetId());
