@@ -191,7 +191,7 @@ export default class BattleHandler {
             return;
         }
 
-        await Utils.Sleep(3);
+        await Utils.Sleep(1);
 
         var roll1 = Utils.Dice(20);
 
@@ -213,7 +213,7 @@ export default class BattleHandler {
         var roll2 = playerAttackRoll;
         if (playerAttackRoll > 1) {
             await this.UpdateBattleEmbed(message, battle, character, roll1);
-            await Utils.Sleep(3);
+            await Utils.Sleep(1);
             roll2 = Utils.Dice(playerAttackRoll);
         }
 
@@ -245,7 +245,7 @@ export default class BattleHandler {
 
         do {
             await this.UpdateBattleEmbed(message, battle, character, roll1, roll2);
-            await Utils.Sleep(3);
+            await Utils.Sleep(1);
 
             var roll3 = Utils.Dice(20);
 
@@ -267,7 +267,7 @@ export default class BattleHandler {
             var roll4 = monsterAttackRoll;
             if (monsterAttackRoll > 1) {
                 await this.UpdateBattleEmbed(message, battle, character, roll1, roll2, roll3);
-                await Utils.Sleep(3);
+                await Utils.Sleep(1);
                 roll4 = Utils.Dice(monsterAttackRoll);
             }
 
@@ -339,7 +339,7 @@ export default class BattleHandler {
             return;
         }
 
-        await Utils.Sleep(3);
+        await Utils.Sleep(1);
         const roll = Utils.Dice(20);
         const charge = character.GetChargeBasedOnRoll(roll);
 
@@ -493,7 +493,7 @@ export default class BattleHandler {
         await character.Kill();
         await Utils.Sleep(2);
         await MessageService.SendMessageToDNDChannel('', await CharacterEmbeds.GetDeadCharacterEmbed(character));
-        await Utils.Sleep(3);
+        await Utils.Sleep(1);
         await MessageService.ReplyMessage(messageInfo, 'Je character is dood. Je kan opnieuw beginnen door een class te kiezen met het commando `;class`.');
         LogService.Log(character.GetPlayer(), character.GetId(), LogType.CharacterDied, `${character.GetName()} is overleden.`);
     }
@@ -509,7 +509,7 @@ export default class BattleHandler {
         }
 
         const nextPlayer = await PlayerManager.GetPlayer(nextBattle?.member.id);
-        await Utils.Sleep(3);
+        await Utils.Sleep(1);
         this.OnAttack(<IMessageInfo>nextBattle, nextPlayer, true);
     }
 
