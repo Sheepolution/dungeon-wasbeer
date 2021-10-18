@@ -191,7 +191,7 @@ export default class BattleHandler {
             return;
         }
 
-        await Utils.Sleep(1);
+        await Utils.Sleep(2);
 
         var roll1 = Utils.Dice(20);
 
@@ -213,7 +213,7 @@ export default class BattleHandler {
         var roll2 = playerAttackRoll;
         if (playerAttackRoll > 1) {
             await this.UpdateBattleEmbed(message, battle, character, roll1);
-            await Utils.Sleep(1);
+            await Utils.Sleep(2);
             roll2 = Utils.Dice(playerAttackRoll);
         }
 
@@ -245,7 +245,7 @@ export default class BattleHandler {
 
         do {
             await this.UpdateBattleEmbed(message, battle, character, roll1, roll2);
-            await Utils.Sleep(1);
+            await Utils.Sleep(3);
 
             var roll3 = Utils.Dice(20);
 
@@ -266,8 +266,12 @@ export default class BattleHandler {
             const monsterAttackRoll = battle.GetMonsterAttackRoll();
             var roll4 = monsterAttackRoll;
             if (monsterAttackRoll > 1) {
-                await this.UpdateBattleEmbed(message, battle, character, roll1, roll2, roll3);
-                await Utils.Sleep(1);
+
+                if (roll3 < roll1 + roll2 && roll3 + monsterAttackRoll > roll1 + roll2) {
+                    await this.UpdateBattleEmbed(message, battle, character, roll1, roll2, roll3);
+                    await Utils.Sleep(3);
+                }
+
                 roll4 = Utils.Dice(monsterAttackRoll);
             }
 
