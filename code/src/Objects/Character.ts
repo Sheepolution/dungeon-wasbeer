@@ -962,6 +962,28 @@ export default class Character {
     }
 
     public async Equip(playerCard: PlayerCard, trx?: any) {
+        if (!this.HasEquipmentSpace()) {
+            return;
+        }
+
+        const card = playerCard.GetCard();
+        const modifierClass = card.GetModifierClass();
+        if (modifierClass != null && modifierClass != this.GetClass()) {
+            return;
+        }
+
+        if (!card.HasBuffs()) {
+            return;
+        }
+
+        if (playerCard.IsEquipped()) {
+            return;
+        }
+
+        if (playerCard.IsUsedInTrade()) {
+            return;
+        }
+
         await playerCard.SetEquipped(true);
         this.equipment.push(playerCard.GetCard());
         this.UpdateFullModifierStats();
@@ -1347,36 +1369,7 @@ export default class Character {
         return CharacterService.GetClassAttackDescription(this.classType, crit).randomChoice();
     }
 
-    private CalculateMaxHealth() {
-        return this.fullModifierStats.health + CharacterConstants.HEALTH_ADDITION_PER_LEVEL[this.level - 1];
-    }
-
-    private CalculateCardModifierStats() {
-        var cardModifierStats = CharacterService.GetEmptyModifierStats();
-
-        for (const card of this.equipment) {
-            cardModifierStats = CharacterService.GetSummedUpModifierStats(cardModifierStats, card.GetModifierStats());
-        }
-
-        return cardModifierStats;
-    }
-
-    private CalculateFullModifierStats() {
-        return CharacterService.GetSummedUpModifierStats(this.classModifierStats, this.cardModifierStats);
-    }
-
-    private CalculateLevel(level: number = 1) {
-        while (level < 20) {
-            if (this.xp >= CharacterConstants.XP_PER_LEVEL[level]) {
-                level += 1;
-            } else {
-                break;
-            }
-        }
-        return level;
-    }
-
-    private UpdateFullModifierStats() {
+    public async UpdateFullModifierStats() {
         if (this.classType == null) { return; }
         this.classModifierStats = CharacterService.GetClassModifierStats(this.classType);
         this.cardModifierStats = this.CalculateCardModifierStats();
@@ -1420,15 +1413,44 @@ export default class Character {
         const oldMaxHealth = this.maxHealth;
         this.maxHealth = this.CalculateMaxHealth();
         if (oldMaxHealth != this.maxHealth) {
-            this.UPDATE({
+            await this.UPDATE({
                 max_health: this.maxHealth
             });
         }
 
         if (this.currentHealth > this.maxHealth) {
             this.currentHealth = this.maxHealth;
-            this.UPDATE({ health: this.currentHealth });
+            await this.UPDATE({ health: this.currentHealth });
         }
+    }
+
+    private CalculateMaxHealth() {
+        return this.fullModifierStats.health + CharacterConstants.HEALTH_ADDITION_PER_LEVEL[this.level - 1];
+    }
+
+    private CalculateCardModifierStats() {
+        var cardModifierStats = CharacterService.GetEmptyModifierStats();
+
+        for (const card of this.equipment) {
+            cardModifierStats = CharacterService.GetSummedUpModifierStats(cardModifierStats, card.GetModifierStats());
+        }
+
+        return cardModifierStats;
+    }
+
+    private CalculateFullModifierStats() {
+        return CharacterService.GetSummedUpModifierStats(this.classModifierStats, this.cardModifierStats);
+    }
+
+    private CalculateLevel(level: number = 1) {
+        while (level < 20) {
+            if (this.xp >= CharacterConstants.XP_PER_LEVEL[level]) {
+                level += 1;
+            } else {
+                break;
+            }
+        }
+        return level;
     }
 
     private async OnLevelUp(trx?: any) {

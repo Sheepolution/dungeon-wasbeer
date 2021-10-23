@@ -466,6 +466,8 @@ export default class CharacterHandler {
             console.log(error);
         });
 
+        await character.UpdateFullModifierStats();
+
         MessageService.ReplyMessage(messageInfo, 'Je equipment is aangepast.', true, true);
     }
 
