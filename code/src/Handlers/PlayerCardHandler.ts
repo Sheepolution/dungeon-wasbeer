@@ -19,6 +19,7 @@ import PlayerCardService from '../Services/PlayerCardService';
 import Card from '../Objects/Card';
 import { CardFilterType } from '../Enums/CardFilterType';
 import CardService from '../Services/CardService';
+import DiscordService from '../Services/DiscordService';
 
 export default class PlayerCardHandler {
 
@@ -315,14 +316,12 @@ export default class PlayerCardHandler {
         var cardFilter = CardFilterType.None;
 
         if (filterType != null) {
-            var id = DiscordUtils.GetMemberId(filterType);
-            if (id != null) {
+            cardFilter = CardService.GetFilterType(filterType);
+            if (cardFilter == CardFilterType.None) {
                 other = filterType;
                 lesserGreater = filterValue;
                 filterType = undefined;
                 filterValue = undefined;
-            } else {
-                cardFilter = CardService.GetFilterType(filterType);
             }
 
             if (other != null) {
@@ -332,17 +331,25 @@ export default class PlayerCardHandler {
                     }
                 }
 
-                var id = DiscordUtils.GetMemberId(other);
-                if (id != null) {
-                    otherPlayer = await PlayerManager.GetPlayer(id);
-                    if (otherPlayer != null) {
-                        if (lesserGreater == undefined) {
-                            player = otherPlayer;
-                            otherPlayer = undefined;
-                        } else if (lesserGreater == '>') {
-                            player = otherPlayer;
-                            otherPlayer = requester;
-                        }
+                var otherId = DiscordUtils.GetMemberId(other);
+                if (otherId == null) {
+                    const member = await DiscordService.FindMember(other, messageInfo.member.guild, true);
+                    if (member != null) {
+                        otherId = member.id;
+                    } else {
+                        MessageService.ReplyMessage(messageInfo, `Ik kan niemand vinden met de naam '${other}'.`, false);
+                        return;
+                    }
+                }
+
+                otherPlayer = await PlayerManager.GetPlayer(otherId);
+                if (otherPlayer != null) {
+                    if (lesserGreater == undefined) {
+                        player = otherPlayer;
+                        otherPlayer = undefined;
+                    } else if (lesserGreater == '>') {
+                        player = otherPlayer;
+                        otherPlayer = requester;
                     }
                 }
             }
