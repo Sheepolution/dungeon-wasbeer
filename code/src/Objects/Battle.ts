@@ -77,7 +77,7 @@ export default class Battle {
     public GetMonsterAttackStrength(crit?: boolean) {
         var strength = this.monster.GetAttackStrength();
         if (this.monster.GetId() == '7e476ee1-c32a-426b-b278-a03d6f85f164') {
-            var missing = Math.ceil(this.monster.GetHealth() / 1000) - Math.ceil(this.monsterHealth / 1000);
+            var missing = Math.ceil(this.monster.GetHealth() / 2000) - Math.ceil(this.monsterHealth / 2000);
             strength += missing * 3;
         }
 
@@ -87,7 +87,7 @@ export default class Battle {
     public GetMonsterAttackRoll() {
         var attackRoll = this.monster.GetAttackRoll();
         if (this.monster.GetId() == '7e476ee1-c32a-426b-b278-a03d6f85f164') {
-            var missing = Math.ceil(this.monster.GetHealth() / 1000) - Math.ceil(this.monsterHealth / 1000);
+            var missing = Math.ceil(this.monster.GetHealth() / 2000) - Math.ceil(this.monsterHealth / 2000);
             attackRoll += missing * 2;
         }
 
@@ -96,7 +96,7 @@ export default class Battle {
 
     public GetMonsterImageUrl() {
         if (this.monster.GetId() == '7e476ee1-c32a-426b-b278-a03d6f85f164') {
-            var missing = Math.ceil(this.monster.GetHealth() / 1000) - Math.ceil(this.monsterHealth / 1000);
+            var missing = Math.ceil(this.monster.GetHealth() / 2000) - Math.ceil(this.monsterHealth / 2000);
             switch (missing) {
                 case 0: return 'https://cdn.discordapp.com/attachments/698616506862272602/769643201971617804/2_heads.png';
                 case 1: return 'https://cdn.discordapp.com/attachments/698616506862272602/769643221142863904/3_heads.png';
