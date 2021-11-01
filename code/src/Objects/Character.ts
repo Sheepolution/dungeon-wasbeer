@@ -644,7 +644,7 @@ export default class Character {
     }
 
     public GetMaxChargeCooldown() {
-        return CharacterConstants.BASE_COOLDOWN_DURATION - this.fullModifierStats.dexterity;
+        return (CharacterConstants.BASE_COOLDOWN_DURATION - this.fullModifierStats.dexterity) / 2;
     }
 
     public async BecomeBlessed(amount: number) {
@@ -676,7 +676,7 @@ export default class Character {
     }
 
     public GetMaxPrayingCooldown() {
-        return CharacterConstants.BASE_COOLDOWN_DURATION - this.fullModifierStats.dexterity;
+        return (CharacterConstants.BASE_COOLDOWN_DURATION - this.fullModifierStats.dexterity) / 2;
     }
 
     public async BecomeEnchanted() {
@@ -797,8 +797,8 @@ export default class Character {
         return await Redis.ttl(Character.protectCooldownPrefix + this.GetId());
     }
 
-    public async SetChargeCooldown(roll: number) {
-        await Redis.set(Character.protectCooldownPrefix + this.GetId(), '1', 'EX', Utils.GetMinutesInSeconds(Math.floor(this.GetMaxChargeCooldown() + 5 * (roll / 20))));
+    public async SetChargeCooldown() {
+        await Redis.set(Character.protectCooldownPrefix + this.GetId(), '1', 'EX', Utils.GetMinutesInSeconds(Math.floor(this.GetMaxChargeCooldown())));
     }
 
     public async GetPrayCooldown() {
