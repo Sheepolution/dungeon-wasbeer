@@ -1035,6 +1035,8 @@ export default class CharacterHandler {
         character.SetIsProtecting(false);
         receiver.SetBeingProtected(false);
 
+        await character.StopBeingInspired();
+
         await character.GiveProtectionPoints(protection, CampaignManager.GetBattle()?.GetId(), messageInfo);
 
         this.SaveProtection(character, receiver, character.GetFullModifierStats().armor, roll, protection);
