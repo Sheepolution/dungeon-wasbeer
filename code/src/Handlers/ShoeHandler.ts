@@ -17,12 +17,12 @@ export default class ShoeHandler {
 
     public static OnCommand(messageInfo: IMessageInfo, player: Player, command: string) {
         switch (command) {
-            // case 'zet':
-            // case 'zetten':
-            // case 'schoen-zetten':
-            // case 'zet-schoen':
-            //     this.OnSettingShoe(messageInfo, player);
-            //     break;
+            case 'zet':
+            case 'zetten':
+            case 'schoen-zetten':
+            case 'zet-schoen':
+                this.OnSettingShoe(messageInfo, player);
+                break;
             case 'kijk':
             case 'kijken':
             case 'legen':
