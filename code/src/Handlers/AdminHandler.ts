@@ -21,6 +21,7 @@ import LogService from '../Services/LogService';
 import PlayerCard from '../Objects/PlayerCard';
 import PlayerManager from '../Managers/PlayerManager';
 import DiscordService from '../Services/DiscordService';
+import { Utils } from '../Utils/Utils';
 
 export default class AdminHandler {
 
@@ -99,6 +100,9 @@ export default class AdminHandler {
                 break;
             case 'lock':
                 BotManager.SetLocked();
+                break;
+            case 'time':
+                this.GetTime(messageInfo);
                 break;
             default:
                 return false;
@@ -236,6 +240,10 @@ export default class AdminHandler {
         }
 
         MessageService.ReplyMessage(messageInfo, 'Ik heb de kaarten gegeven.', true);
+    }
+
+    private static GetTime(messageInfo: IMessageInfo) {
+        MessageService.ReplyMessage(messageInfo, Utils.GetNowString());
     }
 
     private static StartCampaign() {
