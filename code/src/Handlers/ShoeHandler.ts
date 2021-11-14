@@ -52,7 +52,7 @@ export default class ShoeHandler {
         const shoeConfig = ConfigurationManager.GetConfigurationByName('shoe_state');
 
         const now = new Date();
-        const hour = now.getHours();
+        const hour = now.getHours() + 1;
         const shoeState = player.GetShoeState();
 
         if (shoeState == ShoeState.Set) {
@@ -86,7 +86,7 @@ export default class ShoeHandler {
         const shoeConfig = ConfigurationManager.GetConfigurationByName('shoe_state');
 
         const now = new Date();
-        const hour = now.getHours();
+        const hour = now.getHours() + 1;
         var shoeState = player.GetShoeState();
 
         if (hour >= 8 || hour < 1) {
