@@ -66,7 +66,7 @@ export default class AdminHandler {
                 this.SendRandomCard(messageInfo);
                 break;
             case 'monster':
-                this.SendMonster(messageInfo, args[0]);
+                this.SendMonster(messageInfo, content);
                 break;
             case 'random-monster':
                 this.SendRandomMonster(messageInfo);
@@ -93,6 +93,9 @@ export default class AdminHandler {
             case 'give-card':
             case 'givecard':
                 this.GiveCard(messageInfo, args[0], args, player);
+                break;
+            case 'give-exclusive-card':
+                this.GiveExclusiveCard(messageInfo);
                 break;
             case 'lock':
                 BotManager.SetLocked();
@@ -194,6 +197,45 @@ export default class AdminHandler {
 
         MessageService.ReplyMessage(messageInfo, 'Ik heb de kaart gegeven.', true, true);
         LogService.Log(player, receiver.GetId(), LogType.GiveCard, `${player.GetDiscordName()} geeft aan kaart aan ${receiver.GetDiscordName()} met het bericht '${message}'.`);
+    }
+
+    private static async GiveExclusiveCard(messageInfo: IMessageInfo) {
+
+        await MessageService.ReplyMessage(messageInfo, 'Ik deel de exclusieve kaart uit.', true);
+
+        const cardId = ''
+
+        const cards = CardManager.GetCardList().filter(c => c.GetId() == cardId);
+        if (cards.length == 0) {
+            await MessageService.ReplyMessage(messageInfo, 'Kaart niet gevonden.', false);
+            return;
+        }
+
+        const card = cards[0];
+
+        const playerIds = []
+
+        for (const playerId of playerIds) {
+            const receiver = await PlayerManager.GetPlayerById(playerId);
+            if (receiver == null) {
+                MessageService.ReplyMessage(messageInfo, 'Ik kan deze persoon niet vinden.');
+                continue;
+            }
+
+            const playerCards = receiver.GetCards();
+
+            const existingPlayerCard = playerCards.find((x: PlayerCard) => x.GetCard().GetId() == card.GetId());
+            if (existingPlayerCard != null) {
+                continue;
+            }
+
+            const newPlayerCard = new PlayerCard(receiver);
+            await newPlayerCard.POST(card.GetId(), receiver.GetId());
+
+            receiver.GiveCard(newPlayerCard);
+        }
+
+        MessageService.ReplyMessage(messageInfo, 'Ik heb de kaarten gegeven.', true);
     }
 
     private static StartCampaign() {
@@ -408,14 +450,15 @@ export default class AdminHandler {
         }
     }
 
-    private static async SendMonster(messageInfo: IMessageInfo, name: string) {
+    private static SendMonster(messageInfo: IMessageInfo, name: string) {
         if (name == null) {
             this.SendRandomMonster(messageInfo);
             return;
         }
 
-        var monster = new Monster();
-        if (!await monster.FIND_BY_NAME(name)) {
+        const list = MonsterManager.GetMonsterList();
+        const monster = list.find(m => m.GetName().includes(name));
+        if (monster == null) {
             MessageService.ReplyMessage(messageInfo, 'Je hebt geen monster met de naam \'' + name + '\'.', false, true);
             return;
         }

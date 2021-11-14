@@ -80,4 +80,8 @@ export default class MonsterManager {
     public static GetNumberOfMonsters() {
         return this.monsterList.length;
     }
+
+    public static GetMonsterList() {
+        return this.monsterList;
+    }
 }
