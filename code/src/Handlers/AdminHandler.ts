@@ -203,7 +203,7 @@ export default class AdminHandler {
 
         await MessageService.ReplyMessage(messageInfo, 'Ik deel de exclusieve kaart uit.', true);
 
-        const cardId = ''
+        const cardId = '';
 
         const cards = CardManager.GetCardList().filter(c => c.GetId() == cardId);
         if (cards.length == 0) {
@@ -213,7 +213,7 @@ export default class AdminHandler {
 
         const card = cards[0];
 
-        const playerIds = []
+        const playerIds: Array<string> = [];
 
         for (const playerId of playerIds) {
             const receiver = await PlayerManager.GetPlayerById(playerId);
