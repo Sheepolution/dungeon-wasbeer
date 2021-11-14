@@ -101,13 +101,13 @@ export default class ShoeHandler {
             }
 
             if (shoeState == ShoeState.Emptied) {
-                MessageService.ReplyMessage(messageInfo, 'Je hebt je cadeautje al gepakt. Hoopte je dat je nog een cadeautje zou krijgen? Ben je nou gierig bezig?!', false, true);
+                MessageService.ReplyMessage(messageInfo, 'Je hebt je schoentje al geleegd. Hoopte je dat er nog iets in zou zitten? Ben je nou gierig bezig?!', false, true);
                 return;
             } else if (shoeState == ShoeState.Empty) {
                 MessageService.ReplyMessage(messageInfo, 'Je bent vergeten je schoentje te zetten jij dommerik!', false, true);
                 return;
             } else if (shoeState == ShoeState.Set) {
-                MessageService.ReplyMessage(messageInfo, 'De Kerstman moet nog langskomen joh! Nog even geduld.', false, true);
+                MessageService.ReplyMessage(messageInfo, 'Sinterklaas moet nog langskomen joh! Nog even geduld.', false, true);
                 return;
             } else if (shoeState == ShoeState.Filled) {
 
@@ -122,13 +122,13 @@ export default class ShoeHandler {
                     messageInfo.channel = BotManager.GetCardChannel();
 
                     if (cardModifyResult.result) {
-                        var cardMessage = await MessageService.ReplyMessage(messageInfo, 'Je kijkt onder de kerstboom en vindt een cadeautje met jouw naam! Je hebt van de Kerstman een nieuwe kaart gekregen!', undefined, true, CardEmbeds.GetCardEmbed(playerCard.GetCard(), playerCard.GetAmount()));
+                        var cardMessage = await MessageService.ReplyMessage(messageInfo, 'Je kijkt in je schoentje... je hebt van Sinterklaas een nieuwe kaart gekregen!', undefined, true, CardEmbeds.GetCardEmbed(playerCard.GetCard(), playerCard.GetAmount()));
                         if (cardMessage != null) {
                             await LogService.Log(player, playerCard.GetCardId(), LogType.CardReceivedShoe, `${player.GetDiscordName()} heeft de kaart '${playerCard.GetCard().GetName()}' door hun schoen te legen.`);
                             await CardManager.OnCardMessage(cardMessage, playerCard);
                         }
                     } else {
-                        var cardMessage = await MessageService.ReplyMessage(messageInfo, 'Je kijkt onder de kerstboom en vindt een cadeautje met jouw naam! Je hebt van de Kerstman een extra van deze kaart gekregen!', undefined, true, CardEmbeds.GetCardEmbed(playerCard.GetCard(), playerCard.GetAmount()));
+                        var cardMessage = await MessageService.ReplyMessage(messageInfo, 'Je kijkt in je schoentje... je hebt van Sinterklaas een extra van deze kaart gekregen!', undefined, true, CardEmbeds.GetCardEmbed(playerCard.GetCard(), playerCard.GetAmount()));
                         if (cardMessage != null) {
                             await LogService.Log(player, playerCard.GetCardId(), LogType.CardReceivedShoe, `${player.GetDiscordName()} heeft de kaart '${playerCard.GetCard().GetName()}' door hun schoen te legen, en heeft daar nu ${playerCard.GetAmount()} van.`);
                             await CardManager.OnCardMessage(cardMessage, playerCard);
@@ -139,7 +139,7 @@ export default class ShoeHandler {
                 }
             }
         } else if (hour < 8) {
-            MessageService.ReplyMessage(messageInfo, 'De Kerstman is onderweg. Nog even geduld!', false, true);
+            MessageService.ReplyMessage(messageInfo, 'Sinterklaas is onderweg. Nog even geduld!', false, true);
         }
     }
 }
