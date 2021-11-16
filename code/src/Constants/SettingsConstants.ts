@@ -80,6 +80,7 @@ export default class SettingsConstants {
     ];
 
     public static readonly REWARD_POINTS_MULTIPLIER = 50;
+    public static readonly ABILITY_REWARD_POINTS = 10;
     public static readonly DAMAGE_REWARD_POINTS_MULTIPLIER = 1;
     public static readonly HEALING_REWARD_POINTS_MULTIPLIER = .75;
     public static readonly INSPIRE_REWARD_POINTS_MULITPLIER = .75;

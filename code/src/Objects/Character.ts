@@ -1252,7 +1252,7 @@ export default class Character {
     }
 
     public GiveAbilityPoints(battleId?: string, messageInfo?: IMessageInfo) {
-        this.GiveRewardPoints(SettingsConstants.INSPIRE_REWARD_POINTS_MULITPLIER, battleId, messageInfo);
+        this.GiveRewardPoints(SettingsConstants.ABILITY_REWARD_POINTS, battleId, messageInfo);
     }
 
     public async GiveRewardPoints(rewardPoints: number, battleId?: string, messageInfo?: IMessageInfo) {
