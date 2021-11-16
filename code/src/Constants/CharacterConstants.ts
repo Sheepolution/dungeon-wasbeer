@@ -30,7 +30,7 @@ export default class CharacterConstants {
         57000, 68000, 82000, 100000
     ];
 
-    public static readonly CHARACTER_DIED = 'https://media.discordapp.net/attachments/694331679204180029/703293328552362014/unknown.png';
+    public static readonly CHARACTER_DIED_IMAGE = 'https://media.discordapp.net/attachments/694331679204180029/703293328552362014/unknown.png';
 
     public static readonly INSPIRE_STAT_MULTIPLIER = 1.2;
 

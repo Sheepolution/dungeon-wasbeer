@@ -274,7 +274,7 @@ export default class CharacterEmbeds {
     public static async GetDeadCharacterEmbed(character: Character) {
         const embed = new MessageEmbed()
             .setColor(SettingsConstants.COLORS.BAD)
-            .setImage(CharacterConstants.CHARACTER_DIED)
+            .setImage(CharacterConstants.CHARACTER_DIED_IMAGE)
             .setTitle(`RIP ${character.GetName()}\n${character.GetBornDateString()} - ${character.GetDeathDateString()}`)
             .setDescription('--------------------')
             .addField('Level', character.GetLevel(), true)
