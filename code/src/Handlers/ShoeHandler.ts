@@ -22,7 +22,7 @@ export default class ShoeHandler {
             case 'schoen-zetten':
             case 'zet-schoen':
             case 'leg':
-            case 'legggen':
+            case 'leggen':
                 this.OnSettingShoe(messageInfo, player);
                 break;
             case 'kijk':
