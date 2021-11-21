@@ -529,6 +529,13 @@ export default class CharacterEmbeds {
                 embed.addField(`${characterName} slaagt er in te bidden`, character.GetPrayDescription().replaceAll('\\[jij\\]', characterName).replaceAll('\\[blessing\\]', (blessing || 0).toString()));
             }
 
+            const battleCooldown = await character.GetBattleCooldown();
+            if (battleCooldown > 0) {
+                embed.addField('Vechten', `🕒 ${Utils.GetSecondsInMinutesAndSeconds(battleCooldown)}`, true);
+            } else {
+                embed.addField('Vechten', 'Klaar om te vechten!', true);
+            }
+
             if (character.CanHeal()) {
                 const healingCooldown = await character.GetHealingCooldown();
                 if (healingCooldown > 0) {
