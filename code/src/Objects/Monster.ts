@@ -58,7 +58,7 @@ export default class Monster {
         this.level = model.level;
         this.category = model.category;
         this.type = model.type;
-        this.health = model.health * 2;
+        this.health = model.health;
         this.strength = model.strength * 2;
         this.attack = model.attack * 2;
         this.attackDescription = model.attack_description;
