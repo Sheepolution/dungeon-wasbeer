@@ -23,6 +23,9 @@ export default class ImageConstants {
         DNW: 'https://cdn.discordapp.com/attachments/694331679204180029/783754515928317992/DnW.png',
         ART: 'https://cdn.discordapp.com/attachments/694331679204180029/783751086715830362/Kunstsmall.png',
         EXCLUSIVE: 'https://cdn.discordapp.com/attachments/694331679204180029/804800987851391056/exclusief.png',
+        MEDIA: 'https://cdn.discordapp.com/attachments/694331679204180029/934119676512964668/Mediasmoll.png',
+        FURRY: 'https://cdn.discordapp.com/attachments/694331679204180029/934119292381823017/Furrysmoll.png',
+        MEME: 'https://cdn.discordapp.com/attachments/694331679204180029/934115601100718090/Memesmoll.png',
     };
 
     public static readonly SOLVED = 'https://cdn.discordapp.com/attachments/694331679204180029/708732190485118986/solved.gif';

@@ -136,6 +136,14 @@ export default class CardService {
                 return ImageConstants.ICONS.ART;
             case 'Exclusief':
                 return ImageConstants.ICONS.EXCLUSIVE;
+            case 'Media':
+                return ImageConstants.ICONS.MEDIA;
+            case 'Furry':
+                return ImageConstants.ICONS.FURRY;
+            case 'Meme':
+                return ImageConstants.ICONS.MEME;
+            default:
+                return ImageConstants.ICONS.EXCLUSIVE;
         }
     }
 
@@ -185,6 +193,14 @@ export default class CardService {
                 return EmojiConstants.CARD_CATEGORIES.ART;
             case 'Exclusief':
                 return EmojiConstants.CARD_CATEGORIES.EXCLUSIVE;
+            case 'Media':
+                return EmojiConstants.CARD_CATEGORIES.MEDIA;
+            case 'Furry':
+                return EmojiConstants.CARD_CATEGORIES.FURRY;
+            case 'Meme':
+                return EmojiConstants.CARD_CATEGORIES.MEME;
+            default:
+                return ImageConstants.ICONS.EXCLUSIVE;
         }
     }
 

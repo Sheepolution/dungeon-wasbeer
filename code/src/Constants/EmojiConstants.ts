@@ -33,6 +33,9 @@ export default class EmojiConstants {
         DNW: '<:dnw:784174386293768263>',
         ART: '<:kunst:784174386571509763>',
         EXCLUSIVE: '<:exclusief:804802089754296350>',
+        MEDIA: '<:media:934122029840490526>',
+        FURRY: '<:furry:934122029769191424>',
+        MEME: '<:meme:934122029953720400>',
     };
 
     public static readonly STATUS = {
