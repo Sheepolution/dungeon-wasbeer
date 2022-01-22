@@ -200,7 +200,7 @@ export default class CardService {
             case 'Meme':
                 return EmojiConstants.CARD_CATEGORIES.MEME;
             default:
-                return ImageConstants.ICONS.EXCLUSIVE;
+                return EmojiConstants.CARD_CATEGORIES.EXCLUSIVE;
         }
     }
 
