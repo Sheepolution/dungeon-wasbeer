@@ -142,6 +142,12 @@ export default class CardService {
                 return ImageConstants.ICONS.FURRY;
             case 'Meme':
                 return ImageConstants.ICONS.MEME;
+            case 'Bloemen':
+                return ImageConstants.ICONS.FLOWERS;
+            case 'Ome Wasbeer':
+                return ImageConstants.ICONS.UNCLE;
+            case 'Hobby':
+                return ImageConstants.ICONS.HOBBY;
             default:
                 return ImageConstants.ICONS.EXCLUSIVE;
         }
@@ -199,6 +205,12 @@ export default class CardService {
                 return EmojiConstants.CARD_CATEGORIES.FURRY;
             case 'Meme':
                 return EmojiConstants.CARD_CATEGORIES.MEME;
+            case 'Bloemen':
+                return EmojiConstants.CARD_CATEGORIES.FLOWERS;
+            case 'Ome Wasbeer':
+                return EmojiConstants.CARD_CATEGORIES.UNCLE;
+            case 'Hobby':
+                return EmojiConstants.CARD_CATEGORIES.HOBBY;
             default:
                 return EmojiConstants.CARD_CATEGORIES.EXCLUSIVE;
         }

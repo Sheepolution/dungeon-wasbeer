@@ -36,6 +36,9 @@ export default class EmojiConstants {
         MEDIA: '<:media:934122029840490526>',
         FURRY: '<:furry:934122029769191424>',
         MEME: '<:meme:934122029953720400>',
+        FLOWERS: '<:bloemen:951096870032248893>',
+        UNCLE: '<:ome:951096831608225802>',
+        HOBBY: '<:hobby:951096782383902730>',
     };
 
     public static readonly STATUS = {
