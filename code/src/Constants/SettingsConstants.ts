@@ -66,8 +66,7 @@ export default class SettingsConstants {
         CARD: [
             4,
             8,
-            16,
-            24
+            12,
         ]
     };
 
