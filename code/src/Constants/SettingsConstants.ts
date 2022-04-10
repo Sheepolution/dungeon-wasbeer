@@ -59,7 +59,6 @@ export default class SettingsConstants {
     public static readonly CARD_AMOUNT_REWARD_REACH_INCREASE = [
         10,
         50,
-        100,
     ];
 
     public static readonly MESSAGE_POINT_AMOUNT_REWARDS = {
