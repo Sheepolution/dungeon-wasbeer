@@ -1269,41 +1269,39 @@ export default class Character {
         if (messageInfo != null) {
             if (battleId != null /* this.rewardBattleId != battleId*/) {
                 const now = Utils.GetNow();
-                if (this.rewardDate == null || this.rewardDate.getDate() != now.getDate()) {
-                    if (this.HasEnoughPointsForReward()) {
-                        this.rewardPoints -= this.GetNextRewardPoints();
-                        this.rewardBattleId = battleId;
-                        this.rewardDate = now;
+                if (this.HasEnoughPointsForReward()) {
+                    this.rewardPoints -= this.GetNextRewardPoints();
+                    this.rewardBattleId = battleId;
+                    this.rewardDate = now;
 
-                        this.UPDATE({
-                            reward_battle_id: this.rewardBattleId,
-                            reward_points: this.rewardPoints,
-                            reward_points_total: this.rewardPointsTotal,
-                            reward_date: this.rewardDate.toISOString(),
-                        });
+                    this.UPDATE({
+                        reward_battle_id: this.rewardBattleId,
+                        reward_points: this.rewardPoints,
+                        reward_points_total: this.rewardPointsTotal,
+                        reward_date: this.rewardDate.toISOString(),
+                    });
 
-                        var player = this.GetPlayer();
+                    var player = this.GetPlayer();
 
-                        // TODO: Make this generic
-                        const cardModifyResult = await CardManager.GivePlayerCard(player);
-                        const playerCard = <PlayerCard>cardModifyResult.object;
-                        messageInfo.channel = BotManager.GetCardChannel();
-                        if (cardModifyResult.result) {
-                            var cardMessage = await MessageService.ReplyMessage(messageInfo, 'Je hebt goed meegeholpen in de Dungeons & Wasberen campaign. Voor jou deze nieuwe kaart!', undefined, true, CardEmbeds.GetCardEmbed(playerCard.GetCard(), playerCard.GetAmount()));
-                            if (cardMessage != null) {
-                                CardManager.OnCardMessage(cardMessage, playerCard);
-                                LogService.Log(player, playerCard.GetCardId(), LogType.CardReceivedReward, `${player.GetDiscordName()} heeft de kaart '${playerCard.GetCard().GetName()}' gekregen als beloning in gevecht ${battleId}.`);
-                            }
-                        } else {
-                            var cardMessage = await MessageService.ReplyMessage(messageInfo, 'Je hebt goed meegeholpen in de Dungeons & Wasberen campaign. Voor jou deze extra kaart!', undefined, true, CardEmbeds.GetCardEmbed(playerCard.GetCard(), playerCard.GetAmount()));
-                            if (cardMessage != null) {
-                                CardManager.OnCardMessage(cardMessage, playerCard);
-                                LogService.Log(player, playerCard.GetCardId(), LogType.CardReceivedReward, `${player.GetDiscordName()} heeft de kaart '${playerCard.GetCard().GetName()}' gekregen als beloning in gevecht ${battleId}, en heeft daar nu ${playerCard.GetAmount()} van.`);
-                            }
+                    // TODO: Make this generic
+                    const cardModifyResult = await CardManager.GivePlayerCard(player);
+                    const playerCard = <PlayerCard>cardModifyResult.object;
+                    messageInfo.channel = BotManager.GetCardChannel();
+                    if (cardModifyResult.result) {
+                        var cardMessage = await MessageService.ReplyMessage(messageInfo, 'Je hebt goed meegeholpen in de Dungeons & Wasberen campaign. Voor jou deze nieuwe kaart!', undefined, true, CardEmbeds.GetCardEmbed(playerCard.GetCard(), playerCard.GetAmount()));
+                        if (cardMessage != null) {
+                            CardManager.OnCardMessage(cardMessage, playerCard);
+                            LogService.Log(player, playerCard.GetCardId(), LogType.CardReceivedReward, `${player.GetDiscordName()} heeft de kaart '${playerCard.GetCard().GetName()}' gekregen als beloning in gevecht ${battleId}.`);
                         }
-
-                        return;
+                    } else {
+                        var cardMessage = await MessageService.ReplyMessage(messageInfo, 'Je hebt goed meegeholpen in de Dungeons & Wasberen campaign. Voor jou deze extra kaart!', undefined, true, CardEmbeds.GetCardEmbed(playerCard.GetCard(), playerCard.GetAmount()));
+                        if (cardMessage != null) {
+                            CardManager.OnCardMessage(cardMessage, playerCard);
+                            LogService.Log(player, playerCard.GetCardId(), LogType.CardReceivedReward, `${player.GetDiscordName()} heeft de kaart '${playerCard.GetCard().GetName()}' gekregen als beloning in gevecht ${battleId}, en heeft daar nu ${playerCard.GetAmount()} van.`);
+                        }
                     }
+
+                    return;
                 }
             }
         }

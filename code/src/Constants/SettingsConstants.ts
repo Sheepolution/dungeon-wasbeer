@@ -70,10 +70,10 @@ export default class SettingsConstants {
     };
 
     public static readonly CARD_RANK_ROLL_VALUE = [
-        40,
-        18,
-        7,
-        2,
+        45,
+        20,
+        10,
+        3,
         0.1,
     ];
 
