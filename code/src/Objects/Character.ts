@@ -1062,7 +1062,8 @@ export default class Character {
         if (battleId == null || battleId != this.rewardBattleId) {
             return this.rewardPoints;
         } else {
-            return this.GetNextRewardPoints() + this.rewardPoints;
+            return this.rewardPoints;
+            // return this.GetNextRewardPoints() + this.rewardPoints;
         }
     }
 
@@ -1266,7 +1267,7 @@ export default class Character {
         this.rewardPointsTotal += rewardPoints;
 
         if (messageInfo != null) {
-            if (battleId != null && this.rewardBattleId != battleId) {
+            if (battleId != null /* this.rewardBattleId != battleId*/) {
                 const now = Utils.GetNow();
                 if (this.rewardDate == null || this.rewardDate.getDate() != now.getDate()) {
                     if (this.HasEnoughPointsForReward()) {
