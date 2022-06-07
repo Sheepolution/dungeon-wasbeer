@@ -52,8 +52,8 @@ export default class SettingsConstants {
     public static readonly CARD_PIECES_DIG_COOLDOWN_MINUTES_MAX = 60 * 8;
 
     public static readonly CARD_PIECE_FIND_CHANCE = [
-        60,
         30,
+        10,
     ];
 
     public static readonly CARD_AMOUNT_REWARD_REACH_INCREASE = [
