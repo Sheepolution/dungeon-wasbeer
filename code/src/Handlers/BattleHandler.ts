@@ -14,7 +14,7 @@ import { LogType } from '../Enums/LogType';
 import EmojiConstants from '../Constants/EmojiConstants';
 import LogService from '../Services/LogService';
 import Charge from '../Objects/Charge';
-import CardManager from '../Managers/CardManager';
+// import CardManager from '../Managers/CardManager';
 
 export default class BattleHandler {
 
@@ -385,7 +385,7 @@ export default class BattleHandler {
         }
 
         if (monsterId == '64a667a2-5dee-4d64-beb8-77dc83cee15c') {
-            await CardManager.GiveBackTakenCard(character);
+            // await CardManager.GiveBackTakenCard(character);
         }
 
         const damage = await this.ResolveAttackResult(messageInfo, message, battle, character, playerWon, playerWon ? character.GetAttackStrength(true) : battle.GetMonsterAttackStrength(true), roll1, roll2, roll3, 0);
@@ -416,7 +416,7 @@ export default class BattleHandler {
         }
 
         if (monsterId == '64a667a2-5dee-4d64-beb8-77dc83cee15c') {
-            await CardManager.TakeEquippedCard(character);
+            // await CardManager.TakeEquippedCard(character);
         }
 
         const damage = await this.ResolveAttackResult(messageInfo, message, battle, character, playerWon, playerWon ? playerStrength : monsterAttackStrength, roll1, roll2, roll3, 0);
@@ -440,7 +440,7 @@ export default class BattleHandler {
             character.GiveDamagePoints(receivedDamage, battle.GetId(), messageInfo);
 
             if (monsterId == '64a667a2-5dee-4d64-beb8-77dc83cee15c') {
-                await CardManager.GiveBackTakenCard(character);
+                // await CardManager.GiveBackTakenCard(character);
             }
 
             if (battle.IsMonsterDead()) {
@@ -465,7 +465,7 @@ export default class BattleHandler {
             }
 
             if (monsterId == '64a667a2-5dee-4d64-beb8-77dc83cee15c') {
-                await CardManager.TakeEquippedCard(character);
+                // await CardManager.TakeEquippedCard(character);
             }
 
             if (character.IsDead()) {
@@ -484,8 +484,8 @@ export default class BattleHandler {
 
     private static async OnDefeatingMonster(battle: Battle) {
         if (battle.GetMonster().GetId() == '64a667a2-5dee-4d64-beb8-77dc83cee15c') {
-            await CardManager.ResetTakenCards();
-            PlayerManager.ResetPlayerCache();
+            // await CardManager.ResetTakenCards();
+            // PlayerManager.ResetPlayerCache();
         }
 
         await battle.Complete();
