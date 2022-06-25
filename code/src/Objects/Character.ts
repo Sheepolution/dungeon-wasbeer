@@ -1407,7 +1407,7 @@ export default class Character {
         this.fullModifierStats.regeneration = Math.min(Math.max(0, this.fullModifierStats.regeneration), max.regeneration * 10);
         this.fullModifierStats.spell = Math.min(Math.max(0, this.fullModifierStats.spell), max.spell * 10);
         this.fullModifierStats.strength = Math.min(Math.max(0, this.fullModifierStats.strength), max.strength * 10);
-        this.fullModifierStats.dexterity = Math.min(Math.max(0, this.fullModifierStats.dexterity), max.dexterity * 10);
+        this.fullModifierStats.dexterity = Math.min(Math.max(0, this.fullModifierStats.dexterity), max.dexterity);
 
         const oldMaxHealth = this.maxHealth;
         this.maxHealth = this.CalculateMaxHealth();
