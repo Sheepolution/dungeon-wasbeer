@@ -946,7 +946,7 @@ export default class Character {
     }
 
     public GetTotalEquipmentSpace() {
-        return CharacterConstants.EQUIPMENT_SPACE_PER_LEVEL[this.level - 1];
+        return CharacterConstants.EQUIPMENT_SPACE_PER_LEVEL[this.level - 1] * 2;
     }
 
     public GetEquipment() {
@@ -1399,15 +1399,15 @@ export default class Character {
             this.fullModifierStats.armor += buff;
         }
 
-        this.fullModifierStats.armor = Math.min(Math.max(0, this.fullModifierStats.armor), max.armor);
-        this.fullModifierStats.attack = Math.min(Math.max(0, this.fullModifierStats.attack), max.attack);
-        this.fullModifierStats.charisma = Math.min(Math.max(0, this.fullModifierStats.charisma), max.charisma);
-        this.fullModifierStats.wisdom = Math.min(Math.max(0, this.fullModifierStats.wisdom), max.wisdom);
-        this.fullModifierStats.health = Math.min(Math.max(0, this.fullModifierStats.health), max.health);
-        this.fullModifierStats.regeneration = Math.min(Math.max(0, this.fullModifierStats.regeneration), max.regeneration);
-        this.fullModifierStats.spell = Math.min(Math.max(0, this.fullModifierStats.spell), max.spell);
-        this.fullModifierStats.strength = Math.min(Math.max(0, this.fullModifierStats.strength), max.strength);
-        this.fullModifierStats.dexterity = Math.min(Math.max(0, this.fullModifierStats.dexterity), max.dexterity);
+        this.fullModifierStats.armor = Math.min(Math.max(0, this.fullModifierStats.armor), max.armor * 10);
+        this.fullModifierStats.attack = Math.min(Math.max(0, this.fullModifierStats.attack), max.attack * 10);
+        this.fullModifierStats.charisma = Math.min(Math.max(0, this.fullModifierStats.charisma), max.charisma * 10);
+        this.fullModifierStats.wisdom = Math.min(Math.max(0, this.fullModifierStats.wisdom), max.wisdom * 10);
+        this.fullModifierStats.health = Math.min(Math.max(0, this.fullModifierStats.health), max.health * 10);
+        this.fullModifierStats.regeneration = Math.min(Math.max(0, this.fullModifierStats.regeneration), max.regeneration * 10);
+        this.fullModifierStats.spell = Math.min(Math.max(0, this.fullModifierStats.spell), max.spell * 10);
+        this.fullModifierStats.strength = Math.min(Math.max(0, this.fullModifierStats.strength), max.strength * 10);
+        this.fullModifierStats.dexterity = Math.min(Math.max(0, this.fullModifierStats.dexterity), max.dexterity * 10);
 
         const oldMaxHealth = this.maxHealth;
         this.maxHealth = this.CalculateMaxHealth();
