@@ -5,7 +5,7 @@ export default class Discord {
 
     public static client: Client;
     public static discordClientOptions: ClientOptions = {
-        intents: [GatewayIntentBits.Guilds , GatewayIntentBits.GuildMembers , GatewayIntentBits.GuildBans , GatewayIntentBits.GuildMessages , GatewayIntentBits.GuildMessageReactions , GatewayIntentBits.GuildMessageTyping , GatewayIntentBits.GuildVoiceStates , GatewayIntentBits.DirectMessages , GatewayIntentBits.DirectMessageReactions , GatewayIntentBits.DirectMessageTyping , GatewayIntentBits.DirectMessageReactions],
+        intents: [GatewayIntentBits.Guilds, GatewayIntentBits.GuildMembers, GatewayIntentBits.GuildBans, GatewayIntentBits.GuildMessages, GatewayIntentBits.GuildMessageReactions, GatewayIntentBits.GuildMessageTyping, GatewayIntentBits.GuildVoiceStates, GatewayIntentBits.DirectMessages, GatewayIntentBits.DirectMessageReactions, GatewayIntentBits.DirectMessageTyping, GatewayIntentBits.DirectMessageReactions, GatewayIntentBits.MessageContent],
         partials: [Partials.Message, Partials.Channel, Partials.Reaction, Partials.User, Partials.GuildMember, Partials.GuildScheduledEvent, Partials.ThreadMember]
     };
 
@@ -31,40 +31,35 @@ export default class Discord {
     }
 
     public static Init() {
-        this.client = new Client({
-                intents: [GatewayIntentBits.Guilds , GatewayIntentBits.GuildMembers , GatewayIntentBits.GuildBans , GatewayIntentBits.GuildMessages , GatewayIntentBits.GuildMessageReactions , GatewayIntentBits.GuildMessageTyping , GatewayIntentBits.GuildVoiceStates , GatewayIntentBits.DirectMessages , GatewayIntentBits.DirectMessageReactions , GatewayIntentBits.DirectMessageTyping , GatewayIntentBits.DirectMessageReactions],
-                partials: [Partials.Message, Partials.Channel, Partials.Reaction, Partials.User, Partials.GuildMember, Partials.GuildScheduledEvent, Partials.ThreadMember]
-            }
-        );
-
+        this.client = new Client(Discord.discordClientOptions);
 
         DiscordService.SetClient(this.client);
 
         this.client.on('ready', async () => { await Discord.EventReady(); });
-        this.client.on('message', async (message) => { await Discord.EventMessage(message); });
-        this.client.on('messageReactionAdd', async (reaction, user) => { 
-            if (reaction.partial){
+        this.client.on('messageCreate', async (message) => { await Discord.EventMessage(message); });
+        this.client.on('messageReactionAdd', async (reaction, user) => {
+            if (reaction.partial) {
                 try {
                     await reaction.fetch();
-                } catch (error){
+                } catch (error) {
                     console.error('Something went wrong when fetching the message: ', error);
                     return;
                 }
             }
-            // await Discord.EventReactionAdd(reaction, <User>user); 
+            await Discord.EventReactionAdd(<MessageReaction>reaction, <User>user);
         });
-        this.client.on('messageReactionRemove', async (reaction, user) => { 
+        this.client.on('messageReactionRemove', async (reaction, user) => {
 
-        //Is zeer waarschijnlijk fout, moet getest worden.
-            if (reaction.partial){
+            //Is zeer waarschijnlijk fout, moet getest worden.
+            if (reaction.partial) {
                 try {
                     await reaction.fetch();
-                } catch (error){
+                } catch (error) {
                     console.error('Something went wrong when fetching the message: ', error);
                     return;
                 }
             }
-            // await Discord.EventReactionRemove(reaction, <User>user); 
+            await Discord.EventReactionRemove(<MessageReaction>reaction, <User>user);
         });
         this.client.login(process.env.TOKEN);
     }

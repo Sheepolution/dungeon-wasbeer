@@ -117,10 +117,10 @@ export default class PlayerCardHandler {
         }
 
         if (obj.values.ownerList) {
-            await obj.message.edit(null, CardEmbeds.GetPlayerCardOwnerListEmbed(obj.values.card, obj.values.ownerList, obj.values.page));
+            await obj.message.edit({ embeds: [CardEmbeds.GetPlayerCardOwnerListEmbed(obj.values.card, obj.values.ownerList, obj.values.page)] });
         } else {
             const cardList = PlayerCardService.GetPlayerCardList(obj.values.player, obj.values.sorting, obj.values.otherPlayer, obj.values.filterType, obj.values.filterValue);
-            await obj.message.edit(null, CardEmbeds.GetPlayerCardListEmbed(cardList, obj.values.player, obj.values.page, obj.values.otherPlayer, obj.values.filterType, obj.values.filterValue));
+            await obj.message.edit({ embeds: [CardEmbeds.GetPlayerCardListEmbed(cardList, obj.values.player, obj.values.page, obj.values.otherPlayer, obj.values.filterType, obj.values.filterValue)] });
         }
     }
 
@@ -130,10 +130,10 @@ export default class PlayerCardHandler {
             return;
         }
 
-        var hasDigCooldown = await player.HasDigCooldown();
+        const hasDigCooldown = await player.HasDigCooldown();
 
         const roll = Math.random() * 100;
-        var category = 1;
+        let category = 1;
         for (const value of SettingsConstants.CARD_PIECE_FIND_CHANCE) {
             if (roll > value) {
                 break;
@@ -145,9 +145,9 @@ export default class PlayerCardHandler {
             category += 1;
         }
 
-        var currentCardPieces = player.GetCardPieces();
+        const currentCardPieces = player.GetCardPieces();
 
-        var baseText = 'Je graaft in de vuilnisbak';
+        let baseText = 'Je graaft in de vuilnisbak';
         if (currentCardPieces == 1) {
             baseText = 'Je graaft in de vuilnisbak met één kaartstukje op zak';
         } else if (currentCardPieces > 1) {
@@ -156,7 +156,7 @@ export default class PlayerCardHandler {
 
         const needed = SettingsConstants.CARD_PIECES_NEEDED;
 
-        var message = await MessageService.ReplyMessage(messageInfo, `${baseText}...`);
+        const message = await MessageService.ReplyMessage(messageInfo, `${baseText}...`);
 
         if (message == null) {
             return;
@@ -172,20 +172,20 @@ export default class PlayerCardHandler {
             await player.AddCardPiece();
             await message.edit(`${baseText} en vindt een stukje van een kaart!\nJe hebt er nu ${player.GetCardPieces()} van de ${needed}!`);
             LogService.Log(player, player.GetId(), LogType.PieceFound, `${player.GetDiscordName()} heeft gegraven en een kaartstukje gevonden.`);
-            var pieces = player.GetCardPieces();
+            const pieces = player.GetCardPieces();
             if (pieces >= needed) {
                 await Utils.Sleep(3);
                 const cardModifyResult = await CardManager.GivePlayerCard(player);
                 const playerCard = <PlayerCard>cardModifyResult.object;
                 messageInfo.channel = BotManager.GetCardChannel();
                 if (cardModifyResult.result) {
-                    var cardMessage = await MessageService.ReplyMessage(messageInfo, 'Je plakt de stukjes aan elkaar, je hebt een nieuwe kaart!', undefined, true, CardEmbeds.GetCardEmbed(playerCard.GetCard(), playerCard.GetAmount()));
+                    const cardMessage = await MessageService.ReplyMessage(messageInfo, 'Je plakt de stukjes aan elkaar, je hebt een nieuwe kaart!', undefined, true, CardEmbeds.GetCardEmbed(playerCard.GetCard(), playerCard.GetAmount()));
                     if (cardMessage != null) {
                         CardManager.OnCardMessage(cardMessage, playerCard);
                         LogService.Log(player, playerCard.GetCardId(), LogType.CardReceivedPieces, `${player.GetDiscordName()} heeft de kaart '${playerCard.GetCard().GetName()}' door kaartstukjes.`);
                     }
                 } else {
-                    var cardMessage = await MessageService.ReplyMessage(messageInfo, 'Je plakt de stukjes aan elkaar, je hebt een extra van deze kaart!', undefined, true, CardEmbeds.GetCardEmbed(playerCard.GetCard(), playerCard.GetAmount()));
+                    const cardMessage = await MessageService.ReplyMessage(messageInfo, 'Je plakt de stukjes aan elkaar, je hebt een extra van deze kaart!', undefined, true, CardEmbeds.GetCardEmbed(playerCard.GetCard(), playerCard.GetAmount()));
                     if (cardMessage != null) {
                         CardManager.OnCardMessage(cardMessage, playerCard);
                         LogService.Log(player, playerCard.GetCardId(), LogType.CardReceivedPieces, `${player.GetDiscordName()} heeft de kaart '${playerCard.GetCard().GetName()}' door kaartstukjes, en heeft daar nu ${playerCard.GetAmount()} van.`);
@@ -209,7 +209,7 @@ export default class PlayerCardHandler {
 
     private static async GiveTetrisCard(messageInfo: IMessageInfo, player: Player, mention: string) {
         const discordId = player.GetDiscordId();
-        var isNeill = false;
+        let isNeill = false;
         if (discordId == SettingsConstants.TETRIS_GUYS.NEILL) {
             isNeill = true;
         } else if (discordId != SettingsConstants.TETRIS_GUYS.RUBEN) {
@@ -311,9 +311,9 @@ export default class PlayerCardHandler {
 
     private static async SendPlayerCardList(messageInfo: IMessageInfo, player: Player, sorting?: SortingType, filterType?: string, filterValue?: string, other?: string, lesserGreater?: string) {
 
-        var otherPlayer;
-        var requester = player;
-        var cardFilter = CardFilterType.None;
+        let otherPlayer;
+        const requester = player;
+        let cardFilter = CardFilterType.None;
 
         if (filterType != null) {
             cardFilter = CardService.GetFilterType(filterType);
@@ -331,7 +331,7 @@ export default class PlayerCardHandler {
                     }
                 }
 
-                var otherId = DiscordUtils.GetMemberId(other);
+                let otherId = DiscordUtils.GetMemberId(other);
                 if (otherId == null) {
                     const member = await DiscordService.FindMember(other, messageInfo.member.guild, true);
                     if (member != null) {
@@ -386,8 +386,8 @@ export default class PlayerCardHandler {
             return;
         }
 
-        var finalCard: Card | null = null;
-        var finalOwnerList: any = null;
+        let finalCard: Card | null = null;
+        let finalOwnerList: any = null;
 
         for (const card of cards) {
             const cardName = card.GetName();

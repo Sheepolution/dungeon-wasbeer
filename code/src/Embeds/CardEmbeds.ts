@@ -1,5 +1,5 @@
 import Card from '../Objects/Card';
-import { Embed, EmbedBuilder } from 'discord.js';
+import { EmbedBuilder } from 'discord.js';
 import SettingsConstants from '../Constants/SettingsConstants';
 import Player from '../Objects/Player';
 import EmojiConstants from '../Constants/EmojiConstants';
@@ -17,25 +17,25 @@ export default class CardEmbeds {
 
         const embed = new EmbedBuilder()
             .setColor(SettingsConstants.COLORS.DEFAULT)
-            .setAuthor({name: card.GetCategory(), iconURL: CardService.GetIconByCategory(card.GetCategory())})
+            .setAuthor({ name: card.GetCategory(), iconURL: CardService.GetIconByCategory(card.GetCategory()) })
             .setTitle(card.GetName() + (amount == 1 ? '' : ' (x' + amount + ')'))
             .setDescription(card.GetDescription())
-            .setFooter({ text: `Seizoen ${card.GetSeason()}`})
+            .setFooter({ text: `Seizoen ${card.GetSeason()}` })
             .setImage(card.GetImageUrl())
-            .addFields({name: 'Level', value: card.GetRankString()});
+            .addFields({ name: 'Level', value: card.GetRankString() });
 
         const season = card.GetSeason();
-        embed.setFooter({text: `Seizoen ${season > 0 ? season : '???'}`});
+        embed.setFooter({ text: `Seizoen ${season > 0 ? season : '???'}` });
 
         const modifiers = card.GetModifiers();
         const modifierClass = card.GetModifierClass();
 
         if (modifiers.length > 0) {
-            embed.addFields({name: 'Modifiers', value: CardService.ParseModifierArrayToEmbedString(modifiers), inline: true});
+            embed.addFields({ name: 'Modifiers', value: CardService.ParseModifierArrayToEmbedString(modifiers), inline: true });
         }
 
         if (modifierClass) {
-            embed.addFields({name: 'Class', value: `${CharacterService.GetClassIconEmoji(modifierClass)} ${modifierClass.toString()}`, inline: true});
+            embed.addFields({ name: 'Class', value: `${CharacterService.GetClassIconEmoji(modifierClass)} ${modifierClass.toString()}`, inline: true });
         }
 
         return embed;
@@ -44,15 +44,15 @@ export default class CardEmbeds {
     public static GetFakeCardEmbed(messageInfo: IMessageInfo) {
         const embed = new EmbedBuilder()
             .setColor(SettingsConstants.COLORS.DEFAULT)
-            .setAuthor({name: 'Exclusief', iconURL: CardService.GetIconByCategory('Exclusief')})
+            .setAuthor({ name: 'Exclusief', iconURL: CardService.GetIconByCategory('Exclusief') })
             .setTitle(messageInfo.member.displayName)
             .setDescription(['Dit is een topgozer!', 'Held.', 'Ja daar is ie dan!', 'Droomgozer', 'Misschien wel mijn favoriete persoon'].randomChoice())
-            .setFooter({text: 'Seizoen 4'})
+            .setFooter({ text: 'Seizoen 4' })
             .setImage(messageInfo.member.user.displayAvatarURL())
-            .addFields({name: 'Level', value:  ':star:'.repeat(5)});
+            .addFields({ name: 'Level', value: ':star:'.repeat(5) });
 
         const season = 4;
-        embed.setFooter({text: `Seizoen ${season > 0 ? season : '???'}`});
+        embed.setFooter({ text: `Seizoen ${season > 0 ? season : '???'}` });
 
         return embed;
     }
@@ -74,7 +74,7 @@ export default class CardEmbeds {
         for (const key in stats) {
             if ({}.hasOwnProperty.call(stats, key)) {
                 const list = stats[key];
-                embed.addFields({name: key, value: list.join('/')});
+                embed.addFields({ name: key, value: list.join('/') });
             }
         }
 
@@ -86,7 +86,7 @@ export default class CardEmbeds {
         const embed = new EmbedBuilder()
             .setColor(SettingsConstants.COLORS.DEFAULT);
 
-        var title = `De kaarten van ${player.GetDiscordName()}`;
+        let title = `De kaarten van ${player.GetDiscordName()}`;
 
         if (otherPlayer != null) {
             title += ` die ${otherPlayer.GetDiscordName()} niet heeft`;
@@ -98,8 +98,8 @@ export default class CardEmbeds {
 
         embed.setTitle(title);
 
-        var split = SettingsConstants.CARD_AMOUNT_SPLIT_PAGES;
-        var pages = Math.ceil(playerCards.length / split);
+        const split = SettingsConstants.CARD_AMOUNT_SPLIT_PAGES;
+        const pages = Math.ceil(playerCards.length / split);
 
         if (page != null) {
             if (page == 0) {
@@ -115,14 +115,14 @@ export default class CardEmbeds {
             }
         }
 
-        var start = page == null ? 0 : (page - 1) * split;
-        var end = page == null ? playerCards.length : Math.min(playerCards.length, page * split);
+        const start = page == null ? 0 : (page - 1) * split;
+        const end = page == null ? playerCards.length : Math.min(playerCards.length, page * split);
 
         if (page != null) {
-            embed.setFooter({text: `${start + 1}-${end} van de ${playerCards.length} kaarten`});
+            embed.setFooter({ text: `${start + 1}-${end} van de ${playerCards.length} kaarten` });
         }
 
-        var list = '';
+        let list = '';
 
         for (let i = start; i < end; i++) {
             const playerCard = playerCards[i];
@@ -137,7 +137,7 @@ export default class CardEmbeds {
         const seasons = [];
 
         for (const playerCard of playerCards) {
-            var cardSeason = playerCard.GetCard().GetSeason();
+            const cardSeason = playerCard.GetCard().GetSeason();
             if (cardSeason <= 0) {
                 continue;
             }
@@ -149,7 +149,7 @@ export default class CardEmbeds {
             }
         }
 
-        var seasonText = '';
+        let seasonText = '';
 
         for (let i = 0; i < seasons.length; i++) {
             const season = seasons[i];
@@ -170,10 +170,10 @@ export default class CardEmbeds {
         embed.setTitle(`Iedereen die de kaart ${card.GetName()} heeft`);
 
         const category = card.GetCategory();
-        embed.setAuthor({name: category, iconURL: CardService.GetIconByCategory(category)});
+        embed.setAuthor({ name: category, iconURL: CardService.GetIconByCategory(category) });
 
-        var split = SettingsConstants.CARD_AMOUNT_SPLIT_PAGES;
-        var pages = Math.ceil(ownerList.length / split);
+        const split = SettingsConstants.CARD_AMOUNT_SPLIT_PAGES;
+        const pages = Math.ceil(ownerList.length / split);
 
         if (page != null) {
             if (page == 0) {
@@ -189,14 +189,14 @@ export default class CardEmbeds {
             }
         }
 
-        var start = page == null ? 0 : (page - 1) * split;
-        var end = page == null ? ownerList.length : Math.min(ownerList.length, page * split);
+        const start = page == null ? 0 : (page - 1) * split;
+        const end = page == null ? ownerList.length : Math.min(ownerList.length, page * split);
 
         if (page != null) {
-            embed.setFooter({text: `${start + 1}-${end} van de ${ownerList.length} eigenaren`});
+            embed.setFooter({ text: `${start + 1}-${end} van de ${ownerList.length} eigenaren` });
         }
 
-        var list = '';
+        let list = '';
 
         for (let i = start; i < end; i++) {
             const owner = ownerList[i];
