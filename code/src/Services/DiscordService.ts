@@ -17,7 +17,7 @@ export default class DiscordService {
     public static async FindMember(searchKey: string, guild: Guild, fuzzy: Boolean = false) {
         // TODO: Research how fetching with query works. Does it work for both displayName and username?
         // For now we just fetch all.
-        var foundMember = await this.FindMemberById(searchKey, guild);
+        let foundMember = await this.FindMemberById(searchKey, guild);
         if (foundMember) {
             return foundMember;
         }
@@ -53,7 +53,7 @@ export default class DiscordService {
     }
 
     public static FindChannel(channelId: string, guild?: Guild) {
-        var channel = this.FindChannelById(channelId, guild);
+        const channel = this.FindChannelById(channelId, guild);
 
         if (channel == null && guild != null) {
             // Guild has already been fetched in FindChannelById
@@ -65,7 +65,7 @@ export default class DiscordService {
     public static async FindChannelById(searchKey: string, guild?: Guild) {
         const id = DiscordUtils.GetChannelId(searchKey);
         if (id) {
-            var foundChannel;
+            let foundChannel;
             if (guild) {
                 foundChannel = guild.channels.cache.get(id);
                 if (!foundChannel) {
@@ -93,7 +93,7 @@ export default class DiscordService {
     public static FindGuild(guildId: string) {
         return this.client.guilds.cache.get(guildId);
     }
-EmbedBuilder: any
+    EmbedBuilder: any;
     public static IsMemberAdmin(member: GuildMember) {
         return member.permissions.has(PermissionsBitField.Flags.Administrator);
     }
@@ -101,9 +101,9 @@ EmbedBuilder: any
     public static async SendEmbed(channel: Channel, embed: EmbedBuilder, content?: string) {
         const textChannel: TextChannel = <TextChannel>channel;
         try {
-    //      return await (content ? textChannel.send(messageToSend) : textChannel.send(embed));
+            //      return await (content ? textChannel.send(messageToSend) : textChannel.send(embed));
 
-            return await (content ? textChannel.send({content: content, embeds: [embed] }) : textChannel.send({embeds: [embed]}));
+            return await (content ? textChannel.send({ content: content, embeds: [embed] }) : textChannel.send({ embeds: [embed] }));
         } catch (error) {
             // Error
         }
@@ -116,7 +116,7 @@ EmbedBuilder: any
                 return await this.SendEmbed(textChannel, embed, message);
             }
             if (attachments != null) {
-                return await textChannel.send({content: message, files: attachments});
+                return await textChannel.send({ content: message, files: attachments });
             } else {
                 return await textChannel.send(message);
             }
@@ -128,14 +128,14 @@ EmbedBuilder: any
     }
 
     public static async ReplyMessage(textChannel: TextChannel, member: GuildMember, message: string, embed?: EmbedBuilder, attachments?: Array<AttachmentBuilder>) {
-        const reply = `<@${member.user}> ${message}`;
+        const reply = `${member.user} ${message}`;
 
         if (embed) {
             return await this.SendEmbed(textChannel, embed, reply);
         }
 
         if (attachments != null) {
-            return await textChannel.send({content: reply, files: attachments});
+            return await textChannel.send({ content: reply, files: attachments });
         } else {
             return await textChannel.send(reply);
         }
