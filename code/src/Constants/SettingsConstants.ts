@@ -1,9 +1,9 @@
 export default class SettingsConstants {
     public static readonly COLORS = {
-        BAD: '#ff0000',
-        GOOD: '#00ff00',
-        MONSTER: '#ff0000',
-        DEFAULT: '#f0529a',
+        BAD: 0xff0000,
+        GOOD: 0x00ff00,
+        MONSTER: 0xff0000,
+        DEFAULT: 0xf0529a,
     };
 
     public static readonly PREFIX = ';';

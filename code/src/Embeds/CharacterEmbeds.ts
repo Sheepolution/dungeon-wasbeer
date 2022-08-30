@@ -10,7 +10,7 @@ import Puzzle from '../Objects/Puzzle';
 import SettingsConstants from '../Constants/SettingsConstants';
 import { TopListType } from '../Enums/TopListType';
 import { Utils } from '../Utils/Utils';
-import { MessageEmbed } from 'discord.js';
+import { Embed, EmbedBuilder } from 'discord.js';
 import Log from '../Objects/Log';
 import Inspire from '../Objects/Inspire';
 import Enchantment from '../Objects/Enchantment';
@@ -24,78 +24,78 @@ import Protect from '../Objects/Protection';
 export default class CharacterEmbeds {
 
     public static async GetCharacterInfoEmbed(character: Character) {
-        const embed = new MessageEmbed()
+        const embed = new EmbedBuilder()
             .setColor(SettingsConstants.COLORS.DEFAULT)
-            .setAuthor(character.GetClassName(), CharacterService.GetClassIconImage(character.GetClass()))
+            .setAuthor({name: character.GetClassName(), iconURL: CharacterService.GetClassIconImage(character.GetClass())})
             .setTitle(`${character.GetName()}${character.GetEnhancementsString()}`)
             .setThumbnail(character.GetAvatarUrl())
-            .addField('XP', `${character.GetXP()}/${character.GetXPForNextLevel()}`, true)
-            .addField('Level', character.GetLevel(), true);
+            .addFields({name: 'XP', value: `${character.GetXP()}/${character.GetXPForNextLevel()}`, inline: true})
+            .addFields({name: 'Level', value: `${character.GetLevel()}`, inline: true});
 
         const modifiers = character.GetFullModifierStats();
         const modifiersClass = character.GetClassModifierStats();
         const modifiersCards = character.GetCardModifierStats();
 
-        embed.addField('Health', `${character.GetCurrentHealth()}/${character.GetMaxHealth()} ${modifiersCards.health > 0 ? `(${character.GetBaseHealth()}+${modifiersCards.health})` : ''}`, true)
-            .addField('Regeneration', `${modifiers.regeneration} ${modifiersCards.regeneration > 0 ? `(${modifiersClass.regeneration}+${modifiersCards.regeneration})` : ''}`, true)
-            .addField('Armor', `${modifiers.armor} ${modifiersCards.armor > 0 ? `(${modifiersClass.armor}+${modifiersCards.armor})` : ''}`, true);
+        embed.addFields({name: 'Health', value: `${character.GetCurrentHealth()}/${character.GetMaxHealth()} ${modifiersCards.health > 0 ? `(${character.GetBaseHealth()}+${modifiersCards.health})` : ''}`, inline: true})
+            .addFields({name: 'Regeneration', value: `${modifiers.regeneration} ${modifiersCards.regeneration > 0 ? `(${modifiersClass.regeneration}+${modifiersCards.regeneration})` : ''}`, inline: true})
+            .addFields({name: 'Armor', value: `${modifiers.armor} ${modifiersCards.armor > 0 ? `(${modifiersClass.armor}+${modifiersCards.armor})` : ''}`, inline: true});
 
         if (character.IsSorcerer()) {
-            embed.addField('Spell attack', `${modifiers.spell} ${modifiersCards.spell > 0 ? `(${modifiersClass.spell}+${modifiersCards.spell})` : ''}`, true);
+            embed.addFields({name: 'Spell attack', value: `${modifiers.spell} ${modifiersCards.spell > 0 ? `(${modifiersClass.spell}+${modifiersCards.spell})` : ''}`, inline: true});
         } else {
-            embed.addField('Strength', `${modifiers.strength} ${modifiersCards.strength > 0 ? `(${modifiersClass.strength}+${modifiersCards.strength})` : ''}`, true);
+            embed.addFields({name: 'Strength', value: `${modifiers.strength} ${modifiersCards.strength > 0 ? `(${modifiersClass.strength}+${modifiersCards.strength})` : ''}`, inline: true});
         }
 
-        embed.addField('Attack', `${modifiers.attack} ${modifiersCards.attack > 0 ? `(${modifiersClass.attack}+${modifiersCards.attack})` : ''}`, true)
-            .addField('Dexterity', `${modifiers.dexterity} ${modifiersCards.dexterity > 0 ? `(${modifiersClass.dexterity}+${modifiersCards.dexterity})` : ''}`, true);
+        embed.addFields({name: 'Attack', value: `${modifiers.attack} ${modifiersCards.attack > 0 ? `(${modifiersClass.attack}+${modifiersCards.attack})` : ''}`, inline: true})
+            .addFields({name: 'Dexterity', value: `${modifiers.dexterity} ${modifiersCards.dexterity > 0 ? `(${modifiersClass.dexterity}+${modifiersCards.dexterity})` : ''}`, inline: true});
 
         if (character.CanHeal()) {
-            embed.addField('Wisdom', `${modifiers.wisdom} ${modifiersCards.wisdom > 0 ? `(${modifiersClass.wisdom}+${modifiersCards.wisdom})` : ''}`, true);
+            embed.addFields({name: 'Wisdom', value: `${modifiers.wisdom} ${modifiersCards.wisdom > 0 ? `(${modifiersClass.wisdom}+${modifiersCards.wisdom})` : ''}`, inline: true});
         }
 
         if (character.CanInspire()) {
-            embed.addField('Charisma', `${modifiers.charisma} ${modifiersCards.charisma > 0 ? `(${modifiersClass.charisma}+${modifiersCards.charisma})` : ''}`, true);
+            embed.addFields({name: 'Charisma', value: `${modifiers.charisma} ${modifiersCards.charisma > 0 ? `(${modifiersClass.charisma}+${modifiersCards.charisma})` : ''}`, inline: true});
         }
 
         if (character.IsInspired()) {
-            embed.addField('Inspiratie', `${character.GetInspiration()}%`, true);
+            embed.addFields({name: 'Inspiratie', value: `${character.GetInspiration()}%`, inline: true});
         }
 
         if (character.IsProtected()) {
-            embed.addField('Protection', character.GetProtection(), true);
+            embed.addFields({name: 'Protection', value: `${character.GetProtection()}`, inline: true});
         }
 
         if (character.IsBlessed()) {
-            embed.addField('Blessing', character.GetBlessing(), true);
+            embed.addFields({name: 'Blessing', value: `${character.GetBlessing()}`, inline: true});
         }
 
         const equipment = character.GetEquipment();
-        embed.addField('-----------------------------', `Equipment ${equipment.length}/${character.GetTotalEquipmentSpace()}`);
+        embed.addFields({name: '-----------------------------', value: `Equipment ${equipment.length}/${character.GetTotalEquipmentSpace()}`});
         this.AddEquipmentToEmbed(embed, equipment);
 
-        embed.addField('-----------------------------', 'Cooldown(s)');
+        embed.addFields({name: '-----------------------------', value: 'Cooldown(s)'});
         const battleCooldown = await character.GetBattleCooldown();
         if (battleCooldown > 0) {
-            embed.addField('Vechten', `🕒 ${Utils.GetSecondsInMinutesAndSeconds(battleCooldown)}`, true);
+            embed.addFields({name: 'Vechten', value: `🕒 ${Utils.GetSecondsInMinutesAndSeconds(battleCooldown)}`, inline: true});
         } else {
-            embed.addField('Vechten', 'Klaar om te vechten!', true);
+            embed.addFields({name: 'Vechten', value: 'Klaar om te vechten!', inline: true});
         }
 
         if (character.CanHeal()) {
             const healingCooldown = await character.GetHealingCooldown();
             if (healingCooldown > 0) {
-                embed.addField('Healen', `🕒 ${Utils.GetSecondsInMinutesAndSeconds(healingCooldown)}`, true);
+                embed.addFields({name: 'Healen', value: `🕒 ${Utils.GetSecondsInMinutesAndSeconds(healingCooldown)}`, inline: true});
             } else {
-                embed.addField('Healen', 'Klaar om te healen!', true);
+                embed.addFields({name: 'Healen', value: 'Klaar om te healen!', inline: true});
             }
         }
 
         if (character.CanInspire()) {
             const inspiringCooldown = await character.GetInspireCooldown();
             if (inspiringCooldown > 0) {
-                embed.addField('Inspireren', `🕒 ${Utils.GetSecondsInMinutesAndSeconds(inspiringCooldown)}`, true);
+                embed.addFields({name: 'Inspireren', value: `🕒 ${Utils.GetSecondsInMinutesAndSeconds(inspiringCooldown)}`, inline: true});
             } else {
-                embed.addField('Inspireren', 'Klaar om een mooi lied te spelen!', true);
+                embed.addFields({name: 'Inspireren', value: 'Klaar om een mooi lied te spelen!', inline: true});
             }
         }
 
@@ -103,13 +103,13 @@ export default class CharacterEmbeds {
     }
 
     public static GetCharacterDescriptionEmbed(character: Character) {
-        const embed = new MessageEmbed()
+        const embed = new EmbedBuilder()
             .setColor(SettingsConstants.COLORS.DEFAULT)
-            .setAuthor(character.GetClassName(), CharacterService.GetClassIconImage(character.GetClass()))
+            .setAuthor({name: character.GetClassName(), iconURL: CharacterService.GetClassIconImage(character.GetClass())})
             .setTitle(`${character.GetName()}${character.GetEnhancementsString()}`)
             .setImage(character.GetAvatarUrl())
-            .addField('XP', `${character.GetXP()}/${character.GetXPForNextLevel()}`, true)
-            .addField('Level', character.GetLevel(), true);
+            .addFields({name: 'XP', value: `${character.GetXP()}/${character.GetXPForNextLevel()}`, inline: true})
+            .addFields({name: 'Level', value: `${character.GetLevel()}`, inline: true});
 
         const lore = character.GetLore();
         if (lore != null) {
@@ -120,118 +120,118 @@ export default class CharacterEmbeds {
     }
 
     public static GetCharacterStatsEmbed(character: Character) {
-        const embed = new MessageEmbed()
+        const embed = new EmbedBuilder()
             .setColor(SettingsConstants.COLORS.DEFAULT)
-            .setAuthor(character.GetClassName(), CharacterService.GetClassIconImage(character.GetClass()))
+            .setAuthor({name: character.GetClassName(), iconURL: CharacterService.GetClassIconImage(character.GetClass())})
             .setTitle(`${character.GetName()}${character.GetEnhancementsString()}`)
-            .addField('XP', `${character.GetXP()}/${character.GetXPForNextLevel()}`, true)
-            .addField('Level', character.GetLevel(), true);
+            .addFields({name: 'XP', value: `${character.GetXP()}/${character.GetXPForNextLevel()}`, inline: true})
+            .addFields({name: 'Level', value: `${character.GetLevel()}`, inline: true});
 
         const modifiers = character.GetFullModifierStats();
         const modifiersClass = character.GetClassModifierStats();
         const modifiersCards = character.GetCardModifierStats();
 
-        embed.addField('Health', `${character.GetCurrentHealth()}/${character.GetMaxHealth()} ${modifiersCards.health > 0 ? `(${character.GetBaseHealth()}+${modifiersCards.health})` : ''}`, true)
-            .addField('Regeneration', `${modifiers.regeneration} ${modifiersCards.regeneration > 0 ? `(${modifiersClass.regeneration}+${modifiersCards.regeneration})` : ''}`, true)
-            .addField('Armor', `${modifiers.armor} ${modifiersCards.armor > 0 ? `(${modifiersClass.armor}+${modifiersCards.armor})` : ''}`, true);
+        embed.addFields({name: 'Health', value: `${character.GetCurrentHealth()}/${character.GetMaxHealth()} ${modifiersCards.health > 0 ? `(${character.GetBaseHealth()}+${modifiersCards.health})` : ''}`, inline: true})
+            .addFields({name: 'Regeneration', value: `${modifiers.regeneration} ${modifiersCards.regeneration > 0 ? `(${modifiersClass.regeneration}+${modifiersCards.regeneration})` : ''}`, inline: true})
+            .addFields({name: 'Armor', value: `${modifiers.armor} ${modifiersCards.armor > 0 ? `(${modifiersClass.armor}+${modifiersCards.armor})` : ''}`, inline: true});
 
         if (character.IsSorcerer()) {
-            embed.addField('Spell attack', `${modifiers.spell} ${modifiersCards.spell > 0 ? `(${modifiersClass.spell}+${modifiersCards.spell})` : ''}`, true);
+            embed.addFields({name: 'Spell attack', value: `${modifiers.spell} ${modifiersCards.spell > 0 ? `(${modifiersClass.spell}+${modifiersCards.spell})` : ''}`, inline: true});
         } else {
-            embed.addField('Strength', `${modifiers.strength} ${modifiersCards.strength > 0 ? `(${modifiersClass.strength}+${modifiersCards.strength})` : ''}`, true);
+            embed.addFields({name: 'Strength', value: `${modifiers.strength} ${modifiersCards.strength > 0 ? `(${modifiersClass.strength}+${modifiersCards.strength})` : ''}`, inline: true});
         }
 
-        embed.addField('Attack', `${modifiers.attack} ${modifiersCards.attack > 0 ? `(${modifiersClass.attack}+${modifiersCards.attack})` : ''}`, true)
-            .addField('Dexterity', `${modifiers.dexterity} ${modifiersCards.dexterity > 0 ? `(${modifiersClass.dexterity}+${modifiersCards.dexterity})` : ''}`, true);
+        embed.addFields({name: 'Attack', value: `${modifiers.attack} ${modifiersCards.attack > 0 ? `(${modifiersClass.attack}+${modifiersCards.attack})` : ''}`, inline: true})
+            .addFields({name: 'Dexterity', value: `${modifiers.dexterity} ${modifiersCards.dexterity > 0 ? `(${modifiersClass.dexterity}+${modifiersCards.dexterity})` : ''}`, inline: true});
 
         if (character.CanHeal()) {
-            embed.addField('Wisdom', `${modifiers.wisdom} ${modifiersCards.wisdom > 0 ? `(${modifiersClass.wisdom}+${modifiersCards.wisdom})` : ''}`, true);
+            embed.addFields({name: 'Wisdom', value: `${modifiers.wisdom} ${modifiersCards.wisdom > 0 ? `(${modifiersClass.wisdom}+${modifiersCards.wisdom})` : ''}`, inline: true});
         }
 
         if (character.CanInspire()) {
-            embed.addField('Charisma', `${modifiers.charisma} ${modifiersCards.charisma > 0 ? `(${modifiersClass.charisma}+${modifiersCards.charisma})` : ''}`, true);
+            embed.addFields({name: 'Charisma', value: `${modifiers.charisma} ${modifiersCards.charisma > 0 ? `(${modifiersClass.charisma}+${modifiersCards.charisma})` : ''}`, inline: true});
         }
 
         if (character.IsInspired()) {
-            embed.addField('Inspiratie', `${character.GetInspiration()}%`, true);
+            embed.addFields({name: 'Inspiratie', value: `${character.GetInspiration()}%`, inline: true});
         }
 
         if (character.IsProtected()) {
-            embed.addField('Protection', character.GetProtection(), true);
+            embed.addFields({name: 'Protection', value: `${character.GetProtection()}`, inline: true});
         }
 
         if (character.IsBlessed()) {
-            embed.addField('Blessing', character.GetBlessing(), true);
+            embed.addFields({name: 'Blessing', value: `${character.GetBlessing()}`, inline: true});
         }
 
         return embed;
     }
 
     public static async GetCharacterCooldownsEmbed(character: Character) {
-        const embed = new MessageEmbed()
+        const embed = new EmbedBuilder()
             .setColor(SettingsConstants.COLORS.DEFAULT)
-            .setAuthor(character.GetClassName(), CharacterService.GetClassIconImage(character.GetClass()))
+            .setAuthor({name: character.GetClassName(), iconURL: CharacterService.GetClassIconImage(character.GetClass())})
             .setTitle(`${character.GetName()}${character.GetEnhancementsString()}`);
 
-        embed.addField('-----------------------------', 'Cooldown(s)');
+        embed.addFields({name: '-----------------------------', value: 'Cooldown(s)'});
         const battleCooldown = await character.GetBattleCooldown();
         if (battleCooldown > 0) {
-            embed.addField('Vechten', `🕒 ${Utils.GetSecondsInMinutesAndSeconds(battleCooldown)}`, true);
+            embed.addFields({name: 'Vechten', value:`🕒 ${Utils.GetSecondsInMinutesAndSeconds(battleCooldown)}`, inline: true});
         } else {
-            embed.addField('Vechten', 'Klaar om te vechten!', true);
+            embed.addFields({name: 'Vechten', value:'Klaar om te vechten!', inline: true});
         }
 
         if (character.CanHeal()) {
             const healingCooldown = await character.GetHealingCooldown();
             if (healingCooldown > 0) {
-                embed.addField('Healen', `🕒 ${Utils.GetSecondsInMinutesAndSeconds(healingCooldown)}`, true);
+                embed.addFields({name: 'Healen', value:`🕒 ${Utils.GetSecondsInMinutesAndSeconds(healingCooldown)}`, inline: true});
             } else {
-                embed.addField('Healen', 'Klaar om te healen!', true);
+                embed.addFields({name: 'Healen',  value:'Klaar om te healen!', inline: true});
             }
         }
 
         if (character.CanInspire()) {
             const inspiringCooldown = await character.GetInspireCooldown();
             if (inspiringCooldown > 0) {
-                embed.addField('Inspireren', `🕒 ${Utils.GetSecondsInMinutesAndSeconds(inspiringCooldown)}`, true);
+                embed.addFields({name: 'Inspireren',  value:`🕒 ${Utils.GetSecondsInMinutesAndSeconds(inspiringCooldown)}`, inline: true});
             } else {
-                embed.addField('Inspireren', 'Klaar om een mooi lied te spelen!', true);
+                embed.addFields({name: 'Inspireren',  value:'Klaar om een mooi lied te spelen!', inline: true});
             }
         }
 
         if (character.CanEnchant()) {
             const enchantingCooldown = await character.GetEnchantmentCooldown();
             if (enchantingCooldown > 0) {
-                embed.addField('Enchantment', `🕒 ${Utils.GetSecondsInMinutesAndSeconds(enchantingCooldown)}`, true);
+                embed.addFields({name: 'Enchantment',  value:`🕒 ${Utils.GetSecondsInMinutesAndSeconds(enchantingCooldown)}`, inline: true});
             } else {
-                embed.addField('Enchantment', 'Klaar voor een enchantment!', true);
+                embed.addFields({name: 'Enchantment',  value:'Klaar voor een enchantment!', inline: true});
             }
         }
 
         if (character.CanPercept()) {
             const perceptingCooldown = await character.GetPerceptionCooldown();
             if (perceptingCooldown > 0) {
-                embed.addField('Perception check', `🕒 ${Utils.GetSecondsInMinutesAndSeconds(perceptingCooldown)}`, true);
+                embed.addFields({name: 'Perception check',  value:`🕒 ${Utils.GetSecondsInMinutesAndSeconds(perceptingCooldown)}`, inline: true});
             } else {
-                embed.addField('Perception check', 'Klaar voor een perception check!', true);
+                embed.addFields({name: 'Perception check',  value:'Klaar voor een perception check!', inline: true});
             }
         }
 
         if (character.CanReinforce()) {
             const reinforcementCooldown = await character.GetReinforcementCooldown();
             if (reinforcementCooldown > 0) {
-                embed.addField('Reinforcement', `🕒 ${Utils.GetSecondsInMinutesAndSeconds(reinforcementCooldown)}`, true);
+                embed.addFields({name: 'Reinforcement',  value:`🕒 ${Utils.GetSecondsInMinutesAndSeconds(reinforcementCooldown)}`, inline: true});
             } else {
-                embed.addField('Reinforcement', 'Klaar om te reinforcen!', true);
+                embed.addFields({name: 'Reinforcement',  value:'Klaar om te reinforcen!', inline: true});
             }
         }
 
         if (character.CanProtect()) {
             const protectCooldown = await character.GetProtectCooldown();
             if (protectCooldown > 0) {
-                embed.addField('Protection', `🕒 ${Utils.GetSecondsInMinutesAndSeconds(protectCooldown)}`, true);
+                embed.addFields({name: 'Protection',  value:`🕒 ${Utils.GetSecondsInMinutesAndSeconds(protectCooldown)}`, inline: true});
             } else {
-                embed.addField('Protection', 'Klaar om te protecten!', true);
+                embed.addFields({name: 'Protection',  value:'Klaar om te protecten!', inline: true});
             }
         }
 
@@ -240,18 +240,18 @@ export default class CharacterEmbeds {
 
     public static GetEquipmentEmbed(character: Character) {
         const equipment = character.GetEquipment();
-        const embed = new MessageEmbed()
+        const embed = new EmbedBuilder()
             .setColor(SettingsConstants.COLORS.DEFAULT)
-            .setAuthor(character.GetClassName(), CharacterService.GetClassIconImage(character.GetClass()))
+            .setAuthor({name:character.GetClassName(), iconURL:CharacterService.GetClassIconImage(character.GetClass())})
             .setTitle(`De equipment van ${character.GetName()}${character.GetEnhancementsString()} (${equipment.length}/${character.GetTotalEquipmentSpace()})`);
         this.AddEquipmentToEmbed(embed, equipment);
         return embed;
     }
 
     public static GetNewCharacterEmbed(character: Character) {
-        const embed = new MessageEmbed()
+        const embed = new EmbedBuilder()
             .setColor(SettingsConstants.COLORS.DEFAULT)
-            .setAuthor(character.GetClassName(), CharacterService.GetClassIconImage(character.GetClass()))
+            .setAuthor({name: character.GetClassName(), iconURL: CharacterService.GetClassIconImage(character.GetClass())})
             .setImage(CharacterService.GetClassImage(character.GetClass()))
             .setTitle(character.GetName());
 
@@ -259,9 +259,9 @@ export default class CharacterEmbeds {
     }
 
     public static async GetCharacterHistoryEmbed(character: Character) {
-        const embed = new MessageEmbed()
+        const embed = new EmbedBuilder()
             .setColor(SettingsConstants.COLORS.DEFAULT)
-            .setAuthor(character.GetClassName(), CharacterService.GetClassIconImage(character.GetClass()))
+            .setAuthor({name: character.GetClassName(), iconURL:CharacterService.GetClassIconImage(character.GetClass())})
             .setTitle(`De geschiedenis van ${character.GetName()}${character.GetEnhancementsString()}`)
             .setImage(character.GetAvatarUrl())
             .setDescription(`Aangemaakt op ${character.GetBornDateString()}`);
@@ -272,19 +272,19 @@ export default class CharacterEmbeds {
     }
 
     public static async GetDeadCharacterEmbed(character: Character) {
-        const embed = new MessageEmbed()
+        const embed = new EmbedBuilder()
             .setColor(SettingsConstants.COLORS.BAD)
             .setImage(CharacterConstants.CHARACTER_DIED_IMAGE)
             .setTitle(`RIP ${character.GetName()}\n${character.GetBornDateString()} - ${character.GetDeathDateString()}`)
             .setDescription('--------------------')
-            .addField('Level', character.GetLevel(), true)
-            .addField('XP', character.GetXP(), true);
+            .addFields({name: 'Level',  value:`${character.GetLevel()}`, inline: true})
+            .addFields({name: 'XP',  value:`${character.GetXP()}`, inline: true});
 
         await this.AddCharacterHistoryToEmbed(embed, character);
 
         const equipment = character.GetEquipment();
         if (equipment.length > 0) {
-            embed.addField('-----------------------------', 'Equipment');
+            embed.addFields({name: '-----------------------------',  value:'Equipment'});
             this.AddEquipmentToEmbed(embed, equipment);
         }
 
@@ -292,7 +292,7 @@ export default class CharacterEmbeds {
     }
 
     public static async GetHealingEmbed(character: Character, receiver: Character, roll?: number, healing?: number) {
-        const embed = new MessageEmbed();
+        const embed = new EmbedBuilder();
         if (healing != null) {
             embed.setColor((roll != null && healing == 0) ? SettingsConstants.COLORS.BAD : SettingsConstants.COLORS.GOOD);
         } else {
@@ -305,47 +305,47 @@ export default class CharacterEmbeds {
         embed.setTitle('Healing roll')
             .setThumbnail(character.GetAvatarUrl())
             .setDescription(`${character.GetName()}${character.GetEnhancementsString()} rollt om ${receiver == character ? 'zichzelf' : receiver.GetName()}${receiver.GetEnhancementsString()} te healen.\n\n-- Statistieken --`)
-            .addField(`Health van ${receiverName}`, `${receiver.GetCurrentHealth()}/${receiver.GetMaxHealth()}`)
-            .addField(`Healing van ${characterName}`, character.GetFullModifierStats().wisdom)
-            .addField('--------------------------------', '-- Roll --');
+            .addFields({name: `Health van ${receiverName}`, value: `${receiver.GetCurrentHealth()}/${receiver.GetMaxHealth()}`})
+            .addFields({name: `Healing van ${characterName}`,value: `${character.GetFullModifierStats().wisdom}`})
+            .addFields({name: '--------------------------------',  value:'-- Roll --'});
 
         if (roll == null) {
-            embed.addField(characterName, 'Rollt de D20...');
+            embed.addFields({name: characterName, value: 'Rollt de D20...'});
         } else {
-            embed.addField(characterName, `D20 = ${roll}`)
-                .addField('--------------------------------', '-- Resultaat --')
-                .setFooter(`Participatiepunten: ${character.GetRewardPoints(CampaignManager.GetBattle()?.GetId())}/${character.GetNextRewardPoints()}`);
+            embed.addFields({name: characterName,  value:`D20 = ${roll}`})
+                .addFields({name: '--------------------------------',  value:'-- Resultaat --'})
+                .setFooter({text: `Participatiepunten: ${character.GetRewardPoints(CampaignManager.GetBattle()?.GetId())}/${character.GetNextRewardPoints()}`});
 
             if (healing == 0) {
-                embed.addField(`${characterName} faalt met healen!`, character.GetHealFailDescription().replaceAll('\\[naam\\]', receiverName).replaceAll('\\[jij\\]', characterName));
+                embed.addFields({name: `${characterName} faalt met healen!`, value: character.GetHealFailDescription().replaceAll('\\[naam\\]', receiverName).replaceAll('\\[jij\\]', characterName)});
             } else {
-                embed.addField(`${characterName} slaagt er in te healen`, character.GetHealDescription().replaceAll('\\[naam\\]', receiverName).replaceAll('\\[jij\\]', characterName).replaceAll('\\[health\\]', (healing || 0).toString()));
+                embed.addFields({name: `${characterName} slaagt er in te healen`, value: character.GetHealDescription().replaceAll('\\[naam\\]', receiverName).replaceAll('\\[jij\\]', characterName).replaceAll('\\[health\\]', (healing || 0).toString())});
             }
 
-            embed.addField('--------------------------------', '-- Cooldown(s) --');
+            embed.addFields({name: '--------------------------------',  value:'-- Cooldown(s) --'});
 
             const battleCooldown = await character.GetBattleCooldown();
             if (battleCooldown > 0) {
-                embed.addField('Vechten', `🕒 ${Utils.GetSecondsInMinutesAndSeconds(battleCooldown)}`, true);
+                embed.addFields({name: 'Vechten',  value:`🕒 ${Utils.GetSecondsInMinutesAndSeconds(battleCooldown)}`, inline: true});
             } else {
-                embed.addField('Vechten', 'Klaar om te vechten!', true);
+                embed.addFields({name: 'Vechten',  value:'Klaar om te vechten!', inline: true});
             }
 
             if (character.CanHeal()) {
                 const healingCooldown = await character.GetHealingCooldown();
                 if (healingCooldown > 0) {
-                    embed.addField('Healen', `🕒 ${Utils.GetSecondsInMinutesAndSeconds(healingCooldown)}`, true);
+                    embed.addFields({name: 'Healen',  value:`🕒 ${Utils.GetSecondsInMinutesAndSeconds(healingCooldown)}`, inline: true});
                 } else {
-                    embed.addField('Healen', 'Klaar om te healen!', true);
+                    embed.addFields({name: 'Healen',  value:'Klaar om te healen!', inline: true});
                 }
             }
 
             if (character.CanInspire()) {
                 const inspiringCooldown = await character.GetInspireCooldown();
                 if (inspiringCooldown > 0) {
-                    embed.addField('Inspireren', `🕒 ${Utils.GetSecondsInMinutesAndSeconds(inspiringCooldown)}`, true);
+                    embed.addFields({name: 'Inspireren',  value:`🕒 ${Utils.GetSecondsInMinutesAndSeconds(inspiringCooldown)}`, inline: true});
                 } else {
-                    embed.addField('Inspireren', 'Klaar om een mooi lied te spelen!', true);
+                    embed.addFields({name: 'Inspireren',  value:'Klaar om een mooi lied te spelen!', inline: true});
                 }
             }
         }
@@ -354,7 +354,7 @@ export default class CharacterEmbeds {
     }
 
     public static async GetInspiringEmbed(character: Character, receiver: Character, roll?: number, inspiration?: number) {
-        const embed = new MessageEmbed();
+        const embed = new EmbedBuilder();
         if (inspiration != null) {
             embed.setColor((roll != null && inspiration == 0) ? SettingsConstants.COLORS.BAD : SettingsConstants.COLORS.GOOD);
         } else {
@@ -367,46 +367,46 @@ export default class CharacterEmbeds {
         embed.setTitle('Inspire roll')
             .setThumbnail(character.GetAvatarUrl())
             .setDescription(`${character.GetName()}${character.GetEnhancementsString()} rollt om ${receiver == character ? 'zichzelf' : receiver.GetName()}${receiver.GetEnhancementsString()} te inspireren.\n\n-- Statistieken --`)
-            .addField(`Charisma van ${characterName}`, character.GetFullModifierStats().charisma)
-            .addField('--------------------------------', '-- Roll --');
+            .addFields({name: `Charisma van ${characterName}`,  value:`${character.GetFullModifierStats().charisma}`})
+            .addFields({name: '--------------------------------',  value:'-- Roll --'});
 
         if (roll == null) {
-            embed.addField(characterName, 'Rollt de D20...');
+            embed.addFields({name: characterName, value:'Rollt de D20...'});
         } else {
-            embed.addField(characterName, `D20 = ${roll}`)
-                .addField('--------------------------------', '-- Resultaat --')
-                .setFooter(`Participatiepunten: ${character.GetRewardPoints(CampaignManager.GetBattle()?.GetId())}/${character.GetNextRewardPoints()}`);
+            embed.addFields({name:characterName, value:`D20 = ${roll}`})
+                .addFields({name: '--------------------------------', value:'-- Resultaat --'})
+                .setFooter({text: `Participatiepunten: ${character.GetRewardPoints(CampaignManager.GetBattle()?.GetId())}/${character.GetNextRewardPoints()}`});
 
             if (inspiration == 0) {
-                embed.addField(`${characterName} faalt met inspireren!`, character.GetInspireFailDescription().replaceAll('\\[naam\\]', receiverName).replaceAll('\\[jij\\]', characterName));
+                embed.addFields({name: `${characterName} faalt met inspireren!`, value: character.GetInspireFailDescription().replaceAll('\\[naam\\]', receiverName).replaceAll('\\[jij\\]', characterName)});
             } else {
-                embed.addField(`${characterName} slaagt er in te inspireren`, character.GetInspireDescription().replaceAll('\\[naam\\]', receiverName).replaceAll('\\[jij\\]', characterName).replaceAll('\\[inspiratie\\]', (inspiration || 0).toString()));
+                embed.addFields({name: `${characterName} slaagt er in te inspireren`, value: character.GetInspireDescription().replaceAll('\\[naam\\]', receiverName).replaceAll('\\[jij\\]', characterName).replaceAll('\\[inspiratie\\]', (inspiration || 0).toString())});
             }
 
-            embed.addField('--------------------------------', '-- Cooldown(s) --');
+            embed.addFields({name: '--------------------------------', value:'-- Cooldown(s) --'});
 
             const battleCooldown = await character.GetBattleCooldown();
             if (battleCooldown > 0) {
-                embed.addField('Vechten', `🕒 ${Utils.GetSecondsInMinutesAndSeconds(battleCooldown)}`, true);
+                embed.addFields({name: 'Vechten', value:`🕒 ${Utils.GetSecondsInMinutesAndSeconds(battleCooldown)}`, inline: true});
             } else {
-                embed.addField('Vechten', 'Klaar om te vechten!', true);
+                embed.addFields({name: 'Vechten', value:'Klaar om te vechten!', inline: true});
             }
 
             if (character.CanHeal()) {
                 const healingCooldown = await character.GetHealingCooldown();
                 if (healingCooldown > 0) {
-                    embed.addField('Healen', `🕒 ${Utils.GetSecondsInMinutesAndSeconds(healingCooldown)}`, true);
+                    embed.addFields({name: 'Healen', value:`🕒 ${Utils.GetSecondsInMinutesAndSeconds(healingCooldown)}`, inline: true});
                 } else {
-                    embed.addField('Healen', 'Klaar om te healen!', true);
+                    embed.addFields({name: 'Healen', value:'Klaar om te healen!', inline: true});
                 }
             }
 
             if (character.CanInspire()) {
                 const inspiringCooldown = await character.GetInspireCooldown();
                 if (inspiringCooldown > 0) {
-                    embed.addField('Inspireren', `🕒 ${Utils.GetSecondsInMinutesAndSeconds(inspiringCooldown)}`, true);
+                    embed.addFields({name: 'Inspireren', value:`🕒 ${Utils.GetSecondsInMinutesAndSeconds(inspiringCooldown)}`, inline: true});
                 } else {
-                    embed.addField('Inspireren', 'Klaar om een mooi lied te spelen!', true);
+                    embed.addFields({name: 'Inspireren',value: 'Klaar om een mooi lied te spelen!', inline: true});
                 }
             }
         }
@@ -415,7 +415,7 @@ export default class CharacterEmbeds {
     }
 
     public static async GetProtectionEmbed(character: Character, receiver: Character, roll?: number, protection?: number) {
-        const embed = new MessageEmbed();
+        const embed = new EmbedBuilder();
         if (protection != null) {
             embed.setColor((roll != null && protection == 0) ? SettingsConstants.COLORS.BAD : SettingsConstants.COLORS.GOOD);
         } else {
@@ -428,38 +428,38 @@ export default class CharacterEmbeds {
         embed.setTitle('Protection roll')
             .setThumbnail(character.GetAvatarUrl())
             .setDescription(`${character.GetName()}${character.GetEnhancementsString()} rollt om ${receiver == character ? 'zichzelf' : receiver.GetName()}${receiver.GetEnhancementsString()} te beschermen.\n\n-- Statistieken --`)
-            .addField(`Armor van ${receiverName}`, receiver.GetArmor())
-            .addField(`Armor van ${characterName}`, character.GetFullModifierStats().armor)
-            .addField('--------------------------------', '-- Roll --');
+            .addFields({name: `Armor van ${receiverName}`, value:`${receiver.GetArmor()}`})
+            .addFields({name: `Armor van ${characterName}`, value:`${character.GetFullModifierStats().armor}`})
+            .addFields({name: '--------------------------------', value:'-- Roll --'});
 
         if (roll == null) {
-            embed.addField(characterName, 'Rollt de D20...');
+            embed.addFields({name: characterName, value:'Rollt de D20...'});
         } else {
-            embed.addField(characterName, `D20 = ${roll}`)
-                .addField('--------------------------------', '-- Resultaat --')
-                .setFooter(`Participatiepunten: ${character.GetRewardPoints(CampaignManager.GetBattle()?.GetId())}/${character.GetNextRewardPoints()}`);
+            embed.addFields({name: characterName, value:`D20 = ${roll}`})
+                .addFields({name: '--------------------------------', value:'-- Resultaat --'})
+                .setFooter({text: `Participatiepunten: ${character.GetRewardPoints(CampaignManager.GetBattle()?.GetId())}/${character.GetNextRewardPoints()}`});
 
             if (protection == 0) {
-                embed.addField(`${characterName} faalt met beschermen!`, character.GetProtectionFailDescription().replaceAll('\\[naam\\]', receiverName).replaceAll('\\[jij\\]', characterName));
+                embed.addFields({name: `${characterName} faalt met beschermen!`, value: character.GetProtectionFailDescription().replaceAll('\\[naam\\]', receiverName).replaceAll('\\[jij\\]', characterName)});
             } else {
-                embed.addField(`${characterName} slaagt er in te beschermen`, character.GetProtectionDescription().replaceAll('\\[naam\\]', receiverName).replaceAll('\\[jij\\]', characterName).replaceAll('\\[bescherming\\]', (protection || 0).toString()));
+                embed.addFields({name: `${characterName} slaagt er in te beschermen`, value: character.GetProtectionDescription().replaceAll('\\[naam\\]', receiverName).replaceAll('\\[jij\\]', characterName).replaceAll('\\[bescherming\\]', (protection || 0).toString())});
             }
 
-            embed.addField('--------------------------------', '-- Cooldown(s) --');
+            embed.addFields({name: '--------------------------------', value:'-- Cooldown(s) --'});
 
             const battleCooldown = await character.GetBattleCooldown();
             if (battleCooldown > 0) {
-                embed.addField('Vechten', `🕒 ${Utils.GetSecondsInMinutesAndSeconds(battleCooldown)}`, true);
+                embed.addFields({name: 'Vechten', value: `🕒 ${Utils.GetSecondsInMinutesAndSeconds(battleCooldown)}`, inline: true});
             } else {
-                embed.addField('Vechten', 'Klaar om te vechten!', true);
+                embed.addFields({name: 'Vechten', value: 'Klaar om te vechten!', inline: true});
             }
 
             if (character.CanProtect()) {
                 const protectingCooldown = await character.GetProtectCooldown();
                 if (protectingCooldown > 0) {
-                    embed.addField('Protecting', `🕒 ${Utils.GetSecondsInMinutesAndSeconds(protectingCooldown)}`, true);
+                    embed.addFields({name: 'Protecting', value: `🕒 ${Utils.GetSecondsInMinutesAndSeconds(protectingCooldown)}`, inline: true});
                 } else {
-                    embed.addField('Protecting', 'Klaar om iemand te beschermen!', true);
+                    embed.addFields({name: 'Protecting', value: 'Klaar om iemand te beschermen!', inline: true});
                 }
             }
         }
@@ -468,7 +468,7 @@ export default class CharacterEmbeds {
     }
 
     public static GetChargingEmbed(character: Character, roll?: number, charge: number = 0) {
-        const embed = new MessageEmbed();
+        const embed = new EmbedBuilder();
         if (charge != null) {
             embed.setColor((roll != null && charge == 0) ? SettingsConstants.COLORS.BAD : SettingsConstants.COLORS.GOOD);
         } else {
@@ -480,20 +480,20 @@ export default class CharacterEmbeds {
         embed.setTitle('Charge roll')
             .setThumbnail(character.GetAvatarUrl())
             .setDescription(`${character.GetName()}${character.GetEnhancementsString()} rollt voor een charge.\n\n-- Statistieken --`)
-            .addField(`Armor van ${characterName}`, character.GetArmor())
-            .addField('--------------------------------', '-- Roll --');
+            .addFields({name: `Armor van ${characterName}`, value: `${character.GetArmor()}`})
+            .addFields({name: '--------------------------------', value: '-- Roll --'});
 
         if (roll == null) {
-            embed.addField(characterName, 'Rollt de D20...');
+            embed.addFields({name: characterName, value: 'Rollt de D20...'});
         } else {
-            embed.addField(characterName, `D20 = ${roll}`)
-                .addField('--------------------------------', '-- Resultaat --')
-                .setFooter(`Participatiepunten: ${character.GetRewardPoints(CampaignManager.GetBattle()?.GetId())}/${character.GetNextRewardPoints()}`);
+            embed.addFields({name: characterName, value: `D20 = ${roll}`})
+                .addFields({name: '--------------------------------', value: '-- Resultaat --'})
+                .setFooter({text: `Participatiepunten: ${character.GetRewardPoints(CampaignManager.GetBattle()?.GetId())}/${character.GetNextRewardPoints()}`});
 
             if (charge == 0) {
-                embed.addField(`${characterName} faalt met chargen!`, character.GetChargeFailDescription().replaceAll('\\[jij\\]', characterName));
+                embed.addFields({name: `${characterName} faalt met chargen!`, value: character.GetChargeFailDescription().replaceAll('\\[jij\\]', characterName)});
             } else {
-                embed.addField(`${characterName} slaagt er in te beschermen`, character.GetChargeDescription().replaceAll('\\[jij\\]', characterName).replaceAll('\\[charge\\]', charge.toString()));
+                embed.addFields({name: `${characterName} slaagt er in te beschermen`, value: character.GetChargeDescription().replaceAll('\\[jij\\]', characterName).replaceAll('\\[charge\\]', charge.toString())});
             }
         }
 
@@ -501,7 +501,7 @@ export default class CharacterEmbeds {
     }
 
     public static async GetPrayingEmbed(character: Character, roll?: number, blessing?: number) {
-        const embed = new MessageEmbed();
+        const embed = new EmbedBuilder();
         if (blessing != null) {
             embed.setColor((roll != null && blessing == 0) ? SettingsConstants.COLORS.BAD : SettingsConstants.COLORS.GOOD);
         } else {
@@ -513,35 +513,35 @@ export default class CharacterEmbeds {
         embed.setTitle('Prayer roll')
             .setThumbnail(character.GetAvatarUrl())
             .setDescription(`${character.GetName()}${character.GetEnhancementsString()} rollt voor een blessing.\n\n-- Statistieken --`)
-            .addField(`Wisdom van ${characterName}`, character.GetFullModifierStats().wisdom)
-            .addField('--------------------------------', '-- Roll --');
+            .addFields({name: `Wisdom van ${characterName}`, value: `${character.GetFullModifierStats().wisdom}`})
+            .addFields({name: '--------------------------------', value: '-- Roll --'});
 
         if (roll == null) {
-            embed.addField(characterName, 'Rollt de D20...');
+            embed.addFields({name: characterName, value: 'Rollt de D20...'});
         } else {
-            embed.addField(characterName, `D20 = ${roll}`)
-                .addField('--------------------------------', '-- Resultaat --')
-                .setFooter(`Participatiepunten: ${character.GetRewardPoints(CampaignManager.GetBattle()?.GetId())}/${character.GetNextRewardPoints()}`);
+            embed.addFields({name: characterName, value: `D20 = ${roll}`})
+                .addFields({name: '--------------------------------', value: '-- Resultaat --'})
+                .setFooter({text: `Participatiepunten: ${character.GetRewardPoints(CampaignManager.GetBattle()?.GetId())}/${character.GetNextRewardPoints()}`});
 
             if (blessing == 0) {
-                embed.addField(`${characterName} faalt met bidden!`, character.GetPrayFailDescription().replaceAll('\\[jij\\]', characterName));
+                embed.addFields({name: `${characterName} faalt met bidden!`, value: character.GetPrayFailDescription().replaceAll('\\[jij\\]', characterName)});
             } else {
-                embed.addField(`${characterName} slaagt er in te bidden`, character.GetPrayDescription().replaceAll('\\[jij\\]', characterName).replaceAll('\\[blessing\\]', (blessing || 0).toString()));
+                embed.addFields({name: `${characterName} slaagt er in te bidden`, value: character.GetPrayDescription().replaceAll('\\[jij\\]', characterName).replaceAll('\\[blessing\\]', (blessing || 0).toString())});
             }
 
             const battleCooldown = await character.GetBattleCooldown();
             if (battleCooldown > 0) {
-                embed.addField('Vechten', `🕒 ${Utils.GetSecondsInMinutesAndSeconds(battleCooldown)}`, true);
+                embed.addFields({name: 'Vechten', value: `🕒 ${Utils.GetSecondsInMinutesAndSeconds(battleCooldown)}`, inline: true});
             } else {
-                embed.addField('Vechten', 'Klaar om te vechten!', true);
+                embed.addFields({name: 'Vechten', value: 'Klaar om te vechten!', inline: true});
             }
 
             if (character.CanHeal()) {
                 const healingCooldown = await character.GetHealingCooldown();
                 if (healingCooldown > 0) {
-                    embed.addField('Healen', `🕒 ${Utils.GetSecondsInMinutesAndSeconds(healingCooldown)}`, true);
+                    embed.addFields({name: 'Healen', value: `🕒 ${Utils.GetSecondsInMinutesAndSeconds(healingCooldown)}`, inline: true});
                 } else {
-                    embed.addField('Healen', 'Klaar om te healen!', true);
+                    embed.addFields({name: 'Healen', value: 'Klaar om te healen!', inline: true});
                 }
             }
         }
@@ -551,7 +551,7 @@ export default class CharacterEmbeds {
 
     public static async GetLowestHealthEmbed() {
         const list: any = await Character.GET_LOW_HEALTH_LIST();
-        const embed = new MessageEmbed()
+        const embed = new EmbedBuilder()
             .setTitle('Deze characters hebben healing nodig!');
 
         var listString = '';
@@ -567,7 +567,7 @@ export default class CharacterEmbeds {
 
     public static async GetTopXPEmbed() {
         const list: any = await Character.GET_TOP_XP_LIST();
-        const embed = new MessageEmbed()
+        const embed = new EmbedBuilder()
             .setTitle(`Top ${list.length} meeste xp`);
 
         var listString = '';
@@ -584,7 +584,7 @@ export default class CharacterEmbeds {
 
     public static async GetTopRewardPointsEmbed() {
         const list: any = await Character.GET_TOP_REWARD_POINTS_LIST();
-        const embed = new MessageEmbed()
+        const embed = new EmbedBuilder()
             .setTitle(`Top ${list.length} meeste participatiepunten`);
 
         var listString = '';
@@ -601,7 +601,7 @@ export default class CharacterEmbeds {
 
     public static async GetTopRegeneratedEmbed() {
         const list: any = await Character.GET_TOP_REGENERATED_LIST();
-        const embed = new MessageEmbed()
+        const embed = new EmbedBuilder()
             .setTitle(`Top ${list.length} meeste health regenerated`);
 
         var listString = '';
@@ -618,7 +618,7 @@ export default class CharacterEmbeds {
 
     public static async GetTopSleptEmbed() {
         const list: any = await Character.GET_TOP_SLEPT_LIST();
-        const embed = new MessageEmbed()
+        const embed = new EmbedBuilder()
             .setTitle(`Top ${list.length} meeste keren geslapen`);
 
         var listString = '';
@@ -635,7 +635,7 @@ export default class CharacterEmbeds {
 
     public static async GetTopFightsEmbed(topListType: TopListType, battleId?: string) {
         const list: any = await Attack.GET_TOP_BATTLES_LIST(undefined, battleId);
-        const embed = new MessageEmbed()
+        const embed = new EmbedBuilder()
             .setTitle(`Top ${list.length} aanvallen${topListType == TopListType.Current ? ' van dit gevecht' : topListType == TopListType.Previous ? ' van het vorige gevecht' : ''}`);
 
         var listString = '';
@@ -652,7 +652,7 @@ export default class CharacterEmbeds {
 
     public static async GetTopFightsWonEmbed(topListType: TopListType, battleId?: string) {
         const list: any = await Attack.GET_TOP_BATTLES_LIST(true, battleId);
-        const embed = new MessageEmbed()
+        const embed = new EmbedBuilder()
             .setTitle(`Top ${list.length} meeste gewonnen aanvallen${topListType == TopListType.Current ? ' in dit gevecht' : topListType == TopListType.Previous ? ' in het vorige gevecht' : ''}`);
 
         var listString = '';
@@ -669,7 +669,7 @@ export default class CharacterEmbeds {
 
     public static async GetTopFightsLostEmbed(topListType: TopListType, battleId?: string) {
         const list: any = await Attack.GET_TOP_BATTLES_LIST(false, battleId);
-        const embed = new MessageEmbed()
+        const embed = new EmbedBuilder()
             .setTitle(`Top ${list.length} meeste verloren aanvallen${topListType == TopListType.Current ? ' in dit gevecht' : topListType == TopListType.Previous ? ' in het vorige gevecht' : ''}`);
 
         var listString = '';
@@ -714,7 +714,7 @@ export default class CharacterEmbeds {
 
         list.sort((a: any, b: any) => b.ratio - a.ratio);
 
-        const embed = new MessageEmbed()
+        const embed = new EmbedBuilder()
             .setTitle(`Top ${list.length} win ratio ${topListType == TopListType.Current ? ' in dit gevecht' : topListType == TopListType.Previous ? ' in het vorige gevecht' : ''}`);
 
         var listString = '';
@@ -731,7 +731,7 @@ export default class CharacterEmbeds {
 
     public static async GetTopDamageDoneEmbed(topListType: TopListType, battleId?: string) {
         const list: any = await Attack.GET_TOP_DAMAGE_LIST(true, battleId);
-        const embed = new MessageEmbed()
+        const embed = new EmbedBuilder()
             .setTitle(`Top ${list.length} meeste schade gedaan${topListType == TopListType.Current ? ' in dit gevecht' : topListType == TopListType.Previous ? ' in het vorige gevecht' : ''}`);
 
         var listString = '';
@@ -748,7 +748,7 @@ export default class CharacterEmbeds {
 
     public static async GetTopDamageReceivedEmbed(topListType: TopListType, battleId?: string) {
         const list: any = await Attack.GET_TOP_DAMAGE_LIST(false, battleId);
-        const embed = new MessageEmbed()
+        const embed = new EmbedBuilder()
             .setTitle(`Top ${list.length} meeste schade gekregen${topListType == TopListType.Current ? ' in dit gevecht' : topListType == TopListType.Previous ? ' in het vorige gevecht' : ''}`);
 
         var listString = '';
@@ -765,7 +765,7 @@ export default class CharacterEmbeds {
 
     public static async GetTopCritsDoneEmbed(topListType: TopListType, battleId?: string) {
         const list: any = await Attack.GET_TOP_CRIT_LIST(true, battleId);
-        const embed = new MessageEmbed()
+        const embed = new EmbedBuilder()
             .setTitle(`Top ${list.length} meeste crits gedaan${topListType == TopListType.Current ? ' in dit gevecht' : topListType == TopListType.Previous ? ' in het vorige gevecht' : ''}`);
 
         var listString = '';
@@ -782,7 +782,7 @@ export default class CharacterEmbeds {
 
     public static async GetTopCritsReceivedEmbed(topListType: TopListType, battleId?: string) {
         const list: any = await Attack.GET_TOP_CRIT_LIST(false, battleId);
-        const embed = new MessageEmbed()
+        const embed = new EmbedBuilder()
             .setTitle(`Top ${list.length} meeste crits gekregen${topListType == TopListType.Current ? ' in dit gevecht' : topListType == TopListType.Previous ? ' in het vorige gevecht' : ''}`);
 
         var listString = '';
@@ -799,7 +799,7 @@ export default class CharacterEmbeds {
 
     public static async GetTopHealsDoneEmbed(topListType: TopListType, battleId?: string) {
         const list: any = await Heal.GET_TOP_HEALS_DONE_LIST(battleId);
-        const embed = new MessageEmbed()
+        const embed = new EmbedBuilder()
             .setTitle(`Top ${list.length} meeste heals gedaan${topListType == TopListType.Current ? ' in dit gevecht' : topListType == TopListType.Previous ? ' in het vorige gevecht' : ''}`);
 
         var listString = '';
@@ -816,7 +816,7 @@ export default class CharacterEmbeds {
 
     public static async GetTopHealingDoneEmbed(topListType: TopListType, battleId?: string) {
         const list: any = await Heal.GET_TOP_HEALING_DONE_LIST(battleId);
-        const embed = new MessageEmbed()
+        const embed = new EmbedBuilder()
             .setTitle(`Top ${list.length} meeste healing gedaan${topListType == TopListType.Current ? ' in dit gevecht' : topListType == TopListType.Previous ? ' in het vorige gevecht' : ''}`);
 
         var listString = '';
@@ -833,7 +833,7 @@ export default class CharacterEmbeds {
 
     public static async GetTopHealsReceivedEmbed(topListType: TopListType, battleId?: string) {
         const list: any = await Heal.GET_TOP_HEALS_RECEIVED_LIST(battleId);
-        const embed = new MessageEmbed()
+        const embed = new EmbedBuilder()
             .setTitle(`Top ${list.length} meeste heals gekregen${topListType == TopListType.Current ? ' in dit gevecht' : topListType == TopListType.Previous ? ' in het vorige gevecht' : ''}`);
 
         var listString = '';
@@ -850,7 +850,7 @@ export default class CharacterEmbeds {
 
     public static async GetTopHealingReceivedEmbed(topListType: TopListType, battleId?: string) {
         const list: any = await Heal.GET_TOP_HEALING_RECEIVED_LIST(battleId);
-        const embed = new MessageEmbed()
+        const embed = new EmbedBuilder()
             .setTitle(`Top ${list.length} meeste healing gekregen${topListType == TopListType.Current ? ' in dit gevecht' : topListType == TopListType.Previous ? ' in het vorige gevecht' : ''}`);
 
         var listString = '';
@@ -867,7 +867,7 @@ export default class CharacterEmbeds {
 
     public static async GetTopLuckEmbed(topListType: TopListType, battleId?: string, unlucky: boolean = false) {
         const list: any = await Attack.GET_TOP_MOST_LUCK_LIST(battleId, unlucky);
-        const embed = new MessageEmbed()
+        const embed = new EmbedBuilder()
             .setTitle(`Top ${list.length} ${unlucky ? 'laagste' : 'hoogste'} gemiddelde rolls vergeleken met het monster${topListType == TopListType.Current ? ' in dit gevecht' : topListType == TopListType.Previous ? ' in het vorige gevecht' : ''}`);
 
         var listString = '';
@@ -903,7 +903,7 @@ export default class CharacterEmbeds {
 
         list.splice(10);
 
-        const embed = new MessageEmbed()
+        const embed = new EmbedBuilder()
             .setTitle('Deze characters hebben de hoogste gevechtscooldown');
 
         var listString = '';
@@ -919,7 +919,7 @@ export default class CharacterEmbeds {
 
     public static async GetTopPuzzlesSolvedEmbed() {
         const list: any = await Puzzle.GET_TOP_SOLVED_LIST();
-        const embed = new MessageEmbed()
+        const embed = new EmbedBuilder()
             .setTitle(`Top ${list.length} meeste puzzels opgelost`);
 
         var listString = '';
@@ -937,7 +937,7 @@ export default class CharacterEmbeds {
     public static async GetTopFastestPuzzlesSolvedEmbed(all: boolean) {
         const list: any = await Puzzle.GET_TOP_FASTEST_SOLVED_LIST();
         const amount = list.length;
-        const embed = new MessageEmbed();
+        const embed = new EmbedBuilder();
 
         var listString = '';
 
@@ -977,7 +977,7 @@ export default class CharacterEmbeds {
 
     public static async GetTopUniqueCards() {
         const list: any = await Character.GET_TOP_CARD_LIST();
-        const embed = new MessageEmbed()
+        const embed = new EmbedBuilder()
             .setTitle(`Top ${list.length} meeste unieke kaarten in bezit`);
 
         var listString = '';
@@ -1010,7 +1010,7 @@ export default class CharacterEmbeds {
 
         listInspires.sort((a: any, b: any) => b.cnt - a.cnt);
 
-        const embed = new MessageEmbed()
+        const embed = new EmbedBuilder()
             .setTitle(`Top ${listInspires.length} meeste inspires gekregen${topListType == TopListType.Current ? ' in dit gevecht' : topListType == TopListType.Previous ? ' in het vorige gevecht' : ''}`);
 
         var listString = '';
@@ -1027,7 +1027,7 @@ export default class CharacterEmbeds {
 
     public static async GetTopInspirationDoneEmbed(topListType: TopListType, battleId?: string) {
         const list: any = await Inspire.GET_TOP_INSPIRATION_DONE_LIST(battleId);
-        const embed = new MessageEmbed()
+        const embed = new EmbedBuilder()
             .setTitle(`Top ${list.length} meeste inspiratie gedaan${topListType == TopListType.Current ? ' in dit gevecht' : topListType == TopListType.Previous ? ' in het vorige gevecht' : ''}`);
 
         var listString = '';
@@ -1044,7 +1044,7 @@ export default class CharacterEmbeds {
 
     public static async GetTopInspirationReceivedEmbed(topListType: TopListType, battleId?: string) {
         const list: any = await Inspire.GET_TOP_INSPIRATION_RECEIVED_LIST(battleId);
-        const embed = new MessageEmbed()
+        const embed = new EmbedBuilder()
             .setTitle(`Top ${list.length} meeste inspiratie gekregen${topListType == TopListType.Current ? ' in dit gevecht' : topListType == TopListType.Previous ? ' in het vorige gevecht' : ''}`);
 
         var listString = '';
@@ -1065,7 +1065,7 @@ export default class CharacterEmbeds {
 
         listProtects.sort((a: any, b: any) => b.cnt - a.cnt);
 
-        const embed = new MessageEmbed()
+        const embed = new EmbedBuilder()
             .setTitle(`Top ${listProtects.length} meeste protects gedaan${topListType == TopListType.Current ? ' in dit gevecht' : topListType == TopListType.Previous ? ' in het vorige gevecht' : ''}`);
 
         var listString = '';
@@ -1086,7 +1086,7 @@ export default class CharacterEmbeds {
 
         listProtects.sort((a: any, b: any) => b.cnt - a.cnt);
 
-        const embed = new MessageEmbed()
+        const embed = new EmbedBuilder()
             .setTitle(`Top ${listProtects.length} meeste protects gekregen${topListType == TopListType.Current ? ' in dit gevecht' : topListType == TopListType.Previous ? ' in het vorige gevecht' : ''}`);
 
         var listString = '';
@@ -1103,7 +1103,7 @@ export default class CharacterEmbeds {
 
     public static async GetTopProtectionDoneEmbed(topListType: TopListType, battleId?: string) {
         const list: any = await Protect.GET_TOP_PROTECTION_DONE_LIST(battleId);
-        const embed = new MessageEmbed()
+        const embed = new EmbedBuilder()
             .setTitle(`Top ${list.length} meeste protection gedaan${topListType == TopListType.Current ? ' in dit gevecht' : topListType == TopListType.Previous ? ' in het vorige gevecht' : ''}`);
 
         var listString = '';
@@ -1120,7 +1120,7 @@ export default class CharacterEmbeds {
 
     public static async GetTopProtectionReceivedEmbed(topListType: TopListType, battleId?: string) {
         const list: any = await Protect.GET_TOP_PROTECTION_RECEIVED_LIST(battleId);
-        const embed = new MessageEmbed()
+        const embed = new EmbedBuilder()
             .setTitle(`Top ${list.length} meeste protection gekregen${topListType == TopListType.Current ? ' in dit gevecht' : topListType == TopListType.Previous ? ' in het vorige gevecht' : ''}`);
 
         var listString = '';
@@ -1153,7 +1153,7 @@ export default class CharacterEmbeds {
 
         listInspires.sort((a: any, b: any) => b.cnt - a.cnt);
 
-        const embed = new MessageEmbed()
+        const embed = new EmbedBuilder()
             .setTitle(`Top ${listInspires.length} meeste inspires gedaan${topListType == TopListType.Current ? ' in dit gevecht' : topListType == TopListType.Previous ? ' in het vorige gevecht' : ''}`);
 
         var listString = '';
@@ -1170,7 +1170,7 @@ export default class CharacterEmbeds {
 
     public static async GetTopEnchantmentsDoneEmbed(topListType: TopListType, battleId?: string) {
         const list: any = await Enchantment.GET_TOP_ENCHANTMENTS_DONE_LIST(battleId);
-        const embed = new MessageEmbed()
+        const embed = new EmbedBuilder()
             .setTitle(`Top ${list.length} meeste enchantments gedaan${topListType == TopListType.Current ? ' in dit gevecht' : topListType == TopListType.Previous ? ' in het vorige gevecht' : ''}`);
 
         var listString = '';
@@ -1187,7 +1187,7 @@ export default class CharacterEmbeds {
 
     public static async GetTopEnchantmentsReceivedEmbed(topListType: TopListType, battleId?: string) {
         const list: any = await Enchantment.GET_TOP_ENCHANTMENTS_RECEIVED_LIST(battleId);
-        const embed = new MessageEmbed()
+        const embed = new EmbedBuilder()
             .setTitle(`Top ${list.length} meeste enchantments gekregen${topListType == TopListType.Current ? ' in dit gevecht' : topListType == TopListType.Previous ? ' in het vorige gevecht' : ''}`);
 
         var listString = '';
@@ -1204,7 +1204,7 @@ export default class CharacterEmbeds {
 
     public static async GetTopPerceptionsDoneEmbed(topListType: TopListType, battleId?: string) {
         const list: any = await Perception.GET_TOP_PERCEPTIONS_DONE_LIST(battleId);
-        const embed = new MessageEmbed()
+        const embed = new EmbedBuilder()
             .setTitle(`Top ${list.length} meeste perception checks gedaan${topListType == TopListType.Current ? ' in dit gevecht' : topListType == TopListType.Previous ? ' in het vorige gevecht' : ''}`);
 
         var listString = '';
@@ -1221,7 +1221,7 @@ export default class CharacterEmbeds {
 
     public static async GetTopPerceptionsReceivedEmbed(topListType: TopListType, battleId?: string) {
         const list: any = await Perception.GET_TOP_PERCEPTIONS_RECEIVED_LIST(battleId);
-        const embed = new MessageEmbed()
+        const embed = new EmbedBuilder()
             .setTitle(`Top ${list.length} meeste perception checks gekregen${topListType == TopListType.Current ? ' in dit gevecht' : topListType == TopListType.Previous ? ' in het vorige gevecht' : ''}`);
 
         var listString = '';
@@ -1238,7 +1238,7 @@ export default class CharacterEmbeds {
 
     public static async GetTopReinforcementsDoneEmbed(topListType: TopListType, battleId?: string) {
         const list: any = await Reinforcement.GET_TOP_REINFORCEMENTS_DONE_LIST(battleId);
-        const embed = new MessageEmbed()
+        const embed = new EmbedBuilder()
             .setTitle(`Top ${list.length} meeste reinforcements gedaan${topListType == TopListType.Current ? ' in dit gevecht' : topListType == TopListType.Previous ? ' in het vorige gevecht' : ''}`);
 
         var listString = '';
@@ -1255,7 +1255,7 @@ export default class CharacterEmbeds {
 
     public static async GetTopReinforcementsReceivedEmbed(topListType: TopListType, battleId?: string) {
         const list: any = await Reinforcement.GET_TOP_REINFORCEMENTS_RECEIVED_LIST(battleId);
-        const embed = new MessageEmbed()
+        const embed = new EmbedBuilder()
             .setTitle(`Top ${list.length} meeste reinforcements gekregen${topListType == TopListType.Current ? ' in dit gevecht' : topListType == TopListType.Previous ? ' in het vorige gevecht' : ''}`);
 
         var listString = '';
@@ -1273,7 +1273,7 @@ export default class CharacterEmbeds {
     public static async GetTopCardsReceivedByPieces() {
         var list = await Log.GET_TOP_CARD_RECEIVED_BY_PIECES();
 
-        const embed = new MessageEmbed()
+        const embed = new EmbedBuilder()
             .setTitle(`Top ${list.length} meeste kaarten door kaartstukjes te graven`);
 
         var listString = '';
@@ -1291,7 +1291,7 @@ export default class CharacterEmbeds {
     public static async GetTopCardsTaken() {
         var list = await Log.GET_TOP_CARD_TAKEN();
 
-        const embed = new MessageEmbed()
+        const embed = new EmbedBuilder()
             .setTitle(`Top ${list.length} meeste kaarten afgepakt`);
 
         var listString = '';
@@ -1307,7 +1307,7 @@ export default class CharacterEmbeds {
     }
 
     public static GetResetCharacterWarningEmbed() {
-        const embed = new MessageEmbed();
+        const embed = new EmbedBuilder();
         embed.setTitle('WAARSCHUWING')
             .setColor(SettingsConstants.COLORS.BAD)
             .setDescription('Weet je zeker dat je wilt stoppen met je huidige character?\n**Je kan dit niet ongedaan maken**\n\
@@ -1318,7 +1318,7 @@ Als je zeker weet dat je wilt stoppen met dit character, gebruik dan het command
     }
 
     public static GetStoryEmbed(text: string, imageUrl: string, thumbnail?: string) {
-        const embed = new MessageEmbed()
+        const embed = new EmbedBuilder()
             .setColor(SettingsConstants.COLORS.DEFAULT)
             .setTitle('Verhaal')
             .setDescription(text)
@@ -1331,44 +1331,44 @@ Als je zeker weet dat je wilt stoppen met dit character, gebruik dan het command
         return embed;
     }
 
-    private static AddEquipmentToEmbed(embed: MessageEmbed, equipment: Array<Card>) {
+    private static AddEquipmentToEmbed(embed: EmbedBuilder, equipment: Array<Card>) {
         if (equipment.length == 0) {
-            embed.addField('Leeg', 'Voeg equipment toe met `;equip [kaart]`.');
+            embed.addFields({name: 'Leeg', value: 'Voeg equipment toe met `;equip [kaart]`.'});
         }
 
         for (const card of equipment) {
-            embed.addField(card.GetName(), CardService.ParseModifierArrayToEmbedString(card.GetModifiers()), true);
+            embed.addFields({name: card.GetName(), value: CardService.ParseModifierArrayToEmbedString(card.GetModifiers()), inline: true});
         }
     }
 
-    private static async AddCharacterHistoryToEmbed(embed: MessageEmbed, character: Character) {
+    private static async AddCharacterHistoryToEmbed(embed: EmbedBuilder, character: Character) {
         const victories = await character.GetVictories();
         const losses = await character.GetLosses();
 
-        embed.addField('Monsters', await character.GetBattles(), true)
-            .addField('Aanvallen', parseInt(victories) + parseInt(losses), true)
-            .addField('Gewonnen', victories, true)
-            .addField('Verloren', losses, true)
-            .addField('Schade gedaan', await character.GetTotalDamageDone(), true)
-            .addField('Schade gekregen', await character.GetTotalDamageTaken(), true)
-            .addField('Crits gedaan', await character.GetTotalCritsDone(), true)
-            .addField('Crits gekregen', await character.GetTotalCritsTaken(), true)
-            .addField('Regenerated', character.GetRegenerated(), true)
-            .addField('Geslapen', character.GetSleepAmount(), true);
+        embed.addFields({name: 'Monsters', value: await character.GetBattles(), inline: true})
+            .addFields({name: 'Aanvallen', value: `${parseInt(victories) + parseInt(losses)}`, inline: true})
+            .addFields({name: 'Gewonnen', value: victories, inline: true})
+            .addFields({name: 'Verloren', value: losses, inline: true})
+            .addFields({name: 'Schade gedaan', value: await character.GetTotalDamageDone(), inline: true})
+            .addFields({name: 'Schade gekregen', value: await character.GetTotalDamageTaken(), inline: true})
+            .addFields({name: 'Crits gedaan', value: await character.GetTotalCritsDone(), inline: true})
+            .addFields({name: 'Crits gekregen', value: await character.GetTotalCritsTaken(), inline: true})
+            .addFields({name: 'Regenerated', value: `${character.GetRegenerated()}`, inline: true})
+            .addFields({name: 'Geslapen', value: `${character.GetSleepAmount()}`, inline: true});
 
         if (character.CanHeal()) {
-            embed.addField('Heals gedaan', await character.GetTotalHealsDone(), true);
-            embed.addField('Healing gedaan', await character.GetTotalHealingDone(), true);
+            embed.addFields({name: 'Heals gedaan', value: await character.GetTotalHealsDone(), inline: true});
+            embed.addFields({name: 'Healing gedaan', value: await character.GetTotalHealingDone(), inline: true});
         }
 
-        embed.addField('Heals gekregen', await character.GetTotalHealsReceived(), true)
-            .addField('Healing gekregen', await character.GetTotalHealingReceived(), true);
+        embed.addFields({name: 'Heals gekregen', value: await character.GetTotalHealsReceived(), inline: true})
+            .addFields({name: 'Healing gekregen', value: await character.GetTotalHealingReceived(), inline: true});
 
         if (character.CanInspire()) {
-            embed.addField('Geïnspireerd', await character.GetTotalInspiresDone(), true);
+            embed.addFields({name: 'Geïnspireerd', value: `${await character.GetTotalInspiresDone()}`, inline: true});
         }
 
-        embed.addField('Puzzels opgelost', await character.GetTotalPuzzlesSolved(), true);
+        embed.addFields({name: 'Puzzels opgelost', value: await character.GetTotalPuzzlesSolved(), inline: true});
     }
 
 }

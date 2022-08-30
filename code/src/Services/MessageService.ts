@@ -1,12 +1,12 @@
 import DiscordService from './DiscordService';
 import IMessageInfo from '../Interfaces/IMessageInfo';
-import { TextChannel, MessageEmbed, MessageAttachment } from 'discord.js';
+import { TextChannel, EmbedBuilder, AttachmentBuilder } from 'discord.js';
 import EmojiConstants from '../Constants/EmojiConstants';
 import BotManager from '../Managers/BotManager';
 
 export default class MessageService {
 
-    public static async ReplyMessage(messageInfo: IMessageInfo, message: string, good?: boolean, mention?: boolean, embed?: MessageEmbed, attachments?: Array<MessageAttachment>) {
+    public static async ReplyMessage(messageInfo: IMessageInfo, message: string, good?: boolean, mention?: boolean, embed?: EmbedBuilder, attachments?: Array<AttachmentBuilder>) {
         if (good != null) {
             message = (good ? EmojiConstants.STATUS.GOOD : EmojiConstants.STATUS.BAD) + ' ' + message;
         }
@@ -17,32 +17,32 @@ export default class MessageService {
         }
     }
 
-    public static async ReplyEmbed(messageInfo: IMessageInfo, embed: MessageEmbed, message?: string) {
+    public static async ReplyEmbed(messageInfo: IMessageInfo, embed: EmbedBuilder, message?: string) {
         return DiscordService.SendEmbed(messageInfo.channel, embed, message);
     }
 
-    public static async SendMessageToDM(messageInfo: IMessageInfo, message: string, embed?: MessageEmbed) {
+    public static async SendMessageToDM(messageInfo: IMessageInfo, message: string, embed?: EmbedBuilder) {
         const dmChannel = messageInfo.member.user.dmChannel || await messageInfo.member.user.createDM();
         return await DiscordService.SendMessage(dmChannel, message, embed);
     }
 
-    public static async SendMessageToCardChannel(message: string, embed?: MessageEmbed) {
+    public static async SendMessageToCardChannel(message: string, embed?: EmbedBuilder) {
         return await this.SendMessage(BotManager.GetCardChannel(), message, embed);
     }
 
-    public static async SendMessageToDNDChannel(message: string, embed?: MessageEmbed) {
+    public static async SendMessageToDNDChannel(message: string, embed?: EmbedBuilder) {
         return await this.SendMessage(BotManager.GetDNDChannel(), message, embed);
     }
 
-    public static async SendMessageToArtChannel(message: string, embed?: MessageEmbed) {
+    public static async SendMessageToArtChannel(message: string, embed?: EmbedBuilder) {
         return await this.SendMessage(BotManager.GetArtChannel(), message, embed);
     }
 
-    public static async SendMessageToSpoilersChannel(message: string, embed?: MessageEmbed) {
+    public static async SendMessageToSpoilersChannel(message: string, embed?: EmbedBuilder) {
         return await this.SendMessage(BotManager.GetSpoilersChannel(), message, embed);
     }
 
-    public static async SendMessageToChatChannel(message: string, embed?: MessageEmbed) {
+    public static async SendMessageToChatChannel(message: string, embed?: EmbedBuilder) {
         return await this.SendMessage(BotManager.GetChatChannel(), message, embed);
     }
 
@@ -70,7 +70,7 @@ export default class MessageService {
         MessageService.ReplyMessage(messageInfo, 'Je hebt geen kaart met de naam \'' + name + '\'.', false, true);
     }
 
-    private static async SendMessage(channel: TextChannel, message: string, embed?: MessageEmbed) {
+    private static async SendMessage(channel: TextChannel, message: string, embed?: EmbedBuilder) {
         return await DiscordService.SendMessage(channel, message, embed);
     }
 }

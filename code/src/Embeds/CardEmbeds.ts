@@ -1,5 +1,5 @@
 import Card from '../Objects/Card';
-import { MessageEmbed } from 'discord.js';
+import { Embed, EmbedBuilder } from 'discord.js';
 import SettingsConstants from '../Constants/SettingsConstants';
 import Player from '../Objects/Player';
 import EmojiConstants from '../Constants/EmojiConstants';
@@ -14,44 +14,45 @@ import IMessageInfo from '../Interfaces/IMessageInfo';
 export default class CardEmbeds {
 
     public static GetCardEmbed(card: Card, amount: number = 1) {
-        const embed = new MessageEmbed()
+
+        const embed = new EmbedBuilder()
             .setColor(SettingsConstants.COLORS.DEFAULT)
-            .setAuthor(card.GetCategory(), CardService.GetIconByCategory(card.GetCategory()))
+            .setAuthor({name: card.GetCategory(), iconURL: CardService.GetIconByCategory(card.GetCategory())})
             .setTitle(card.GetName() + (amount == 1 ? '' : ' (x' + amount + ')'))
             .setDescription(card.GetDescription())
-            .setFooter(`Seizoen ${card.GetSeason()}`)
+            .setFooter({ text: `Seizoen ${card.GetSeason()}`})
             .setImage(card.GetImageUrl())
-            .addField('Level', card.GetRankString());
+            .addFields({name: 'Level', value: card.GetRankString()});
 
         const season = card.GetSeason();
-        embed.setFooter(`Seizoen ${season > 0 ? season : '???'}`);
+        embed.setFooter({text: `Seizoen ${season > 0 ? season : '???'}`});
 
         const modifiers = card.GetModifiers();
         const modifierClass = card.GetModifierClass();
 
         if (modifiers.length > 0) {
-            embed.addField('Modifiers', CardService.ParseModifierArrayToEmbedString(modifiers), true);
+            embed.addFields({name: 'Modifiers', value: CardService.ParseModifierArrayToEmbedString(modifiers), inline: true});
         }
 
         if (modifierClass) {
-            embed.addField('Class', `${CharacterService.GetClassIconEmoji(modifierClass)} ${modifierClass.toString()}`, true);
+            embed.addFields({name: 'Class', value: `${CharacterService.GetClassIconEmoji(modifierClass)} ${modifierClass.toString()}`, inline: true});
         }
 
         return embed;
     }
 
     public static GetFakeCardEmbed(messageInfo: IMessageInfo) {
-        const embed = new MessageEmbed()
+        const embed = new EmbedBuilder()
             .setColor(SettingsConstants.COLORS.DEFAULT)
-            .setAuthor('Exclusief', CardService.GetIconByCategory('Exclusief'))
+            .setAuthor({name: 'Exclusief', iconURL: CardService.GetIconByCategory('Exclusief')})
             .setTitle(messageInfo.member.displayName)
             .setDescription(['Dit is een topgozer!', 'Held.', 'Ja daar is ie dan!', 'Droomgozer', 'Misschien wel mijn favoriete persoon'].randomChoice())
-            .setFooter('Seizoen 4')
+            .setFooter({text: 'Seizoen 4'})
             .setImage(messageInfo.member.user.displayAvatarURL())
-            .addField('Level', ':star:'.repeat(5));
+            .addFields({name: 'Level', value:  ':star:'.repeat(5)});
 
         const season = 4;
-        embed.setFooter(`Seizoen ${season > 0 ? season : '???'}`);
+        embed.setFooter({text: `Seizoen ${season > 0 ? season : '???'}`});
 
         return embed;
     }
@@ -66,14 +67,14 @@ export default class CardEmbeds {
             stats[card.category][card.rank - 1]++;
         }
 
-        const embed = new MessageEmbed()
+        const embed = new EmbedBuilder()
             .setTitle('Card statistics')
             .setDescription('Total: ' + cards.length + '\nRank 1/2/3/4/5');
 
         for (const key in stats) {
             if ({}.hasOwnProperty.call(stats, key)) {
                 const list = stats[key];
-                embed.addField(key, list.join('/'));
+                embed.addFields({name: key, value: list.join('/')});
             }
         }
 
@@ -82,7 +83,7 @@ export default class CardEmbeds {
 
     public static GetPlayerCardListEmbed(playerCards: Array<PlayerCard>, player: Player, page?: number, otherPlayer?: Player, filterType?: CardFilterType, filterValue?: string) {
         const cardsAmount = CardManager.GetAmountOfNormalCards();
-        const embed = new MessageEmbed()
+        const embed = new EmbedBuilder()
             .setColor(SettingsConstants.COLORS.DEFAULT);
 
         var title = `De kaarten van ${player.GetDiscordName()}`;
@@ -118,7 +119,7 @@ export default class CardEmbeds {
         var end = page == null ? playerCards.length : Math.min(playerCards.length, page * split);
 
         if (page != null) {
-            embed.setFooter(`${start + 1}-${end} van de ${playerCards.length} kaarten`);
+            embed.setFooter({text: `${start + 1}-${end} van de ${playerCards.length} kaarten`});
         }
 
         var list = '';
@@ -163,13 +164,13 @@ export default class CardEmbeds {
     }
 
     public static GetPlayerCardOwnerListEmbed(card: Card, ownerList: Array<any>, page?: number) {
-        const embed = new MessageEmbed()
+        const embed = new EmbedBuilder()
             .setColor(SettingsConstants.COLORS.DEFAULT);
 
         embed.setTitle(`Iedereen die de kaart ${card.GetName()} heeft`);
 
         const category = card.GetCategory();
-        embed.setAuthor(category, CardService.GetIconByCategory(category));
+        embed.setAuthor({name: category, iconURL: CardService.GetIconByCategory(category)});
 
         var split = SettingsConstants.CARD_AMOUNT_SPLIT_PAGES;
         var pages = Math.ceil(ownerList.length / split);
@@ -192,7 +193,7 @@ export default class CardEmbeds {
         var end = page == null ? ownerList.length : Math.min(ownerList.length, page * split);
 
         if (page != null) {
-            embed.setFooter(`${start + 1}-${end} van de ${ownerList.length} eigenaren`);
+            embed.setFooter({text: `${start + 1}-${end} van de ${ownerList.length} eigenaren`});
         }
 
         var list = '';
@@ -217,7 +218,7 @@ export default class CardEmbeds {
     }
 
     public static GetTradeEmbed(tradeInfo: ITradeInfo) {
-        const embed = new MessageEmbed()
+        const embed = new EmbedBuilder()
             .setColor(SettingsConstants.COLORS.DEFAULT)
             .setImage(tradeInfo.yourCard.GetCard().GetImageUrl())
             .setThumbnail(tradeInfo.theirCard.GetCard().GetImageUrl());

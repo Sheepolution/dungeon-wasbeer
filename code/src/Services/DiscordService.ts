@@ -1,4 +1,4 @@
-import { Channel, Client, Guild, GuildMember, MessageEmbed, TextChannel, MessageAttachment } from 'discord.js';
+import { Channel, Client, Guild, GuildMember, EmbedBuilder, TextChannel, AttachmentBuilder, PermissionsBitField } from 'discord.js';
 import DiscordUtils from '../Utils/DiscordUtils';
 import { Utils } from '../Utils/Utils';
 
@@ -93,28 +93,30 @@ export default class DiscordService {
     public static FindGuild(guildId: string) {
         return this.client.guilds.cache.get(guildId);
     }
-
+EmbedBuilder: any
     public static IsMemberAdmin(member: GuildMember) {
-        return member.hasPermission('ADMINISTRATOR');
+        return member.permissions.has(PermissionsBitField.Flags.Administrator);
     }
 
-    public static async SendEmbed(channel: Channel, embed: MessageEmbed, content?: string) {
+    public static async SendEmbed(channel: Channel, embed: EmbedBuilder, content?: string) {
         const textChannel: TextChannel = <TextChannel>channel;
         try {
-            return await (content ? textChannel.send(content, embed) : textChannel.send(embed));
+    //      return await (content ? textChannel.send(messageToSend) : textChannel.send(embed));
+
+            return await (content ? textChannel.send({content: content, embeds: [embed] }) : textChannel.send({embeds: [embed]}));
         } catch (error) {
             // Error
         }
     }
 
-    public static async SendMessage(channel: Channel, message: string, embed?: MessageEmbed, attachments?: Array<MessageAttachment>) {
+    public static async SendMessage(channel: Channel, message: string, embed?: EmbedBuilder, attachments?: Array<AttachmentBuilder>) {
         try {
             const textChannel: TextChannel = <TextChannel>channel;
             if (embed) {
                 return await this.SendEmbed(textChannel, embed, message);
             }
             if (attachments != null) {
-                return await textChannel.send(message, attachments);
+                return await textChannel.send({content: message, files: attachments});
             } else {
                 return await textChannel.send(message);
             }
@@ -125,7 +127,7 @@ export default class DiscordService {
         }
     }
 
-    public static async ReplyMessage(textChannel: TextChannel, member: GuildMember, message: string, embed?: MessageEmbed, attachments?: Array<MessageAttachment>) {
+    public static async ReplyMessage(textChannel: TextChannel, member: GuildMember, message: string, embed?: EmbedBuilder, attachments?: Array<AttachmentBuilder>) {
         const reply = `<@${member.user}> ${message}`;
 
         if (embed) {
@@ -133,13 +135,14 @@ export default class DiscordService {
         }
 
         if (attachments != null) {
-            return await textChannel.send(reply, attachments);
+            return await textChannel.send({content: reply, files: attachments});
         } else {
             return await textChannel.send(reply);
         }
     }
 
-    public static GetMessageAttachment(data: any, name: string) {
-        return new MessageAttachment(data, name);
+    public static GetAttachmentBuilder(data: any, name: string) {
+        // return new AttachmentBuilder({files: data, name: name});
+        return new AttachmentBuilder(data).setName(name);
     }
 }

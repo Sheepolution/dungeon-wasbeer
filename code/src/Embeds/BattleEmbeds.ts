@@ -2,7 +2,7 @@ import Battle from '../Objects/Battle';
 import Character from '../Objects/Character';
 import SettingsConstants from '../Constants/SettingsConstants';
 import { Utils } from '../Utils/Utils';
-import { MessageEmbed } from 'discord.js';
+import { EmbedBuilder } from 'discord.js';
 import EmojiConstants from '../Constants/EmojiConstants';
 
 export default class BattleEmbeds {
@@ -28,16 +28,16 @@ export default class BattleEmbeds {
             }
         }
 
-        const embed = new MessageEmbed()
+        const embed = new EmbedBuilder()
             .setColor(SettingsConstants.COLORS.MONSTER)
-            .setAuthor(monster.GetCategory(), 'https://cdn.discordapp.com/attachments/694331679204180029/698606955496734781/unknown.png')
+            .setAuthor({name: monster.GetCategory(), iconURL:'https://cdn.discordapp.com/attachments/694331679204180029/698606955496734781/unknown.png'})
             .setTitle(monsterName)
             .setDescription(monster.GetDescription())
             .setImage(battle.GetMonsterImageUrl())
-            .addField('Level', monster.GetLevelString())
-            .addField('Health', `${battle.GetCurrentMonsterHealth()}/${monster.GetHealth()}`, true)
-            .addField('Strength', attackStrength, true)
-            .addField('Attack', attackRoll, true);
+            .addFields({name: 'Level', value: monster.GetLevelString()})
+            .addFields({name: 'Health', value: `${battle.GetCurrentMonsterHealth()}/${monster.GetHealth()}`, inline: true})
+            .addFields({name: 'Strength', value: `${attackStrength}`, inline: true})
+            .addFields({name: 'Attack', value: `${attackRoll}`, inline: true});
 
         return embed;
     }
@@ -58,15 +58,15 @@ export default class BattleEmbeds {
             monsterStrength = '???';
         }
 
-        const embed = new MessageEmbed()
+        const embed = new EmbedBuilder()
             .setColor(SettingsConstants.COLORS.DEFAULT)
-            .setAuthor('Aanval')
+            .setAuthor({name: 'Aanval'})
             .setThumbnail(playerWon ? character.GetAvatarUrl() : battle.GetMonsterImageUrl())
             .setTitle(`${characterName}${character.GetEnhancementsString()} VS ${monsterName}${monsterId == '3125ae9e-d51b-4cf0-a964-d92cf4f711ac' ? ` ${EmojiConstants.DNW_STATES.ENCHANTED}` : ''}`)
             .setDescription('-- Statistieken --')
-            .addField(characterName, `Health: ${character.GetCurrentHealth() + character.GetProtection()}/${character.GetMaxHealth()}\n${character.GetAttackName()}: ${characterStrength}\nAttack: ${characterAttack}\nArmor: ${character.GetArmor()}`, true)
-            .addField(monsterName, `Health: ${battle.GetCurrentMonsterHealth()}/${battle.GetMaxMonsterHealth()}\nStrength: ${monsterStrength}\nAttack: ${monsterAttack}`, true)
-            .addField('--------------------------------', '-- Rolls --');
+            .addFields({name: characterName, value: `Health: ${character.GetCurrentHealth() + character.GetProtection()}/${character.GetMaxHealth()}\n${character.GetAttackName()}: ${characterStrength}\nAttack: ${characterAttack}\nArmor: ${character.GetArmor()}`, inline: true})
+            .addFields({name: monsterName, value: `Health: ${battle.GetCurrentMonsterHealth()}/${battle.GetMaxMonsterHealth()}\nStrength: ${monsterStrength}\nAttack: ${monsterAttack}`, inline: true})
+            .addFields({name: '--------------------------------', value: '-- Rolls --'});
 
         if (roll1 != null && roll2 != null) {
             var message;
@@ -79,7 +79,7 @@ export default class BattleEmbeds {
                 message += `\nD${characterAttack} = ${roll2}`;
             }
 
-            embed.addField(characterName, message += `\nTotaal = ${roll1 + roll2}`, true);
+            embed.addFields({name: characterName, value: message += `\nTotaal = ${roll1 + roll2}`, inline: true});
 
             if (roll3 != null && roll4 != null) {
                 message = '';
@@ -92,18 +92,18 @@ export default class BattleEmbeds {
                 }
 
                 if (message.length > 0) {
-                    embed.addField(monsterName, message + `\nTotaal = ${roll3 + roll4}`, true);
+                    embed.addFields({name: monsterName, value: message + `\nTotaal = ${roll3 + roll4}`, inline: true});
                 } else {
-                    embed.addField(monsterName, 'Geen rolls.', true);
+                    embed.addFields({name: monsterName, value: 'Geen rolls.', inline: true});
                 }
             } else if (roll3 != null) {
                 message = `D20 = ${roll3}`;
                 if (monsterAttack > 1) {
                     message += `\nRolt de D${monsterAttack}...`;
                 }
-                embed.addField(monsterName, message, true);
+                embed.addFields({name: monsterName, value: message, inline: true});
             } else {
-                embed.addField(monsterName, 'Rolt de D20...', true);
+                embed.addFields({name: monsterName, value: 'Rolt de D20...', inline: true});
             }
         } else if (roll1 != null) {
             message = `D20 = ${roll1}`;
@@ -111,21 +111,21 @@ export default class BattleEmbeds {
                 message += `\nRolt de D${characterAttack}...`;
             }
 
-            embed.addField(characterName, message, true);
+            embed.addFields({name: characterName, value: message,inline: true});
         } else {
-            embed.addField(characterName, 'Rolt de D20...', true);
+            embed.addFields({name: characterName, value: 'Rolt de D20...', inline: true});
         }
 
         if (playerWon != null) {
-            embed.setFooter(`Participatiepunten: ${character.GetRewardPoints(battle.GetId())}/${character.GetNextRewardPoints()}`);
+            embed.setFooter({text: `Participatiepunten: ${character.GetRewardPoints(battle.GetId())}/${character.GetNextRewardPoints()}`});
 
-            embed.addField('--------------------------------', '-- Resultaat --');
+            embed.addFields({name: '--------------------------------', value: '-- Resultaat --'});
             if (playerWon) {
                 var attackDescription = character.GetAttackDescription(crit);
                 if (!attackDescription.includes('[damage]')) {
                     attackDescription += '\nJe doet [damage] damage op de [monster].';
                 }
-                embed.addField(`${characterName} wint${crit ? ' met een crit' : ''}!`, attackDescription.replaceAll('\\[damage\\]', damage?.toString() || '').replaceAll('\\[monster\\]', monsterName || ''));
+                embed.addFields({name: `${characterName} wint${crit ? ' met een crit' : ''}!`, value: attackDescription.replaceAll('\\[damage\\]', damage?.toString() || '').replaceAll('\\[monster\\]', monsterName || '')});
                 embed.setColor(SettingsConstants.COLORS.GOOD);
             } else {
                 var attackDescription = crit ? battle.GetMonsterAttackCritDescription() : battle.GetMonsterAttackDescription();
@@ -139,70 +139,70 @@ export default class BattleEmbeds {
                     attackDescription = attackDescription.replaceAll('\\[heads\\]', heads.toString());
                 }
 
-                embed.addField(`De ${monsterName} wint${crit ? ' met een crit' : ''}!`, attackDescription.replaceAll('\\[damage\\]', damage?.toString() || ''));
+                embed.addFields({name: `De ${monsterName} wint${crit ? ' met een crit' : ''}!`, value: attackDescription.replaceAll('\\[damage\\]', damage?.toString() || '')});
                 embed.setColor(SettingsConstants.COLORS.BAD);
             }
 
-            embed.addField('--------------------------------', '-- Cooldown(s) --');
+            embed.addFields({name: '--------------------------------', value: '-- Cooldown(s) --'});
 
             const battleCooldown = await character.GetBattleCooldown();
             if (battleCooldown > 0) {
-                embed.addField('Vechten', `🕒 ${Utils.GetSecondsInMinutesAndSeconds(battleCooldown)}`, true);
+                embed.addFields({name: 'Vechten', value: `🕒 ${Utils.GetSecondsInMinutesAndSeconds(battleCooldown)}`,inline: true});
             } else {
-                embed.addField('Vechten', 'Klaar om te vechten!', true);
+                embed.addFields({name: 'Vechten', value: 'Klaar om te vechten!', inline: true});
             }
 
             if (character.CanHeal()) {
                 const healingCooldown = await character.GetHealingCooldown();
                 if (healingCooldown > 0) {
-                    embed.addField('Healen', `🕒 ${Utils.GetSecondsInMinutesAndSeconds(healingCooldown)}`, true);
+                    embed.addFields({name: 'Healen', value: `🕒 ${Utils.GetSecondsInMinutesAndSeconds(healingCooldown)}`,inline: true});
                 } else {
-                    embed.addField('Healen', 'Klaar om te healen!', true);
+                    embed.addFields({name: 'Healen', value: 'Klaar om te healen!', inline: true});
                 }
             }
 
             if (character.CanInspire()) {
                 const inspiringCooldown = await character.GetInspireCooldown();
                 if (inspiringCooldown > 0) {
-                    embed.addField('Inspireren', `🕒 ${Utils.GetSecondsInMinutesAndSeconds(inspiringCooldown)}`, true);
+                    embed.addFields({name: 'Inspireren', value: `🕒 ${Utils.GetSecondsInMinutesAndSeconds(inspiringCooldown)}`, inline: true});
                 } else {
-                    embed.addField('Inspireren', 'Klaar om een mooi lied te spelen!', true);
+                    embed.addFields({name: 'Inspireren', value: 'Klaar om een mooi lied te spelen!', inline: true});
                 }
             }
 
             if (character.CanEnchant()) {
                 const enchantingCooldown = await character.GetEnchantmentCooldown();
                 if (enchantingCooldown > 0) {
-                    embed.addField('Enchantment', `🕒 ${Utils.GetSecondsInMinutesAndSeconds(enchantingCooldown)}`, true);
+                    embed.addFields({name: 'Enchantment', value: `🕒 ${Utils.GetSecondsInMinutesAndSeconds(enchantingCooldown)}`, inline: true});
                 } else {
-                    embed.addField('Enchantment', 'Klaar voor een enchantment!', true);
+                    embed.addFields({name: 'Enchantment', value: 'Klaar voor een enchantment!', inline: true});
                 }
             }
 
             if (character.CanPercept()) {
                 const perceptingCooldown = await character.GetPerceptionCooldown();
                 if (perceptingCooldown > 0) {
-                    embed.addField('Perception check', `🕒 ${Utils.GetSecondsInMinutesAndSeconds(perceptingCooldown)}`, true);
+                    embed.addFields({name: 'Perception check', value:`🕒 ${Utils.GetSecondsInMinutesAndSeconds(perceptingCooldown)}`, inline:true});
                 } else {
-                    embed.addField('Perception check', 'Klaar voor een perception check!', true);
+                    embed.addFields({name:'Perception check', value:'Klaar voor een perception check!', inline:true});
                 }
             }
 
             if (character.CanReinforce()) {
                 const reinforcementCooldown = await character.GetReinforcementCooldown();
                 if (reinforcementCooldown > 0) {
-                    embed.addField('Reinforcement', `🕒 ${Utils.GetSecondsInMinutesAndSeconds(reinforcementCooldown)}`, true);
+                    embed.addFields({name: 'Reinforcement', value:`🕒 ${Utils.GetSecondsInMinutesAndSeconds(reinforcementCooldown)}`, inline:true});
                 } else {
-                    embed.addField('Reinforcement', 'Klaar om te reinforcen!', true);
+                    embed.addFields({name:'Reinforcement', value:'Klaar om te reinforcen!', inline:true});
                 }
             }
 
             if (character.CanProtect()) {
                 const protectCooldown = await character.GetProtectCooldown();
                 if (protectCooldown > 0) {
-                    embed.addField('Protection', `🕒 ${Utils.GetSecondsInMinutesAndSeconds(protectCooldown)}`, true);
+                    embed.addFields({name:'Protection', value:`🕒 ${Utils.GetSecondsInMinutesAndSeconds(protectCooldown)}`, inline:true});
                 } else {
-                    embed.addField('Protection', 'Klaar om te protecten!', true);
+                    embed.addFields({name:'Protection', value:'Klaar om te protecten!', inline:true});
                 }
             }
         }

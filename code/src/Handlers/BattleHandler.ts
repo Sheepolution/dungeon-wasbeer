@@ -549,11 +549,17 @@ export default class BattleHandler {
     }
 
     private static async UpdateBattleEmbed(message: Message, battle: Battle, character: Character, roll1?: number, roll2?: number, roll3?: number, roll4?: number, playerWon?: boolean, damage?: number, crit?: boolean) {
-        await message.edit('', await BattleEmbeds.GetBattleEmbed(battle, character, roll1, roll2, roll3, roll4, playerWon, damage, crit));
+        // await message.edit('', await BattleEmbeds.GetBattleEmbed(battle, character, roll1, roll2, roll3, roll4, playerWon, damage, crit));
+        await message.edit({embeds: [await BattleEmbeds.GetBattleEmbed(battle, character, roll1, roll2, roll3, roll4, playerWon, damage, crit)]});
+                    //Expected 1 arguments, but got 2.
+                    //removed first argument without testing.
     }
 
     private static async UpdateChargeEmbed(message: Message, character: Character, roll?: number, charge?: number) {
-        await message.edit('', await CharacterEmbeds.GetChargingEmbed(character, roll, charge));
+        // await message.edit('', await CharacterEmbeds.GetChargingEmbed(character, roll, charge));
+        await message.edit({embeds: [await CharacterEmbeds.GetChargingEmbed(character, roll, charge)]});
+                    //Expected 1 arguments, but got 2.
+                    //removed first argument without testing.
     }
 
     private static async UpdateStates(character: Character) {

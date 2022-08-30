@@ -1,6 +1,6 @@
 import SettingsConstants from '../Constants/SettingsConstants';
 import Monster from '../Objects/Monster';
-import { MessageEmbed } from 'discord.js';
+import { EmbedBuilder } from 'discord.js';
 
 export default class MonsterEmbeds {
 
@@ -17,16 +17,16 @@ export default class MonsterEmbeds {
             }
         }
 
-        const embed = new MessageEmbed()
+        const embed = new EmbedBuilder()
             .setColor(SettingsConstants.COLORS.MONSTER)
-            .setAuthor(monster.GetCategory(), 'https://cdn.discordapp.com/attachments/694331679204180029/698606955496734781/unknown.png')
+            .setAuthor({name: monster.GetCategory(), iconURL: 'https://cdn.discordapp.com/attachments/694331679204180029/698606955496734781/unknown.png'})
             .setTitle(monster.GetName())
             .setDescription(monster.GetDescription())
             .setImage(monster.GetImageUrl())
-            .addField('Level', monster.GetLevelString())
-            .addField('Health', monster.GetHealth(), true)
-            .addField('Strength', attackStrength, true)
-            .addField('Attack', attackRoll, true);
+            .addFields({ name: 'Level', value: monster.GetLevelString() })
+            .addFields({ name: 'Health', value: `${monster.GetHealth()}`, inline: true})
+            .addFields({ name: 'Strength', value: `${attackStrength}`, inline: true})
+            .addFields({ name: 'Attack', value: `${attackRoll}`, inline: true})
 
         return embed;
     }
