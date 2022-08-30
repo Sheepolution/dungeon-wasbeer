@@ -28,12 +28,12 @@ export default class ArtHandler {
 
     public static async PinArt(messageInfo: IMessageInfo) {
         const pinned = await (<TextChannel>messageInfo.channel).messages.fetchPinned(true);
-        const pinnedArray = pinned.array();
-        if (pinnedArray.length >= 50) {
-            pinnedArray.sort((a, b) => {
+        // const pinnedArray = pinned.array();
+        const pinnedCount = Object.keys(pinned).length
+        if (pinnedCount >= 50) {
+            pinned.sort((a, b) => {
                 return a.createdTimestamp - b.createdTimestamp;
-            });
-            await pinnedArray[0].unpin();
+            }).first()?.unpin();
         }
 
         await messageInfo.message?.pin();

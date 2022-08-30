@@ -1163,19 +1163,19 @@ export default class CharacterHandler {
     }
 
     private static async UpdateHealingEmbed(message: Message, character: Character, receiver: Character, roll: number, healing: number) {
-        message.edit('', await CharacterEmbeds.GetHealingEmbed(character, receiver, roll, healing));
+        message.edit({embeds: [await CharacterEmbeds.GetHealingEmbed(character, receiver, roll, healing)]});
     }
 
     private static async UpdateInspiringEmbed(message: Message, character: Character, receiver: Character, roll: number, inspiration: number) {
-        message.edit('', await CharacterEmbeds.GetInspiringEmbed(character, receiver, roll, inspiration));
+        message.edit({embeds: [await CharacterEmbeds.GetInspiringEmbed(character, receiver, roll, inspiration)]});
     }
 
     private static async UpdateProtectionEmbed(message: Message, character: Character, receiver: Character, roll: number, protection: number) {
-        message.edit('', await CharacterEmbeds.GetProtectionEmbed(character, receiver, roll, protection));
+        message.edit({embeds: [await CharacterEmbeds.GetProtectionEmbed(character, receiver, roll, protection)]});
     }
 
     private static async UpdatePrayingEmbed(message: Message, character: Character, roll: number, blessing: number) {
-        message.edit('', await CharacterEmbeds.GetPrayingEmbed(character, roll, blessing));
+        message.edit({embeds: [await CharacterEmbeds.GetPrayingEmbed(character, roll, blessing)]});
     }
 
     private static async EditAvatar(messageInfo: IMessageInfo, player: Player, url?: string) {

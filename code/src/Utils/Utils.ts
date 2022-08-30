@@ -1,5 +1,6 @@
 /* eslint-disable no-inner-declarations */
-const uuidv4 = require('uuid/v4');
+// const uuidv4 = require('uuid/v4');
+const { v4: uuidv4 } = require('uuid');
 export const perfy = require('perfy');
 
 export module Utils {
