@@ -946,7 +946,7 @@ export default class Character {
     }
 
     public GetTotalEquipmentSpace() {
-        return CharacterConstants.EQUIPMENT_SPACE_PER_LEVEL[this.level - 1] * 2;
+        return Math.min(25, CharacterConstants.EQUIPMENT_SPACE_PER_LEVEL[this.level - 1] * 2);
     }
 
     public GetEquipment() {
